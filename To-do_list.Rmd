@@ -1,0 +1,13 @@
+---
+title: "To-do_list"
+author: "Vincyane Badouard"
+date: "19/01/2021"
+output: html_document
+---
+
++ Add the "NEWS.file"
++ Connect to Travis CI
+
+
++ Update the "NEWS.file"
++ Update the version number(in the DESCRIPTION file)
