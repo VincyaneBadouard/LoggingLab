@@ -1,16 +1,31 @@
 Package: Maria
-Title: What the Package Does (One Line, Title Case)
+Title: Simulate conventional or low impact logging on a forest.
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    c(person(given = "Vincyane",
+           family = "Badouard",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "vincyane.badouard@gmail.com",
+           comment = c(ORCID = "YOUR-ORCID-ID")),
+      person(given = "Géraldine",
+           family = "Derroire",
+           role = "ctb",
+           email = "geraldine.derroire@cirad.fr",
+           comment = c(ORCID = "YOUR-ORCID-ID")),
+      person(given = "Sylvain",
+           family = "Schmitt",
+           role = "ctb",
+           email = "sylvain.m.schmitt@gmail.com ",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+           )
+Description: This package allows to simulate conventional or low impact logging.
+URL: https://github.com/VincyaneBadouard/Maria.git
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
