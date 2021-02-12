@@ -3,6 +3,6 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+'^README\\.Rmd$
 NEWS.md
-README.md
 ToDo.md
