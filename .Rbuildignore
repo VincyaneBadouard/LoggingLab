@@ -6,3 +6,4 @@
 '^README\\.Rmd$
 NEWS.md
 ToDo.md
+^\.github$
