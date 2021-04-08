@@ -4,7 +4,11 @@
 \alias{bonjour}
 \title{Say "Bonjour !" with a name}
 \usage{
+<<<<<<< HEAD
 bonjour(nom = "Maria", verbose = TRUE)
+=======
+bonjour(nom = "Maria", verbose = T)
+>>>>>>> c69e0d5da9136d607b27dd63284c2fdd0e4d6e04
 }
 \arguments{
 \item{nom}{(character) Name of the person to say bonjour.}
