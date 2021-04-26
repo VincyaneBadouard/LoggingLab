@@ -1,11 +1,13 @@
-#' Data title
+#' Paracou6_2016
 #'
-#' Data description
+#' Species inventory
+#' 2016 inventory of Paracou plot 6.Public dataset extracted from the Guyafor database.
 #'
-#' @format A data frame with X rows and Z variables:
+#' @format A tibble with 3620 rows and 31 variables:
 #' \describe{
 #'   \item{var1}{description, in units}
 #'   \item{var2}{description, in units}
 #'   ...
 #' }
-#' @source \url{}
+#' @source \url{http://paracou.cirad.fr/}
+"Paracou6_2016"
