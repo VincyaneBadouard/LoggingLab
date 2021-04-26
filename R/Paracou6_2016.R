@@ -9,5 +9,8 @@
 #'   \item{var2}{description, in units}
 #'   ...
 #' }
-#' @source \url{http://paracou.cirad.fr/}
+#' @source \url{http://paracou.cirad.fr}
+#'
+#' EcoFoG::Guyafor2df(WHERE = "Forest='Paracou' AND Plot='6' AND CensusYear=2016",UID = NULL,PWD = NULL,Driver = "SQL Server Native Client 10.0")
+
 "Paracou6_2016"

@@ -8,6 +8,5 @@
 Logging simulator
 }
 \details{
-This package allows to simulate conventional
-or low impact logging.
+This package allows to simulate the different low impact logging versions in French Guiana.
 }
