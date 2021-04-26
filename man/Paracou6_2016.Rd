@@ -7,6 +7,7 @@
 \format{
 A tibble with 3620 rows and 31 variables:
 \describe{
+Forest "character"
 \item{var1}{description, in units}
 \item{var2}{description, in units}
 ...

@@ -2,4 +2,5 @@
 
 export("%>%")
 export(bonjour)
+export(datacheckformat)
 importFrom(magrittr,"%>%")

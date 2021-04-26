@@ -1,0 +1,217 @@
+---
+title: "DraftFunctions"
+author: "Vincyane Badouard"
+date: "26/04/2021"
+output: html_document
+---
+
+# Fonction de contrôle & formatage de l’INPUT “data” de la fonction pilot (“datacheckformat”):
+INPUT: data = Inventaires botaniques Guyafor/ONF (data frame)
+OUTPUT: data = Inventaires botaniques type “Guyafor”(data frame)
+
+vérification du type d’inventaire : 
+* Test présence des variables.
+* Test class des variables.
+Si les tests précédents ont tous reçu =TRUE, STOP de la fonction dataformat. 
+Sinon mettre en forme “inventaire Guyafor” (nom des var, leurs classes, unités (mettre des limites avec range),...)
+re-vérification du type d’inventaire : 
+* Test présence des variables
+* Test class des variables
+Si les tests précédent ont tous reçu =TRUE, STOP de la fonction dataformat.
+Sinon Message : “Votre format de données renseignés à l’argument “data”, n’est pas compatible. Voir la vignette du package pour y trouver le format requis.”
+
+```{r}
+data("Paracou6_2016") #data in the environment
+lapply(Paracou6_2016, class) #give the class of alla the data variables
+```
+
+```{r Create a broken dataset}
+#in inst/extdata
+BrokenParacou6_2016 <- Paracou6_2016 %>% 
+  select(-Species) %>% # missing column
+  rename(DBH = CircCorr) %>% # other column name
+  rename(PLOT = Plot) %>% # variable name in upper case
+  mutate(idTree = as.character(as.numeric(idTree))) %>% #an other variable class
+  mutate(Lon = round(Lon, digits =0)) %>% # no digits
+  mutate(Genus = toupper(Genus)) # values in upper case
+```
+
+
+```{r My tests}
+
+'pouet' %in% names(Paracou6_2016)
+if (!is.null(Paracou6_2016$pouet)) 
+    stop("pouet parameter should be an integer (column name), or NULL if no presence column.")
+
+```
+
+```{r}
+# Variables presence check
+"Plot" %in% names(Paracou6_2016)
+"CensusYear" %in% names(Paracou6_2016)
+"idTree" %in% names(Paracou6_2016)
+"Family" %in% names(Paracou6_2016)
+"Genus" %in% names(Paracou6_2016)
+"Species" %in% names(Paracou6_2016)
+"CircCorr" %in% names(Paracou6_2016)
+"CodeAlive" %in% names(Paracou6_2016)
+"CommercialSp" %in% names(Paracou6_2016)
+"UTMZone" %in% names(Paracou6_2016)
+'Lat' %in% names(Paracou6_2016)
+'Lon' %in% names(Paracou6_2016)
+'VernName' %in% names(Paracou6_2016)
+'Xfield' %in% names(Paracou6_2016)
+'Yfield' %in% names(Paracou6_2016)
+'Xutm' %in% names(Paracou6_2016)
+'Yutm' %in% names(Paracou6_2016)
+
+```
+
+```{r}
+# Variables class check
+ if (!inherits(Paracou6_2016$idTree, "integer") && !is.null(idTree)) #majuscule ?
+    stop("idTree parameter should be an integer (column name), or NULL if no presence column.")
+
+if (!inherits(Paracou6_2016$Plot, "character") && !is.null(Plot))
+    stop("Plot parameter should be a character (column name), or NULL if no presence column.") 
+  
+   if (!inherits(Paracou6_2016$Xfield, "numeric") && !is.null(Xfield))
+    stop("Xfield parameter should be numeric (column name), or NULL if no presence column.")
+  
+   if (!inherits(Paracou6_2016$Yfield, "numeric") && !is.null(Yfield))
+    stop("Yfield parameter should be numeric (column name), or NULL if no presence column.")
+  
+   if (!inherits(Paracou6_2016$Xutm, "numeric") && !is.null(Xutm))
+    stop("Xutm parameter should be numeric (column name), or NULL if no presence column.")
+  
+   if (!inherits(Paracou6_2016$Yutm, "numeric") && !is.null(Yutm))
+    stop("Yutm parameter should be numeric (column name), or NULL if no presence column.")
+  
+   if (!inherits(Paracou6_2016$UTMZone, "integer") && !is.null(UTMZone))
+    stop("UTMZone parameter should be an integer (column name), or NULL if no presence column.")
+  
+   if (!inherits(Paracou6_2016$Lat, "numeric") && !is.null(Lat))
+    stop("Lat parameter should be numeric (column name), or NULL if no presence column.")
+  
+   if (!inherits(Paracou6_2016$Lon, "numeric") && !is.null(Lon))
+    stop("Lon parameter should be numeric (column name), or NULL if no presence column.")
+  
+   if (!inherits(Paracou6_2016$Family, "character") && !is.null(Family))
+    stop("Family parameter should be a character (column name), or NULL if no presence column.")
+  
+   if (!inherits(Paracou6_2016$Genus, "character") && !is.null(Genus))
+    stop("Genus parameter should be a character (column name), or NULL if no presence column.") 
+  
+   if (!inherits(Paracou6_2016$Species, "character") && !is.null(Species))
+    stop("Species parameter should be a character (column name), or NULL if no presence column.")  
+  
+   if (!inherits(Paracou6_2016$VernName, "character") && !is.null(VernName))
+    stop("VernName parameter should be a character (column name), or NULL if no presence column.")
+  
+   if (!inherits(Paracou6_2016$CommercialSp, "logical") && !is.null(CommercialSp))
+    stop("CommercialSp parameter should be logical (column name), or NULL if no presence column.")  
+  
+   if (!inherits(Paracou6_2016$CensusYear, "integer") && !is.null(CensusYear))
+    stop("CensusYear parameter should be an integer (column name), or NULL if no presence column.")  
+
+  if (!inherits(Paracou6_2016$CodeAlive, "logical") && !is.null(CodeAlive))
+    stop("CodeAlive parameter should be logical (column name), or NULL if no presence column.")
+  
+  if (!inherits(Paracou6_2016$CircCorr, "numeric") && !is.null(CircCorr)) #DBH
+    stop("CircCorr parameter should be numeric (column name), or NULL if no presence column.") 
+
+# 
+# if (!inherits(Paracou6_2016$Forest, "character"))
+#     stop("Forest parameter should be a character (column name), or NULL if no presence column.") #pas besoin
+#    if (!inherits(Paracou6_2016$idVern, "integer") && !is.null(idVern))
+#     stop("idVern parameter should be an integer (column name), or NULL if no presence column.") #pas besoin
+# 
+#   
+#    
+#    if (!inherits(Paracou6_2016$PlotArea, "numeric") && !is.null(PlotArea))
+#     stop("PlotArea parameter should be numeric (column name), or NULL if no presence column.") #pas besoin
+#   
+#    if (!inherits(Paracou6_2016$SubPlot, "integer") && !is.null(SubPlot))
+#     stop("SubPlot parameter should be an integer (column name), or NULL if no presence column.") #pas besoin
+#   
+#    if (!inherits(Paracou6_2016$TreeFieldNum, "numeric") && !is.null(TreeFieldNum))
+#     stop("TreeFieldNum parameter should be numeric (column name), or NULL if no presence column.") #pas besoin
+#   
+#    if (!inherits(Paracou6_2016$Project, "character") && !is.null(Project))
+#     stop("Project parameter should be a character (column name), or NULL if no presence column.") #pas besoin
+#   
+#    if (!inherits(Paracou6_2016$Protocole, "character") && !is.null(Protocole))
+#     stop("Protocole parameter should be a character (column name), or NULL if no presence column.") #pas besoin
+```
+
+```{r all with error message}
+if(!all("Plot" %in% names(Paracou6_2016),
+"CensusYear" %in% names(Paracou6_2016),
+"idTree" %in% names(Paracou6_2016),
+"Family" %in% names(Paracou6_2016),
+"Genus" %in% names(Paracou6_2016),
+"Species" %in% names(Paracou6_2016),
+"CircCorr" %in% names(Paracou6_2016),
+"CodeAlive" %in% names(Paracou6_2016),
+"CommercialSp" %in% names(Paracou6_2016),
+"UTMZone" %in% names(Paracou6_2016),
+'Lat' %in% names(Paracou6_2016),
+'Lon' %in% names(Paracou6_2016),
+'VernName' %in% names(Paracou6_2016),
+'Xfield' %in% names(Paracou6_2016),
+'Yfield' %in% names(Paracou6_2016),
+'Xutm' %in% names(Paracou6_2016),
+'Yutm' %in% names(Paracou6_2016),
+if (!inherits(Paracou6_2016$idTree, "integer") && !is.null(idTree)) #majuscule ?
+    stop("idTree parameter should be an integer (column name), or NULL if no presence column."),
+
+if (!inherits(Paracou6_2016$Plot, "character") && !is.null(Plot))
+    stop("Plot parameter should be a character (column name), or NULL if no presence column."), 
+  
+   if (!inherits(Paracou6_2016$Xfield, "numeric") && !is.null(Xfield))
+    stop("Xfield parameter should be numeric (column name), or NULL if no presence column."),
+  
+   if (!inherits(Paracou6_2016$Yfield, "numeric") && !is.null(Yfield))
+    stop("Yfield parameter should be numeric (column name), or NULL if no presence column."),
+  
+   if (!inherits(Paracou6_2016$Xutm, "numeric") && !is.null(Xutm))
+    stop("Xutm parameter should be numeric (column name), or NULL if no presence column."),
+  
+   if (!inherits(Paracou6_2016$Yutm, "numeric") && !is.null(Yutm))
+    stop("Yutm parameter should be numeric (column name), or NULL if no presence column."),
+  
+   if (!inherits(Paracou6_2016$UTMZone, "integer") && !is.null(UTMZone))
+    stop("UTMZone parameter should be an integer (column name), or NULL if no presence column."),
+  
+   if (!inherits(Paracou6_2016$Lat, "numeric") && !is.null(Lat))
+    stop("Lat parameter should be numeric (column name), or NULL if no presence column."),
+  
+   if (!inherits(Paracou6_2016$Lon, "numeric") && !is.null(Lon))
+    stop("Lon parameter should be numeric (column name), or NULL if no presence column."),
+  
+   if (!inherits(Paracou6_2016$Family, "character") && !is.null(Family))
+    stop("Family parameter should be a character (column name), or NULL if no presence column."),
+  
+   if (!inherits(Paracou6_2016$Genus, "character") && !is.null(Genus))
+    stop("Genus parameter should be a character (column name), or NULL if no presence column."), 
+  
+   if (!inherits(Paracou6_2016$Species, "character") && !is.null(Species))
+    stop("Species parameter should be a character (column name), or NULL if no presence column."),  
+  
+   if (!inherits(Paracou6_2016$VernName, "character") && !is.null(VernName))
+    stop("VernName parameter should be a character (column name), or NULL if no presence column."),
+  
+   if (!inherits(Paracou6_2016$CommercialSp, "logical") && !is.null(CommercialSp))
+    stop("CommercialSp parameter should be logical (column name), or NULL if no presence column."), 
+  
+   if (!inherits(Paracou6_2016$CensusYear, "integer") && !is.null(CensusYear))
+    stop("CensusYear parameter should be an integer (column name), or NULL if no presence column."),  
+
+  if (!inherits(Paracou6_2016$CodeAlive, "logical") && !is.null(CodeAlive))
+    stop("CodeAlive parameter should be logical (column name), or NULL if no presence column."),
+  
+  if (!inherits(Paracou6_2016$CircCorr, "numeric") && !is.null(CircCorr)) #DBH
+    stop("CircCorr parameter should be numeric (column name), or NULL if no presence column.")))
+    stop("Your data format, as specified in the 'data' argument, is not compatible. See the package vignette for the required format.") 
+```
+
