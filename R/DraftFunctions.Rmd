@@ -5,213 +5,519 @@ date: "26/04/2021"
 output: html_document
 ---
 
-# Fonction de contrôle & formatage de l’INPUT “data” de la fonction pilot (“datacheckformat”):
-INPUT: data = Inventaires botaniques Guyafor/ONF (data frame)
-OUTPUT: data = Inventaires botaniques type “Guyafor”(data frame)
+```{r}
+library(dplyr)
+library(tibble)
+library(tidyr)
+```
+
+```{r}
+ParamCrownDiameterAllometry <- read_delim("D:/VSC Kourou/DATA/ParamCrownDiameterAllometry.csv", 
+    ";", escape_double = FALSE, col_types = cols(alpha = col_number(), 
+        beta = col_number()), locale = locale(decimal_mark = ","), 
+    trim_ws = TRUE) %>%
+  separate(ScientificName, sep = "_", into = c("Genus", "Species"), remove = F) %>% 
+  mutate(Family = ifelse(Taxo == "fam", Genus, NA)) %>% 
+  mutate(Genus = ifelse(is.na(Family), Genus, NA))
+  
+usethis::use_data(ParamCrownDiameterAllometry)
+```
+
+# Data loading
+```{r}
+data(Paracou6_2016) #data inventory in the global environment
+data("ForestZoneVolumeParametersTable") # The volume parameters data in the global environment
+load(system.file("extdata", "BrokenParacou6_2016.rda", package = "Maria")) # the test inventory in the global environment
+load(system.file("extdata", "ParamCrownDiameterAllometry.rda", package = "Maria"))
+```
+```{r}
+lapply(Paracou6_2016, class) #give the class of all the data variables
+```
+
+# Create a broken dataset
+```{r Create a broken dataset}
+#in inst/extdata
+library(schoolmath)
+library(dplyr)
+
+BrokenParacou6_2016 <- Paracou6_2016 %>% 
+  select(-Species) %>% # missing column
+  rename(Vernacular = VernName) %>% # other column name
+  rename(PLOT = Plot) %>% # variable name in upper case
+  mutate(idTree = as.character(as.numeric(idTree))) %>% #an other variable class
+  mutate(Lon = round(Lon, digits =0)) %>% # no digits
+  mutate(Genus = toupper(Genus)) %>%  # values in upper case
+  mutate(CodeAlive = ifelse(is.even(Paracou6_2016$idTree), "FALSE", CodeAlive)) %>% # Some FALSE in CodeAlive
+  mutate(CensusYear = ifelse(is.even(Paracou6_2016$idTree), CensusYear, CensusYear+1)) # different years inventory
+BrokenParacou6_2016[1:3, "idTree"] <- "200" # create a 2 time present tree
+BrokenParacou6_2016[4, "CircCorr"] <- "6" # DBH < 10
+BrokenParacou6_2016[5, "Plot"] <- "100" # a tree in another plot
+
+
+# pour l'enregistrer : usethis::use_data(BrokenParacou6_2016) puis le move dans ins/exdata
+```
+
+
+# inventorycheckformat
+INPUT: inventory = Inventaires botaniques Guyafor/ONF (data frame)
+OUTPUT: inventory = Inventaires botaniques type “Guyafor”(data frame)
 
 vérification du type d’inventaire : 
 * Test présence des variables.
 * Test class des variables.
-Si les tests précédents ont tous reçu =TRUE, STOP de la fonction dataformat. 
+Si les tests précédents ont tous reçu =TRUE, STOP de la fonction inventorycheckformat 
 Sinon mettre en forme “inventaire Guyafor” (nom des var, leurs classes, unités (mettre des limites avec range),...)
 re-vérification du type d’inventaire : 
 * Test présence des variables
 * Test class des variables
-Si les tests précédent ont tous reçu =TRUE, STOP de la fonction dataformat.
-Sinon Message : “Votre format de données renseignés à l’argument “data”, n’est pas compatible. Voir la vignette du package pour y trouver le format requis.”
-
-```{r}
-data("Paracou6_2016") #data in the environment
-lapply(Paracou6_2016, class) #give the class of alla the data variables
-```
-
-```{r Create a broken dataset}
-#in inst/extdata
-BrokenParacou6_2016 <- Paracou6_2016 %>% 
-  select(-Species) %>% # missing column
-  rename(DBH = CircCorr) %>% # other column name
-  rename(PLOT = Plot) %>% # variable name in upper case
-  mutate(idTree = as.character(as.numeric(idTree))) %>% #an other variable class
-  mutate(Lon = round(Lon, digits =0)) %>% # no digits
-  mutate(Genus = toupper(Genus)) # values in upper case
-```
-
+Si les tests précédent ont tous reçu =TRUE, STOP de la fonction inventorycheckformat
+Sinon Message : “Votre format de données renseignés à l’argument “inventory”, n’est pas compatible. Voir la vignette du package pour y trouver le format requis.”
 
 ```{r My tests}
 
 'pouet' %in% names(Paracou6_2016)
 if (!is.null(Paracou6_2016$pouet)) 
-    stop("pouet parameter should be an integer (column name), or NULL if no presence column.")
+    stop("pouet variable should be an integer.")
 
 ```
 
 ```{r}
 # Variables presence check
-"Plot" %in% names(Paracou6_2016)
-"CensusYear" %in% names(Paracou6_2016)
-"idTree" %in% names(Paracou6_2016)
-"Family" %in% names(Paracou6_2016)
-"Genus" %in% names(Paracou6_2016)
-"Species" %in% names(Paracou6_2016)
-"CircCorr" %in% names(Paracou6_2016)
-"CodeAlive" %in% names(Paracou6_2016)
-"CommercialSp" %in% names(Paracou6_2016)
-"UTMZone" %in% names(Paracou6_2016)
-'Lat' %in% names(Paracou6_2016)
-'Lon' %in% names(Paracou6_2016)
-'VernName' %in% names(Paracou6_2016)
-'Xfield' %in% names(Paracou6_2016)
-'Yfield' %in% names(Paracou6_2016)
-'Xutm' %in% names(Paracou6_2016)
-'Yutm' %in% names(Paracou6_2016)
+if(!("Plot" %in% names(Paracou6_2016)))
+  stop("Plot variable is not found")
+if(!("CensusYear" %in% names(Paracou6_2016)))
+    stop("CensusYear variable is not found")
+if(!("idTree" %in% names(Paracou6_2016)))
+    stop("idTree variable is not found")
+if(!("Family" %in% names(Paracou6_2016)))
+    stop("Family variable is not found")
+if(!("Genus" %in% names(Paracou6_2016)))
+    stop("Genus variable is not found")
+if(!("Species" %in% names(Paracou6_2016)))
+    stop("Species variable is not found")
+if(!("CircCorr" %in% names(Paracou6_2016)))
+  stop("CircCorr variable is not found")
+if(!("CodeAlive" %in% names(Paracou6_2016)))
+    stop("CodeAlive variable is not found")
+if(!("CommercialSp" %in% names(Paracou6_2016)))
+    stop("CommercialSp variable is not found")
+if(!("UTMZone" %in% names(Paracou6_2016)))
+    stop("UTMZone variable is not found")
+if(!('Lat' %in% names(Paracou6_2016)))
+    stop("Lat variable is not found")
+if(!('Lon' %in% names(Paracou6_2016)))
+    stop("Lon variable is not found")
+if(!('VernName' %in% names(Paracou6_2016)))
+    stop("VernName variable is not found")
+if(!('Xfield' %in% names(Paracou6_2016)))
+    stop("Xfield variable is not found")
+if(!('Yfield' %in% names(Paracou6_2016)))
+    stop("Yfield variable is not found")
+if(!('Xutm' %in% names(Paracou6_2016)))
+    stop("Xutm variable is not found")
+if(!('Yutm' %in% names(Paracou6_2016)))
+    stop("Yutm variable is not found")
 
 ```
 
 ```{r}
 # Variables class check
  if (!inherits(Paracou6_2016$idTree, "integer") && !is.null(idTree)) #majuscule ?
-    stop("idTree parameter should be an integer (column name), or NULL if no presence column.")
+    stop("idTree variable should be an integer.")
 
 if (!inherits(Paracou6_2016$Plot, "character") && !is.null(Plot))
-    stop("Plot parameter should be a character (column name), or NULL if no presence column.") 
+    stop("Plot variable should be a character.") 
   
    if (!inherits(Paracou6_2016$Xfield, "numeric") && !is.null(Xfield))
-    stop("Xfield parameter should be numeric (column name), or NULL if no presence column.")
+    stop("Xfield variable should be numeric.")
   
    if (!inherits(Paracou6_2016$Yfield, "numeric") && !is.null(Yfield))
-    stop("Yfield parameter should be numeric (column name), or NULL if no presence column.")
+    stop("Yfield variable should be numeric.")
   
    if (!inherits(Paracou6_2016$Xutm, "numeric") && !is.null(Xutm))
-    stop("Xutm parameter should be numeric (column name), or NULL if no presence column.")
+    stop("Xutm variable should be numeric.")
   
    if (!inherits(Paracou6_2016$Yutm, "numeric") && !is.null(Yutm))
-    stop("Yutm parameter should be numeric (column name), or NULL if no presence column.")
+    stop("Yutm variable should be numeric.")
   
    if (!inherits(Paracou6_2016$UTMZone, "integer") && !is.null(UTMZone))
-    stop("UTMZone parameter should be an integer (column name), or NULL if no presence column.")
+    stop("UTMZone variable should be an integer.")
   
    if (!inherits(Paracou6_2016$Lat, "numeric") && !is.null(Lat))
-    stop("Lat parameter should be numeric (column name), or NULL if no presence column.")
+    stop("Lat variable should be numeric.")
   
    if (!inherits(Paracou6_2016$Lon, "numeric") && !is.null(Lon))
-    stop("Lon parameter should be numeric (column name), or NULL if no presence column.")
+    stop("Lon variable should be numeric.")
   
    if (!inherits(Paracou6_2016$Family, "character") && !is.null(Family))
-    stop("Family parameter should be a character (column name), or NULL if no presence column.")
+    stop("Family variable should be a character.")
   
    if (!inherits(Paracou6_2016$Genus, "character") && !is.null(Genus))
-    stop("Genus parameter should be a character (column name), or NULL if no presence column.") 
+    stop("Genus variable should be a character.") 
   
    if (!inherits(Paracou6_2016$Species, "character") && !is.null(Species))
-    stop("Species parameter should be a character (column name), or NULL if no presence column.")  
+    stop("Species variable should be a character.")  
   
    if (!inherits(Paracou6_2016$VernName, "character") && !is.null(VernName))
-    stop("VernName parameter should be a character (column name), or NULL if no presence column.")
+    stop("VernName variable should be a character.")
   
    if (!inherits(Paracou6_2016$CommercialSp, "logical") && !is.null(CommercialSp))
-    stop("CommercialSp parameter should be logical (column name), or NULL if no presence column.")  
+    stop("CommercialSp variable should be logical.")  
   
    if (!inherits(Paracou6_2016$CensusYear, "integer") && !is.null(CensusYear))
-    stop("CensusYear parameter should be an integer (column name), or NULL if no presence column.")  
+    stop("CensusYear variable should be an integer.")  
 
   if (!inherits(Paracou6_2016$CodeAlive, "logical") && !is.null(CodeAlive))
-    stop("CodeAlive parameter should be logical (column name), or NULL if no presence column.")
+    stop("CodeAlive variable should be logical.")
   
   if (!inherits(Paracou6_2016$CircCorr, "numeric") && !is.null(CircCorr)) #DBH
-    stop("CircCorr parameter should be numeric (column name), or NULL if no presence column.") 
+    stop("CircCorr variable should be numeric.") 
 
 # 
 # if (!inherits(Paracou6_2016$Forest, "character"))
-#     stop("Forest parameter should be a character (column name), or NULL if no presence column.") #pas besoin
+#     stop("Forest variable should be a character.") #pas besoin
 #    if (!inherits(Paracou6_2016$idVern, "integer") && !is.null(idVern))
-#     stop("idVern parameter should be an integer (column name), or NULL if no presence column.") #pas besoin
+#     stop("idVern variable should be an integer.") #pas besoin
 # 
 #   
 #    
 #    if (!inherits(Paracou6_2016$PlotArea, "numeric") && !is.null(PlotArea))
-#     stop("PlotArea parameter should be numeric (column name), or NULL if no presence column.") #pas besoin
+#     stop("PlotArea variable should be numeric.") #pas besoin
 #   
 #    if (!inherits(Paracou6_2016$SubPlot, "integer") && !is.null(SubPlot))
-#     stop("SubPlot parameter should be an integer (column name), or NULL if no presence column.") #pas besoin
+#     stop("SubPlot variable should be an integer.") #pas besoin
 #   
 #    if (!inherits(Paracou6_2016$TreeFieldNum, "numeric") && !is.null(TreeFieldNum))
-#     stop("TreeFieldNum parameter should be numeric (column name), or NULL if no presence column.") #pas besoin
+#     stop("TreeFieldNum variable should be numeric.") #pas besoin
 #   
 #    if (!inherits(Paracou6_2016$Project, "character") && !is.null(Project))
-#     stop("Project parameter should be a character (column name), or NULL if no presence column.") #pas besoin
+#     stop("Project variable should be a character.") #pas besoin
 #   
 #    if (!inherits(Paracou6_2016$Protocole, "character") && !is.null(Protocole))
-#     stop("Protocole parameter should be a character (column name), or NULL if no presence column.") #pas besoin
+#     stop("Protocole variable should be a character.") #pas besoin
 ```
 
 ```{r all with error message}
-if(!all("Plot" %in% names(Paracou6_2016),
-"CensusYear" %in% names(Paracou6_2016),
-"idTree" %in% names(Paracou6_2016),
-"Family" %in% names(Paracou6_2016),
-"Genus" %in% names(Paracou6_2016),
-"Species" %in% names(Paracou6_2016),
-"CircCorr" %in% names(Paracou6_2016),
-"CodeAlive" %in% names(Paracou6_2016),
-"CommercialSp" %in% names(Paracou6_2016),
-"UTMZone" %in% names(Paracou6_2016),
-'Lat' %in% names(Paracou6_2016),
-'Lon' %in% names(Paracou6_2016),
-'VernName' %in% names(Paracou6_2016),
-'Xfield' %in% names(Paracou6_2016),
-'Yfield' %in% names(Paracou6_2016),
-'Xutm' %in% names(Paracou6_2016),
-'Yutm' %in% names(Paracou6_2016),
-if (!inherits(Paracou6_2016$idTree, "integer") && !is.null(idTree)) #majuscule ?
-    stop("idTree parameter should be an integer (column name), or NULL if no presence column."),
+if(!("Plot" %in% names(Paracou6_2016)))
+  stop("Plot variable is not found")
+if(!("CensusYear" %in% names(Paracou6_2016)))
+    stop("CensusYear variable is not found")
+if(!("idTree" %in% names(Paracou6_2016)))
+    stop("idTree variable is not found")
+if(!("Family" %in% names(Paracou6_2016)))
+    stop("Family variable is not found")
+if(!("Genus" %in% names(Paracou6_2016)))
+    stop("Genus variable is not found")
+if(!("Species" %in% names(Paracou6_2016)))
+    stop("Species variable is not found")
+if(!("CircCorr" %in% names(Paracou6_2016)))
+  stop("CircCorr variable is not found")
+if(!("CodeAlive" %in% names(Paracou6_2016)))
+    stop("CodeAlive variable is not found")
+if(!("CommercialSp" %in% names(Paracou6_2016)))
+    stop("CommercialSp variable is not found")
+if(!("UTMZone" %in% names(Paracou6_2016)))
+    stop("UTMZone variable is not found")
+if(!('Lat' %in% names(Paracou6_2016)))
+    stop("Lat variable is not found")
+if(!('Lon' %in% names(Paracou6_2016)))
+    stop("Lon variable is not found")
+if(!('VernName' %in% names(Paracou6_2016)))
+    stop("VernName variable is not found")
+if(!('Xfield' %in% names(Paracou6_2016)))
+    stop("Xfield variable is not found")
+if(!('Yfield' %in% names(Paracou6_2016)))
+    stop("Yfield variable is not found")
+if(!('Xutm' %in% names(Paracou6_2016)))
+    stop("Xutm variable is not found")
+if(!('Yutm' %in% names(Paracou6_2016)))
+    stop("Yutm variable is not found")
+if (!inherits(Paracou6_2016$idTree, "integer.")) #majuscule ?
+    stop("idTree variable should be an integer.")
 
-if (!inherits(Paracou6_2016$Plot, "character") && !is.null(Plot))
-    stop("Plot parameter should be a character (column name), or NULL if no presence column."), 
+if (!inherits(Paracou6_2016$Plot, "character"))
+    stop("Plot variable should be a character.")
   
-   if (!inherits(Paracou6_2016$Xfield, "numeric") && !is.null(Xfield))
-    stop("Xfield parameter should be numeric (column name), or NULL if no presence column."),
+   if (!inherits(Paracou6_2016$Xfield, "numeric"))
+    stop("Xfield variable should be numeric.")
   
-   if (!inherits(Paracou6_2016$Yfield, "numeric") && !is.null(Yfield))
-    stop("Yfield parameter should be numeric (column name), or NULL if no presence column."),
+   if (!inherits(Paracou6_2016$Yfield, "numeric"))
+    stop("Yfield variable should be numeric.")
   
-   if (!inherits(Paracou6_2016$Xutm, "numeric") && !is.null(Xutm))
-    stop("Xutm parameter should be numeric (column name), or NULL if no presence column."),
+   if (!inherits(Paracou6_2016$Xutm, "numeric"))
+    stop("Xutm variable should be numeric.")
   
-   if (!inherits(Paracou6_2016$Yutm, "numeric") && !is.null(Yutm))
-    stop("Yutm parameter should be numeric (column name), or NULL if no presence column."),
+   if (!inherits(Paracou6_2016$Yutm, "numeric"))
+    stop("Yutm variable should be numeric.")
   
-   if (!inherits(Paracou6_2016$UTMZone, "integer") && !is.null(UTMZone))
-    stop("UTMZone parameter should be an integer (column name), or NULL if no presence column."),
+   if (!inherits(Paracou6_2016$UTMZone, "integer"))
+    stop("UTMZone variable should be an integer.")
   
-   if (!inherits(Paracou6_2016$Lat, "numeric") && !is.null(Lat))
-    stop("Lat parameter should be numeric (column name), or NULL if no presence column."),
+   if (!inherits(Paracou6_2016$Lat, "numeric"))
+    stop("Lat variable should be numeric.")
   
-   if (!inherits(Paracou6_2016$Lon, "numeric") && !is.null(Lon))
-    stop("Lon parameter should be numeric (column name), or NULL if no presence column."),
+   if (!inherits(Paracou6_2016$Lon, "numeric"))
+    stop("Lon variable should be numeric.")
   
-   if (!inherits(Paracou6_2016$Family, "character") && !is.null(Family))
-    stop("Family parameter should be a character (column name), or NULL if no presence column."),
+   if (!inherits(Paracou6_2016$Family, "character"))
+    stop("Family variable should be a character.")
   
-   if (!inherits(Paracou6_2016$Genus, "character") && !is.null(Genus))
-    stop("Genus parameter should be a character (column name), or NULL if no presence column."), 
+   if (!inherits(Paracou6_2016$Genus, "character"))
+    stop("Genus variable should be a character.") 
   
-   if (!inherits(Paracou6_2016$Species, "character") && !is.null(Species))
-    stop("Species parameter should be a character (column name), or NULL if no presence column."),  
+   if (!inherits(Paracou6_2016$Species, "character"))
+    stop("Species variable should be a character.")  
   
-   if (!inherits(Paracou6_2016$VernName, "character") && !is.null(VernName))
-    stop("VernName parameter should be a character (column name), or NULL if no presence column."),
+   if (!inherits(Paracou6_2016$VernName, "character"))
+    stop("VernName variable should be a character.")
   
-   if (!inherits(Paracou6_2016$CommercialSp, "logical") && !is.null(CommercialSp))
-    stop("CommercialSp parameter should be logical (column name), or NULL if no presence column."), 
+   if (!inherits(Paracou6_2016$CommercialSp, "logical"))
+    stop("CommercialSp variable should be logical.")
   
-   if (!inherits(Paracou6_2016$CensusYear, "integer") && !is.null(CensusYear))
-    stop("CensusYear parameter should be an integer (column name), or NULL if no presence column."),  
+   if (!inherits(Paracou6_2016$CensusYear, "integer"))
+    stop("CensusYear variable should be an integer.") 
 
-  if (!inherits(Paracou6_2016$CodeAlive, "logical") && !is.null(CodeAlive))
-    stop("CodeAlive parameter should be logical (column name), or NULL if no presence column."),
+  if (!inherits(Paracou6_2016$CodeAlive, "logical"))
+    stop("CodeAlive variable should be logical.")
   
-  if (!inherits(Paracou6_2016$CircCorr, "numeric") && !is.null(CircCorr)) #DBH
-    stop("CircCorr parameter should be numeric (column name), or NULL if no presence column.")))
-    stop("Your data format, as specified in the 'data' argument, is not compatible. See the package vignette for the required format.") 
+  if (!inherits(Paracou6_2016$CircCorr, "numeric")) #DBH
+    stop("CircCorr variable should be numeric.")
+```
+
+# cleaninventory
+INPUT: inventory = Inventaires botaniques type “Guyafor” (Paracou6_2016)(data frame)
+OUTPUT: inventory = Inventaires botaniques exploitable (Paracou6_2016Clean) (data frame)
+
+Ne prendre que les arbres vivants : lignes ayant la valeur “TRUE” à la colonne “CodeAlive” de inventory. 
+Check si les valeurs de ID sont uniques. Si FALSE message d’erreur “Les identifiants des arbres ne sont pas uniques”
+Enlever les arbres hors de la parcelle s’il y en a : coordonnées de l’arbre non comprises dans les coordonnées de la parcelle.
+Ne prendre que les lignes pour lesquelles “DBH”> 10.
+```{r}
+duplicated(Paracou6_2016)
+unique(Paracou6_2016) #same rows number
+
+#duplicated() gives "FALSE" when the row is unique
+# any() : at least one of the values true?
+any(duplicated(Paracou6_2016)) # at least one row is duplicated?
+all(Paracou6_2016$Plot==Paracou6_2016$Plot[1]) #all the Plot values are equal?
+```
+
+```{r}
+
+if (!("DBH" %in% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA) #if DBH doesn't exist create it
+   Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
+
+InventoryClean <- Paracou6_2016 %>% 
+  filter(CodeAlive == "TRUE") %>% #only alive trees
+  filter(DBH >= 10) # DBH >= 10
+
+  if (any(duplicated(Paracou6_2016)==TRUE))
+    stop ("Tree identifiers (idTree) are not unique.") # stop function if the tree identifiers (idTree) are not unique
+  if (all(Paracou6_2016$Plot==Paracou6_2016$Plot[1])==FALSE) #all the Plot values are equal?
+    stop ("Your inventory concerns different plots (Plot). Our function simulates logging at the plot level.") 
+  # Remove out-plot trees (A faire)
+  
+
+
+```
+
+# addtreedim
+Fonction d’ajout de variables pour l’INPUT “inventory” :
+INPUT: inventory = InventoryClean (data frame)
+OUTPUT: inventory = Inventory_addtreedim (data frame)
+
+calculer pour tous les arbres : 
+  + TreeBiomass : biomasse de tous les arbres (BIOMASS package)
+  + TreeHeight : hauteur de l’arbre (H) (BIOMASS package)
+  + TreeHarvestableVolume : volume exploitable à partir du tarif de cubage (= a + b*DBH2) que représente chaque arbre (a et b dépendent de la localisation)
+  + TrunkHeight : hauteur de fût (TreeHarvestableVolume  = π(DBH/2)² x TrunkHeight)
+  + CrownDiameter : diamètre de couronne (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺 (allométries de Mélaine)
+  + CrownHeight : TreeHeight - TrunkHeight
+
+```{r TreeHeight}
+library(BIOMASS)
+library(knitr)
+# TreeHeight = hauteur de l’arbre (H) (en mètre) (BIOMASS package)
+# 3 options :
+# - get my tree heights from the location (from continent or region specific model, or from coordinates)
+# - from other Guyanese trees heights data, fit different H-D models, select the best and apply on my data.
+
+RegionTreeHeight <- retrieveH(D = Paracou6_2016$CircCor, region = "GuianaShield") #continent or region specific model (Feldpaush et al. (2012))
+# GuianaShield = Guyana, French Guiana (piste St Elie (Chave 2005)), Venezuela
+
+n <- length(Paracou6_2016$CircCor)
+coord <- cbind(long = rep(-52.92, n), lat = rep(5.27, n)) # Paracou P6 coordinates
+CoordTreeHeight <- retrieveH(D = Paracou6_2016$CircCor, coord = coord) #by coordinates (Chave et al. (2012))
+
+result <- modelHD(D = , H = , useWeight = TRUE) #from Guyanese trees heights data
+kable(result)
+# Compute the local H-D model with the lowest RSE (Root Squared Error)
+selectedHDmodel <- modelHD(D = , H = , method = "log2", useWeight = TRUE)
+
+predictHeight(CircCor, model)
+
+```
+
+
+```{r TreeHarvestableVolume}
+# TreeHarvestableVolume = volume exploitable à partir du tarif de cubage (= a + b*DBH2) que représente chaque arbre (a et b dépendent de la localisation)
+
+ForestZoneVolumeParametersTable <- data.frame (Forest = c("Acarouany","BAFOG","Kaw","Laussat","Montagne Plomb","Montagne Tortue","Nouragues","Organabo","Paracou","Régina St Georges","Risquetout","Tibourou"), # Guyafor forests
+                  Zone = c("East", "West", "Central", "FrenchGuiana")) %>% # Volume formules zones
+  mutate(Zone = ifelse(Forest == "Acarouany"| Forest =="BAFOG" |Forest =="Laussat", "West", NA)) %>% # West zone
+  mutate(Zone = ifelse(Forest == "Montagne Plomb"| Forest =="Organabo"|Forest =="Paracou"|Forest =="Risquetout", "Central", Zone)) %>% # Central zone
+  mutate(Zone = ifelse(Forest == "Kaw"| Forest =="Montagne Tortue"|Forest =="Nouragues"|Forest =="Régina St Georges"|Forest =="Tibourou", "East", Zone)) %>% # East zone
+  left_join(VolumeParametersTable)
+
+
+Paracou6_2016_volume <- Paracou6_2016 %>% 
+  left_join(ForestZoneVolumeParametersTable) %>% 
+mutate(TreeHarvestableVolume = aCoef + bCoef * CircCorr^2) # compute the tree harvestable volume
+
+# West  = c("Acarouany", "BAFOG", "Laussat")
+# Central  = c("Montagne Plomb", "Organabo","Paracou", "Risquetout")
+# East = c("Kaw", "Montagne Tortue","Nouragues", "Régina St Georges", "Tibourou")
+# Guyane = le reste par défaut
+# et possibilité à l'utilisateur de mettre ses propres tarifs
+
+```
+
+
+```{r TrunkHeight & CrownHeight}
+mutate(TrunkHeight = TreeHarvestableVolume/(π(DBH/2)^2)) # compute the trunk height (cylinderVolume= π(DBH/2)² x H)
+mutate(CrownHeight = TreeHeight - TrunkHeight) # compute the crown height
+
+```
+
+```{r}
+spParamCrownDiameter <- ParamCrownDiameterAllometry %>% #parameters at species scale
+  filter(Taxo == "sp") %>% 
+  select(-Family)
+genParamCrownDiameter <- ParamCrownDiameterAllometry %>% #parameters at genus scale
+  filter(Taxo == "gen") %>% 
+  select(-Family, -ScientificName, -Species)
+famParamCrownDiameter <- ParamCrownDiameterAllometry %>% #parameters at family scale
+  filter(Taxo == "fam") %>% 
+  select(-Genus, -ScientificName, -Species)
+
+Paracou6_2016 %>% 
+  sample_n(100) %>% # short data
+  select(idTree, Family, Genus, Species) %>% #only useful columns 
+  left_join(select(spParamCrownDiameter, -Taxo, -ScientificName, -beta), by = c("Genus","Species")) %>% 
+  left_join(select(genParamCrownDiameter, -Taxo, -beta), by = c("Genus"), suffix = c(".species", ".genus")) %>% 
+  left_join(select(famParamCrownDiameter, -Taxo, -beta) %>% 
+              rename(alpha.family = alpha), by = c("Family")) %>% 
+  mutate(alpha = alpha.species) %>% #mutate(alpha = alpha.species,beta = beta.species)
+  mutate(alpha = ifelse(is.na(alpha), alpha.genus, alpha)) %>% 
+  mutate(alpha = ifelse(is.na(alpha), alpha.family, alpha)) %>% 
+  mutate(alpha = ifelse(is.na(alpha), mean(alpha, na.rm =T), alpha)) %>% 
+  select(-alpha.species, -alpha.genus, -alpha.family)
+```
+
+
+```{r CrownDiameter}
+
+spParamCrownDiameter <- ParamCrownDiameterAllometry %>% #parameters at species scale
+  filter(Taxo == "sp") %>% 
+  select(-Family)
+genParamCrownDiameter <- ParamCrownDiameterAllometry %>% #parameters at genus scale
+  filter(Taxo == "gen") %>% 
+  select(-Family, -ScientificName, -Species)
+famParamCrownDiameter <- ParamCrownDiameterAllometry %>% #parameters at family scale
+  filter(Taxo == "fam") %>% 
+  select(-Genus, -ScientificName, -Species)
+
+error <- rnorm(2000, mean = 0, sd = 0.0295966977) #Mélaine's model error distribution (hist(error))
+
+Paracou6_2016_crown <- Paracou6_2016 %>% 
+  unite(Genus, Species, col = "ScientificName", sep = "_", remove = F) %>% 
+  left_join(spParamCrownDiameter, by = c("ScientificName","Genus","Species")) %>% #Add parameters at species scale
+  left_join(genParamCrownDiameter, by = "Genus", suffix = c(".species", ".genus")) %>% #Add parameters at genus scale
+  left_join(famParamCrownDiameter, by = "Family") %>% #Add parameters at family scale
+  
+  rename(Taxo.family = Taxo, alpha.family = alpha, beta.family = beta) %>% 
+  mutate(alpha = alpha.species, beta = beta.species, Taxo = Taxo.species) %>% # create the future & unique alpha,beta,taxo columns 
+  mutate(alpha = ifelse(is.na(alpha), alpha.genus, alpha)) %>% #if species parameters are absent, take genus parameters
+  mutate(alpha = ifelse(is.na(alpha), alpha.family, alpha)) %>% #if species&genus parameters are absent, take family parameters
+  mutate(alpha = ifelse(is.na(alpha), mean(alpha, na.rm =T), alpha)) %>% #if species,genus&family parameters are absent, take parameters mean
+  select(-alpha.species, -alpha.genus, -alpha.family) %>% #remove obsolete columns
+  
+  mutate(beta = ifelse(is.na(beta), beta.genus, beta)) %>% #if species parameters are absent, take genus parameters
+  mutate(beta = ifelse(is.na(beta), beta.family, beta)) %>% #if species&genus parameters are absent, take family parameters
+  mutate(beta = ifelse(is.na(beta), mean(beta, na.rm =T), beta)) %>% #if species,genus&family parameters are absent, take parameters mean
+  select(-beta.species, -beta.genus, -beta.family) %>% #remove obsolete columns
+  
+  mutate(Taxo = ifelse(is.na(Taxo), Taxo.genus, Taxo)) %>% #if species parameters are absent, take genus parameters
+  mutate(Taxo = ifelse(is.na(Taxo), Taxo.family, Taxo)) %>% #if species&genus parameters are absent, take family parameters
+  mutate(Taxo = ifelse(is.na(Taxo), "mean", Taxo)) %>% #if species,genus&family parameters are absent, take parameters mean
+  select(-Taxo.species, -Taxo.genus, -Taxo.family) %>%  #remove obsolete columns
+  mutate(CrownDiameter = exp((
+  (ln(DBH)-alpha-error)/beta)
+  )/TreeHeight) # compute the crown diameter (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977. (Mélaine's allometries))
+
+# Informations:
+# How many individuals have find their Crown diameter parameters at species, genus, family or no scale:
+sum(Paracou6_2016_crown$Taxo == "fam") #442 individuals with family scale parameters
+sum(Paracou6_2016_crown$Taxo == "gen") #742 individuals with genus scale parameters
+sum(Paracou6_2016_crown$Taxo == "sp") #2364 individuals with family scale parameters
+sum(Paracou6_2016_crown$Taxo == "mean") #72 individuals no recognize at any scale, so with plot mean parameters
+
+unique(Paracou6_2016_crown[(Paracou6_2016_crown$Taxo == "mean"),]$ScientificName) #which species are no recognized
+length(unique(Paracou6_2016_crown$ScientificName)) #How many species are in the plot
+```
+
+```{r All addtreedim}
+# allometry parameters data preparation:
+spParamCrownDiameter <- ParamCrownDiameterAllometry %>% #parameters at species scale
+  filter(Taxo == "sp") %>% 
+  select(-Family)
+genParamCrownDiameter <- ParamCrownDiameterAllometry %>% #parameters at genus scale
+  filter(Taxo == "gen") %>% 
+  select(-Family, -ScientificName, -Species)
+famParamCrownDiameter <- ParamCrownDiameterAllometry %>% #parameters at family scale
+  filter(Taxo == "fam") %>% 
+  select(-Genus, -ScientificName, -Species)
+
+error <- rnorm(2000, mean = 0, sd = 0.0295966977) #Mélaine's model error distribution (hist(error))
+
+# Variables computation:
+InventoryAddtreedim <- InventoryClean %>% 
+  
+# TreeHarvestableVolume
+  left_join(ForestZoneVolumeParametersTable) %>% 
+  mutate(TreeHarvestableVolume = aCoef + bCoef * CircCorr^2) %>%  # compute the tree harvestable volume
+
+# TrunkHeight & CrownHeight  
+  mutate(TrunkHeight = TreeHarvestableVolume/(pi*(DBH/2)^2)) %>%  # compute the trunk height (cylinderVolume= π(DBH/2)² x H)
+  # mutate(CrownHeight = TreeHeight - TrunkHeight) %>%  # compute the crown height TREEHEIGHT EN ATTENTE
+
+# CrownDiameter
+  unite(Genus, Species, col = "ScientificName", sep = "_", remove = F) %>% 
+  left_join(spParamCrownDiameter, by = c("ScientificName","Genus","Species")) %>% #Add parameters at species scale
+  left_join(genParamCrownDiameter, by = "Genus", suffix = c(".species", ".genus")) %>% #Add parameters at genus scale
+  left_join(famParamCrownDiameter, by = "Family") %>% #Add parameters at family scale
+  
+  rename(Taxo.family = Taxo, alpha.family = alpha, beta.family = beta) %>% 
+  mutate(alpha = alpha.species, beta = beta.species, Taxo = Taxo.species) %>% # create the future & unique alpha,beta,taxo columns 
+  mutate(alpha = ifelse(is.na(alpha), alpha.genus, alpha)) %>% #if species parameters are absent, take genus parameters
+  mutate(alpha = ifelse(is.na(alpha), alpha.family, alpha)) %>% #if species&genus parameters are absent, take family parameters
+  mutate(alpha = ifelse(is.na(alpha), mean(alpha, na.rm =T), alpha)) %>% #if species,genus&family parameters are absent, take parameters mean
+  select(-alpha.species, -alpha.genus, -alpha.family) %>% #remove obsolete columns
+  
+  mutate(beta = ifelse(is.na(beta), beta.genus, beta)) %>% #if species parameters are absent, take genus parameters
+  mutate(beta = ifelse(is.na(beta), beta.family, beta)) %>% #if species&genus parameters are absent, take family parameters
+  mutate(beta = ifelse(is.na(beta), mean(beta, na.rm =T), beta)) %>% #if species,genus&family parameters are absent, take parameters mean
+  select(-beta.species, -beta.genus, -beta.family) %>% #remove obsolete columns
+  
+  mutate(Taxo = ifelse(is.na(Taxo), Taxo.genus, Taxo)) %>% #if species parameters are absent, take genus parameters
+  mutate(Taxo = ifelse(is.na(Taxo), Taxo.family, Taxo)) %>% #if species&genus parameters are absent, take family parameters
+  mutate(Taxo = ifelse(is.na(Taxo), "mean", Taxo)) %>% #if species,genus&family parameters are absent, take parameters mean
+  select(-Taxo.species, -Taxo.genus, -Taxo.family) %>%  #remove obsolete columns
+  # mutate(CrownDiameter = exp((
+  # (ln(DBH)-alpha-error)/beta)
+  # )/TreeHeight) # compute the crown diameter (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977. (Mélaine's allometries))
+  
+#                                                !!!!!!!TREEHEIGHT EN ATTENTE!!!!!!
+
 ```
 
