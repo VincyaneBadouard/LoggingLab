@@ -6,21 +6,34 @@ output: html_document
 ---
 
 ```{r}
+library(readr)
 library(dplyr)
 library(tibble)
 library(tidyr)
 ```
 
-```{r}
+```{r ParamCrownDiameterAllometry table code}
 ParamCrownDiameterAllometry <- read_delim("D:/VSC Kourou/DATA/ParamCrownDiameterAllometry.csv", 
     ";", escape_double = FALSE, col_types = cols(alpha = col_number(), 
         beta = col_number()), locale = locale(decimal_mark = ","), 
     trim_ws = TRUE) %>%
   separate(ScientificName, sep = "_", into = c("Genus", "Species"), remove = F) %>% 
   mutate(Family = ifelse(Taxo == "fam", Genus, NA)) %>% 
-  mutate(Genus = ifelse(is.na(Family), Genus, NA))
+  mutate(Genus = ifelse(is.na(Family), Genus, NA)) 
   
 usethis::use_data(ParamCrownDiameterAllometry)
+```
+
+```{r SpeciesCriteria table code}
+SpeciesCriteria <- read_delim("D:/VSC Kourou/DATA/SpeciesCriteria.csv", 
+    ";", escape_double = FALSE, col_types = cols(Commercial = col_factor(levels = c("1", 
+        "2")), MinFD = col_number(), UpMinFD = col_number(), 
+        MaxFD = col_number()), locale = locale(encoding = "Latin1"), 
+    trim_ws = TRUE) %>% 
+  separate(ScientificName, sep = " ", into = c("Genus", "Species"), remove = T) %>% 
+  unite(Genus, Species, col = "ScientificName", sep = "_", remove = F)
+
+usethis::use_data(SpeciesCriteria)
 ```
 
 # Data loading
@@ -55,6 +68,66 @@ BrokenParacou6_2016[5, "Plot"] <- "100" # a tree in another plot
 
 
 # pour l'enregistrer : usethis::use_data(BrokenParacou6_2016) puis le move dans ins/exdata
+```
+
+# My custom options
+faut ptetre mettre Maria. devant  chaque objet!
+```{r}
+# Mimimum DBH value = 10 cm
+# Maximum area slope = 27%
+# Maximum main&2nd trail centerline slope = 22%
+# Maximum main&2nd trail cross slope = 4%
+# Grapple maximum slope = 20%
+# Trees slope = 22%
+# Plateau maximum slope = 5%
+# Distance to compute slope = 6 m (3m for each side)
+# water sources buffer zone = 30 m
+# Main trail width = 5-6 m
+# 2nd trail width = 4 m
+# Big trees = 50 cm
+# Objective bonus = 20-30%
+# Cable = 40 m
+# Grapple = 6 m
+# Isolate tree minimum distance = 100 m
+# Future trees minimum diameter = 35 cm
+# TreefallSuccess proportion = 0.6
+# Treefall orientation = 30-45◦
+# (Hollow) Part taken from hollow trees for fuel exploitation = 1/3
+# Purge = 0.14
+# Maximum TrailDensity = 200 m/ha
+# Maximum landing area = 1 500 m^2
+
+
+# TrunkHeight formule : TrunkHeight = TreeHarvestableVolume/(pi*(((DBH/100)/2)^2))
+# CrownDiameter formule : CrownDiameter = exp(((ln(DBH)-alpha-error)/beta))/TreeHeight
+# RottenModel
+
+pars <- list(MinDBHValue = 10, #in cm
+  MaxAreaSlope = 27, #in %
+  MaxTrailCenterlineSlope = 22, #in %
+  MaxTrailCrossSlope = 4, #in %
+  GrappleMaxslope = 20, #in %
+  TreeMaxSlope = 22, #in %
+  PlateauMaxSlope = 5, #in %
+  SlopeDistance = 6, #in m (3m for each side)
+  WaterSourcesBufferZone = 30, #in m
+  MainTrailWidth = 5-6, #in m
+  "2ndTrailWidth" = 4, #in m
+  BigTrees = 50, #in cm
+  ObjectiveBonus = 20-30, #in % (ObjectiveBonus >= 20 && ObjectiveBonus =< 30 ou c(20:30))
+  CableLength = 40, #in m
+  GrappleLength = 6, #in m
+  IsolateTreeMinDistance = 100, #in m
+  FutureTreesMinDiameter = 35, #in cm
+  TreefallSuccessProportion = 0.6,
+  TreefallOrientation = 30-45, #in degree (◦)
+  TreeHollowPartForFuel = 1/3, #(Hollow) Part taken from hollow trees for fuel exploitation
+  Purge = 0.14, # in m^3 of fuelwood/m^3 of logged trees  
+  MaxTrailDensity = 200, #in m/ha
+  MaxLandingArea = 1500, #in square meters
+  TrunkHeightAllometry = TreeHarvestableVolume/(pi*(((DBH/100)/2)^2)),
+CrownDiameterAllometry = exp(((ln(DBH)-alpha-error)/beta))/TreeHeight,
+RottenModel = ) 
 ```
 
 
@@ -304,7 +377,7 @@ all(Paracou6_2016$Plot==Paracou6_2016$Plot[1]) #all the Plot values are equal?
 
 ```{r}
 
-if (!("DBH" %in% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA) #if DBH doesn't exist create it
+if (!("DBH" %in% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA) #if DBH (cm) doesn't exist create it
    Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
 
 InventoryClean <- Paracou6_2016 %>% 
@@ -483,15 +556,15 @@ error <- rnorm(2000, mean = 0, sd = 0.0295966977) #Mélaine's model error distri
 # Variables computation:
 InventoryAddtreedim <- InventoryClean %>% 
   
-# TreeHarvestableVolume
+# TreeHarvestableVolume (m^3)
   left_join(ForestZoneVolumeParametersTable) %>% 
-  mutate(TreeHarvestableVolume = aCoef + bCoef * CircCorr^2) %>%  # compute the tree harvestable volume
+  mutate(TreeHarvestableVolume = aCoef + bCoef * (DBH/100)^2) %>%  # compute the tree harvestable volume
 
-# TrunkHeight & CrownHeight  
-  mutate(TrunkHeight = TreeHarvestableVolume/(pi*(DBH/2)^2)) %>%  # compute the trunk height (cylinderVolume= π(DBH/2)² x H)
+# TrunkHeight & CrownHeight (m)
+  mutate(TrunkHeight = TreeHarvestableVolume/(pi*(((DBH/100)/2)^2))) %>%  # compute the trunk height (cylinderVolume= π(DBH/2)² x H) DBH in cm, in m in the formule.
   # mutate(CrownHeight = TreeHeight - TrunkHeight) %>%  # compute the crown height TREEHEIGHT EN ATTENTE
 
-# CrownDiameter
+# CrownDiameter (m)
   unite(Genus, Species, col = "ScientificName", sep = "_", remove = F) %>% 
   left_join(spParamCrownDiameter, by = c("ScientificName","Genus","Species")) %>% #Add parameters at species scale
   left_join(genParamCrownDiameter, by = "Genus", suffix = c(".species", ".genus")) %>% #Add parameters at genus scale
@@ -512,7 +585,7 @@ InventoryAddtreedim <- InventoryClean %>%
   mutate(Taxo = ifelse(is.na(Taxo), Taxo.genus, Taxo)) %>% #if species parameters are absent, take genus parameters
   mutate(Taxo = ifelse(is.na(Taxo), Taxo.family, Taxo)) %>% #if species&genus parameters are absent, take family parameters
   mutate(Taxo = ifelse(is.na(Taxo), "mean", Taxo)) %>% #if species,genus&family parameters are absent, take parameters mean
-  select(-Taxo.species, -Taxo.genus, -Taxo.family) %>%  #remove obsolete columns
+  select(-Taxo.species, -Taxo.genus, -Taxo.family) #remove obsolete columns
   # mutate(CrownDiameter = exp((
   # (ln(DBH)-alpha-error)/beta)
   # )/TreeHeight) # compute the crown diameter (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977. (Mélaine's allometries))

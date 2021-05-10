@@ -21,7 +21,7 @@ cleaninventory <- function(
   # inventory <- Paracou6_2016
   # rm(Paracou6_2016)
 
-if (!("DBH" %in% names(inventory))) {add_column(inventory, DBH = NA) #if DBH doesn't exist create it
+if (!("DBH" %in% names(inventory))) {add_column(inventory, DBH = NA) #if DBH (cm) doesn't exist create it
     inventory$DBH = inventory$CircCorr/pi} # and compute it
 
   inventory <- inventory %>%

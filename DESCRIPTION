@@ -5,18 +5,23 @@ Authors@R:
     c(person(given = "Vincyane",
            family = "Badouard",
            role = c("aut", "cre"),
-           email = "vincyane.badouard@gmail.com",
-           comment = c(ORCID = "YOUR-ORCID-ID")),
+           email = "vincyane.badouard@gmail.com"),
+      person(given = "Guillaume",
+           family = "Salzet",
+           role = "aut",
+           email = "Guillaume.Salzet@ecofog.gf"),
+      person(given = "Thomas",
+           family = "Gaquiere",
+           role = "aut",
+           email = "gaquiere.thomas@yahoo.com "),
       person(given = "Géraldine",
            family = "Derroire",
            role = "ctb",
-           email = "geraldine.derroire@cirad.fr",
-           comment = c(ORCID = "YOUR-ORCID-ID")),
+           email = "geraldine.derroire@cirad.fr"),
       person(given = "Sylvain",
            family = "Schmitt",
            role = "ctb",
-           email = "sylvain.m.schmitt@gmail.com ",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           email = "sylvain.m.schmitt@gmail.com ")
            )
 Description: This package allows to simulate conventional or low impact logging.
 URL: https://github.com/VincyaneBadouard/Maria.git
