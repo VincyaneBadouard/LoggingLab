@@ -6,6 +6,7 @@ output: html_document
 ---
 
 ```{r}
+library(Maria)
 library(readr)
 library(dplyr)
 library(tibble)
@@ -410,24 +411,78 @@ calculer pour tous les arbres :
 ```{r TreeHeight}
 library(BIOMASS)
 library(knitr)
+if (!("DBH" %in% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA) #if DBH (cm) doesn't exist create it
+   Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
 # TreeHeight = hauteur de l’arbre (H) (en mètre) (BIOMASS package)
 # 3 options :
 # - get my tree heights from the location (from continent or region specific model, or from coordinates)
 # - from other Guyanese trees heights data, fit different H-D models, select the best and apply on my data.
 
-RegionTreeHeight <- retrieveH(D = Paracou6_2016$CircCor, region = "GuianaShield") #continent or region specific model (Feldpaush et al. (2012))
+RegionTreeHeight <- retrieveH(D = Paracou6_2016$DBH, region = "GuianaShield") #continent or region specific model (Feldpaush et al. (2012))
 # GuianaShield = Guyana, French Guiana (piste St Elie (Chave 2005)), Venezuela
 
 n <- length(Paracou6_2016$CircCor)
 coord <- cbind(long = rep(-52.92, n), lat = rep(5.27, n)) # Paracou P6 coordinates
-CoordTreeHeight <- retrieveH(D = Paracou6_2016$CircCor, coord = coord) #by coordinates (Chave et al. (2012))
+CoordTreeHeight <- retrieveH(D = Paracou6_2016$DBH, coord = coord) #by coordinates (Chave et al. (2012))
 
-result <- modelHD(D = , H = , useWeight = TRUE) #from Guyanese trees heights data
-kable(result)
-# Compute the local H-D model with the lowest RSE (Root Squared Error)
-selectedHDmodel <- modelHD(D = , H = , method = "log2", useWeight = TRUE)
+# Just with Nouragues data (measurement: laser rangefinder):
+ModelsresultNouraguesdata <- modelHD(
+  D = NouraguesHD$D,
+  H = NouraguesHD$H,
+  useWeight = TRUE
+)
+kable(ModelsresultNouraguesdata) #log2 has the lowest RSE (4.222718) (Root Squared Error)
+HDmodelNouraguesdata <- modelHD(
+  D = NouraguesHD$D,
+  H = NouraguesHD$H,
+  method = "log2", # Compute the local H-D model with the lowest RSE.
+  useWeight = TRUE
+)
+TreeHeightEstimation <- retrieveH(
+  D = Paracou6_2016$DBH,
+  model = HDmodelNouraguesdata
+)
+## Put these tree heights estimations in the inventory
+Paracou6_2016TreeHeight <- Paracou6_2016 %>% 
+mutate(TreeHeight = TreeHeightEstimation$H)
+plot(Paracou6_2016TreeHeight$DBH, Paracou6_2016TreeHeight$TreeHeight)#amazing !! It's a log2 form
 
-predictHeight(CircCor, model)
+
+# Different guyanese data:
+TreeheightGuyafordata <- read_delim("D:/VSC Kourou/DATA/TreeheightGuyafordata.csv", 
+    ";", escape_double = FALSE, col_types = cols(Circ = col_number(), 
+        CircCorr = col_number(), Hauteur = col_number()), 
+    locale = locale(encoding = "Latin1"), 
+    trim_ws = TRUE) %>% 
+  # filter(!(HeightHow == "Visual Estimate" | HeightHow == "Visual estimate"))
+    filter(HeightHow == "Sine Method (Larjavaara & Muller-Landau 2013) with Trimble LaserAce 1000 Rangefinder")
+if (!("DBH" %in% names(TreeheightGuyafordata))) {add_column(TreeheightGuyafordata, DBH = NA) #if DBH (cm) doesn't exist create it
+   TreeheightGuyafordata$DBH = TreeheightGuyafordata$CircCorr/pi} # and compute it
+
+unique(TreeheightGuyafordata$HeightHow)
+
+ModelsresultGuiana <- modelHD(
+  D = TreeheightGuyafordata$DBH,
+  H = TreeheightGuyafordata$Hauteur,
+  useWeight = TRUE
+)
+kable(ModelsresultGuiana) #log2 has the lowest RSE (4.749107 with all data, 4.316927 without "Visual E/estimate", 3.059860 with just "Sine Method")
+#Don't forget, you have the model form, and its parameters, and there are different according to the data.
+
+HDmodelGuiana <- modelHD(
+  D = TreeheightGuyafordata$DBH,
+  H = TreeheightGuyafordata$Hauteur,
+  method = "log2", # Compute the local H-D model with the lowest RSE.
+  useWeight = TRUE
+)
+TreeHeightGuianaEstimation <- retrieveH(
+  D = Paracou6_2016$DBH,
+  model = HDmodelGuiana
+)
+## Put these tree heights estimations in the inventory
+Paracou6_2016TreeHeight <- Paracou6_2016 %>% 
+mutate(TreeHeight = TreeHeightGuianaEstimation$H)
+plot(Paracou6_2016TreeHeight$DBH, Paracou6_2016TreeHeight$TreeHeight)#amazing !! It's a log2 form
 
 ```
 
