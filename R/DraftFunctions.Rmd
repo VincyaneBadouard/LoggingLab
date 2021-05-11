@@ -6,6 +6,7 @@ output: html_document
 ---
 
 ```{r}
+library(Maria)
 library(readr)
 library(dplyr)
 library(tibble)
@@ -99,7 +100,7 @@ faut ptetre mettre Maria. devant  chaque objet!
 
 
 # TrunkHeight formule : TrunkHeight = TreeHarvestableVolume/(pi*(((DBH/100)/2)^2))
-# CrownDiameter formule : CrownDiameter = exp(((ln(DBH)-alpha-error)/beta))/TreeHeight
+# CrownDiameter formule : CrownDiameter = exp(((log(DBH)-alpha-error)/beta))/TreeHeight
 # RottenModel
 
 pars <- list(MinDBHValue = 10, #in cm
@@ -126,7 +127,7 @@ pars <- list(MinDBHValue = 10, #in cm
   MaxTrailDensity = 200, #in m/ha
   MaxLandingArea = 1500, #in square meters
   TrunkHeightAllometry = TreeHarvestableVolume/(pi*(((DBH/100)/2)^2)),
-CrownDiameterAllometry = exp(((ln(DBH)-alpha-error)/beta))/TreeHeight,
+CrownDiameterAllometry = exp(((log(DBH)-alpha-error)/beta))/TreeHeight,
 RottenModel = ) 
 ```
 
@@ -410,24 +411,78 @@ calculer pour tous les arbres :
 ```{r TreeHeight}
 library(BIOMASS)
 library(knitr)
+if (!("DBH" %in% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA) #if DBH (cm) doesn't exist create it
+   Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
 # TreeHeight = hauteur de l’arbre (H) (en mètre) (BIOMASS package)
 # 3 options :
 # - get my tree heights from the location (from continent or region specific model, or from coordinates)
 # - from other Guyanese trees heights data, fit different H-D models, select the best and apply on my data.
 
-RegionTreeHeight <- retrieveH(D = Paracou6_2016$CircCor, region = "GuianaShield") #continent or region specific model (Feldpaush et al. (2012))
+RegionTreeHeight <- retrieveH(D = Paracou6_2016$DBH, region = "GuianaShield") #continent or region specific model (Feldpaush et al. (2012))
 # GuianaShield = Guyana, French Guiana (piste St Elie (Chave 2005)), Venezuela
 
 n <- length(Paracou6_2016$CircCor)
 coord <- cbind(long = rep(-52.92, n), lat = rep(5.27, n)) # Paracou P6 coordinates
-CoordTreeHeight <- retrieveH(D = Paracou6_2016$CircCor, coord = coord) #by coordinates (Chave et al. (2012))
+CoordTreeHeight <- retrieveH(D = Paracou6_2016$DBH, coord = coord) #by coordinates (Chave et al. (2012))
 
-result <- modelHD(D = , H = , useWeight = TRUE) #from Guyanese trees heights data
-kable(result)
-# Compute the local H-D model with the lowest RSE (Root Squared Error)
-selectedHDmodel <- modelHD(D = , H = , method = "log2", useWeight = TRUE)
+# Just with Nouragues data (measurement: laser rangefinder):
+ModelsresultNouraguesdata <- modelHD(
+  D = NouraguesHD$D,
+  H = NouraguesHD$H,
+  useWeight = TRUE
+)
+kable(ModelsresultNouraguesdata) #log2 has the lowest RSE (4.222718) (Root Squared Error)
+HDmodelNouraguesdata <- modelHD(
+  D = NouraguesHD$D,
+  H = NouraguesHD$H,
+  method = "log2", # Compute the local H-D model with the lowest RSE.
+  useWeight = TRUE
+)
+TreeHeightEstimation <- retrieveH(
+  D = Paracou6_2016$DBH,
+  model = HDmodelNouraguesdata
+)
+## Put these tree heights estimations in the inventory
+Paracou6_2016TreeHeight <- Paracou6_2016 %>% 
+mutate(TreeHeight = TreeHeightEstimation$H)
+plot(Paracou6_2016TreeHeight$DBH, Paracou6_2016TreeHeight$TreeHeight)#amazing !! It's a log2 form
 
-predictHeight(CircCor, model)
+
+# Different guyanese data:
+TreeheightGuyafordata <- read_delim("D:/VSC Kourou/DATA/TreeheightGuyafordata.csv", 
+    ";", escape_double = FALSE, col_types = cols(Circ = col_number(), 
+        CircCorr = col_number(), Hauteur = col_number()), 
+    locale = locale(encoding = "Latin1"), 
+    trim_ws = TRUE) %>% 
+  # filter(!(HeightHow == "Visual Estimate" | HeightHow == "Visual estimate"))
+    filter(HeightHow == "Sine Method (Larjavaara & Muller-Landau 2013) with Trimble LaserAce 1000 Rangefinder")
+if (!("DBH" %in% names(TreeheightGuyafordata))) {add_column(TreeheightGuyafordata, DBH = NA) #if DBH (cm) doesn't exist create it
+   TreeheightGuyafordata$DBH = TreeheightGuyafordata$CircCorr/pi} # and compute it
+
+unique(TreeheightGuyafordata$HeightHow)
+
+ModelsresultGuiana <- modelHD(
+  D = TreeheightGuyafordata$DBH,
+  H = TreeheightGuyafordata$Hauteur,
+  useWeight = TRUE
+)
+kable(ModelsresultGuiana) #log2 has the lowest RSE (4.749107 with all data, 4.316927 without "Visual E/estimate", 3.059860 with just "Sine Method")
+#Don't forget, you have the model form, and its parameters, and there are different according to the data.
+
+HDmodelGuiana <- modelHD(
+  D = TreeheightGuyafordata$DBH,
+  H = TreeheightGuyafordata$Hauteur,
+  method = "log2", # Compute the local H-D model with the lowest RSE.
+  useWeight = TRUE
+)
+TreeHeightGuianaEstimation <- retrieveH(
+  D = Paracou6_2016$DBH,
+  model = HDmodelGuiana
+)
+## Put these tree heights estimations in the inventory
+Paracou6_2016TreeHeight <- Paracou6_2016 %>% 
+mutate(TreeHeight = TreeHeightGuianaEstimation$H)
+plot(Paracou6_2016TreeHeight$DBH, Paracou6_2016TreeHeight$TreeHeight)#amazing !! It's a log2 form
 
 ```
 
@@ -525,7 +580,7 @@ Paracou6_2016_crown <- Paracou6_2016 %>%
   mutate(Taxo = ifelse(is.na(Taxo), "mean", Taxo)) %>% #if species,genus&family parameters are absent, take parameters mean
   select(-Taxo.species, -Taxo.genus, -Taxo.family) %>%  #remove obsolete columns
   mutate(CrownDiameter = exp((
-  (ln(DBH)-alpha-error)/beta)
+  (log(DBH)-alpha-error)/beta)
   )/TreeHeight) # compute the crown diameter (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977. (Mélaine's allometries))
 
 # Informations:
@@ -538,6 +593,11 @@ sum(Paracou6_2016_crown$Taxo == "mean") #72 individuals no recognize at any scal
 unique(Paracou6_2016_crown[(Paracou6_2016_crown$Taxo == "mean"),]$ScientificName) #which species are no recognized
 length(unique(Paracou6_2016_crown$ScientificName)) #How many species are in the plot
 ```
+#' @examples
+#' data(Paracou6_2016)
+#' if (!("DBH" %in% names(inventory))) {add_column(inventory, DBH = NA) #if DBH doesn't exist create it
+#' inventory$DBH = inventory$CircCorr/pi} # and compute it
+#' cleaninventory(inventory = Paracou6_2016)
 
 ```{r All addtreedim}
 # allometry parameters data preparation:
@@ -587,8 +647,8 @@ InventoryAddtreedim <- InventoryClean %>%
   mutate(Taxo = ifelse(is.na(Taxo), "mean", Taxo)) %>% #if species,genus&family parameters are absent, take parameters mean
   select(-Taxo.species, -Taxo.genus, -Taxo.family) #remove obsolete columns
   # mutate(CrownDiameter = exp((
-  # (ln(DBH)-alpha-error)/beta)
-  # )/TreeHeight) # compute the crown diameter (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977. (Mélaine's allometries))
+  # (log(DBH)-alpha-error)/beta)
+  # )/TreeHeight) # compute the crown diameter (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977. (Mélaine's allometries)) # Mettre finalement l'objet créé dans le zzz.R
   
 #                                                !!!!!!!TREEHEIGHT EN ATTENTE!!!!!!
 
