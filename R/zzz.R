@@ -6,7 +6,6 @@ NULL
   packageStartupMessage('Welcome to the ForestLogging package.')
 }
 
-
 .onLoad <- function(libname, pkgname) {
   op <- options() #Get the current options from the envmt and store them in op
   op.Maria <- list( # creation of objects (future options)
