@@ -18,27 +18,43 @@ cleaninventory <- function(
 ){
 
   # # to test inside the function
-  # rm(list = ls())
+  # rm(list = ls()) #vider l'envmt
   # data(Paracou6_2016)
   # inventory <- Paracou6_2016
   # rm(Paracou6_2016)
 
-if (!("DBH" %in% names(inventory))) {add_column(inventory, DBH = NA) #if DBH (cm) doesn't exist create it
-    inventory$DBH = inventory$CircCorr/pi} # and compute it
+  if (!("DBH" %in% names(inventory))) {add_column(inventory, DBH = NA) #if DBH (cm) doesn't exist create it
+    inventory$DBH <- inventory$CircCorr/pi} # and compute it
 
   inventory <- inventory %>%
     filter(CodeAlive == "TRUE") %>% #only alive trees
     filter(DBH >= 10) # DBH >= 10, Circ = perimeter of the circle =! diameter !
 
-  if (any(duplicated(inventory$idTree)))
-    stop ("Tree identifiers (idTree) are not unique.") # stop function if the tree identifiers (idTree) are not unique
+  GoodData <- TRUE # usefull boolean for later
+
+  GeneralStop <- "" # empty character string to stock all the warnings
+
+  if (any(duplicated(inventory$idTree))) {
+    GoodData <- FALSE
+    GeneralStop <- paste (GeneralStop, "Tree identifiers (idTree) are not unique.")# stop function if the tree identifiers (idTree) are not unique
+  }
 
   # length(unique(inventory$Plot)) == 1
-  if (!all(inventory$Plot == inventory$Plot[1])) #all the Plot values are equal?
-    stop ("Your inventory concerns different plots (Plot). Our function simulates logging at the plot level.")
+  if (!length(unique(inventory$Plot))== 1){ #all the Plot values are equal?
+    GoodData <- FALSE
+    GeneralStop <- paste (GeneralStop,"Your inventory concerns different plots (Plot). Our function simulates logging at the plot level.")
+  }
 
-  if (!length(unique(inventory$Plot))== 1) #all is the same year?
-    stop ("Your inventory concerns different years (CensusYear). Our function simulates logging at 1 year scale.")
+  if (!length(unique(inventory$CensusYear))== 1) {#all is the same year?
+    GoodData <- FALSE
+    GeneralStop <- paste (GeneralStop,"Your inventory concerns different years (CensusYear). Our function simulates logging at 1 year scale.")
+  }
+
+  if (!GoodData)# inverse value of the object
+    stop(paste ("Your inventory does not comply", GeneralStop))
+
+
+  return(inventory)
 
   # Remove out-plot trees (A faire)
 }

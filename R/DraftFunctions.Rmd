@@ -11,26 +11,27 @@ library(readr)
 library(dplyr)
 library(tibble)
 library(tidyr)
+library(schoolmath)
 ```
 
 ```{r ParamCrownDiameterAllometry table code}
 ParamCrownDiameterAllometry <- read_delim("D:/VSC Kourou/DATA/ParamCrownDiameterAllometry.csv", 
-    ";", escape_double = FALSE, col_types = cols(alpha = col_number(), 
-        beta = col_number()), locale = locale(decimal_mark = ","), 
-    trim_ws = TRUE) %>%
+                                          ";", escape_double = FALSE, col_types = cols(alpha = col_number(), 
+                                                                                       beta = col_number()), locale = locale(decimal_mark = ","), 
+                                          trim_ws = TRUE) %>%
   separate(ScientificName, sep = "_", into = c("Genus", "Species"), remove = F) %>% 
   mutate(Family = ifelse(Taxo == "fam", Genus, NA)) %>% 
   mutate(Genus = ifelse(is.na(Family), Genus, NA)) 
-  
+
 usethis::use_data(ParamCrownDiameterAllometry)
 ```
 
 ```{r SpeciesCriteria table code}
 SpeciesCriteria <- read_delim("D:/VSC Kourou/DATA/SpeciesCriteria.csv", 
-    ";", escape_double = FALSE, col_types = cols(Commercial = col_factor(levels = c("1", 
-        "2")), MinFD = col_number(), UpMinFD = col_number(), 
-        MaxFD = col_number()), locale = locale(encoding = "Latin1"), 
-    trim_ws = TRUE) %>% 
+                              ";", escape_double = FALSE, col_types = cols(Commercial = col_factor(levels = c("1", 
+                                                                                                              "2")), MinFD = col_number(), UpMinFD = col_number(), 
+                                                                           MaxFD = col_number()), locale = locale(encoding = "Latin1"), 
+                              trim_ws = TRUE) %>% 
   separate(ScientificName, sep = " ", into = c("Genus", "Species"), remove = T) %>% 
   unite(Genus, Species, col = "ScientificName", sep = "_", remove = F)
 
@@ -51,8 +52,6 @@ lapply(Paracou6_2016, class) #give the class of all the data variables
 # Create a broken dataset
 ```{r Create a broken dataset}
 #in inst/extdata
-library(schoolmath)
-library(dplyr)
 
 BrokenParacou6_2016 <- Paracou6_2016 %>% 
   select(-Species) %>% # missing column
@@ -64,8 +63,8 @@ BrokenParacou6_2016 <- Paracou6_2016 %>%
   mutate(CodeAlive = ifelse(is.even(Paracou6_2016$idTree), "FALSE", CodeAlive)) %>% # Some FALSE in CodeAlive
   mutate(CensusYear = ifelse(is.even(Paracou6_2016$idTree), CensusYear, CensusYear+1)) # different years inventory
 BrokenParacou6_2016[1:3, "idTree"] <- "200" # create a 2 time present tree
-BrokenParacou6_2016[4, "CircCorr"] <- "6" # DBH < 10
-BrokenParacou6_2016[5, "Plot"] <- "100" # a tree in another plot
+BrokenParacou6_2016[4, "CircCorr"] <- 6 # DBH < 10
+BrokenParacou6_2016[5, "PLOT"] <- "100" # a tree in another plot
 
 
 # pour l'enregistrer : usethis::use_data(BrokenParacou6_2016) puis le move dans ins/exdata
@@ -104,31 +103,31 @@ faut ptetre mettre Maria. devant  chaque objet!
 # RottenModel
 
 pars <- list(MinDBHValue = 10, #in cm
-  MaxAreaSlope = 27, #in %
-  MaxTrailCenterlineSlope = 22, #in %
-  MaxTrailCrossSlope = 4, #in %
-  GrappleMaxslope = 20, #in %
-  TreeMaxSlope = 22, #in %
-  PlateauMaxSlope = 5, #in %
-  SlopeDistance = 6, #in m (3m for each side)
-  WaterSourcesBufferZone = 30, #in m
-  MainTrailWidth = 5-6, #in m
-  "2ndTrailWidth" = 4, #in m
-  BigTrees = 50, #in cm
-  ObjectiveBonus = 20-30, #in % (ObjectiveBonus >= 20 && ObjectiveBonus =< 30 ou c(20:30))
-  CableLength = 40, #in m
-  GrappleLength = 6, #in m
-  IsolateTreeMinDistance = 100, #in m
-  FutureTreesMinDiameter = 35, #in cm
-  TreefallSuccessProportion = 0.6,
-  TreefallOrientation = 30-45, #in degree (◦)
-  TreeHollowPartForFuel = 1/3, #(Hollow) Part taken from hollow trees for fuel exploitation
-  Purge = 0.14, # in m^3 of fuelwood/m^3 of logged trees  
-  MaxTrailDensity = 200, #in m/ha
-  MaxLandingArea = 1500, #in square meters
-  TrunkHeightAllometry = TreeHarvestableVolume/(pi*(((DBH/100)/2)^2)),
-CrownDiameterAllometry = exp(((log(DBH)-alpha-error)/beta))/TreeHeight,
-RottenModel = ) 
+             MaxAreaSlope = 27, #in %
+             MaxTrailCenterlineSlope = 22, #in %
+             MaxTrailCrossSlope = 4, #in %
+             GrappleMaxslope = 20, #in %
+             TreeMaxSlope = 22, #in %
+             PlateauMaxSlope = 5, #in %
+             SlopeDistance = 6, #in m (3m for each side)
+             WaterSourcesBufferZone = 30, #in m
+             MainTrailWidth = 5-6, #in m
+             "2ndTrailWidth" = 4, #in m
+             BigTrees = 50, #in cm
+             ObjectiveBonus = 20-30, #in % (ObjectiveBonus >= 20 && ObjectiveBonus =< 30 ou c(20:30))
+             CableLength = 40, #in m
+             GrappleLength = 6, #in m
+             IsolateTreeMinDistance = 100, #in m
+             FutureTreesMinDiameter = 35, #in cm
+             TreefallSuccessProportion = 0.6,
+             TreefallOrientation = 30-45, #in degree (◦)
+             TreeHollowPartForFuel = 1/3, #(Hollow) Part taken from hollow trees for fuel exploitation
+             Purge = 0.14, # in m^3 of fuelwood/m^3 of logged trees  
+             MaxTrailDensity = 200, #in m/ha
+             MaxLandingArea = 1500, #in square meters
+             TrunkHeightAllometry = TreeHarvestableVolume/(pi*(((DBH/100)/2)^2)),
+             CrownDiameterAllometry = exp(((log(DBH)-alpha-error)/beta))/TreeHeight,
+             RottenModel = ) 
 ```
 
 
@@ -151,7 +150,7 @@ Sinon Message : “Votre format de données renseignés à l’argument “inven
 
 'pouet' %in% names(Paracou6_2016)
 if (!is.null(Paracou6_2016$pouet)) 
-    stop("pouet variable should be an integer.")
+  stop("pouet variable should be an integer.")
 
 ```
 
@@ -160,92 +159,92 @@ if (!is.null(Paracou6_2016$pouet))
 if(!("Plot" %in% names(Paracou6_2016)))
   stop("Plot variable is not found")
 if(!("CensusYear" %in% names(Paracou6_2016)))
-    stop("CensusYear variable is not found")
+  stop("CensusYear variable is not found")
 if(!("idTree" %in% names(Paracou6_2016)))
-    stop("idTree variable is not found")
+  stop("idTree variable is not found")
 if(!("Family" %in% names(Paracou6_2016)))
-    stop("Family variable is not found")
+  stop("Family variable is not found")
 if(!("Genus" %in% names(Paracou6_2016)))
-    stop("Genus variable is not found")
+  stop("Genus variable is not found")
 if(!("Species" %in% names(Paracou6_2016)))
-    stop("Species variable is not found")
+  stop("Species variable is not found")
 if(!("CircCorr" %in% names(Paracou6_2016)))
   stop("CircCorr variable is not found")
 if(!("CodeAlive" %in% names(Paracou6_2016)))
-    stop("CodeAlive variable is not found")
+  stop("CodeAlive variable is not found")
 if(!("CommercialSp" %in% names(Paracou6_2016)))
-    stop("CommercialSp variable is not found")
+  stop("CommercialSp variable is not found")
 if(!("UTMZone" %in% names(Paracou6_2016)))
-    stop("UTMZone variable is not found")
+  stop("UTMZone variable is not found")
 if(!('Lat' %in% names(Paracou6_2016)))
-    stop("Lat variable is not found")
+  stop("Lat variable is not found")
 if(!('Lon' %in% names(Paracou6_2016)))
-    stop("Lon variable is not found")
+  stop("Lon variable is not found")
 if(!('VernName' %in% names(Paracou6_2016)))
-    stop("VernName variable is not found")
+  stop("VernName variable is not found")
 if(!('Xfield' %in% names(Paracou6_2016)))
-    stop("Xfield variable is not found")
+  stop("Xfield variable is not found")
 if(!('Yfield' %in% names(Paracou6_2016)))
-    stop("Yfield variable is not found")
+  stop("Yfield variable is not found")
 if(!('Xutm' %in% names(Paracou6_2016)))
-    stop("Xutm variable is not found")
+  stop("Xutm variable is not found")
 if(!('Yutm' %in% names(Paracou6_2016)))
-    stop("Yutm variable is not found")
+  stop("Yutm variable is not found")
 
 ```
 
 ```{r}
 # Variables class check
- if (!inherits(Paracou6_2016$idTree, "integer") && !is.null(idTree)) #majuscule ?
-    stop("idTree variable should be an integer.")
+if (!inherits(Paracou6_2016$idTree, "integer") && !is.null(idTree)) #majuscule ?
+  stop("idTree variable should be an integer.")
 
 if (!inherits(Paracou6_2016$Plot, "character") && !is.null(Plot))
-    stop("Plot variable should be a character.") 
-  
-   if (!inherits(Paracou6_2016$Xfield, "numeric") && !is.null(Xfield))
-    stop("Xfield variable should be numeric.")
-  
-   if (!inherits(Paracou6_2016$Yfield, "numeric") && !is.null(Yfield))
-    stop("Yfield variable should be numeric.")
-  
-   if (!inherits(Paracou6_2016$Xutm, "numeric") && !is.null(Xutm))
-    stop("Xutm variable should be numeric.")
-  
-   if (!inherits(Paracou6_2016$Yutm, "numeric") && !is.null(Yutm))
-    stop("Yutm variable should be numeric.")
-  
-   if (!inherits(Paracou6_2016$UTMZone, "integer") && !is.null(UTMZone))
-    stop("UTMZone variable should be an integer.")
-  
-   if (!inherits(Paracou6_2016$Lat, "numeric") && !is.null(Lat))
-    stop("Lat variable should be numeric.")
-  
-   if (!inherits(Paracou6_2016$Lon, "numeric") && !is.null(Lon))
-    stop("Lon variable should be numeric.")
-  
-   if (!inherits(Paracou6_2016$Family, "character") && !is.null(Family))
-    stop("Family variable should be a character.")
-  
-   if (!inherits(Paracou6_2016$Genus, "character") && !is.null(Genus))
-    stop("Genus variable should be a character.") 
-  
-   if (!inherits(Paracou6_2016$Species, "character") && !is.null(Species))
-    stop("Species variable should be a character.")  
-  
-   if (!inherits(Paracou6_2016$VernName, "character") && !is.null(VernName))
-    stop("VernName variable should be a character.")
-  
-   if (!inherits(Paracou6_2016$CommercialSp, "logical") && !is.null(CommercialSp))
-    stop("CommercialSp variable should be logical.")  
-  
-   if (!inherits(Paracou6_2016$CensusYear, "integer") && !is.null(CensusYear))
-    stop("CensusYear variable should be an integer.")  
+  stop("Plot variable should be a character.") 
 
-  if (!inherits(Paracou6_2016$CodeAlive, "logical") && !is.null(CodeAlive))
-    stop("CodeAlive variable should be logical.")
-  
-  if (!inherits(Paracou6_2016$CircCorr, "numeric") && !is.null(CircCorr)) #DBH
-    stop("CircCorr variable should be numeric.") 
+if (!inherits(Paracou6_2016$Xfield, "numeric") && !is.null(Xfield))
+  stop("Xfield variable should be numeric.")
+
+if (!inherits(Paracou6_2016$Yfield, "numeric") && !is.null(Yfield))
+  stop("Yfield variable should be numeric.")
+
+if (!inherits(Paracou6_2016$Xutm, "numeric") && !is.null(Xutm))
+  stop("Xutm variable should be numeric.")
+
+if (!inherits(Paracou6_2016$Yutm, "numeric") && !is.null(Yutm))
+  stop("Yutm variable should be numeric.")
+
+if (!inherits(Paracou6_2016$UTMZone, "integer") && !is.null(UTMZone))
+  stop("UTMZone variable should be an integer.")
+
+if (!inherits(Paracou6_2016$Lat, "numeric") && !is.null(Lat))
+  stop("Lat variable should be numeric.")
+
+if (!inherits(Paracou6_2016$Lon, "numeric") && !is.null(Lon))
+  stop("Lon variable should be numeric.")
+
+if (!inherits(Paracou6_2016$Family, "character") && !is.null(Family))
+  stop("Family variable should be a character.")
+
+if (!inherits(Paracou6_2016$Genus, "character") && !is.null(Genus))
+  stop("Genus variable should be a character.") 
+
+if (!inherits(Paracou6_2016$Species, "character") && !is.null(Species))
+  stop("Species variable should be a character.")  
+
+if (!inherits(Paracou6_2016$VernName, "character") && !is.null(VernName))
+  stop("VernName variable should be a character.")
+
+if (!inherits(Paracou6_2016$CommercialSp, "logical") && !is.null(CommercialSp))
+  stop("CommercialSp variable should be logical.")  
+
+if (!inherits(Paracou6_2016$CensusYear, "integer") && !is.null(CensusYear))
+  stop("CensusYear variable should be an integer.")  
+
+if (!inherits(Paracou6_2016$CodeAlive, "logical") && !is.null(CodeAlive))
+  stop("CodeAlive variable should be logical.")
+
+if (!inherits(Paracou6_2016$CircCorr, "numeric") && !is.null(CircCorr)) #DBH
+  stop("CircCorr variable should be numeric.") 
 
 # 
 # if (!inherits(Paracou6_2016$Forest, "character"))
@@ -275,87 +274,87 @@ if (!inherits(Paracou6_2016$Plot, "character") && !is.null(Plot))
 if(!("Plot" %in% names(Paracou6_2016)))
   stop("Plot variable is not found")
 if(!("CensusYear" %in% names(Paracou6_2016)))
-    stop("CensusYear variable is not found")
+  stop("CensusYear variable is not found")
 if(!("idTree" %in% names(Paracou6_2016)))
-    stop("idTree variable is not found")
+  stop("idTree variable is not found")
 if(!("Family" %in% names(Paracou6_2016)))
-    stop("Family variable is not found")
+  stop("Family variable is not found")
 if(!("Genus" %in% names(Paracou6_2016)))
-    stop("Genus variable is not found")
+  stop("Genus variable is not found")
 if(!("Species" %in% names(Paracou6_2016)))
-    stop("Species variable is not found")
+  stop("Species variable is not found")
 if(!("CircCorr" %in% names(Paracou6_2016)))
   stop("CircCorr variable is not found")
 if(!("CodeAlive" %in% names(Paracou6_2016)))
-    stop("CodeAlive variable is not found")
+  stop("CodeAlive variable is not found")
 if(!("CommercialSp" %in% names(Paracou6_2016)))
-    stop("CommercialSp variable is not found")
+  stop("CommercialSp variable is not found")
 if(!("UTMZone" %in% names(Paracou6_2016)))
-    stop("UTMZone variable is not found")
+  stop("UTMZone variable is not found")
 if(!('Lat' %in% names(Paracou6_2016)))
-    stop("Lat variable is not found")
+  stop("Lat variable is not found")
 if(!('Lon' %in% names(Paracou6_2016)))
-    stop("Lon variable is not found")
+  stop("Lon variable is not found")
 if(!('VernName' %in% names(Paracou6_2016)))
-    stop("VernName variable is not found")
+  stop("VernName variable is not found")
 if(!('Xfield' %in% names(Paracou6_2016)))
-    stop("Xfield variable is not found")
+  stop("Xfield variable is not found")
 if(!('Yfield' %in% names(Paracou6_2016)))
-    stop("Yfield variable is not found")
+  stop("Yfield variable is not found")
 if(!('Xutm' %in% names(Paracou6_2016)))
-    stop("Xutm variable is not found")
+  stop("Xutm variable is not found")
 if(!('Yutm' %in% names(Paracou6_2016)))
-    stop("Yutm variable is not found")
+  stop("Yutm variable is not found")
 if (!inherits(Paracou6_2016$idTree, "integer.")) #majuscule ?
-    stop("idTree variable should be an integer.")
+  stop("idTree variable should be an integer.")
 
 if (!inherits(Paracou6_2016$Plot, "character"))
-    stop("Plot variable should be a character.")
-  
-   if (!inherits(Paracou6_2016$Xfield, "numeric"))
-    stop("Xfield variable should be numeric.")
-  
-   if (!inherits(Paracou6_2016$Yfield, "numeric"))
-    stop("Yfield variable should be numeric.")
-  
-   if (!inherits(Paracou6_2016$Xutm, "numeric"))
-    stop("Xutm variable should be numeric.")
-  
-   if (!inherits(Paracou6_2016$Yutm, "numeric"))
-    stop("Yutm variable should be numeric.")
-  
-   if (!inherits(Paracou6_2016$UTMZone, "integer"))
-    stop("UTMZone variable should be an integer.")
-  
-   if (!inherits(Paracou6_2016$Lat, "numeric"))
-    stop("Lat variable should be numeric.")
-  
-   if (!inherits(Paracou6_2016$Lon, "numeric"))
-    stop("Lon variable should be numeric.")
-  
-   if (!inherits(Paracou6_2016$Family, "character"))
-    stop("Family variable should be a character.")
-  
-   if (!inherits(Paracou6_2016$Genus, "character"))
-    stop("Genus variable should be a character.") 
-  
-   if (!inherits(Paracou6_2016$Species, "character"))
-    stop("Species variable should be a character.")  
-  
-   if (!inherits(Paracou6_2016$VernName, "character"))
-    stop("VernName variable should be a character.")
-  
-   if (!inherits(Paracou6_2016$CommercialSp, "logical"))
-    stop("CommercialSp variable should be logical.")
-  
-   if (!inherits(Paracou6_2016$CensusYear, "integer"))
-    stop("CensusYear variable should be an integer.") 
+  stop("Plot variable should be a character.")
 
-  if (!inherits(Paracou6_2016$CodeAlive, "logical"))
-    stop("CodeAlive variable should be logical.")
-  
-  if (!inherits(Paracou6_2016$CircCorr, "numeric")) #DBH
-    stop("CircCorr variable should be numeric.")
+if (!inherits(Paracou6_2016$Xfield, "numeric"))
+  stop("Xfield variable should be numeric.")
+
+if (!inherits(Paracou6_2016$Yfield, "numeric"))
+  stop("Yfield variable should be numeric.")
+
+if (!inherits(Paracou6_2016$Xutm, "numeric"))
+  stop("Xutm variable should be numeric.")
+
+if (!inherits(Paracou6_2016$Yutm, "numeric"))
+  stop("Yutm variable should be numeric.")
+
+if (!inherits(Paracou6_2016$UTMZone, "integer"))
+  stop("UTMZone variable should be an integer.")
+
+if (!inherits(Paracou6_2016$Lat, "numeric"))
+  stop("Lat variable should be numeric.")
+
+if (!inherits(Paracou6_2016$Lon, "numeric"))
+  stop("Lon variable should be numeric.")
+
+if (!inherits(Paracou6_2016$Family, "character"))
+  stop("Family variable should be a character.")
+
+if (!inherits(Paracou6_2016$Genus, "character"))
+  stop("Genus variable should be a character.") 
+
+if (!inherits(Paracou6_2016$Species, "character"))
+  stop("Species variable should be a character.")  
+
+if (!inherits(Paracou6_2016$VernName, "character"))
+  stop("VernName variable should be a character.")
+
+if (!inherits(Paracou6_2016$CommercialSp, "logical"))
+  stop("CommercialSp variable should be logical.")
+
+if (!inherits(Paracou6_2016$CensusYear, "integer"))
+  stop("CensusYear variable should be an integer.") 
+
+if (!inherits(Paracou6_2016$CodeAlive, "logical"))
+  stop("CodeAlive variable should be logical.")
+
+if (!inherits(Paracou6_2016$CircCorr, "numeric")) #DBH
+  stop("CircCorr variable should be numeric.")
 ```
 
 # cleaninventory
@@ -379,18 +378,18 @@ all(Paracou6_2016$Plot==Paracou6_2016$Plot[1]) #all the Plot values are equal?
 ```{r}
 
 if (!("DBH" %in% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA) #if DBH (cm) doesn't exist create it
-   Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
+  Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
 
 InventoryClean <- Paracou6_2016 %>% 
   filter(CodeAlive == "TRUE") %>% #only alive trees
   filter(DBH >= 10) # DBH >= 10
 
-  if (any(duplicated(Paracou6_2016)==TRUE))
-    stop ("Tree identifiers (idTree) are not unique.") # stop function if the tree identifiers (idTree) are not unique
-  if (all(Paracou6_2016$Plot==Paracou6_2016$Plot[1])==FALSE) #all the Plot values are equal?
-    stop ("Your inventory concerns different plots (Plot). Our function simulates logging at the plot level.") 
-  # Remove out-plot trees (A faire)
-  
+if (any(duplicated(Paracou6_2016)==TRUE))
+  stop ("Tree identifiers (idTree) are not unique.") # stop function if the tree identifiers (idTree) are not unique
+if (all(Paracou6_2016$Plot==Paracou6_2016$Plot[1])==FALSE) #all the Plot values are equal?
+  stop ("Your inventory concerns different plots (Plot). Our function simulates logging at the plot level.") 
+# Remove out-plot trees (A faire)
+
 
 
 ```
@@ -401,18 +400,18 @@ INPUT: inventory = InventoryClean (data frame)
 OUTPUT: inventory = Inventory_addtreedim (data frame)
 
 calculer pour tous les arbres : 
-  + TreeBiomass : biomasse de tous les arbres (BIOMASS package)
-  + TreeHeight : hauteur de l’arbre (H) (BIOMASS package)
-  + TreeHarvestableVolume : volume exploitable à partir du tarif de cubage (= a + b*DBH2) que représente chaque arbre (a et b dépendent de la localisation)
-  + TrunkHeight : hauteur de fût (TreeHarvestableVolume  = π(DBH/2)² x TrunkHeight)
-  + CrownDiameter : diamètre de couronne (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺 (allométries de Mélaine)
-  + CrownHeight : TreeHeight - TrunkHeight
++ TreeBiomass : biomasse de tous les arbres (BIOMASS package)
++ TreeHeight : hauteur de l’arbre (H) (BIOMASS package)
++ TreeHarvestableVolume : volume exploitable à partir du tarif de cubage (= a + b*DBH2) que représente chaque arbre (a et b dépendent de la localisation)
++ TrunkHeight : hauteur de fût (TreeHarvestableVolume  = π(DBH/2)² x TrunkHeight)
++ CrownDiameter : diamètre de couronne (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺 (allométries de Mélaine)
++ CrownHeight : TreeHeight - TrunkHeight
 
 ```{r TreeHeight}
 library(BIOMASS)
 library(knitr)
 if (!("DBH" %in% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA) #if DBH (cm) doesn't exist create it
-   Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
+  Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
 # TreeHeight = hauteur de l’arbre (H) (en mètre) (BIOMASS package)
 # 3 options :
 # - get my tree heights from the location (from continent or region specific model, or from coordinates)
@@ -444,20 +443,20 @@ TreeHeightEstimation <- retrieveH(
 )
 ## Put these tree heights estimations in the inventory
 Paracou6_2016TreeHeight <- Paracou6_2016 %>% 
-mutate(TreeHeight = TreeHeightEstimation$H)
+  mutate(TreeHeight = TreeHeightEstimation$H)
 plot(Paracou6_2016TreeHeight$DBH, Paracou6_2016TreeHeight$TreeHeight)#amazing !! It's a log2 form
 
 
 # Different guyanese data:
 TreeheightGuyafordata <- read_delim("D:/VSC Kourou/DATA/TreeheightGuyafordata.csv", 
-    ";", escape_double = FALSE, col_types = cols(Circ = col_number(), 
-        CircCorr = col_number(), Hauteur = col_number()), 
-    locale = locale(encoding = "Latin1"), 
-    trim_ws = TRUE) %>% 
+                                    ";", escape_double = FALSE, col_types = cols(Circ = col_number(), 
+                                                                                 CircCorr = col_number(), Hauteur = col_number()), 
+                                    locale = locale(encoding = "Latin1"), 
+                                    trim_ws = TRUE) %>% 
   # filter(!(HeightHow == "Visual Estimate" | HeightHow == "Visual estimate"))
-    filter(HeightHow == "Sine Method (Larjavaara & Muller-Landau 2013) with Trimble LaserAce 1000 Rangefinder")
+  filter(HeightHow == "Sine Method (Larjavaara & Muller-Landau 2013) with Trimble LaserAce 1000 Rangefinder")
 if (!("DBH" %in% names(TreeheightGuyafordata))) {add_column(TreeheightGuyafordata, DBH = NA) #if DBH (cm) doesn't exist create it
-   TreeheightGuyafordata$DBH = TreeheightGuyafordata$CircCorr/pi} # and compute it
+  TreeheightGuyafordata$DBH = TreeheightGuyafordata$CircCorr/pi} # and compute it
 
 unique(TreeheightGuyafordata$HeightHow)
 
@@ -481,7 +480,7 @@ TreeHeightGuianaEstimation <- retrieveH(
 )
 ## Put these tree heights estimations in the inventory
 Paracou6_2016TreeHeight <- Paracou6_2016 %>% 
-mutate(TreeHeight = TreeHeightGuianaEstimation$H)
+  mutate(TreeHeight = TreeHeightGuianaEstimation$H)
 plot(Paracou6_2016TreeHeight$DBH, Paracou6_2016TreeHeight$TreeHeight)#amazing !! It's a log2 form
 
 ```
@@ -491,7 +490,7 @@ plot(Paracou6_2016TreeHeight$DBH, Paracou6_2016TreeHeight$TreeHeight)#amazing !!
 # TreeHarvestableVolume = volume exploitable à partir du tarif de cubage (= a + b*DBH2) que représente chaque arbre (a et b dépendent de la localisation)
 
 ForestZoneVolumeParametersTable <- data.frame (Forest = c("Acarouany","BAFOG","Kaw","Laussat","Montagne Plomb","Montagne Tortue","Nouragues","Organabo","Paracou","Régina St Georges","Risquetout","Tibourou"), # Guyafor forests
-                  Zone = c("East", "West", "Central", "FrenchGuiana")) %>% # Volume formules zones
+                                               Zone = c("East", "West", "Central", "FrenchGuiana")) %>% # Volume formules zones
   mutate(Zone = ifelse(Forest == "Acarouany"| Forest =="BAFOG" |Forest =="Laussat", "West", NA)) %>% # West zone
   mutate(Zone = ifelse(Forest == "Montagne Plomb"| Forest =="Organabo"|Forest =="Paracou"|Forest =="Risquetout", "Central", Zone)) %>% # Central zone
   mutate(Zone = ifelse(Forest == "Kaw"| Forest =="Montagne Tortue"|Forest =="Nouragues"|Forest =="Régina St Georges"|Forest =="Tibourou", "East", Zone)) %>% # East zone
@@ -500,7 +499,7 @@ ForestZoneVolumeParametersTable <- data.frame (Forest = c("Acarouany","BAFOG","K
 
 Paracou6_2016_volume <- Paracou6_2016 %>% 
   left_join(ForestZoneVolumeParametersTable) %>% 
-mutate(TreeHarvestableVolume = aCoef + bCoef * CircCorr^2) # compute the tree harvestable volume
+  mutate(TreeHarvestableVolume = aCoef + bCoef * CircCorr^2) # compute the tree harvestable volume
 
 # West  = c("Acarouany", "BAFOG", "Laussat")
 # Central  = c("Montagne Plomb", "Organabo","Paracou", "Risquetout")
@@ -580,7 +579,7 @@ Paracou6_2016_crown <- Paracou6_2016 %>%
   mutate(Taxo = ifelse(is.na(Taxo), "mean", Taxo)) %>% #if species,genus&family parameters are absent, take parameters mean
   select(-Taxo.species, -Taxo.genus, -Taxo.family) %>%  #remove obsolete columns
   mutate(CrownDiameter = exp((
-  (log(DBH)-alpha-error)/beta)
+    (log(DBH)-alpha-error)/beta)
   )/TreeHeight) # compute the crown diameter (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977. (Mélaine's allometries))
 
 # Informations:
@@ -616,15 +615,15 @@ error <- rnorm(2000, mean = 0, sd = 0.0295966977) #Mélaine's model error distri
 # Variables computation:
 InventoryAddtreedim <- InventoryClean %>% 
   
-# TreeHarvestableVolume (m^3)
+  # TreeHarvestableVolume (m^3)
   left_join(ForestZoneVolumeParametersTable) %>% 
   mutate(TreeHarvestableVolume = aCoef + bCoef * (DBH/100)^2) %>%  # compute the tree harvestable volume
-
-# TrunkHeight & CrownHeight (m)
+  
+  # TrunkHeight & CrownHeight (m)
   mutate(TrunkHeight = TreeHarvestableVolume/(pi*(((DBH/100)/2)^2))) %>%  # compute the trunk height (cylinderVolume= π(DBH/2)² x H) DBH in cm, in m in the formule.
   # mutate(CrownHeight = TreeHeight - TrunkHeight) %>%  # compute the crown height TREEHEIGHT EN ATTENTE
-
-# CrownDiameter (m)
+  
+  # CrownDiameter (m)
   unite(Genus, Species, col = "ScientificName", sep = "_", remove = F) %>% 
   left_join(spParamCrownDiameter, by = c("ScientificName","Genus","Species")) %>% #Add parameters at species scale
   left_join(genParamCrownDiameter, by = "Genus", suffix = c(".species", ".genus")) %>% #Add parameters at genus scale
@@ -646,10 +645,10 @@ InventoryAddtreedim <- InventoryClean %>%
   mutate(Taxo = ifelse(is.na(Taxo), Taxo.family, Taxo)) %>% #if species&genus parameters are absent, take family parameters
   mutate(Taxo = ifelse(is.na(Taxo), "mean", Taxo)) %>% #if species,genus&family parameters are absent, take parameters mean
   select(-Taxo.species, -Taxo.genus, -Taxo.family) #remove obsolete columns
-  # mutate(CrownDiameter = exp((
-  # (log(DBH)-alpha-error)/beta)
-  # )/TreeHeight) # compute the crown diameter (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977. (Mélaine's allometries)) # Mettre finalement l'objet créé dans le zzz.R
-  
+# mutate(CrownDiameter = exp((
+# (log(DBH)-alpha-error)/beta)
+# )/TreeHeight) # compute the crown diameter (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977. (Mélaine's allometries)) # Mettre finalement l'objet créé dans le zzz.R
+
 #                                                !!!!!!!TREEHEIGHT EN ATTENTE!!!!!!
 
 ```

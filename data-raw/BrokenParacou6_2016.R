@@ -14,5 +14,5 @@ BrokenParacou6_2016 <- Paracou6_2016 %>%
   mutate(CodeAlive = ifelse(is.even(Paracou6_2016$idTree), "FALSE", CodeAlive)) %>% # Some FALSE in CodeAlive
   mutate(CensusYear = ifelse(is.even(Paracou6_2016$idTree), CensusYear, CensusYear+1)) # different years inventory
 BrokenParacou6_2016[1:3, "idTree"] <- "200" # create a 2 time present tree
-BrokenParacou6_2016[4, "CircCorr"] <- "6" # DBH < 10
-BrokenParacou6_2016[5, "Plot"] <- "100" # a tree in another plot
+BrokenParacou6_2016[4, "CircCorr"] <- 6 # DBH < 10
+BrokenParacou6_2016[5, "PLOT"] <- "100" # a tree in another plot
