@@ -26,9 +26,11 @@ test_that("cleaninventory", {
 
 })
 
+
 # only keep CodeAlive == TRUE -> check if CodeAlive == TRUE
 # create DBH column and only keep DBH >= 10 -> check if DBH >= 10 (check if DBH exists in the same way)
 # check if idTree's are unique
 # check if it is always the same plot
 # and the same year
 # stop when at least one condition is not checked -> check if the stops work
+

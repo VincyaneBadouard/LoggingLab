@@ -42,5 +42,4 @@ Imports:
     magrittr,
     dplyr,
     tibble,
-    schoolmath
 BugReports: 
