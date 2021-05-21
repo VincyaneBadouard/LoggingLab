@@ -33,4 +33,3 @@ test_that("cleaninventory", {
 # check if it is always the same plot
 # and the same year
 # stop when at least one condition is not checked -> check if the stops work
-
