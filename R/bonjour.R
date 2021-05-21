@@ -3,7 +3,7 @@
 #' @param nom (character) Name of the person to say bonjour.
 #' @param verbose (boolean) Print in console
 #'
-#' @return
+#' @return a character string ""Bonjour! name"
 #' @export
 #'
 #' @examples

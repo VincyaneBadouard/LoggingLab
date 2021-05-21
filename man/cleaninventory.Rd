@@ -7,10 +7,10 @@
 cleaninventory(inventory)
 }
 \arguments{
-\item{inventory}{(dataframe) Your inventory data or the "Paracou6_2016" test data#'}
+\item{inventory}{Your inventory data or the "Paracou6_2016" test data (data.frame)}
 }
 \value{
-cleaninventory (dataframe).Stop the function if the tree identifiers (idTree) are not unique, or if there are different plots in the inventory.
+inventory (data.frame).Stop the function if the tree identifiers (idTree) are not unique, or if there are different plots in the inventory.
 }
 \description{
 select trees according to the protocol: alive, unique, at the right place & of the required minimum protocol diameter

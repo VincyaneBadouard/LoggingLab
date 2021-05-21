@@ -42,7 +42,7 @@ usethis::use_data(SpeciesCriteria)
 ```{r}
 data(Paracou6_2016) #data inventory in the global environment
 data("ForestZoneVolumeParametersTable") # The volume parameters data in the global environment
-load(system.file("extdata", "BrokenParacou6_2016.rda", package = "Maria")) # the test inventory in the global environment
+# load(system.file("extdata", "BrokenParacou6_2016.rda", package = "Maria")) # the test inventory in the global environment
 load(system.file("extdata", "ParamCrownDiameterAllometry.rda", package = "Maria"))
 ```
 ```{r}
@@ -410,26 +410,32 @@ calculer pour tous les arbres :
 ```{r TreeHeight}
 library(BIOMASS)
 library(knitr)
-if (!("DBH" %in% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA) #if DBH (cm) doesn't exist create it
+
+#if DBH (cm) doesn't exist create it
+if (!("DBH" %in% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA)
   Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
+
 # TreeHeight = hauteur de l’arbre (H) (en mètre) (BIOMASS package)
 # 3 options :
 # - get my tree heights from the location (from continent or region specific model, or from coordinates)
 # - from other Guyanese trees heights data, fit different H-D models, select the best and apply on my data.
 
-RegionTreeHeight <- retrieveH(D = Paracou6_2016$DBH, region = "GuianaShield") #continent or region specific model (Feldpaush et al. (2012))
-# GuianaShield = Guyana, French Guiana (piste St Elie (Chave 2005)), Venezuela
+#continent or region specific model (Feldpaush et al. (2012))
+RegionTreeHeight <- retrieveH(D = Paracou6_2016$DBH, region = "GuianaShield") # GuianaShield = Guyana, French Guiana (piste St Elie (Chave 2005)), Venezuela
 
+#by coordinates (Chave et al. (2012))
 n <- length(Paracou6_2016$CircCor)
 coord <- cbind(long = rep(-52.92, n), lat = rep(5.27, n)) # Paracou P6 coordinates
-CoordTreeHeight <- retrieveH(D = Paracou6_2016$DBH, coord = coord) #by coordinates (Chave et al. (2012))
+CoordTreeHeight <- retrieveH(D = Paracou6_2016$DBH, coord = coord) 
 
 # Just with Nouragues data (measurement: laser rangefinder):
-ModelsresultNouraguesdata <- modelHD(
+# Fit first different height-diameter models
+ModelsresultNouraguesdata <- modelHD( # modelHD = .
   D = NouraguesHD$D,
   H = NouraguesHD$H,
-  useWeight = TRUE
+  useWeight = TRUE # model weights will be (D^2)*H (weights are proportional to tree volume, so that larger trees have a stronger influence during the construction of the model)
 )
+# choose the best model
 kable(ModelsresultNouraguesdata) #log2 has the lowest RSE (4.222718) (Root Squared Error)
 HDmodelNouraguesdata <- modelHD(
   D = NouraguesHD$D,
@@ -437,6 +443,7 @@ HDmodelNouraguesdata <- modelHD(
   method = "log2", # Compute the local H-D model with the lowest RSE.
   useWeight = TRUE
 )
+# Applicate the model to retrieve tree heights ---- HERE
 TreeHeightEstimation <- retrieveH(
   D = Paracou6_2016$DBH,
   model = HDmodelNouraguesdata
@@ -592,11 +599,7 @@ sum(Paracou6_2016_crown$Taxo == "mean") #72 individuals no recognize at any scal
 unique(Paracou6_2016_crown[(Paracou6_2016_crown$Taxo == "mean"),]$ScientificName) #which species are no recognized
 length(unique(Paracou6_2016_crown$ScientificName)) #How many species are in the plot
 ```
-#' @examples
-#' data(Paracou6_2016)
-#' if (!("DBH" %in% names(inventory))) {add_column(inventory, DBH = NA) #if DBH doesn't exist create it
-#' inventory$DBH = inventory$CircCorr/pi} # and compute it
-#' cleaninventory(inventory = Paracou6_2016)
+
 
 ```{r All addtreedim}
 # allometry parameters data preparation:
@@ -624,6 +627,7 @@ InventoryAddtreedim <- InventoryClean %>%
   # mutate(CrownHeight = TreeHeight - TrunkHeight) %>%  # compute the crown height TREEHEIGHT EN ATTENTE
   
   # CrownDiameter (m)
+  # Add crown diameter parameters at the inventory:
   unite(Genus, Species, col = "ScientificName", sep = "_", remove = F) %>% 
   left_join(spParamCrownDiameter, by = c("ScientificName","Genus","Species")) %>% #Add parameters at species scale
   left_join(genParamCrownDiameter, by = "Genus", suffix = c(".species", ".genus")) %>% #Add parameters at genus scale

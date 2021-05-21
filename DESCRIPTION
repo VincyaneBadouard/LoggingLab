@@ -1,5 +1,5 @@
 Package: Maria
-Title: Simulate conventional or low impact logging on a forest.
+Title: Simulate Different Forms of Logging on a Forest
 Version: 0.0.0.9000
 Authors@R: 
     c(person(given = "Vincyane",
@@ -23,7 +23,7 @@ Authors@R:
            role = "ctb",
            email = "sylvain.m.schmitt@gmail.com ")
            )
-Description: This package allows to simulate conventional or low impact logging.
+Description: This package allows to simulate different forms of logging on a forest.
 URL: https://github.com/VincyaneBadouard/Maria.git
 License: GPL-3
 Encoding: UTF-8

@@ -2,8 +2,8 @@
 #'
 #'@description select trees according to the protocol: alive, unique, at the right place & of the required minimum protocol diameter
 #'
-#' @param inventory (dataframe) Your inventory data or the "Paracou6_2016" test data#'
-#' @return cleaninventory (dataframe).Stop the function if the tree identifiers (idTree) are not unique, or if there are different plots in the inventory.
+#' @param inventory Your inventory data or the "Paracou6_2016" test data (data.frame)
+#' @return inventory (data.frame).Stop the function if the tree identifiers (idTree) are not unique, or if there are different plots in the inventory.
 #' @export
 #' @importFrom tibble add_column
 #' @importFrom dplyr filter

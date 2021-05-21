@@ -42,7 +42,7 @@ NULL
     WaterSourcesBufferZone = 30, #in m
     MinMainTrailWidth = 5, #in m
     MaxMainTrailWidth = 6, #in m
-    "2ndTrailWidth" = 4, #in m
+    ScndTrailWidth = 4, #in m
     BigTrees = 50, #in cm
     ObjectiveBonus = 30, #in % [20;30%]
     CableLength = 40, #in m
