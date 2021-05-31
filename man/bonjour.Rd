@@ -7,12 +7,12 @@
 bonjour(nom = "Maria", verbose = TRUE)
 }
 \arguments{
-\item{nom}{(character) Name of the person to say bonjour.}
+\item{nom}{Name of the person to say "Bonjour !" (character).}
 
-\item{verbose}{(boolean) Print in console}
+\item{verbose}{Print in console (boolean).}
 }
 \value{
-
+A character string "Bonjour! Name"
 }
 \description{
 Say "Bonjour !" with a name

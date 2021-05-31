@@ -13,7 +13,7 @@ cleaninventory(inventory)
 inventory (data.frame).Stop the function if the tree identifiers (idTree) are not unique, or if there are different plots in the inventory.
 }
 \description{
-select trees according to the protocol: alive, unique, at the right place & of the required minimum protocol diameter
+Select trees according to the protocol: alive, unique, at the right place & of the required minimum protocol diameter
 }
 \examples{
 

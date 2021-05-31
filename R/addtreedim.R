@@ -6,8 +6,6 @@
 #'
 #' @return inventory (data.frame) with additional variables (TreeHeight, TreeHarvestableVolume, TrunkHeight, CrownHeight, CrownDiameter)
 #' @export
-#' @importFrom BIOMASS retrieveH
-#' @importFrom BIOMASS modelHD
 #'
 #' @examples
 #' data(Paracou6_2016)
@@ -54,7 +52,8 @@ inventory <- inventory %>%
   mutate(TrunkHeight = TreeHarvestableVolume/(pi*(((DBH/100)/2)^2))) %>%  # compute the trunk height (CylinderVolume= π(DBH/2)² x H) (DBH in cm, in m in the formula)
 
   # TreeHeight (m) EN ATTENTE
-  # mutate(TreeHeight = TreeHeightEstimation$H) %>%
+  # mutate(TreeHeight = TreeHeightEstimation$H) %>% #' @importFrom BIOMASS retrieveH #' @importFrom BIOMASS modelHD
+
 
   # CrownHeight (m)
   # mutate(CrownHeight = TreeHeight - TrunkHeight) %>%  # compute the crown height TREEHEIGHT EN ATTENTE

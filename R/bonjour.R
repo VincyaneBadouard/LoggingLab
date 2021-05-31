@@ -1,9 +1,9 @@
 #' Say "Bonjour !" with a name
 #'
-#' @param nom (character) Name of the person to say bonjour.
-#' @param verbose (boolean) Print in console
+#' @param nom Name of the person to say "Bonjour !" (character).
+#' @param verbose Print in console (boolean).
 #'
-#' @return a character string ""Bonjour! name"
+#' @return A character string "Bonjour! Name"
 #' @export
 #'
 #' @examples

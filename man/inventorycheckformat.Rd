@@ -10,7 +10,7 @@ inventorycheckformat(inventory)
 \item{inventory}{(dataframe) Your inventory data or the "Paracou6_2016" test data#'}
 }
 \value{
-stop the function if the format is not the one required.
+Stop the function if the format is not the one required.
 }
 \description{
 Check & format your inventory data for the package "Maria"

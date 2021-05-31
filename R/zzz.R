@@ -12,7 +12,7 @@ NULL
     # Package options
     Maria.path = "~/R-dev",
     Maria.install.args = "",
-    Maria.name = "Vincyane Badouard, Guillaume Salzet, Thomas Gaquiere, Géraldine Derroire and Sylvain Schmitt",
+    Maria.name = "Vincyane Badouard, Guillaume Salzet, Thomas Gaquiere, Geraldine Derroire and Sylvain Schmitt",
     Maria.desc.author = c('person("Vincyane","Badouard",
          role = c("aut", "cre"),
           "vincyane.badouard@gmail.com"),
@@ -22,7 +22,7 @@ NULL
   person("Thomas","Gaquiere",
          role = "aut",
           "gaquiere.thomas@yahoo.com "),
-  person("Géraldine","Derroire",
+  person("Geraldine","Derroire",
          role = "ctb",
           "geraldine.derroire@cirad.fr"),
   person("Sylvain","Schmitt",
@@ -50,8 +50,8 @@ NULL
     IsolateTreeMinDistance = 100, #in m
     FutureTreesMinDiameter = 35, #in cm
     TreefallSuccessProportion = 0.6,
-    MinTreefallOrientation = 30, #in degree (◦)
-    MaxTreefallOrientation = 45, #in degree (◦)
+    MinTreefallOrientation = 30, #in degree
+    MaxTreefallOrientation = 45, #in degree
     TreeHollowPartForFuel = 1/3, #(Hollow) Part taken from hollow trees for fuel exploitation
     Purge = 0.14, # in m^3 of fuelwood/m^3 of logged trees
     MaxTrailDensity = 200, #in m/ha
@@ -64,11 +64,11 @@ NULL
   invisible() # send no msg to the user.
 }
 
-# pour les options qui sont des formules il est nécessaire de les inscrire dans des fcts (truc qui rentrent et qui sortent):
+# pour les options qui sont des formules il est necessaire de les inscrire dans des fcts (truc qui rentrent et qui sortent):
 
-# TrunkHeightAllometry = function(DBH, TreeHarvestableVolume) TreeHarvestableVolume/(pi*(((DBH/100)/2)^2)) # compute the trunk height (cylinderVolume= π(DBH/2)² x H) DBH in cm, in m in the formule.
+# TrunkHeightAllometry = function(DBH, TreeHarvestableVolume) TreeHarvestableVolume/(pi*(((DBH/100)/2)^2)) # compute the trunk height (cylinderVolume= pi(DBH/2)^2 x H) DBH in cm, in m in the formule.
 
-# CrownDiameterAllometry = function(DBH, TreeHeight, alpha, beta, sigma) exp(((log(DBH)-alpha-rnorm(length(DBH), 0, sigma))/beta))/TreeHeight #compute the crown diameter (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977. (Mélaine's allometries))
+# CrownDiameterAllometry = function(DBH, TreeHeight, alpha, beta, sigma) exp(((log(DBH)-alpha-rnorm(length(DBH), 0, sigma))/beta))/TreeHeight #compute the crown diameter (CD) (ln(D) = alpha + beta ln(H*CD) + error, with error~N(0,sigma^2) and meansigma^2 = 0.0295966977. (Melaine's allometries))
 
 # RottenModel = function() # Hollow trees identification
 

@@ -12,6 +12,8 @@ library(dplyr)
 library(tibble)
 library(tidyr)
 library(schoolmath)
+library(ggplot2)
+library(reshape)
 ```
 
 ```{r ParamCrownDiameterAllometry table code}
@@ -407,6 +409,105 @@ calculer pour tous les arbres :
 + CrownDiameter : diamètre de couronne (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺 (allométries de Mélaine)
 + CrownHeight : TreeHeight - TrunkHeight
 
+
+
+
+```{r}
+
+TreeheightGuyafordata <- read_delim("D:/VSC Kourou/DATA/TreeheightGuyafordata.csv", 
+                                    ";", escape_double = FALSE, col_types = cols(Circ = col_number(), 
+                                                                                 CircCorr = col_number(), Hauteur = col_number()), 
+                                    locale = locale(encoding = "Latin1"), 
+                                    trim_ws = TRUE) %>% 
+  unite(Genus, Species, col = "ScientificName", sep = "_", remove = F) %>% 
+  mutate(DBH = ifelse(is.na(CircCorr), Circ/pi, CircCorr/pi)) %>% 
+  mutate(HeightHow = recode(HeightHow, 'Visual estimate' = 'Visual Estimate'))
+
+any(is.na(TreeheightGuyafordata$DBH)) # all the DBH have been computed?
+
+
+# esquisse::esquisser()
+
+#Methods facet
+TreeheightGuyafordata %>%
+ ggplot() +
+  aes(x = DBH, y = Hauteur) +
+  geom_point(shape = "circle", size = 0.5, colour = "#440154") +
+  geom_smooth(span = 0.75) + # using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+  theme_minimal() +
+  facet_wrap(vars(HeightHow))
+
+# Colored multilignes
+TreeheightGuyafordata %>%
+ ggplot() +
+  aes(x = DBH, y = Hauteur, colour = HeightHow) +
+  geom_line(size = 0.2) +
+  scale_color_hue(direction = 1) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+
+# Methods Box-Plot
+TreeheightGuyafordata %>%
+ggplot(aes(x=DBH, y=Hauteur, fill=HeightHow)) +
+  theme(legend.position = "bottom") +
+  geom_boxplot()
+
+# DBH distribution per method
+TreeheightGuyafordata %>%
+ ggplot() +
+  aes(x = DBH) +
+  geom_histogram(bins = 30L, fill = "#440154") +
+  theme_minimal() +
+  facet_wrap(vars(HeightHow), scales = "free_y") #or "fixed"
+
+
+# Ind/sp distribution per method
+ggplot(TreeheightGuyafordata) +
+  aes(x = ScientificName) +
+  geom_bar(fill = "#440154") +
+  theme_minimal() +
+  facet_wrap(vars(HeightHow), scales = "free") #or "fixed"
+
+```
+```{r}
+library(BIOMASS)
+library(knitr)
+
+ModelsresultGuiana <-modelHD(
+  D = TreeheightGuyafordata$DBH,
+  H = TreeheightGuyafordata$Hauteur,
+  useWeight = TRUE
+)
+kable(ModelsresultGuiana) #log2 has the lowest RSE (4.699261 with all data, 4.316927 without "Visual E/estimate", 3.059860 with just "Sine Method")
+#Don't forget, you have the model form, and its parameters, and there are different according to the data.
+
+HDmodelGuiana <- modelHD(
+  D = TreeheightGuyafordata$DBH,
+  H = TreeheightGuyafordata$Hauteur,
+  method = "log2", # Compute the H-D model with the lowest RSE.
+  useWeight = TRUE
+)
+TreeHeightGuianaEstimation <- retrieveH(
+  D = TreeheightGuyafordata$DBH,
+  model = HDmodelGuiana
+)
+#Put these tree heights estimations in the inventory
+TreeheightGuyafordataEstim <- TreeheightGuyafordata %>% 
+  mutate(HauteurEstimee = TreeHeightGuianaEstimation$H)
+plot(TreeheightGuyafordataEstim$DBH, TreeheightGuyafordataEstim$HauteurEstimee)#amazing !! It's a log2 form
+
+#facet obs/estim :
+TreeheightGuyafordataEstim %>%
+ # filter(!is.na(CircCorr)) %>%
+ ggplot() +
+  aes(x = Hauteur, y = HauteurEstimee) +
+  geom_point(shape = "circle", size = 0.5, colour = "#440154") +
+  geom_smooth(span = 0.75) + # try with method = lm
+  theme_minimal() +
+  facet_wrap(vars(HeightHow))
+```
+
 ```{r TreeHeight}
 library(BIOMASS)
 library(knitr)
@@ -430,7 +531,7 @@ CoordTreeHeight <- retrieveH(D = Paracou6_2016$DBH, coord = coord)
 
 # Just with Nouragues data (measurement: laser rangefinder):
 # Fit first different height-diameter models
-ModelsresultNouraguesdata <- modelHD( # modelHD = .
+ModelsresultNouraguesdata <- modelHD(
   D = NouraguesHD$D,
   H = NouraguesHD$H,
   useWeight = TRUE # model weights will be (D^2)*H (weights are proportional to tree volume, so that larger trees have a stronger influence during the construction of the model)
@@ -491,6 +592,15 @@ Paracou6_2016TreeHeight <- Paracou6_2016 %>%
 plot(Paracou6_2016TreeHeight$DBH, Paracou6_2016TreeHeight$TreeHeight)#amazing !! It's a log2 form
 
 ```
+
+```{r}
+# Question : ya t'il des arbres mesurés par plsrs méthodes la même année ?
+
+TreeheightMethods <- TreeheightGuyafordata %>% 
+  select(Forest, Plot, SubPlot, TreeFieldNum, Genus, Species, CensusYear) %>% 
+  unique()
+```
+
 
 
 ```{r TreeHarvestableVolume}

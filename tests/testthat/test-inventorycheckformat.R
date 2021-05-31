@@ -17,7 +17,7 @@ test_that("inventorycheckformat", {
   ## check if class to detect are the right ones
   ### Create the test inventory
   if (!("DBH" %in% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA) #if DBH (cm) doesn't exist create it
-    Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
+    Paracou6_2016$DBH <- Paracou6_2016$CircCorr/pi} # and compute it
   RightClasses <- Paracou6_2016 %>%
     dplyr::mutate_if(is.character, as.factor) %>%
     dplyr::mutate_if(is.double, as.character) %>%

@@ -1,9 +1,21 @@
-test_that("addtreedim", {
-
-
-
-
-})
+# test_that("addtreedim", {
+#
+#   # Test data preparation
+#   if (!("DBH" %in% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA) #if DBH (cm) doesn't exist create it
+#     Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi}
+#
+#   # check their class (integer)
+#   lapply(c("TreeHeight", "TreeHarvestableVolume", "TrunkHeight", "CrownHeight", "CrownDiameter"),
+#          function(element) expect_type(addtreedim(Paracou6_2016)$element, integer))
+#
+#   # check that variables are not empty, or contains NA's
+#   lapply(c("TreeHeight", "TreeHarvestableVolume", "TrunkHeight", "CrownHeight", "CrownDiameter"),
+#          function(element) expect_vector(addtreedim(Paracou6_2016)$element, ptype = integer(), size = length(idTree)))
+#
+#   # check if formulas are respected
+#
+#   # check coherence
+# })
 
 
 # compute for all trees:
@@ -20,4 +32,4 @@ test_that("addtreedim", {
 # -> is not empty, or contains NA's
 # -> check coherence
 
-# -> check if formules are respected
+# -> check if formulas are respected
