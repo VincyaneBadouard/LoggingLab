@@ -15,7 +15,46 @@ TreeheightGuyafordata <- read_delim("D:/VSC Kourou/DATA/TreeheightGuyafordata.cs
   mutate(HeightHow = recode(HeightHow, 'Visual estimate' = 'Visual Estimate'))
 
 any(is.na(TreeheightGuyafordata$DBH)) # all the DBH have been computed?
+
+# DBH range per method
+TreeheightGuyafordata %>% 
+  group_by(HeightHow) %>% #pour réaliser les opérations suivantes par groupes de modalités
+  summarise(MinDBH = min(DBH)) %>% 
+  arrange(MinDBH)
+
+TreeheightGuyafordata %>% 
+  group_by(HeightHow) %>% #pour réaliser les opérations suivantes par groupes de modalités
+  summarise(MaxDBH = max(DBH)) %>% 
+  arrange(desc(MaxDBH))
+# Visual Estimate: 0.416986 - 256.23946
+# Telemeter: 9.867606 - 159.15494
+# Optical Telemeter Birnbaum: 7.591691 -131.46198
+# Vertex Laser: 10.185916 - 95.73170
+# Sine Method: 6.073353 - 88.80846
+
+
+# measurements number per method
+TreeheightGuyafordata %>% 
+  count(HeightHow) %>% 
+  arrange(desc(n))
+# Visual Estimate	: 27986			
+# Optical Telemeter Birnbaum: 4902	
+# Telemeter: 1454			
+# Sine Method:  998	
+# Vertex Laser: 441
+
+TreeheightGuyafordata %>% 
+  group_by(HeightHow) %>% 
+  n_distinct(ScientificName) %>% 
+  count(ScientificName) %>% 
+  arrange(desc(n))
+
+TreeheightGuyafordata %>% 
+  group_by(HeightHow) %>%
+  n_distinct(TreeheightGuyafordata$ScientificName) %>% 
+  count(ScientificName)
 ```
+
 
 
 
@@ -139,5 +178,38 @@ TreeheightGuyafordataEstim %>%
 
 # dev.off()
 
+```
+
+```{r}
+# Fit Height-Diameter model
+library(BIOMASS)
+
+SineTelemeter <- read_delim("D:/VSC Kourou/DATA/TreeheightGuyafordata.csv",
+                                    ";", escape_double = FALSE, col_types = cols(Circ = col_number(),
+                                                                                 CircCorr = col_number(), Hauteur = col_number()),
+                                    locale = locale(encoding = "Latin1"),
+                                    trim_ws = TRUE) %>%
+  filter(HeightHow == "Sine Method (Larjavaara & Muller-Landau 2013) with Trimble LaserAce 1000 Rangefinder"| HeightHow == "Telemeter") %>%
+  mutate(DBH = ifelse(is.na(CircCorr), Circ/pi, CircCorr/pi)) # add DBH column
+
+
+HDmodel <- modelHD(
+  D = SineTelemeter$DBH,
+  H = SineTelemeter$Hauteur,
+  method = "log2", # Compute the H-D model with the lowest RSE.
+  useWeight = TRUE
+)
+
+Dmodel[["coefficients"]]
+
+# log 2: log(H) = a + b*log(D) + c*log(D)^2
+
+# log(H) = 0.07359191 + 1.34241216*log(D) + -0.12282344*log(D)^2
+# H = exp(0.07359191 + 1.34241216*log(D) + -0.12282344*log(D)^2)
+
+
+# (Intercept)  0.07359191
+# I(log(D)^1)  1.34241216
+# I(log(D)^2) -0.12282344
 ```
 

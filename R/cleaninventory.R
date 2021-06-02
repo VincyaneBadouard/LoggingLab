@@ -7,6 +7,8 @@
 #' @export
 #' @importFrom tibble add_column
 #' @importFrom dplyr filter
+#' @importFrom dplyr mutate
+
 #'
 #' @examples
 #'
@@ -17,18 +19,17 @@ cleaninventory <- function(
   inventory
 ){
 
-  # # to test inside the function
-  # rm(list = ls()) #vider l'envmt
-  # data(Paracou6_2016)
-  # inventory <- Paracou6_2016
-  # rm(Paracou6_2016)
+  # Argument check
+  if (!inherits(inventory, "data.frame"))
+    stop("inventory must be a data.frame")
 
-  if (!("DBH" %in% names(inventory))) {add_column(inventory, DBH = NA) #if DBH (cm) doesn't exist create it
-    inventory$DBH <- inventory$CircCorr/pi} # and compute it
+  if (!("DBH" %in% names(inventory))) {
+    inventory <- mutate(inventory, DBH = ifelse(is.na(CircCorr), Circ/pi, CircCorr/pi))
+  } #if DBH (cm) doesn't exist create it
 
   inventory <- inventory %>%
     filter(CodeAlive == "TRUE") %>% #only alive trees
-    filter(DBH >= 10) # DBH >= 10, Circ = perimeter of the circle =! diameter !
+    filter(DBH >= 10) # DBH >= 10, Circ = perimeter of the circle? =! diameter !
 
   GoodData <- TRUE # usefull boolean for later
 

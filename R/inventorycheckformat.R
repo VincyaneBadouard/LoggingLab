@@ -17,6 +17,10 @@ inventorycheckformat <- function(
 
   GeneralStop <- "" # empty character string to stock all the warnings
 
+  # Argument check
+  if (!inherits(inventory, "data.frame"))
+    stop("inventory must be a data.frame")
+
   # Variables presence check
   # (Plot, CensusYear, idTree, Family, Genus, Species, CircCorr, CodeAlive, CommercialSp, UTMZone, Lat, Lon, VernName, Xfield, Yfield, Xutm, Yutm)
   if(!("Plot" %in% names(inventory))) {

@@ -7,7 +7,8 @@
 addtreedim(
   inventory,
   crowndiameterparameters = ParamCrownDiameterAllometry,
-  volumeparameters = ForestZoneVolumeParametersTable
+  volumeparameters = ForestZoneVolumeParametersTable,
+  otherloggingparameters = loggingparameters()
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ addtreedim(
 \item{crowndiameterparameters}{(data.frame)}
 
 \item{volumeparameters}{(data.frame)}
+
+\item{otherloggingparameters}{(list)}
 }
 \value{
 inventory (data.frame) with additional variables (TreeHeight, TreeHarvestableVolume, TrunkHeight, CrownHeight, CrownDiameter)
@@ -25,7 +28,7 @@ Compute tree dimensions (Height, diameter, harvestable volume, including crown)
 }
 \examples{
 data(Paracou6_2016)
-data("ForestZoneVolumeParametersTable") # The volume parameters data in the global environment
+data(ForestZoneVolumeParametersTable) # The volume parameters data in the global environment
 load(system.file("extdata", "ParamCrownDiameterAllometry.rda", package = "Maria"))
 
 if (!("DBH" \%in\% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA) #if DBH doesn't exist create it

@@ -1,5 +1,9 @@
 test_that("cleaninventory", {
 
+  #Check the function argument
+  MatrixInventory <- as.matrix(Paracou6_2016)
+  expect_error(cleaninventory(MatrixInventory), regexp = "inventory must be a data.frame")
+
   #Create the test inventory
   TestInventory <- Paracou6_2016
   TestInventory[10, "CodeAlive"] <- "FALSE" # Some FALSE in CodeAlive
@@ -10,6 +14,8 @@ test_that("cleaninventory", {
 
   #check if DBH >= 10 (check if DBH exists in the same way)
   expect_true(all(cleaninventory(TestInventory)$DBH >= 10))
+
+  expect_false(any(is.na(cleaninventory(TestInventory)$DBH))) #check that all the DBH are computed
 
 
   #check if the stops work

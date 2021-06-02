@@ -2,6 +2,11 @@ test_that("inventorycheckformat", {
 
   # check if the stops work
 
+  ## check the function argument
+  MatrixInventory <- as.matrix(Paracou6_2016)
+  expect_error(inventorycheckformat(MatrixInventory), regexp = "inventory must be a data.frame")
+
+
   ## check if all the variables are detected
   ### Create the test inventory
   DetectVar <- Paracou6_2016 %>%

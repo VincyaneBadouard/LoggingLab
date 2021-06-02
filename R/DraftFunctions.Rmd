@@ -72,65 +72,7 @@ BrokenParacou6_2016[5, "PLOT"] <- "100" # a tree in another plot
 # pour l'enregistrer : usethis::use_data(BrokenParacou6_2016) puis le move dans ins/exdata
 ```
 
-# My custom options
-faut ptetre mettre Maria. devant  chaque objet!
-```{r}
-# Mimimum DBH value = 10 cm
-# Maximum area slope = 27%
-# Maximum main&2nd trail centerline slope = 22%
-# Maximum main&2nd trail cross slope = 4%
-# Grapple maximum slope = 20%
-# Trees slope = 22%
-# Plateau maximum slope = 5%
-# Distance to compute slope = 6 m (3m for each side)
-# water sources buffer zone = 30 m
-# Main trail width = 5-6 m
-# 2nd trail width = 4 m
-# Big trees = 50 cm
-# Objective bonus = 20-30%
-# Cable = 40 m
-# Grapple = 6 m
-# Isolate tree minimum distance = 100 m
-# Future trees minimum diameter = 35 cm
-# TreefallSuccess proportion = 0.6
-# Treefall orientation = 30-45◦
-# (Hollow) Part taken from hollow trees for fuel exploitation = 1/3
-# Purge = 0.14
-# Maximum TrailDensity = 200 m/ha
-# Maximum landing area = 1 500 m^2
 
-
-# TrunkHeight formule : TrunkHeight = TreeHarvestableVolume/(pi*(((DBH/100)/2)^2))
-# CrownDiameter formule : CrownDiameter = exp(((log(DBH)-alpha-error)/beta))/TreeHeight
-# RottenModel
-
-pars <- list(MinDBHValue = 10, #in cm
-             MaxAreaSlope = 27, #in %
-             MaxTrailCenterlineSlope = 22, #in %
-             MaxTrailCrossSlope = 4, #in %
-             GrappleMaxslope = 20, #in %
-             TreeMaxSlope = 22, #in %
-             PlateauMaxSlope = 5, #in %
-             SlopeDistance = 6, #in m (3m for each side)
-             WaterSourcesBufferZone = 30, #in m
-             MainTrailWidth = 5-6, #in m
-             "2ndTrailWidth" = 4, #in m
-             BigTrees = 50, #in cm
-             ObjectiveBonus = 20-30, #in % (ObjectiveBonus >= 20 && ObjectiveBonus =< 30 ou c(20:30))
-             CableLength = 40, #in m
-             GrappleLength = 6, #in m
-             IsolateTreeMinDistance = 100, #in m
-             FutureTreesMinDiameter = 35, #in cm
-             TreefallSuccessProportion = 0.6,
-             TreefallOrientation = 30-45, #in degree (◦)
-             TreeHollowPartForFuel = 1/3, #(Hollow) Part taken from hollow trees for fuel exploitation
-             Purge = 0.14, # in m^3 of fuelwood/m^3 of logged trees  
-             MaxTrailDensity = 200, #in m/ha
-             MaxLandingArea = 1500, #in square meters
-             TrunkHeightAllometry = TreeHarvestableVolume/(pi*(((DBH/100)/2)^2)),
-             CrownDiameterAllometry = exp(((log(DBH)-alpha-error)/beta))/TreeHeight,
-             RottenModel = ) 
-```
 
 
 # inventorycheckformat
@@ -410,81 +352,40 @@ calculer pour tous les arbres :
 + CrownHeight : TreeHeight - TrunkHeight
 
 
-
-
 ```{r}
+library(BIOMASS)
+library(knitr)
 
 TreeheightGuyafordata <- read_delim("D:/VSC Kourou/DATA/TreeheightGuyafordata.csv", 
                                     ";", escape_double = FALSE, col_types = cols(Circ = col_number(), 
                                                                                  CircCorr = col_number(), Hauteur = col_number()), 
                                     locale = locale(encoding = "Latin1"), 
                                     trim_ws = TRUE) %>% 
+  mutate(HeightHow = recode(HeightHow, 'Visual estimate' = 'Visual Estimate')) %>% 
+  # filter(!(HeightHow == "Visual Estimate" | HeightHow == "Visual estimate")) %>% 
   unite(Genus, Species, col = "ScientificName", sep = "_", remove = F) %>% 
-  mutate(DBH = ifelse(is.na(CircCorr), Circ/pi, CircCorr/pi)) %>% 
-  mutate(HeightHow = recode(HeightHow, 'Visual estimate' = 'Visual Estimate'))
+  mutate(DBH = ifelse(is.na(CircCorr), Circ/pi, CircCorr/pi)) # add DBH column
+
 
 any(is.na(TreeheightGuyafordata$DBH)) # all the DBH have been computed?
 
 
-# esquisse::esquisser()
 
-#Methods facet
-TreeheightGuyafordata %>%
- ggplot() +
-  aes(x = DBH, y = Hauteur) +
-  geom_point(shape = "circle", size = 0.5, colour = "#440154") +
-  geom_smooth(span = 0.75) + # using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
-  theme_minimal() +
-  facet_wrap(vars(HeightHow))
-
-# Colored multilignes
-TreeheightGuyafordata %>%
- ggplot() +
-  aes(x = DBH, y = Hauteur, colour = HeightHow) +
-  geom_line(size = 0.2) +
-  scale_color_hue(direction = 1) +
-  theme_minimal() +
-  theme(legend.position = "bottom")
+SineTelemeter <- TreeheightGuyafordata %>% #data to fit model
+  filter(HeightHow == "Sine Method (Larjavaara & Muller-Landau 2013) with Trimble LaserAce 1000 Rangefinder"| HeightHow == "Telemeter")
 
 
-# Methods Box-Plot
-TreeheightGuyafordata %>%
-ggplot(aes(x=DBH, y=Hauteur, fill=HeightHow)) +
-  theme(legend.position = "bottom") +
-  geom_boxplot()
-
-# DBH distribution per method
-TreeheightGuyafordata %>%
- ggplot() +
-  aes(x = DBH) +
-  geom_histogram(bins = 30L, fill = "#440154") +
-  theme_minimal() +
-  facet_wrap(vars(HeightHow), scales = "free_y") #or "fixed"
-
-
-# Ind/sp distribution per method
-ggplot(TreeheightGuyafordata) +
-  aes(x = ScientificName) +
-  geom_bar(fill = "#440154") +
-  theme_minimal() +
-  facet_wrap(vars(HeightHow), scales = "free") #or "fixed"
-
-```
-```{r}
-library(BIOMASS)
-library(knitr)
 
 ModelsresultGuiana <-modelHD(
-  D = TreeheightGuyafordata$DBH,
-  H = TreeheightGuyafordata$Hauteur,
+  D = SineTelemeter$DBH,
+  H = SineTelemeter$Hauteur,
   useWeight = TRUE
 )
-kable(ModelsresultGuiana) #log2 has the lowest RSE (4.699261 with all data, 4.316927 without "Visual E/estimate", 3.059860 with just "Sine Method")
-#Don't forget, you have the model form, and its parameters, and there are different according to the data.
+kable(ModelsresultGuiana) #log2 has the lowest RSE (4.699261 with all data, 4.316927 without "Visual E/estimate", 3.059860 with just "Sine Method", 3.809011 with sine and telemeter)
 
 HDmodelGuiana <- modelHD(
-  D = TreeheightGuyafordata$DBH,
-  H = TreeheightGuyafordata$Hauteur,
+  D = SineTelemeter$DBH,
+  H = SineTelemeter$Hauteur,
   method = "log2", # Compute the H-D model with the lowest RSE.
   useWeight = TRUE
 )
@@ -495,39 +396,21 @@ TreeHeightGuianaEstimation <- retrieveH(
 #Put these tree heights estimations in the inventory
 TreeheightGuyafordataEstim <- TreeheightGuyafordata %>% 
   mutate(HauteurEstimee = TreeHeightGuianaEstimation$H)
-plot(TreeheightGuyafordataEstim$DBH, TreeheightGuyafordataEstim$HauteurEstimee)#amazing !! It's a log2 form
+plot(TreeheightGuyafordataEstim$DBH, TreeheightGuyafordataEstim$HauteurEstimee)
 
-#facet obs/estim :
+# obs/estim regression:
 TreeheightGuyafordataEstim %>%
- # filter(!is.na(CircCorr)) %>%
- ggplot() +
+  ggplot() +
   aes(x = Hauteur, y = HauteurEstimee) +
   geom_point(shape = "circle", size = 0.5, colour = "#440154") +
-  geom_smooth(span = 0.75) + # try with method = lm
-  theme_minimal() +
-  facet_wrap(vars(HeightHow))
+  geom_smooth(span = 0.75) + 
+  theme_minimal()
+# We are well between 10 and 35m height
 ```
 
 ```{r TreeHeight}
 library(BIOMASS)
 library(knitr)
-
-#if DBH (cm) doesn't exist create it
-if (!("DBH" %in% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA)
-  Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
-
-# TreeHeight = hauteur de l’arbre (H) (en mètre) (BIOMASS package)
-# 3 options :
-# - get my tree heights from the location (from continent or region specific model, or from coordinates)
-# - from other Guyanese trees heights data, fit different H-D models, select the best and apply on my data.
-
-#continent or region specific model (Feldpaush et al. (2012))
-RegionTreeHeight <- retrieveH(D = Paracou6_2016$DBH, region = "GuianaShield") # GuianaShield = Guyana, French Guiana (piste St Elie (Chave 2005)), Venezuela
-
-#by coordinates (Chave et al. (2012))
-n <- length(Paracou6_2016$CircCor)
-coord <- cbind(long = rep(-52.92, n), lat = rep(5.27, n)) # Paracou P6 coordinates
-CoordTreeHeight <- retrieveH(D = Paracou6_2016$DBH, coord = coord) 
 
 # Just with Nouragues data (measurement: laser rangefinder):
 # Fit first different height-diameter models
@@ -679,7 +562,7 @@ Paracou6_2016_crown <- Paracou6_2016 %>%
   left_join(genParamCrownDiameter, by = "Genus", suffix = c(".species", ".genus")) %>% #Add parameters at genus scale
   left_join(famParamCrownDiameter, by = "Family") %>% #Add parameters at family scale
   
-  rename(Taxo.family = Taxo, alpha.family = alpha, beta.family = beta) %>% 
+  dplyr::rename(Taxo.family = Taxo, alpha.family = alpha, beta.family = beta) %>%
   mutate(alpha = alpha.species, beta = beta.species, Taxo = Taxo.species) %>% # create the future & unique alpha,beta,taxo columns 
   mutate(alpha = ifelse(is.na(alpha), alpha.genus, alpha)) %>% #if species parameters are absent, take genus parameters
   mutate(alpha = ifelse(is.na(alpha), alpha.family, alpha)) %>% #if species&genus parameters are absent, take family parameters

@@ -13,7 +13,7 @@ Authors@R:
       person(given = "Thomas",
            family = "Gaquiere",
            role = "aut",
-           email = "gaquiere.thomas@yahoo.com "),
+           email = "gaquiere.thomas@yahoo.com"),
       person(given = "Géraldine",
            family = "Derroire",
            role = "ctb",
@@ -21,7 +21,7 @@ Authors@R:
       person(given = "Sylvain",
            family = "Schmitt",
            role = "ctb",
-           email = "sylvain.m.schmitt@gmail.com ")
+           email = "sylvain.m.schmitt@gmail.com")
            )
 Description: This package allows to simulate different forms of logging on a forest.
 URL: https://github.com/VincyaneBadouard/Maria.git
