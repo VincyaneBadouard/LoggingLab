@@ -1,0 +1,224 @@
+---
+title: "DESIGNATION_DRAFT"
+author: "Vincyane Badouard"
+date: "04/06/2021"
+output: html_document
+---
+
+# Les arguments
+inventory
+speciescriteria
+type
+objective
+diversification
+specieslax
+objectivelax
+otherloggingparameters = loggingparameters()
+multilignes "MainTrail"
+
+# Fonctions internes à exporter
+harvestable, selected, futurereserve
+
+# Etapes préliminaires
++ Ne sélectionner que des arbres encore vivants (DeathCause = NULL) durant toute la fonction.
++ Identification à vue d'œil des arbres à défaut (proportion : valeur fixe ou modèle ?) : coder "1" dans une colonne "Defect" de la table, coder "0" les autres.
++ Ne considérer dans la désignation que les arbres "0" dans "Defect".
++ Désignation : fonction "TreeSelection"
++ Si type = "RILdamagerotten", "VO" = "objective"
++ Sinon "VO" = "objective" + 20-30% pour compenser le bois creux désigné.
+```{r}
+# filter(DeathCause = NULL) %>%  # select only still alived trees (after MainTrails) NULL ou NA
+# mutate(Defect= ifelse(condition, "1", "0")) %>%  # 1 = default tree, 0 = no visible default
+# filter(Defect = "0") %>%
+
+# Désignation : fonction "TreeSelection"
+if (type = "RILdamagerotten"){VO = objective
+}else{
+  VO = objective + otherloggingparameters$ObjectiveBonus # to compensate for the designated hollow wood.
+} 
+```
+
+# harvestable
++ Étiqueter "harvestable", dans une colonne "LoggingStatus", sélection des individus :
+Essences :
+- Si diversification=T ou si diversification=F & specieslax=T : = "1" & "2" dans colonne "Commercial"
+- Sinon (diversification=F & specieslax=F): = "1" dans colonne "Commercial"
+Diamètre exploitable (speciescriteria data): individus dont le DBH est compris entre la valeur dans colonne "MinFD" pour leur sp, de la table speciescriteria , et le MaxFD.
+Distribution spatiale:
+- Arbres sur <22% de pente et arbres sur pente >22% si à 40 m maximum d’une zone <22%.
+- arbre non isolé : élimination des arbres à >100m des autres individus de la même espèce.
+- hors des pistes principales : dont les coordonnées n'appartiennent pas aux multilignes "MainTrail".
++ Si diversification=F & specieslax=T, étiqueter "harvestable2nd" à la place d’"harvestable", les "Commercial"= "2" dans la colonne "LoggingStatus".
++ Étiqueter "UPeco2" à la place d’"harvestable" dans colonne "LoggingStatus", les individus "Commercial"= "2" de "DBH" > à leur "UpMinFD".
++ HVinit= somme des valeurs de "TreeHarvestableVolume " des arbres dont "LoggingStatus" = "harvestable".
+```{r}
+HarverstableConditions  
+#select essences
+if (diversification || (!diversification && specieslax)) {
+  filter(Commercial %in% c("1", "2"))
+} else if (!diversification && !specieslax) {
+  filter(Commercial == "1")
+}
+#select diameters
+left_join(speciescriteria, by = "ScientificName") #or by VernName
+filter(DBH >= MinFD & DBH <= MaxFD)
+
+#select spatially
+#slope
+#isolement
+#MainTrails out
+
+mutate(LoggingStatus = ifelse(HarverstableConditions,
+                              "harvestable", "non-harvestable")) %>% 
+  mutate(LoggingStatus = ifelse(
+    !diversification & 
+      specieslax & 
+      LoggingStatus == "harvestable" & 
+      Commercial == "2",
+    "harvestable2nd", LoggingStatus)) %>% 
+  mutate(LoggingStatus = ifelse(
+    LoggingStatus == "harvestable" &
+      Commercial == "2" & 
+      DBH >= UpMinFD, 
+    "UPeco2", LoggingStatus))
+
+HVinit <- data %>%
+  filter(LoggingStatus == "harvestable") %>% 
+  sum(TreeHarvestableVolume) 
+
+```
+
+
+# selected
+```{r}
+add_column(data, Up = NA) # Create a column to indicate Which sp is FD uped. Or create this column d'office in speciescriteria.
+
+# if objective achieved at the first attempt
+mutate(Selected = ifelse(HVinit == VO & LoggingStatus == "harvestable",
+                         "1", LoggingStatus)) 
+
+
+if (HVinit < VO){ 
+  if (!diversification && specieslax){
+    # LoggingStatus = "harvestable2nd" | LoggingStatus = "harvestable"
+    # Selected = "1"
+    # prendre parmi les arbres étiquetés "harvestable2nd" ou "harvestable" dans "LoggingStatus", les arbres par ordre décroissant de "TreeHarvestableVolume " jusqu’à atteindre HVlax = VO.
+    # étiqueter ces arbres "1", dans une colonne "Selected".
+    
+    if (HVlax < VO && objectivelax) message("Le volume exploitable (= HVlax ) est encore inférieur (de VO- HVlax) à votre volume objectif malgré la diversification que vous avez permise (sans la diversification HVinit= HVinit). Vous avez choisi dans ce cas de poursuivre l’exploitation avec un volume inférieur à votre objectif.")
+    
+    if (HVlax < VO && !objectivelax) stop("Le volume exploitable (=HVlax ) est encore inférieur (de VO- HVlax) à votre volume objectif malgré la diversification que vous avez permise (sans la diversification HVinit= HVinit). Par défaut ou par votre choix, la simulation s’arrête. Si vous souhaitez poursuivre l’exploitation malgré un volume exploitable inférieur à votre volume objectif vous disposez de l‘argument "objectivelax".")
+    
+    if (!HVlax < VO) message("Le volume exploitable (=HVinit) est inférieur (de VO- HVinit) à votre volume objectif. Vous avez choisi de diversifier votre sélection d’espèces dans ce cas. L’exploitation s’est donc réalisée sur cette sélection diversifiée d’espèces.")
+  }
+  
+  if ((!diversification && !specieslax && objectivelax) | (diversification && objectivelax))
+    message("Le volume exploitable (=HVinit) est inférieur (de VO- HVinit) à votre volume objectif. Vous avez choisi dans ce cas de poursuivre l’exploitation sans diversifier vos essences.")
+  
+  
+  if ((!specieslax & !objectivelax) | (diversification && !objectivelax)) 
+    stop("Le volume exploitable (=HVinit) est inférieur (de VO- HVinit) à votre volume objectif. Par défaut ou par votre choix, la simulation s’arrête. Si vous souhaitez poursuivre l’exploitation malgré un volume exploitable inférieur à votre volume objectif vous disposez de l‘argument "objectivelax" ou de la diversification d’essences.")
+}
+
+
+if (HVinit > VO) {
+  # rehaussement des DME des sp ECMP : étiqueter "harvestableUp" à la place d’"harvestable", dans la colonne "LoggingStatus", les individus "Commercial"= "1" dont le "DBH" est compris entre la valeur dans colonne "UpMinFD" pour leur sp, de la table speciescriteria , et le MaxFD.
+  mutate(Up = ifelse(Commercial == "1", "1", Up))# Dans la table species renseigner "1" dans la colonne "Up" les "Commercial"= "1" (pour signifier que leur DME a été réhaussé)
+  # test "Commercial"= "1" pour les "harvestableUp" 
+  
+  if (!diversification) {
+    # HVupCommercial1 = sum(TreeHarvestableVolume) des LoggingStatus == harvestableUp.
+    if (HVupCommercial1 == VO){
+      # Selected = "1" # étiqueter ces arbres "1", dans une colonne "Selected".
+      message("Le volume exploitable (=HVinit) étant supérieur (de VO- HVinit) au volume objectif, les DME des ECMP ont été rehaussés. Le volume objectif est maintenant atteint.")
+    }
+    
+    if (HVupCommercial1 > VO){ 
+      # prendre parmi les arbres étiquetés "harvestableUp" dans "LoggingStatus", les arbres par ordre décroissant de "TreeHarvestableVolume " jusqu’à atteindre HVupCommercial1adjust= VO.
+      # Selected = "1" # étiqueter ces arbres "1", dans une colonne "Selected".
+      message("Le volume exploitable (=HVupCommercial1) est toujours supérieur (de VO- HVupCommercial1) à votre volume objectif malgré le rehaussement des DME (Volume exploitable initial = HVinit). Afin d’atteindre votre volume objectif, les arbres ont été choisis par ordre décroissant de volume jusqu'à l’atteinte du volume objectif.")
+    }
+    if (HVupCommercial1 < VO){
+      # prendre parmi les arbres étiquetés "harvestableUp" & "harvestable" dans "LoggingStatus", les arbres par ordre décroissant de "TreeHarvestableVolume " jusqu’à atteindre HVupCommercial1adjust = VO.
+      # Selected = "1" étiqueter ces arbres "1", dans une colonne "Selected".
+      message("Le volume exploitable (=HVinit) étant supérieur (de VO- HVinit) au volume objectif, les DME des ECMP ont été rehaussés avec une conservation de certaines tiges dont le DBH est inférieur au UpMinFD afin d’assurer l’atteinte du volume objectif.")
+    }
+  }
+  
+  if (diversification) {
+    # "HVupCommercial1" = sum(TreeHarvestableVolume) des LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable."
+    
+    if (HVupCommercial1 == VO){
+      # étiqueter ces arbres "1", dans une colonne "Selected".
+      message("Le volume exploitable (=HVinit) étant supérieur (de VO- HVinit) au volume objectif, les DME des ECMP ont été rehaussés. Le volume objectif est maintenant atteint. Il n’a pas été nécessaire de rehausser les DME des autres espèces économiques")
+    }
+    
+    if (HVupCommercial1 < VO){ 
+      # prendre parmi les arbres "Commercial"= "1" étiquetés "harvestableUp" et "harvestable" dans "LoggingStatus", les arbres par ordre décroissant de "TreeHarvestableVolume " jusqu’à atteindre HVupCommercial1adjust = VO.
+      # Selected = "1" étiqueter ces arbres "1", dans une colonne "Selected".
+      message("Le volume exploitable (=HVinit) étant supérieur (de VO - HVinit) au volume objectif, les DME des ECMP ont été rehaussés avec une conservation de certaines tiges dont le DBH est inférieur au UpMinFD afin d’assurer l’atteinte du volume objectif. Il n’a pas été nécessaire de rehausser les DME des autres espèces économiques.")
+    }
+    
+    if (HVupCommercial1 > VO){ 
+      # rehaussement des DME des autres sp eco: étiqueter "harvestableUp" à la place d’"UPeco2", dans la colonne "LoggingStatus"
+      # Dans la table speciescriteria  renseigner "1" dans la colonne "Up" les "Commercial"= "2" (pour signifier que leur DME a été rehaussé)
+      # "HVupCommercial12" = somme des valeurs de "TreeHarvestableVolume " des "harvestableUp".
+      if (HVupCommercial12 == VO){
+        # Selected = "1" étiqueter ces arbres "1", dans la colonne "Selected".
+      }
+      if (HVupCommercial12 < VO){
+        # prendre parmi les arbres étiquetés "harvestableUp" et "harvestable" dans "LoggingStatus", les arbres par ordre décroissant de "TreeHarvestableVolume " jusqu’à atteindre HVupCommercial12adjust = VO.
+        # Selected = "1" étiqueter ces arbres "1", dans une colonne "Selected".
+      }
+      
+      if (HVupCommercial12 > VO){
+        # prendre parmi les arbres étiquetés "harvestableUp" dans "LoggingStatus", les arbres par ordre décroissant de "TreeHarvestableVolume " jusqu’à atteindre HVupCommercial12adjust = VO.
+        # Selected = "1" étiqueter ces arbres "1", dans une colonne "Selected".
+        message("Le volume exploitable (=HVinit) étant supérieur (de VO- HVinit) au volume objectif, il a été nécessaire de rehausser les DME de toutes les essences. Le volume objectif est maintenant atteint.")
+      }
+    }
+  }
+}
+
+# Lancer le modèle prédictif "Rotten" de S.Schmitt pour identifier les arbres désignés ("Selected"= "1") "véritablement"creux.
+
+# Étiqueter ces arbres "1" dans une colonne "RottenModel" et dans la colonne "Defect". Passer ces "Selected"= "1" à "Selected"= "0".
+
+# if type != "RILdamagerotten" : LoggedVolume =∑TreeHarvestableVolume  des arbres codés "Logged"= "1"
+# if type = "RILdamagerotten" :
+# pour les arbres RottenModel = "1", coder "hollowfuel" dans colonne "DeathCause"
+# Ajout des coordonnées de ces arbres au vecteur "RottenTreesPoints" et si type = "RIL3fuelrotten", au vecteur "EnergywoodTreesPoints".
+# NoRottenLoggedVolume =∑TreeHarvestableVolume  des arbres codés "Logged"= "1"
+# LoggedVolume = ∑NoRottenLoggedVolume  et ⅔ du volume de ceux codés RottenModel = "1".
+# if "Up" = NA remplacer NA par "0"
+
+
+```
+
+# futurereserve
+
+```{r}
+# Étiqueter "future", dans une colonne "LoggingStatus", sélection de tous les individus :
+# Essence : "Commercial"= "1" uniquement (qqsoit la diversification)
+# DBH : 
+# si dans la table speciescriteria  la colonne "Up" = "1" pour son sp : le DBH des individus de cette sp doit être compris entre 35 et le "UpMinFD" de son sp.
+# sinon entre 35 et le "MinFD" de son sp.
+# 
+# Sélectionner les arbres réservés (parmis les Avenirs, autant que d’arbres exploités) :
+# "stem" = nombre de "1" dans colonne "Selected" (& Rottenmodel = 0 ?)
+# Dans colonne "LoggingStatus", remplacer 1 "future"par "reserve" au hasard stem fois.
+
+
+# Créer un vecteur ("HarvestableTreesPoints") de points de coordonnées des arbres LoggingStatus = "harvestable" ou "harvestableUp" ou "harvestable2nd".
+# Créer un vecteur ("SelectedTreesPoints") de points de coordonnées des arbres Selected = 1.
+# Créer un vecteur ("FutureTreesPoints") de points de coordonnées des arbres LoggingStatus = "future"
+# Créer un vecteur ("ReserveTreesPoints") de points de coordonnées des arbres LoggingStatus = "reserve".
+# Si diversification = F & specieslax = T & HVinit< VO LoggingStatus = "harvestable2nd"inchangé
+# sinon LoggingStatus = "harvestable2nd" devient LoggingStatus = "NA".
+# Si pour Commercial = "2" Up = "0" remplacer "UPeco2" par "NA" dans LoggingStatus.
+
+```
+
+
+
+

@@ -6,11 +6,11 @@
 #
 #   # check their class (integer)
 #   lapply(c("TreeHeight", "TreeHarvestableVolume", "TrunkHeight", "CrownHeight", "CrownDiameter"),
-#          function(element) expect_type(addtreedim(Paracou6_2016)$element, integer))
+#          function(element) expect_type(addtreedim(Paracou6_2016)$element, double))
 #
 #   # check that variables are not empty, or contains NA's
 #   lapply(c("TreeHeight", "TreeHarvestableVolume", "TrunkHeight", "CrownHeight", "CrownDiameter"),
-#          function(element) expect_vector(addtreedim(Paracou6_2016)$element, ptype = integer(), size = length(idTree)))
+#          function(element) expect_vector(addtreedim(Paracou6_2016)$element, ptype = double(), size = length(idTree)))
 #
 #   # check if formulas are respected
 #
@@ -28,7 +28,7 @@
 #                                              + CrownHeight : TreeHeight - TrunkHeight
 
 # -> check if column exist
-# -> check their class (integer)
+# -> check their class (double)
 # -> is not empty, or contains NA's
 # -> check coherence
 

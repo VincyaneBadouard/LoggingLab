@@ -4,6 +4,11 @@ author: "Vincyane Badouard"
 date: "26/04/2021"
 output: html_document
 ---
+```{r}
+# si on avait une ancienne version de withr pour rstan
+remove.packages("withr")
+install.packages("withr")
+```
 
 ```{r}
 library(Maria)
@@ -50,30 +55,6 @@ load(system.file("extdata", "ParamCrownDiameterAllometry.rda", package = "Maria"
 ```{r}
 lapply(Paracou6_2016, class) #give the class of all the data variables
 ```
-
-# Create a broken dataset
-```{r Create a broken dataset}
-#in inst/extdata
-
-BrokenParacou6_2016 <- Paracou6_2016 %>% 
-  select(-Species) %>% # missing column
-  rename(Vernacular = VernName) %>% # other column name
-  rename(PLOT = Plot) %>% # variable name in upper case
-  mutate(idTree = as.character(as.numeric(idTree))) %>% #an other variable class
-  mutate(Lon = round(Lon, digits =0)) %>% # no digits
-  mutate(Genus = toupper(Genus)) %>%  # values in upper case
-  mutate(CodeAlive = ifelse(is.even(Paracou6_2016$idTree), "FALSE", CodeAlive)) %>% # Some FALSE in CodeAlive
-  mutate(CensusYear = ifelse(is.even(Paracou6_2016$idTree), CensusYear, CensusYear+1)) # different years inventory
-BrokenParacou6_2016[1:3, "idTree"] <- "200" # create a 2 time present tree
-BrokenParacou6_2016[4, "CircCorr"] <- 6 # DBH < 10
-BrokenParacou6_2016[5, "PLOT"] <- "100" # a tree in another plot
-
-
-# pour l'enregistrer : usethis::use_data(BrokenParacou6_2016) puis le move dans ins/exdata
-```
-
-
-
 
 # inventorycheckformat
 INPUT: inventory = Inventaires botaniques Guyafor/ONF (data frame)

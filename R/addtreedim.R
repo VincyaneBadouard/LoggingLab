@@ -61,35 +61,35 @@ addtreedim <- function(
 
 
     # CrownHeight (m)
-    mutate(CrownHeight = TreeHeight - TrunkHeight)
+    mutate(CrownHeight = TreeHeight - TrunkHeight) %>%
 
 
-    # # CrownDiameter (m)
-    # # Add crown diameter allometry parameters at the inventory:
-    # unite(Genus, Species, col = "ScientificName", sep = "_", remove = F) %>% # create ScientificName column in the inventory
-    # left_join(spParamCrownDiameter, by = c("ScientificName","Genus","Species")) %>% # at species scale
-    # left_join(genParamCrownDiameter, by = "Genus", suffix = c(".species", ".genus")) %>% # at genus scale
-    # left_join(famParamCrownDiameter, by = "Family") %>% # at family scale
-    # dplyr::rename(Taxo.family = Taxo, alpha.family = alpha, beta.family = beta) %>%
-    # # manage the different scales parameters Species > Genus > Family:
-    # # alpha:
-    # mutate(alpha = alpha.species, beta = beta.species, Taxo = Taxo.species) %>% # create the future & unique alpha,beta,taxo columns
-    # mutate(alpha = ifelse(is.na(alpha), alpha.genus, alpha)) %>% #if species parameters are absent, take genus parameters
-    # mutate(alpha = ifelse(is.na(alpha), alpha.family, alpha)) %>% #if species&genus parameters are absent, take family parameters
-    # mutate(alpha = ifelse(is.na(alpha), mean(alpha, na.rm =T), alpha)) %>% #if species,genus&family parameters are absent, take parameters mean
-    # select(-alpha.species, -alpha.genus, -alpha.family) %>% #remove obsolete columns
-    # # beta:
-    # mutate(beta = ifelse(is.na(beta), beta.genus, beta)) %>% #if species parameters are absent, take genus parameters
-    # mutate(beta = ifelse(is.na(beta), beta.family, beta)) %>% #if species&genus parameters are absent, take family parameters
-    # mutate(beta = ifelse(is.na(beta), mean(beta, na.rm =T), beta)) %>% #if species,genus&family parameters are absent, take parameters mean
-    # select(-beta.species, -beta.genus, -beta.family) %>% #remove obsolete columns
-    # # scale:
-    # mutate(Taxo = ifelse(is.na(Taxo), Taxo.genus, Taxo)) %>% #if species parameters are absent, take genus parameters
-    # mutate(Taxo = ifelse(is.na(Taxo), Taxo.family, Taxo)) %>% #if species&genus parameters are absent, take family parameters
-    # mutate(Taxo = ifelse(is.na(Taxo), "mean", Taxo)) %>% #if species,genus&family parameters are absent, take parameters mean
-    # select(-Taxo.species, -Taxo.genus, -Taxo.family) %>% #remove obsolete columns
-    # # compute the crown diameter
-    # mutate(CrownDiameter = otherloggingparameters$CrownDiameterAllometry(DBH, TreeHeight, alpha, beta))
+    # CrownDiameter (m)
+    # Add crown diameter allometry parameters at the inventory:
+    unite(Genus, Species, col = "ScientificName", sep = "_", remove = F) %>% # create ScientificName column in the inventory
+    left_join(spParamCrownDiameter, by = c("ScientificName","Genus","Species")) %>% # at species scale
+    left_join(genParamCrownDiameter, by = "Genus", suffix = c(".species", ".genus")) %>% # at genus scale
+    left_join(famParamCrownDiameter, by = "Family") %>% # at family scale
+    dplyr::rename(Taxo.family = Taxo, alpha.family = alpha, beta.family = beta) %>%
+    # manage the different scales parameters Species > Genus > Family:
+    # alpha:
+    mutate(alpha = alpha.species, beta = beta.species, Taxo = Taxo.species) %>% # create the future & unique alpha,beta,taxo columns
+    mutate(alpha = ifelse(is.na(alpha), alpha.genus, alpha)) %>% #if species parameters are absent, take genus parameters
+    mutate(alpha = ifelse(is.na(alpha), alpha.family, alpha)) %>% #if species&genus parameters are absent, take family parameters
+    mutate(alpha = ifelse(is.na(alpha), mean(alpha, na.rm =T), alpha)) %>% #if species,genus&family parameters are absent, take parameters mean
+    select(-alpha.species, -alpha.genus, -alpha.family) %>% #remove obsolete columns
+    # beta:
+    mutate(beta = ifelse(is.na(beta), beta.genus, beta)) %>% #if species parameters are absent, take genus parameters
+    mutate(beta = ifelse(is.na(beta), beta.family, beta)) %>% #if species&genus parameters are absent, take family parameters
+    mutate(beta = ifelse(is.na(beta), mean(beta, na.rm =T), beta)) %>% #if species,genus&family parameters are absent, take parameters mean
+    select(-beta.species, -beta.genus, -beta.family) %>% #remove obsolete columns
+    # scale:
+    mutate(Taxo = ifelse(is.na(Taxo), Taxo.genus, Taxo)) %>% #if species parameters are absent, take genus parameters
+    mutate(Taxo = ifelse(is.na(Taxo), Taxo.family, Taxo)) %>% #if species&genus parameters are absent, take family parameters
+    mutate(Taxo = ifelse(is.na(Taxo), "mean", Taxo)) %>% #if species,genus&family parameters are absent, take parameters mean
+    select(-Taxo.species, -Taxo.genus, -Taxo.family) %>% #remove obsolete columns
+    # compute the crown diameter
+    mutate(CrownDiameter = otherloggingparameters$CrownDiameterAllometry(DBH, TreeHeight, alpha, beta))
 
 
   return(inventory)
