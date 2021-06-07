@@ -1,5 +1,5 @@
 
-#' Say "Bonjour 2 times !" with a name
+#' Say "Bonjour 2 times !" with a name.
 #'
 #' @param nom Name of the person to say " Bonjour !" (character).
 #' @param verbose Print in console (boolean).
