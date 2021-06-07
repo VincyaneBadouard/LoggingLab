@@ -6,9 +6,7 @@
 #' @return inventory (data.frame).Stop the function if the tree identifiers (idTree) are not unique, or if there are different plots in the inventory.
 #' @export
 #' @importFrom tibble add_column
-#' @importFrom dplyr filter
-#' @importFrom dplyr mutate
-
+#' @importFrom dplyr filter mutate
 #'
 #' @examples
 #'

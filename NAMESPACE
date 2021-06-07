@@ -3,6 +3,7 @@
 export("%>%")
 export(addtreedim)
 export(bonjour)
+export(bonjour2)
 export(cleaninventory)
 export(inventorycheckformat)
 export(loggingparameters)
