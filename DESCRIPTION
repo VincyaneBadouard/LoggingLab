@@ -42,4 +42,5 @@ Imports:
     magrittr (>= 2.0.1),
     dplyr (>= 1.0.5),
     tibble (>= 3.1.0),
+    tidyr (>= 1.1.2),
 BugReports: 
