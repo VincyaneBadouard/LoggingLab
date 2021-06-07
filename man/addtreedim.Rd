@@ -31,7 +31,7 @@ data(Paracou6_2016)
 data(ForestZoneVolumeParametersTable) # The volume parameters data in the global environment
 load(system.file("extdata", "ParamCrownDiameterAllometry.rda", package = "Maria"))
 
-if (!("DBH" \%in\% names(Paracou6_2016))) {add_column(Paracou6_2016, DBH = NA) #if DBH doesn't exist create it
+if (!("DBH" \%in\% names(Paracou6_2016))) {tibble::add_column(Paracou6_2016, DBH = NA) #if DBH doesn't exist create it
 Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
 
 addtreedim(inventory = Paracou6_2016)

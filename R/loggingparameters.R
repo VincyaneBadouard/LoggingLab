@@ -34,6 +34,7 @@
 #' @return A named list of 30 objects.
 
 #' @export
+#' @importFrom stats rnorm
 #'
 #' @examples
 #' loggingparameters(MinDBHValue = 5)
