@@ -30,7 +30,7 @@ loggingparameters(
   Purge = 0.14,
   MaxTrailDensity = 200,
   MaxLandingArea = 1500,
-  TreeHarvestableVolumeAllometry = function(aCoef, bCoef, DBH) aCoef + bCoef *
+  TreeHarvestableVolumeAllometry = function(DBH, aCoef, bCoef) aCoef + bCoef *
     (DBH/100)^2,
   TrunkHeightAllometry = function(DBH, TreeHarvestableVolume) TreeHarvestableVolume/(pi
     * (((DBH/100)/2)^2)),

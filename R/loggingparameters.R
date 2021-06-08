@@ -65,13 +65,24 @@ loggingparameters <- function(
   MaxTrailDensity = 200, #in m/ha
   MaxLandingArea = 1500, #in square meters
 
-  ### Models
+  ### Models (peut-etre mettre les modèles dans un fichier .R chacun ac leure propre doc)
 
-  TreeHarvestableVolumeAllometry = function(aCoef, bCoef, DBH)
+  # my too much specific version
+  TreeHarvestableVolumeAllometry = function(DBH, aCoef, bCoef)
     aCoef + bCoef * (DBH/100)^2, # a and b depend on the forest location)(DBH in cm, in m in the formula)
 
+  # #Sylvain's version
+  # TreeHarvestableVolumeParameters = c("aCoef", "bCoeff"), # create a characters vectoc with the coef names
+  #
+  # TreeHarvestableVolumeAllometry = function(DBH, pars){
+  #   # pars1 and pars2 depend on the forest location)
+  #   if(length(pars) != 2) # check the parameters number
+  #     stop("You should have 2 parameters for the tree harvestable volume allometry")
+  #   return(pars[1] + pars[2] * (DBH/100)^2) #(DBH in cm, in m in the formula)
+  # },
+
   TrunkHeightAllometry = function(DBH, TreeHarvestableVolume) # compute the trunk height
-    TreeHarvestableVolume/(pi*(((DBH/100)/2)^2)),  # cylinderVolume = pi(DBH/2)^2 x H.
+    TreeHarvestableVolume/(pi*(((DBH/100)/2)^2)),  # CylinderVolume = pi(DBH/2)^2 x H.
   # DBH in cm, in m in the formula.
 
   TreeHeightAllometry = function(DBH) exp(0.07359191 + 1.34241216*log(DBH) + -0.12282344*log(DBH)^2),
