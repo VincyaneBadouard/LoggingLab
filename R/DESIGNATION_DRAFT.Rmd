@@ -9,6 +9,7 @@ output: html_document
 inventory
 speciescriteria
 type
+fuel
 objective
 diversification
 specieslax
@@ -24,18 +25,116 @@ harvestable, selected, futurereserve
 + Identification à vue d'œil des arbres à défaut (proportion : valeur fixe ou modèle ?) : coder "1" dans une colonne "Defect" de la table, coder "0" les autres.
 + Ne considérer dans la désignation que les arbres "0" dans "Defect".
 + Désignation : fonction "TreeSelection"
-+ Si type = "RILdamagerotten", "VO" = "objective"
++ Si type = "RIL3fuelhollow", "VO" = "objective"
 + Sinon "VO" = "objective" + 20-30% pour compenser le bois creux désigné.
-```{r}
-# filter(DeathCause = NULL) %>%  # select only still alived trees (after MainTrails) NULL ou NA
-# mutate(Defect= ifelse(condition, "1", "0")) %>%  # 1 = default tree, 0 = no visible default
-# filter(Defect = "0") %>%
 
-# Désignation : fonction "TreeSelection"
-if (type = "RILdamagerotten"){VO = objective
+```{r Give values to the arguments to work}
+
+inventory = addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))) #3539 rows (Paracou: 3620 rows)
+speciescriteria = SpeciesCriteria
+type = "manual"
+fuel = "0"
+objective = 20
+diversification = TRUE
+specieslax = FALSE
+objectivelax = FALSE
+otherloggingparameters = loggingparameters()
+# MainTrail
+
+```
+
+```{r}
+
+# inventory <- inventory %>% 
+# filter(DeathCause = NULL) %>%  # select only still alived trees (after MainTrails) NULL ou NA
+
+# mutate(VisibleDefectProba = otherloggingparameters$VisiblyRottenModel(DBH)) %>%
+# mutate(VisibleDefect = sample(c(0,1), size = 1, replace = F, prob = VisibleDefectProba)) # 1 = default tree, 0 = no visible default (là ma fct ne sait pas qd elle doit mettre 0 ou 1)
+
+# filter(VisibleDefect = "0") %>%
+
+
+if (type == "RIL3fuelhollow"| (type == "manual"& fuel =="2")){VO = objective #3604 rows
 }else{
   VO = objective + otherloggingparameters$ObjectiveBonus # to compensate for the designated hollow wood.
 } 
+
+```
+
+# Joindre les taxonomies ONF/Guyafor (.ONFGuyafortaxojoin)
+```{r}
+# speciescriteriaVern <- speciescriteria %>% 
+#   select(-ScientificName)
+# 
+# speciescriteriaScientfc <- speciescriteria %>% 
+#   select(-VernName)
+
+speciescriteria = SpeciesCriteria
+
+genuscriteria <- speciescriteria %>% # for economic names that relate to entire genus
+  filter(Species == "spp")
+
+speciescriteria <- speciescriteria %>%
+  filter(Species != "spp")
+
+inventoryA <- inventory %>% 
+  left_join(genuscriteria, by = "Genus", suffix = c("", ".genus")) %>%
+  select(-Species.genus) %>% 
+  left_join(speciescriteria, by = c("Genus","Species"), suffix = c(".genus", ".species")) %>% 
+  dplyr::rename(VernName = VernName.genus) %>% 
+  mutate(ONFName = ifelse(is.na(VernName.species), VernName.genus.genus, VernName.species)) %>% 
+  select(-VernName.species, -VernName.genus.genus) %>% 
+  mutate(Commercial = ifelse(is.na(Commercial.species), Commercial.genus, Commercial.species)) %>%
+  mutate(MinFD = ifelse(is.na(MinFD.species), MinFD.genus, MinFD.species)) %>%
+  mutate(UpMinFD = ifelse(is.na(UpMinFD.species), UpMinFD.genus, UpMinFD.species)) %>%
+  mutate(MaxFD = ifelse(is.na(MaxFD.species), MaxFD.genus, MaxFD.species)) %>% 
+  select(-Commercial.species, -Commercial.genus, -MinFD.species, -MinFD.genus, -UpMinFD.species, -UpMinFD.genus, -MaxFD.species, -MaxFD.genus)
+
+ConcernedRows <- which(inventoryA$ONFName == "maho rouge" & (inventoryA$ScientificName == "Lecythis_poiteaui"| inventoryA$ScientificName == "Lecythis_praeclara" | inventoryA$ScientificName == "Lecythis_holcogyne" | inventoryA$ScientificName == "Lecythis_pneumatophora"| inventoryA$ScientificName == "Lecythis chartacea"| inventoryA$ScientificName == "Lecythis zabucajo"))
+if(length(ConcernedRows) > 0){
+  inventoryA$ONFName[ConcernedRows] <- NA
+  inventoryA$Commercial[ConcernedRows] <- NA
+  inventoryA$MinFD[ConcernedRows] <- NA
+  inventoryA$UpMinFD[ConcernedRows] <- NA
+  inventoryA$MaxFD[ConcernedRows] <- NA
+}
+
+ConcernedRows <- which(inventoryA$ONFName == "balata blanc" & (inventoryA$ScientificName == "Micropholis_melinoniana"| inventoryA$ScientificName == "Micropholis_egensis" | inventoryA$ScientificName == "Micropholis_cayennensis" | inventoryA$ScientificName == "Micropholis_obscura"))
+if(length(ConcernedRows) > 0){
+  inventoryA$ONFName[ConcernedRows] <- NA
+  inventoryA$Commercial[ConcernedRows] <- NA
+  inventoryA$MinFD[ConcernedRows] <- NA
+  inventoryA$UpMinFD[ConcernedRows] <- NA
+  inventoryA$MaxFD[ConcernedRows] <- NA
+}
+
+
+filter(inventoryA, ScientificName == "Micropholis_obscura")
+
+
+# Maho rouge = sauf "Lecythis_poiteaui", "Lecythis_praeclara" et "Lecythis_holcogyne" , "Lecythis_pneumatophora" et "Lecythis chartacea", "Lecythis zabucajo") 
+# Bakuman ou Balata blanc = sauf "Micropholis_melinoniana", "Micropholis_egensis",  "Micropholis_cayennensis" et "Micropholis_obscura")
+
+```
+
+```{r}
+# To control
+dupli <- inventoryA[duplicated(inventoryA$idTree), ] # les lignes dupliquées sont dues aux genres qui concernent plsrs essences
+
+
+NAtable <- inventoryA[is.na(inventoryA$Commercial),] #2101 ind not linked
+NAtablescfc <- as.data.frame(unique(inventoryA[is.na(inventoryA$Commercial),]$ScientificName)) #264 sp not linked
+NAtablevern <- as.data.frame(unique(inventoryA[is.na(inventoryA$Commercial),]$VernName)) #122 sp not linked
+
+NAtablevern <- unique(NAtable$VernName) #264 
+NAtablescfc <- unique(NAtable$ScientificName) #122
+
+
+
+filter(inventoryA, Commercial =="1") #177 ind
+filter(inventoryA, Commercial =="2") #1267 ind
+comerc <- filter(inventoryA, Commercial =="1"| Commercial =="2")
+all(comerc$CommercialSp == TRUE)
 ```
 
 # harvestable
@@ -51,51 +150,63 @@ Distribution spatiale:
 + Si diversification=F & specieslax=T, étiqueter "harvestable2nd" à la place d’"harvestable", les "Commercial"= "2" dans la colonne "LoggingStatus".
 + Étiqueter "UPeco2" à la place d’"harvestable" dans colonne "LoggingStatus", les individus "Commercial"= "2" de "DBH" > à leur "UpMinFD".
 + HVinit= somme des valeurs de "TreeHarvestableVolume " des arbres dont "LoggingStatus" = "harvestable".
+
 ```{r}
-HarverstableConditions  
+# Il manque les scénarios dans les conditions -_-
+
 #select essences
-if (diversification || (!diversification && specieslax)) {
-  filter(Commercial %in% c("1", "2"))
-} else if (!diversification && !specieslax) {
-  filter(Commercial == "1")
-}
+HarverstableConditions <- # = 1 boolean vector
+  if (diversification || (!diversification && specieslax)) {
+    inventoryA$Commercial =="1"| inventoryA$Commercial == "2" # now or maybe after we will diversify
+  } else if (!diversification && !specieslax) {
+    Commercial == "1" # We will never diversify
+  }
+
 #select diameters
-left_join(speciescriteria, by = "ScientificName") #or by VernName
-filter(DBH >= MinFD & DBH <= MaxFD)
+HarverstableConditions <- HarverstableConditions & (inventoryA$DBH >= inventoryA$MinFD & inventoryA$DBH <= inventoryA$MaxFD) # harvestable species, accord by their DBH
 
 #select spatially
-#slope
-#isolement
-#MainTrails out
+# HarverstableConditions <- HarverstableConditions & ()
+##slope
+##isolement
+##MainTrails out
+filter(inventoryB, LoggingStatus == "harvestable")#96 ind for the moment
 
-mutate(LoggingStatus = ifelse(HarverstableConditions,
-                              "harvestable", "non-harvestable")) %>% 
-  mutate(LoggingStatus = ifelse(
+inventoryB <- inventoryA %>% 
+  mutate(LoggingStatus = ifelse(HarverstableConditions, #Under the above criteria, designate the harvestable species
+                                "harvestable", "non-harvestable")) %>% 
+  mutate(LoggingStatus = ifelse(is.na(Commercial), #The non-commercial species are non-harvestable.
+                                "non-harvestable", LoggingStatus)) %>%
+  
+  mutate(LoggingStatus = ifelse( 
     !diversification & 
-      specieslax & 
+      specieslax & #designate the secondarily harvestable species, because diversification only if necessary
       LoggingStatus == "harvestable" & 
       Commercial == "2",
     "harvestable2nd", LoggingStatus)) %>% 
+  
   mutate(LoggingStatus = ifelse(
     LoggingStatus == "harvestable" &
       Commercial == "2" & 
-      DBH >= UpMinFD, 
+      DBH >= UpMinFD, #designate preferred species if the plot is species-rich.  
     "UPeco2", LoggingStatus))
 
-HVinit <- data %>%
-  filter(LoggingStatus == "harvestable") %>% 
-  sum(TreeHarvestableVolume) 
+HarvestableTable <- inventoryB %>%
+  filter(LoggingStatus == "harvestable"| LoggingStatus == "UPeco2") #96 ind
+HVinit <- sum(HarvestableTable$TreeHarvestableVolume) #compute the harvestable volume in the plot for these criteria
+#all the inventory: HVinit = 2088.052 m3
+#just harvestable: HVinit = 365.3774 m3
 
 ```
 
 
 # selected
 ```{r}
-add_column(data, Up = NA) # Create a column to indicate Which sp is FD uped. Or create this column d'office in speciescriteria.
+add_column(data, Up = 0) # Create a column to indicate Which sp is FD uped. Or create this column d'office in speciescriteria. "0" = no uped, "1"= uped
 
 # if objective achieved at the first attempt
 mutate(Selected = ifelse(HVinit == VO & LoggingStatus == "harvestable",
-                         "1", LoggingStatus)) 
+                         "1", LoggingStatus))# if we have our volume, harvestable sp = selected sp 
 
 
 if (HVinit < VO){ 
@@ -180,14 +291,16 @@ if (HVinit > VO) {
   }
 }
 
-# Lancer le modèle prédictif "Rotten" de S.Schmitt pour identifier les arbres désignés ("Selected"= "1") "véritablement"creux.
+#Lancer le modèle prédictif "Rotten" de S.Schmitt pour identifier les arbres désignés ("Selected"= "1") "véritablement"creux.
+# mutate(ProbedHollowProba = ifelse(Selected == "1",otherloggingparameters$RottenModel(DBH), NULL) %>%
+# mutate(ProbedHollow = sample(c(0,1), size = 1, replace = F, prob = ProbedHollowProba)) # 1 = default tree, 0 = no visible default
 
-# Étiqueter ces arbres "1" dans une colonne "RottenModel" et dans la colonne "Defect". Passer ces "Selected"= "1" à "Selected"= "0".
+# Étiqueter ces arbres "1" dans une colonne "RottenModel". Passer ces "Selected"= "1" à "Selected"= "0".
 
-# if type != "RILdamagerotten" : LoggedVolume =∑TreeHarvestableVolume  des arbres codés "Logged"= "1"
-# if type = "RILdamagerotten" :
+# if (type != "RIL3fuelhollow"| (type == "manual"& fuel !="2")) : LoggedVolume =∑TreeHarvestableVolume  des arbres codés "Logged"= "1"
+# if (type = "RIL3fuelhollow"| (type == "manual"& fuel =="2")) :
 # pour les arbres RottenModel = "1", coder "hollowfuel" dans colonne "DeathCause"
-# Ajout des coordonnées de ces arbres au vecteur "RottenTreesPoints" et si type = "RIL3fuelrotten", au vecteur "EnergywoodTreesPoints".
+# Ajout des coordonnées de ces arbres au vecteur "RottenTreesPoints" et au vecteur "EnergywoodTreesPoints".
 # NoRottenLoggedVolume =∑TreeHarvestableVolume  des arbres codés "Logged"= "1"
 # LoggedVolume = ∑NoRottenLoggedVolume  et ⅔ du volume de ceux codés RottenModel = "1".
 # if "Up" = NA remplacer NA par "0"
@@ -218,6 +331,7 @@ if (HVinit > VO) {
 # Si pour Commercial = "2" Up = "0" remplacer "UPeco2" par "NA" dans LoggingStatus.
 
 ```
+
 
 
 

@@ -15,7 +15,7 @@ test_that("addtreedim", {
 
   # Test data preparation
   testinventory <- Paracou6_2016 %>% # compute the new inventory
-    mutate(DBH = ifelse(is.na(CircCorr), Circ/pi, CircCorr/pi)) %>% # add DBH column
+    cleaninventory() %>%
     addtreedim()
 
   TestList <- list( # list the variables to check
@@ -34,15 +34,18 @@ test_that("addtreedim", {
          function(element) expect_false(any(is.na(element))))
 
   # check if formulas are respected
-  expect_true(all(testinventory$TreeHarvestableVolume ==
+  expect_true(all(testinventory$TreeHarvestableVolume == # ONF's volume formula
                     testinventory$aCoef + testinventory$bCoef * (testinventory$DBH/100)^2))
 
-  expect_true(all(testinventory$TreeHeight ==
+  expect_true(all(testinventory$TreeHeight == # BIOMASS's model
                     exp(0.07359191 + 1.34241216*log(testinventory$DBH) + -0.12282344*log(testinventory$DBH)^2)))
 
 
-  expect_true(all(testinventory$TrunkHeight
+  expect_true(all(testinventory$TrunkHeight # Cylinder volume formula
                   == testinventory$TreeHarvestableVolume/(pi*(((testinventory$DBH/100)/2)^2))))
+
+
+  expect_true(all(testinventory$CrownHeight == testinventory$TreeHeight - testinventory$TrunkHeight))
 
   # expect_true(all(testinventory$CrownDiameter # dont work
   #                 == exp(((log(testinventory$DBH)- testinventory$alpha - rnorm(length(testinventory$DBH), 0, 0.0295966977))/testinventory$beta))/testinventory$TreeHeight))
@@ -54,7 +57,13 @@ test_that("addtreedim", {
   # expect_true(all(log(testinventory$DBH) #neither
   #                 == testinventory$alpha + testinventory$beta*log(testinventory$TreeHeight*testinventory$CrownDiameter) + rnorm(length(testinventory$DBH), 0, 0.0295966977)))
 
-  # check coherence (A FAIRE)
+  # check coherence
+  expect_true(all(0 < testinventory$TreeHarvestableVolume & testinventory$TreeHarvestableVolume < 1000))
+  expect_true(all(0 < testinventory$TrunkHeight & testinventory$TrunkHeight < 100))
+  expect_true(all(0 < testinventory$TreeHeight & testinventory$TreeHeight < 200))# the tallest known tree: 115.55 m
+  expect_true(all(0 < testinventory$CrownHeight & testinventory$CrownHeight < 100))
+  expect_true(all(0 < testinventory$CrownDiameter & testinventory$CrownDiameter < 200))
+
 })
 
 
@@ -62,13 +71,12 @@ test_that("addtreedim", {
 # + TreeHeight
 # + TreeHarvestableVolume : volume exploitable à partir du tarif de cubage (= a + b*DBH2) que représente chaque arbre (a et b dépendent de la localisation)
 # + TrunkHeight : hauteur de fût (TreeHarvestableVolume  = π(DBH/2)² x TrunkHeight)
-# + CrownHeight : TreeHeight - TrunkHeight
 # + CrownDiameter : diamètre de couronne (CD) (ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺 (allométries de Mélaine)
-#                                              + CrownHeight : TreeHeight - TrunkHeight
+# + CrownHeight : TreeHeight - TrunkHeight
 
 # -> check if column exist
 # -> check their class (double)
 # -> is not empty, or contains NA's
+# -> check if formulas are respected
 # -> check coherence
 
-# -> check if formulas are respected

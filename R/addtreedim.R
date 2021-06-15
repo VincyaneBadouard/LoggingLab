@@ -20,6 +20,7 @@
 #' if (!("DBH" %in% names(Paracou6_2016))) {
 #' tibble::add_column(Paracou6_2016, DBH = NA) #if DBH doesn't exist create it
 #' Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
+#' Paracou6_2016 <- filter(Paracou6_2016, DBH >= 10)
 #'
 #' addtreedim(inventory = Paracou6_2016)
 #'

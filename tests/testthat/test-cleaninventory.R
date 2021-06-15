@@ -13,7 +13,7 @@ test_that("cleaninventory", {
   expect_true(all(cleaninventory(TestInventory)$CodeAlive == "TRUE"))
 
   #check if DBH >= 10 (check if DBH exists in the same way)
-  expect_true(all(cleaninventory(TestInventory)$DBH >= 10))
+  expect_true(all(cleaninventory(TestInventory)$DBH >= 10 & cleaninventory(TestInventory)$DBH < 900))#the largest known tree: 825 cm
 
   expect_false(any(is.na(cleaninventory(TestInventory)$DBH))) #check that all the DBH are computed
 
