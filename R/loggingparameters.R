@@ -29,7 +29,7 @@
 #' @param TrunkHeightAllometry (function)
 #' @param TreeHeightAllometry log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344 log(DBH)^2 (function)
 #' @param CrownDiameterAllometry ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977 (ref)(function)
-#' @param RottenModel 1 / (1 + exp(-(-5.151 + 0.042 DBH.100))) (function)
+#' @param RottenModel Estimates the probability of being probed hollow (default: 1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)
 #'
 #' @return A named list of 30 objects.
 
@@ -91,7 +91,7 @@ loggingparameters <- function(
     exp(((log(DBH)- alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight,
   # compute the crown diameter (CD) (ln(D) = alpha + beta ln(H*CD) + error, with error~N(0,sigma^2) and meansigma^2 = 0.0295966977. (Melaine's allometries))
 
-  RottenModel = function(DBH) 1 / (1 + exp(-(-5.151 + 0.042 * DBH * 100))) # Hollow trees identification
+  RottenModel = function(DBH) 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) # Hollow trees identification
 
   # VisiblyDefectModel = function() #  Visible hollow trees identification
 ){

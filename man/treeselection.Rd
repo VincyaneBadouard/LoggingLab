@@ -24,7 +24,7 @@ treeselection(
 \item{fuel}{no  exploitation = "0" (default),
 damage exploitation in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"}
 
-\item{objective}{(numeric)  diversificationparam specieslaxparam objectivelax}
+\item{objective}{Objective volume per hectare (numeric)  diversificationparam specieslaxparam objectivelax}
 
 \item{otherloggingparameters}{(list) MainTrail (multiline)}
 }

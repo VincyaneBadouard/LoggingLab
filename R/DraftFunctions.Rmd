@@ -19,6 +19,7 @@ library(tidyr)
 library(schoolmath)
 library(ggplot2)
 library(reshape)
+library(sf)
 ```
 
 ```{r ParamCrownDiameterAllometry table code}

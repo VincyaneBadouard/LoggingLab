@@ -5,7 +5,7 @@
 #' @param type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"(character)
 #' @param fuel no  exploitation = "0" (default),
 #' damage exploitation in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"
-#' @param objective (numeric)  diversificationparam specieslaxparam objectivelax
+#' @param objective Objective volume per hectare (numeric)  diversificationparam specieslaxparam objectivelax
 #' @param otherloggingparameters (list) MainTrail (multiline)
 #'
 #' @return
@@ -36,7 +36,7 @@ treeselection <- function(
 
   # filter(VisibleDefect == "0") %>%
 
-  # Désignation : fonction "TreeSelection"
+  # Compute the objective volume with or without bonus:
   if (type == "RIL3fuelhollow"| (type == "manual"& fuel =="2")) {VO = objective
   }else{
     VO = objective + otherloggingparameters$ObjectiveBonus # to compensate for the designated hollow wood.
