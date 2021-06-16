@@ -170,7 +170,6 @@ HarverstableConditions <- HarverstableConditions & (inventoryA$DBH >= inventoryA
 ##slope
 ##isolement
 ##MainTrails out
-filter(inventoryB, LoggingStatus == "harvestable")#96 ind for the moment
 
 inventoryB <- inventoryA %>% 
   mutate(LoggingStatus = ifelse(HarverstableConditions, #Under the above criteria, designate the harvestable species
@@ -202,91 +201,177 @@ HVinit <- sum(HarvestableTable$TreeHarvestableVolume) #compute the harvestable v
 
 # selected
 ```{r}
-add_column(data, Up = 0) # Create a column to indicate Which sp is FD uped. Or create this column d'office in speciescriteria. "0" = no uped, "1"= uped
+inventoryC <- add_column(inventoryC, Up = 0) # Create a column to indicate Which sp is FD uped. Or create this column d'office in speciescriteria. "0" = no uped, "1"= uped. dans speciescriteria ou inventory ?
 
 # if objective achieved at the first attempt
-mutate(Selected = ifelse(HVinit == VO & LoggingStatus == "harvestable",
-                         "1", LoggingStatus))# if we have our volume, harvestable sp = selected sp 
+inventoryC <- inventoryB %>% 
+  mutate(Selected = ifelse(HVinit == VO & LoggingStatus == "harvestable",
+                           "1", NA))# if we have our volume, harvestable sp = selected sp 
 
 
-if (HVinit < VO){ 
-  if (!diversification && specieslax){
-    # LoggingStatus = "harvestable2nd" | LoggingStatus = "harvestable"
-    # Selected = "1"
-    # prendre parmi les arbres étiquetés "harvestable2nd" ou "harvestable" dans "LoggingStatus", les arbres par ordre décroissant de "TreeHarvestableVolume " jusqu’à atteindre HVlax = VO.
-    # étiqueter ces arbres "1", dans une colonne "Selected".
+if (HVinit < VO){ #diversification is necessary, designate the secondary-economic-rank species too
+  if (!diversification && specieslax){  
+    inventoryD <- inventoryC %>%
+      mutate(Condition = ifelse(LoggingStatus == "harvestable2nd" | LoggingStatus == "harvestable", TRUE, FALSE)) %>% 
+      group_by(Condition) %>% 
+      arrange(desc(TreeHarvestableVolume)) %>% 
+      mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>% 
+      ungroup() %>% 
+      mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>%
+      select(-Condition)
     
-    if (HVlax < VO && objectivelax) message("Le volume exploitable (= HVlax ) est encore inférieur (de VO- HVlax) à votre volume objectif malgré la diversification que vous avez permise (sans la diversification HVinit= HVinit). Vous avez choisi dans ce cas de poursuivre l’exploitation avec un volume inférieur à votre objectif.")
+    HarvestableTable <- inventoryD %>% 
+      filter(Selected == "1")
+    HVlax <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with specieslax permission
     
-    if (HVlax < VO && !objectivelax) stop("Le volume exploitable (=HVlax ) est encore inférieur (de VO- HVlax) à votre volume objectif malgré la diversification que vous avez permise (sans la diversification HVinit= HVinit). Par défaut ou par votre choix, la simulation s’arrête. Si vous souhaitez poursuivre l’exploitation malgré un volume exploitable inférieur à votre volume objectif vous disposez de l‘argument "objectivelax".")
     
-    if (!HVlax < VO) message("Le volume exploitable (=HVinit) est inférieur (de VO- HVinit) à votre volume objectif. Vous avez choisi de diversifier votre sélection d’espèces dans ce cas. L’exploitation s’est donc réalisée sur cette sélection diversifiée d’espèces.")
+    if (HVlax < VO && objectivelax) message("The exploitable volume (= ",paste(HVlax),") is still lower (by ",paste(VO- HVlax),") than your objective volume despite the diversification you have allowed (without the diversification HVinit= ",paste(HVinit),"). In this case, you have chosen to continue harvesting with a volume lower than your objective.")
+    
+    if (HVlax < VO && !objectivelax) stop("The harvestable volume = ",paste(HVlax),") is still lower (by ",paste(VO- HVlax),") than your objective volume despite the diversification you have allowed (without the diversification HVinit= ",paste(HVinit),"). By default or by your choice, the simulation stops. If you wish to continue the exploitation in spite of an exploitable volume lower than your objective volume, you have the argument 'objectivelax'.")
+    
+    if (!HVlax == VO) message("The harvestable volume (=",paste(HVinit),") was lower (by ",paste(VO- HVinit),") than your objective volume. You have chosen to diversify your species selection in this case. The exploitation was therefore carried out on this diversified selection of species.")
   }
   
-  if ((!diversification && !specieslax && objectivelax) | (diversification && objectivelax))
-    message("Le volume exploitable (=HVinit) est inférieur (de VO- HVinit) à votre volume objectif. Vous avez choisi dans ce cas de poursuivre l’exploitation sans diversifier vos essences.")
+  if (!diversification && !specieslax && objectivelax)
+    message("The harvestable volume (=",paste(HVinit),") is less (by ",paste(VO- HVinit),") than your objective volume. In this case you have chosen to continue logging without diversifying your species.")
+  
+  if (diversification && objectivelax)
+    message("The harvestable volume (=",paste(HVinit),") is less (by ",paste(VO- HVinit),") than your objective volume. In this case you have chosen to continue logging.")
   
   
   if ((!specieslax & !objectivelax) | (diversification && !objectivelax)) 
-    stop("Le volume exploitable (=HVinit) est inférieur (de VO- HVinit) à votre volume objectif. Par défaut ou par votre choix, la simulation s’arrête. Si vous souhaitez poursuivre l’exploitation malgré un volume exploitable inférieur à votre volume objectif vous disposez de l‘argument "objectivelax" ou de la diversification d’essences.")
+    stop("The harvestable volume (=",paste(HVinit),") is lower (by ",paste(VO- HVinit),") than your objective volume. By default or by your choice, the simulation stops. If you wish to continue the exploitation in spite of a harvestable volume lower than your objective volume, you can use the argument 'objectivelax' or the diversification of species (if it is not already the case).")
 }
 
 
 if (HVinit > VO) {
-  # rehaussement des DME des sp ECMP : étiqueter "harvestableUp" à la place d’"harvestable", dans la colonne "LoggingStatus", les individus "Commercial"= "1" dont le "DBH" est compris entre la valeur dans colonne "UpMinFD" pour leur sp, de la table speciescriteria , et le MaxFD.
-  mutate(Up = ifelse(Commercial == "1", "1", Up))# Dans la table species renseigner "1" dans la colonne "Up" les "Commercial"= "1" (pour signifier que leur DME a été réhaussé)
+  
+  inventoryD <- inventoryC %>%
+    mutate(LoggingStatus = ifelse(
+      Commercial == "1" & (DBH >= UpMinFD & DBH <= MaxFD), #designate preferred individuals of first economic rank species, when the plot is species-rich.
+      "harvestableUp", LoggingStatus)) %>%
+    
+    mutate(Up = ifelse(Commercial == "1", "1", Up))# to inform that the "1" ranks have been FD upgraded. Pas mieux de le faire à l'sp?
   # test "Commercial"= "1" pour les "harvestableUp" 
   
   if (!diversification) {
-    # HVupCommercial1 = sum(TreeHarvestableVolume) des LoggingStatus == harvestableUp.
+    HarvestableTable <- inventoryD %>%
+      filter(LoggingStatus == "harvestableUp")
+    
+    HVupCommercial1 <- sum(HarvestableTable$TreeHarvestableVolume) #82.42823. compute the harvestable volume with upgraded FD individuals
+    
+    
     if (HVupCommercial1 == VO){
-      # Selected = "1" # étiqueter ces arbres "1", dans une colonne "Selected".
-      message("Le volume exploitable (=HVinit) étant supérieur (de VO- HVinit) au volume objectif, les DME des ECMP ont été rehaussés. Le volume objectif est maintenant atteint.")
+      
+      inventoryE <- inventoryD %>%
+        mutate(Selected = ifelse(HVupCommercial1 == VO & LoggingStatus == "harvestableUp", "1", NA))# if harvestableUp individuals are sufficient to have our volume, harvestableUp ind = selected ind
+      
+      message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(VO- HVinit),") than the objective volume, the Minimum Falling Diameter (MinFD) of 1st economic rank species were increased. The objective volume has now been reached.")
     }
     
-    if (HVupCommercial1 > VO){ 
-      # prendre parmi les arbres étiquetés "harvestableUp" dans "LoggingStatus", les arbres par ordre décroissant de "TreeHarvestableVolume " jusqu’à atteindre HVupCommercial1adjust= VO.
-      # Selected = "1" # étiqueter ces arbres "1", dans une colonne "Selected".
-      message("Le volume exploitable (=HVupCommercial1) est toujours supérieur (de VO- HVupCommercial1) à votre volume objectif malgré le rehaussement des DME (Volume exploitable initial = HVinit). Afin d’atteindre votre volume objectif, les arbres ont été choisis par ordre décroissant de volume jusqu'à l’atteinte du volume objectif.")
+    if (HVupCommercial1 > VO){
+      # only individuals with DBH > FD are taken, but not all because their volumes > VO
+      inventoryE<- inventoryD %>%
+        mutate(Condition = ifelse(LoggingStatus == "harvestableUp", TRUE, FALSE)) %>%
+        group_by(Condition) %>%
+        arrange(desc(TreeHarvestableVolume)) %>% 
+        mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
+        ungroup() %>%
+        mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>% 
+        select(-Condition)
+      
+      HarvestableTable <- inventoryE %>%
+        filter(Selected == "1")
+      HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals only
+      
+      message("The harvestable volume (=",paste(HVupCommercial1),") is always higher (by ",paste(VO- HVupCommercial1),") than your objective volume despite the increase in Minimum Falling Diameter (MinFD) (Initial harvestable volume = HVinit). In order to reach your objective volume, the trees were selected in decreasing order of volume until the objective volume was reached.")
     }
     if (HVupCommercial1 < VO){
-      # prendre parmi les arbres étiquetés "harvestableUp" & "harvestable" dans "LoggingStatus", les arbres par ordre décroissant de "TreeHarvestableVolume " jusqu’à atteindre HVupCommercial1adjust = VO.
-      # Selected = "1" étiqueter ces arbres "1", dans une colonne "Selected".
-      message("Le volume exploitable (=HVinit) étant supérieur (de VO- HVinit) au volume objectif, les DME des ECMP ont été rehaussés avec une conservation de certaines tiges dont le DBH est inférieur au UpMinFD afin d’assurer l’atteinte du volume objectif.")
+      
+      inventoryE<- inventoryD %>%
+        mutate(Condition = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable", TRUE, FALSE)) %>%
+        group_by(Condition) %>%
+        arrange(desc(TreeHarvestableVolume)) %>% 
+        mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
+        ungroup() %>%
+        mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>% 
+        select(-Condition)
+      
+      HarvestableTable <- inventoryE %>%
+        filter(Selected == "1")
+      HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals
+      
+      message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(VO- HVinit),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased with retention of some stems with DBH lower than the UpMinFD to ensure that the objective volume was attained.")
     }
   }
   
   if (diversification) {
-    # "HVupCommercial1" = sum(TreeHarvestableVolume) des LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable."
+    
+    HarvestableTable <- inventoryD %>%
+      filter(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable") #the upgraded 1st rank and normal 2nd rank.
+    
+    HVupCommercial1 <- sum(HarvestableTable$TreeHarvestableVolume) #173.334 m3
     
     if (HVupCommercial1 == VO){
-      # étiqueter ces arbres "1", dans une colonne "Selected".
-      message("Le volume exploitable (=HVinit) étant supérieur (de VO- HVinit) au volume objectif, les DME des ECMP ont été rehaussés. Le volume objectif est maintenant atteint. Il n’a pas été nécessaire de rehausser les DME des autres espèces économiques")
+      inventoryE <- inventoryD %>%
+    mutate(Selected = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable",
+                             "1", NA))# if we have our volume, harvestable ind = selected ind
+      message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(VO- HVinit),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased. The objective volume has now been reached. It was not necessary to increase the MinFD of the other economic species")
     }
     
     if (HVupCommercial1 < VO){ 
-      # prendre parmi les arbres "Commercial"= "1" étiquetés "harvestableUp" et "harvestable" dans "LoggingStatus", les arbres par ordre décroissant de "TreeHarvestableVolume " jusqu’à atteindre HVupCommercial1adjust = VO.
-      # Selected = "1" étiqueter ces arbres "1", dans une colonne "Selected".
-      message("Le volume exploitable (=HVinit) étant supérieur (de VO - HVinit) au volume objectif, les DME des ECMP ont été rehaussés avec une conservation de certaines tiges dont le DBH est inférieur au UpMinFD afin d’assurer l’atteinte du volume objectif. Il n’a pas été nécessaire de rehausser les DME des autres espèces économiques.")
+      
+      inventoryE<- inventoryD %>%
+        mutate(Condition = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable", TRUE, FALSE)) %>%
+        group_by(Condition) %>%
+        arrange(desc(TreeHarvestableVolume)) %>% 
+        mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
+        ungroup() %>%
+        mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>% 
+        select(-Condition)
+      
+      HarvestableTable <- inventoryE %>%
+        filter(Selected == "1")
+      HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals, and 2nd rank no upgraded FD individuals
+      
+      message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(VO- HVinit),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased with retention of some stems with DBH lower than the UpMinFD to ensure that the objective volume was attained. It was not necessary to raise the MinFDs of other economic species.")
     }
     
     if (HVupCommercial1 > VO){ 
-      # rehaussement des DME des autres sp eco: étiqueter "harvestableUp" à la place d’"UPeco2", dans la colonne "LoggingStatus"
-      # Dans la table speciescriteria  renseigner "1" dans la colonne "Up" les "Commercial"= "2" (pour signifier que leur DME a été rehaussé)
-      # "HVupCommercial12" = somme des valeurs de "TreeHarvestableVolume " des "harvestableUp".
+      
+      inventoryE <- inventoryD %>%
+    mutate(LoggingStatus = ifelse(LoggingStatus == "UPeco2", #designate preferred individuals of 2nd economic rank species too, when the plot is species-rich.
+      "harvestableUp", LoggingStatus)) %>%
+    
+    mutate(Up = ifelse(Commercial == "2", "1", Up))# to inform that the "2" ranks have been FD upgraded. Pas mieux de le faire à l'sp?
+      HarvestableTable <- inventoryE %>%
+        filter(LoggingStatus == "harvestableUp")
+      
+      HVupCommercial12 <- sum(HarvestableTable$TreeHarvestableVolume) #271.2342 Harvestable volume, with upgraded FD individuals
+      
       if (HVupCommercial12 == VO){
-        # Selected = "1" étiqueter ces arbres "1", dans la colonne "Selected".
+        inventoryF <- inventoryE %>%
+    mutate(Selected = ifelse(LoggingStatus == "harvestableUp",
+                             "1", NA))# if we have our volume, harvestable ind = selected ind
       }
-      if (HVupCommercial12 < VO){
-        # prendre parmi les arbres étiquetés "harvestableUp" et "harvestable" dans "LoggingStatus", les arbres par ordre décroissant de "TreeHarvestableVolume " jusqu’à atteindre HVupCommercial12adjust = VO.
-        # Selected = "1" étiqueter ces arbres "1", dans une colonne "Selected".
+      if (HVupCommercial12 != VO){
+        
+        inventoryF <- inventoryE %>%
+        mutate(Condition = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable", TRUE, FALSE)) %>%
+        group_by(Condition) %>%
+        arrange(desc(TreeHarvestableVolume)) %>%
+        mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
+        ungroup() %>%
+        mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>%
+        select(-Condition)
+
+      HarvestableTable <- inventoryF %>%
+        filter(Selected == "1")
+      HVupCommercial12adjust <- sum(HarvestableTable$TreeHarvestableVolume) #45.44885 Harvestable volume, with upgraded FD individuals
       }
       
-      if (HVupCommercial12 > VO){
-        # prendre parmi les arbres étiquetés "harvestableUp" dans "LoggingStatus", les arbres par ordre décroissant de "TreeHarvestableVolume " jusqu’à atteindre HVupCommercial12adjust = VO.
-        # Selected = "1" étiqueter ces arbres "1", dans une colonne "Selected".
-        message("Le volume exploitable (=HVinit) étant supérieur (de VO- HVinit) au volume objectif, il a été nécessaire de rehausser les DME de toutes les essences. Le volume objectif est maintenant atteint.")
-      }
+      message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(VO- HVinit),") than the objective volume, it was necessary to increase the Minimum Falling Diameter (MinFD) of all species. The objective volume has now been reached.")
+
     }
   }
 }

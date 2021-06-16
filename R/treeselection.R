@@ -36,7 +36,7 @@ treeselection <- function(
 
   # filter(VisibleDefect == "0") %>%
 
-  # Désignation : fonction "TreeSelection"
+  # Compute the objective volume with or without bonus:
   if (type == "RIL3fuelhollow"| (type == "manual"& fuel =="2")) {VO = objective
   }else{
     VO = objective + otherloggingparameters$ObjectiveBonus # to compensate for the designated hollow wood.
