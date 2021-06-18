@@ -136,19 +136,19 @@ filter(inventoryA, ScientificName == "Micropholis_obscura")
 dupli <- inventoryA[duplicated(inventoryA$idTree), ] # les lignes dupliquées sont dues aux genres qui concernent plsrs essences
 
 
-NAtable <- inventoryA[is.na(inventoryA$Commercial),] #2101 ind not linked
-NAtablescfc <- as.data.frame(unique(inventoryA[is.na(inventoryA$Commercial),]$ScientificName)) #264 sp not linked
-NAtablevern <- as.data.frame(unique(inventoryA[is.na(inventoryA$Commercial),]$VernName)) #122 sp not linked
+NAtable <- inventoryA[is.na(inventoryA$Commercial),] #2151 ind not linked
+NAtablescfc <- as.data.frame(unique(inventoryA[is.na(inventoryA$Commercial),]$ScientificName)) #270 sp not linked
+NAtablevern <- as.data.frame(unique(inventoryA[is.na(inventoryA$Commercial),]$VernName)) #126 sp not linked
 
-NAtablevern <- unique(NAtable$VernName) #264 
-NAtablescfc <- unique(NAtable$ScientificName) #122
+NAtablevern <- unique(NAtable$VernName) #126 
+NAtablescfc <- unique(NAtable$ScientificName) #270
 
 
 
 filter(inventoryA, Commercial =="1") #177 ind
-filter(inventoryA, Commercial =="2") #1267 ind
-comerc <- filter(inventoryA, Commercial =="1"| Commercial =="2")
-all(comerc$CommercialSp == TRUE)
+filter(inventoryA, Commercial =="2") #1211 ind
+comerc <- filter(inventoryA, Commercial =="1"| Commercial =="2")#1388
+all(comerc$CommercialSp == TRUE)#FALSE
 ```
 
 # harvestable

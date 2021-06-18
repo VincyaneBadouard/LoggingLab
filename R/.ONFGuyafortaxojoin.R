@@ -53,4 +53,13 @@
     inventoryA$MaxFD[ConcernedRows] <- NA
   }
 
+  ConcernedRows <- which(inventoryA$ONFName == "kimboto" & (inventoryA$ScientificName == "Pradosia_cochlearia"| inventoryA$ScientificName == "Pradosia_huberi"))
+  if(length(ConcernedRows) > 0){
+    inventoryA$ONFName[ConcernedRows] <- NA
+    inventoryA$Commercial[ConcernedRows] <- NA
+    inventoryA$MinFD[ConcernedRows] <- NA
+    inventoryA$UpMinFD[ConcernedRows] <- NA
+    inventoryA$MaxFD[ConcernedRows] <- NA
+  }
+
 }
