@@ -209,6 +209,7 @@ HVinit <- sum(HarvestableTable$TreeHarvestableVolume) #compute the harvestable v
 
 # selected
 ```{r}
+
 # if objective achieved at the first attempt
 inventoryC <- inventoryB %>% 
   mutate(Selected = ifelse(HVinit == VO & LoggingStatus == "harvestable",
@@ -322,8 +323,9 @@ if (HVinit > VO) {
     
     if (HVupCommercial1 == VO){
       inventoryE <- inventoryD %>%
-        mutate(Selected = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable",
-                                 "1", NA))# if we have our volume, harvestable ind = selected ind
+
+    mutate(Selected = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable",
+                             "1", NA))# if we have our volume, harvestable ind = selected ind
       message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(VO- HVinit),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased. The objective volume has now been reached. It was not necessary to increase the MinFD of the other economic species")
     }
     
@@ -352,6 +354,7 @@ if (HVinit > VO) {
       "harvestableUp", LoggingStatus)) %>%
         
         mutate(Up = ifelse(Commercial == "2", "1", Up))# to inform that the "2" ranks have been FD upgraded. Pas mieux de le faire à l'sp?
+
       HarvestableTable <- inventoryE %>%
         filter(LoggingStatus == "harvestableUp")
       
@@ -361,6 +364,7 @@ if (HVinit > VO) {
         inventoryF <- inventoryE %>%
           mutate(Selected = ifelse(LoggingStatus == "harvestableUp",
                                    "1", NA))# if we have our volume, harvestable ind = selected ind
+    
       }
       if (HVupCommercial12 != VO){
         
