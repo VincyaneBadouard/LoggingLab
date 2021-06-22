@@ -1,6 +1,6 @@
 Package: Maria
 Title: Simulate Different Forms of Logging on a Forest
-Version: 0.0.0.9000
+Version: 0.0.0.9003
 Authors@R: 
     c(person(given = "Vincyane",
            family = "Badouard",
@@ -31,8 +31,8 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests:
-    knitr,
-    rmarkdown,
+    knitr (>= 1.3.1),
+    rmarkdown (>= 2.7.0),
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Depends: 
@@ -43,4 +43,4 @@ Imports:
     dplyr (>= 1.0.5),
     tibble (>= 3.1.0),
     tidyr (>= 1.1.2),
-BugReports: 
+BugReports: https://github.com/VincyaneBadouard/Maria/issues

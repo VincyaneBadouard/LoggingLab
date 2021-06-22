@@ -1,15 +1,18 @@
 #' .harvestable
 #'
-#' @param inventory (data.frame) type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"(character)
+#' @param inventory (data.frame)
+#' @param diversification (logical)
+#' @param specieslax = FALSE by default (logical)
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#' inventory = addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
+#' .harvestable(inventory, diversification = TRUE, specieslax = FALSE)
 #'
 .harvestable <- function(
   inventory,
-  # type = c("RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow", "manual"),
   diversification,
   specieslax = FALSE,
 ){
@@ -17,42 +20,35 @@
 
   #select essences
   HarverstableConditions <- # = 1 boolean vector
-    if (diversification || (!diversification && specieslax)) {
-      inventoryA$Commercial =="1"| inventoryA$Commercial == "2" # now or maybe after we will diversify
-    } else if (!diversification && !specieslax) {
+    if (diversification || (!diversification && specieslax))
+      inventory$Commercial =="1"| inventory$Commercial == "2" # now or maybe after we will diversify
+      else if (!diversification && !specieslax)
       Commercial == "1" # We will never diversify
-    }
 
-  #select diameters
-  HarverstableConditions <- HarverstableConditions & (inventoryA$DBH >= inventoryA$MinFD & inventoryA$DBH <= inventoryA$MaxFD) # harvestable individuals, accord by their DBH
+#select diameters
+HarverstableConditions <- HarverstableConditions & (inventory$DBH >= inventory$MinFD & inventory$DBH <= inventory$MaxFD) # harvestable individuals, accord by their DBH
 
-  #select spatially
-  # HarverstableConditions <- HarverstableConditions & ()
-  ##slope
-  ##isolement
-  ##MainTrails out
+#select spatially
+# HarverstableConditions <- HarverstableConditions & ()
+##slope
+##isolement
+##MainTrails out
 
-  inventoryB <- inventoryA %>%
-    mutate(LoggingStatus = ifelse(HarverstableConditions, #Under the above criteria, designate the harvestable species
-                                  "harvestable", "non-harvestable")) %>%
-    mutate(LoggingStatus = ifelse(is.na(Commercial), #The non-commercial species are non-harvestable.
-                                  "non-harvestable", LoggingStatus)) %>%
+inventory <- inventory %>%
+  mutate(LoggingStatus = ifelse(HarverstableConditions, #Under the above criteria, designate the harvestable species
+                                "harvestable", "non-harvestable")) %>%
+  mutate(LoggingStatus = ifelse(is.na(Commercial), #The non-commercial species are non-harvestable.
+                                "non-harvestable", LoggingStatus)) %>%
 
-    mutate(LoggingStatus = ifelse(
-      !diversification &
-        specieslax & #designate the secondarily harvestable species, because diversification only if necessary
-        LoggingStatus == "harvestable" &
-        Commercial == "2",
-      "harvestable2nd", LoggingStatus)) %>%
-
-    mutate(LoggingStatus = ifelse(
+  mutate(LoggingStatus = ifelse(
+    !diversification &
+      specieslax & #designate the secondarily harvestable species, because diversification only if necessary
       LoggingStatus == "harvestable" &
-        Commercial == "2" &
-        DBH >= UpMinFD, #designate preferred species of 2nd rank if the plot is species-rich.
-      "UPeco2", LoggingStatus))
+      Commercial == "2",
+    "harvestable2nd", LoggingStatus)) %>%
 
-  HarvestableTable <- inventoryB %>%
-    filter(LoggingStatus == "harvestable"| LoggingStatus == "UPeco2")
-  HVinit <- sum(HarvestableTable$TreeHarvestableVolume) #compute the harvestable volume in the plot for these criteria
+  HarvestableTable <- inventory %>%
+  filter(LoggingStatus == "harvestable")
+HVinit <- sum(HarvestableTable$TreeHarvestableVolume) #compute the harvestable volume in the plot for these criteria
 
 }
