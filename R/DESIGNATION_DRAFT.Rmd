@@ -65,7 +65,7 @@ if (type == "RIL3fuelhollow"| (type == "manual"& fuel =="2")){VO = objective #36
 
 ```
 
-# Joindre les taxonomies ONF/Guyafor (.ONFGuyafortaxojoin)
+# Joindre les taxonomies ONF/Guyafor (ONFGuyafortaxojoin)
 ```{r}
 
 speciescriteria = SpeciesCriteria
@@ -447,9 +447,32 @@ inventoryH$LoggingStatus[ReserveRows] <-"reserve"
 # Fin treeselection function
 ```{r}
 # Créer un vecteur ("HarvestableTreesPoints") de points de coordonnées des arbres LoggingStatus = "harvestable" ou "harvestableUp" ou "harvestable2nd".
+HarvestableTreescoord <- inventory %>%
+      filter(LoggingStatus == "harvestable" |LoggingStatus == "harvestableUp" |LoggingStatus == "harvestable2nd") %>%
+      select(Xutm, Yutm)
+
+HarvestableTreesPoints  <- st_multipoint(x = as.matrix(HarvestableTreescoord))
+
 # Créer un vecteur ("SelectedTreesPoints") de points de coordonnées des arbres Selected = 1.
+SelectedTreescoord <- inventory %>%
+      filter(Selected == "1") %>%
+      select(Xutm, Yutm)
+
+SelectedTreesPoints  <- st_multipoint(x = as.matrix(SelectedTreescoord))
+
 # Créer un vecteur ("FutureTreesPoints") de points de coordonnées des arbres LoggingStatus = "future"
+FutureTreescoord <- inventory %>%
+      filter(LoggingStatus == "future") %>%
+      select(Xutm, Yutm)
+
+FutureTreesPoints  <- st_multipoint(x = as.matrix(FutureTreescoord))
+
 # Créer un vecteur ("ReserveTreesPoints") de points de coordonnées des arbres LoggingStatus = "reserve".
+ReserveTreescoord <- inventory %>%
+      filter(LoggingStatus == "reserve") %>%
+      select(Xutm, Yutm)
+
+ReserveTreesPoints  <- st_multipoint(x = as.matrix(ReserveTreescoord))
 
 #where specieslax was not necessary, consider eco2s as non-exploitable:
 inventoryI <- inventoryH %>% 

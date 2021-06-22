@@ -35,5 +35,9 @@ damage exploitation in fuelwood = "1", exploitation of hollow trees and damage i
 treeselection
 }
 \examples{
+inventory = addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 
+treeselection(inventory, SpeciesCriteria,
+type ="manual", fuel = "0",objective = 20, diversification = TRUE, specieslax = FALSE,
+objectivelax = FALSE, otherloggingparameters = loggingparameters(), MainTrail)
 }

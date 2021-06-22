@@ -11,6 +11,7 @@
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
 #' @importFrom tidyr unite
+#' @importFrom rlang .data
 #'
 #' @examples
 #' data(Paracou6_2016)

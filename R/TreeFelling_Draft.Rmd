@@ -1,0 +1,298 @@
+---
+title: "TreeFelling_Draft"
+author: "Vincyane Badouard"
+date: "24/06/2021"
+output: html_document
+---
+
+# Les arguments
+
+inventory
+multilignes "MainTrail ", "2ndTrail"
+vecteur "AccessibleTreesPoints", "SelectedTreesPoints",  "AvenirTreesPoints",  "ReserveTreesPoints", "DeadTreesPoints", "HollowTreesPoints" et "FuelwoodTreesPoints"
+
+# OUTPUT : 
+inventory + polygone "Shadow" + vecteurs "TreefallSuccess", "TreefallFailure", "DamageTreesPoints", "DeadTreesPoints"
+
+```{r Give values to the arguments to work}
+
+# inventory = scndtrailsopening(treeselection(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))) #3539 rows (Paracou: 3620 rows)
+speciescriteria = SpeciesCriteria
+type = "manual"
+fuel = "0"
+objective = 20
+diversification = TRUE
+specieslax = FALSE
+objectivelax = FALSE
+otherloggingparameters = loggingparameters()
+# MainTrail
+
+```
+
+# Succès-échec
+```{r}
+
+if (type == "RIL2broken" | type == "RIL2" | type == "RIL3"){
+  Inventory <- Inventory %>% 
+    mutate(TreeFellingOrientationSuccess = ifelse(Accessible == "1", sample(c(1,0), size = 1, replace = F, prob = c(otherloggingparameters$TreefallSuccessProportion, 1-otherloggingparameters$TreefallSuccessProportion)), NA)) # Accessible = linked by 2ndtrails
+  #Tree coordinates  
+  TreefallSuccessCoord <- inventory %>% 
+    filter(TreeFellingOrientationSuccess == "1") %>% 
+    select(Xutm, Yutm)
+  TreefallFailCoord <- inventory %>% 
+    filter(TreeFellingOrientationSuccess == "0") %>% 
+    select(Xutm, Yutm)
+  
+  TreefallSuccess  <- st_multipoint(x = as.matrix(TreefallSuccessCoord))   # Create treefelling success
+  TreefallFailure  <- st_multipoint(x = as.matrix(TreefallFailCoord))      # Create treefelling fails
+  
+}
+
+if (type == "RIL3fuel" | (type == "manual"& fuel =="1")) {
+  
+  Inventory <- Inventory %>% 
+    mutate(TreeFellingOrientationSuccess = ifelse(Selected == "1", sample(c(1,0), size = 1, replace = F, prob = c(otherloggingparameters$TreefallSuccessProportion, 1-otherloggingparameters$TreefallSuccessProportion)), NA)) # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
+  #Tree coordinates  
+  TreefallSuccessCoord <- inventory %>% 
+    filter(TreeFellingOrientationSuccess == "1") %>% 
+    select(Xutm, Yutm)
+  TreefallFailCoord <- inventory %>% 
+    filter(TreeFellingOrientationSuccess == "0") %>% 
+    select(Xutm, Yutm)
+  
+  TreefallSuccess  <- st_multipoint(x = as.matrix(TreefallSuccessCoord))   # Create treefelling success
+  TreefallFailure  <- st_multipoint(x = as.matrix(TreefallFailCoord))      # Create treefelling fails
+  
+}
+
+# Abattre les creux : 
+if (type == "RIL3fuelhollow"  | (type == "manual"& fuel =="2")) {
+  
+  Inventory <- Inventory %>% 
+    mutate(TreeFellingOrientationSuccess = ifelse(Selected == "1"| ProbbedHollow == "1", sample(c(1,0), size = 1, replace = F, prob = c(otherloggingparameters$TreefallSuccessProportion, 1-otherloggingparameters$TreefallSuccessProportion)), NA)) # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
+  #Tree coordinates  
+  TreefallSuccessCoord <- inventory %>% 
+    filter(TreeFellingOrientationSuccess == "1") %>% 
+    select(Xutm, Yutm)
+  TreefallFailCoord <- inventory %>% 
+    filter(TreeFellingOrientationSuccess == "0") %>% 
+    select(Xutm, Yutm)
+  
+  TreefallSuccess  <- st_multipoint(x = as.matrix(TreefallSuccessCoord))   # Create treefelling success
+  TreefallFailure  <- st_multipoint(x = as.matrix(TreefallFailCoord))      # Create treefelling fails
+}
+
+```
+
+
+
+
+```{r}
+# ex:
+outer = matrix(c(0,0,10,0,10,10,0,10,0,0),ncol=2, byrow=TRUE)
+hole1 = matrix(c(1,1,1,2,2,2,2,1,1,1),ncol=2, byrow=TRUE)
+hole2 = matrix(c(5,5,5,6,6,6,6,5,5,5),ncol=2, byrow=TRUE)
+pts = list(outer, hole1, hole2)
+(pl1 = st_polygon(pts))
+plot(pl1)
+
+pts3 = lapply(pts, function(x) cbind(x, 0))
+(pl2 = st_polygon(pts3))
+(pl3 = st_polygon(pts3, "XYM"))
+plot(pl2)
+plot(pl3)
+
+pts4 = lapply(pts3, function(x) cbind(x, 0))
+(pl4 = st_polygon(pts4))
+plot(pl4)
+
+pol1 = list(outer, hole1, hole2) #1 list/polygon :  list with numeric matrices with points in rows
+pol2 = list(outer + 12, hole1 + 12)
+pol3 = list(outer + 24)
+mp = list(pol1,pol2,pol3) #list of lists with numeric matrices
+(mp1 = st_multipolygon(mp))
+plot(mp1)
+
+pts3 = lapply(mp, function(x) lapply(x, function(y) cbind(y, 0)))
+(mp2 = st_multipolygon(pts3))
+(mp3 = st_multipolygon(pts3, "XYM"))
+plot(mp2)
+plot(mp3)
+
+pts4 = lapply(mp2, function(x) lapply(x, function(y) cbind(y, 0)))
+(mp4 = st_multipolygon(pts4))
+plot(mp4)
+
+library(nngeo)
+dat = data.frame(
+  x = c(1, 1, -1, 3, 3), #centroid locations
+  y = c(0, -3, 2, -2, 0), #centroid locations
+  ex = c(0.5, 2, 2, 0.3, 0.6), #Size along x-axis
+  ey = c(0.5, 0.2, 1, 1, 0.3), #Size along y-axis,
+  stringsAsFactors = FALSE
+)
+dat = st_as_sf(dat, coords = c("x", "y")) #centroids
+dat
+
+# Calculate ellipses
+el = st_ellipse(pnt = dat, ex = dat$ex, ey = dat$ey)
+
+# Plot 2
+plot(el, graticule = TRUE, axes = TRUE)
+
+
+dat = data.frame(
+  x = c(1, 2), #centroid locations
+  y = c(0, -3), #centroid locations
+  ex = c(0.5, 2), #Size along x-axis
+  ey = c(0.5, 0.2), #Size along y-axis,
+  stringsAsFactors = FALSE
+)
+dat = st_as_sf(dat, coords = c("x", "y")) #centroids
+dat
+
+# Calculate ellipses
+el = st_ellipse(pnt = dat, ex = dat$ex, ey = dat$ey)
+
+# Plot 2
+plot(el, graticule = TRUE, axes = TRUE)
+
+
+```
+
+
+# Abattages selon le type d’EFI
+```{r}
+
+if (type == "RIL1" | directionalfelling == "0"){
+  Coord = matrix(c(0,0,10,0,10,10,0,10,0,0),ncol=2, byrow=TRUE)
+  pol1 = list() #1 list/polygon :  list with numeric matrices with points in rows
+  pol2 = list()
+  pol3 = list()
+  mp = list(pol1,pol2,pol3) #list of lists with numeric matrices
+  (mp1 = st_multipolygon(mp))
+  plot(mp1)
+  
+  Shadows <- st_multipolygon()
+} 
+# créer un polygone par arbre ("Shadow"):
+# origine = coordonnées de l’arbre (vecteurs "AccessibleTreesPoints")
+# sommet = 1 point au hasard
+# longueur = hauteur de l’arbre TreeHeight
+# largeur = DBH
+# hauteur de l’ellipse CrownHeight
+# diamètre de l’ellipse CrownDiameter
+
+if (type == "RIL2broken" | type == "RIL2" | directionalfelling == "1") {
+  
+  
+}
+# créer un polygone par arbre ("Shadow"):
+# Réussite à 60% :
+# origine = coordonnées de l’arbre (vecteurs "TreefallSuccess")
+# longueur = hauteur de l’arbre
+# largeur = DBH
+# hauteur de l’ellipse
+# diamètre de l’ellipse
+# orientation = base du tronc vers la voie la plus proche (MainTrail ou 2ndTrail)
+# Éviter à  100% les arbres "reserve" (vecteur "ReserveTreesPoints") et essayer d’éviter les arbres "future" (vecteur "AvenirTreesPoints")
+# Echec à 40% :
+# origine = coordonnées de l’arbre (vecteurs "TreefallFailure")
+# sommet = 1 point au hasard
+# longueur = hauteur de l’arbre
+# largeur = DBH
+# hauteur de l’ellipse
+# diamètre de l’ellipse
+
+if (type == "RIL3" | directionalfelling == "2") {
+  
+  
+}
+# créer un polygone par arbre ("Shadow"):
+# Echec à 40% :
+# origine = coordonnées de l’arbre (vecteurs "TreefallFailure")
+# sommet = 1 point au hasard
+# longueur = hauteur de l’arbre
+# largeur = DBH
+# hauteur de l’ellipse
+# diamètre de l’ellipse
+# Réussite à 60% :
+# origine = coordonnées de l’arbre (vecteurs "TreefallSuccess")
+# longueur = hauteur de l’arbre
+# largeur = DBH
+# hauteur de l’ellipse
+# diamètre de l’ellipse
+# orientation = 30-45◦, base du tronc vers la voie la plus proche (MainTrail ou 2ndTrail) MinTreefallOrientation MaxTreefallOrientation
+# Éviter à  100% les arbres "reserve" (vecteur "ReserveTreesPoints") et essayer d’éviter les arbres "future" (vecteur "AvenirTreesPoints")
+
+if (type == "RIL3fuel" | type == "RIL3fuelhollow"  | (type == "manual"& (fuel =="1" |fuel =="2"))) {
+  
+  
+}
+# créer un polygone par arbre ("Shadow"):
+# Echec à 40% :
+# origine = coordonnées de l’arbre (vecteurs "TreefallFailure")
+# sommet = 1 point au hasard
+# longueur = hauteur de l’arbre
+# largeur = DBH
+# hauteur de l’ellipse
+# diamètre de l’ellipse
+# Réussite à 60% :
+# origine = coordonnées de l’arbre (vecteurs "TreefallSuccess")
+# longueur = hauteur de l’arbre
+# largeur = DBH
+# hauteur de l’ellipse
+# diamètre de l’ellipse
+# orientation = 30-45◦,
+# if (piste la plus proche (MainTrail ou 2ndTrail) à ⩽ 6 m de l’arbre & ⩽ 20% de l’entrée de la parcelle (= contact piste/bord parcelle) jusqu’à max 6 m de l’arbre (buffergrappin)  ("piste à grappin" ?)) : houppier vers cette piste.
+# Sinon : pied vers piste la plus proche (MainTrail ou 2ndTrail)
+# Éviter à  100% les arbres "reserve" (vecteur "ReserveTreesPoints") et essayer d’éviter les arbres "future" (vecteur "AvenirTreesPoints")
+
+
+```
+
+# Renseigner les arbres abattus :
+inventory : Pour les arbres pour lesquels un Shadow a été créé :
+renseigner "1" dans une colonne "Cutted".
+if ProbedHollow = "0" : renseigner "cutted" if encore "NA"  dans la colonne "DeathCause".
+if ProbedHollow = "1" renseigner "woodfuel" if encore "NA"  dans la colonne "DeathCause".
+```{r}
+
+# inventory <- inventory %>% 
+
+# mutate(Cutted = ifelse(,"1",) %>% # a shadow = tree cutted
+
+# mutate(DeathCause = ifelse(is.na(DeathCause) & ProbedHollow == "0","cutted", DeathCause) %>% #BO
+#          
+# mutate(DeathCause = ifelse(is.na(DeathCause) & ProbedHollow == "1","woodfuel", DeathCause) #BE
+
+```
+
+# chablismortality
+Fonction de mortalité chablis ("chablismortality"): élimination des arbres chablis 2ndaires de l’arbre abattu =  faire mourir les arbres de coordonnées appartenant aux polygones "Shadow" :
++ Ajouter les coordonnées de ces arbres au vecteur "DamageTreesPoints" et au vecteur "DeadTreesPoints".
++ inventory : Pour ces arbres, renseigner "treefall2nd" ifencore "NA"  dans la colonne "DeathCause".
++ leur faire des Shadow aussi : créer un polygone par arbre ("Shadow"):
+origine = coordonnées de l’arbre (vecteurs "DamageTreesPoints")
+orientation = même direction/sens que son abatteur 
+longueur = hauteur de l’arbre
+largeur = DBH
+hauteur de l’ellipse
+diamètre de l’ellipse
+```{r}
+
+# Ajouter les coordonnées de ces arbres au vecteur "DamageTreesPoints" et au vecteur "DeadTreesPoints".
+
+# inventory : Pour ces arbres, renseigner "treefall2nd" ifencore "NA"  dans la colonne "DeathCause".
+
+# leur faire des Shadow aussi : créer un polygone par arbre ("Shadow"):
+# origine = coordonnées de l’arbre (vecteurs "DamageTreesPoints")
+# orientation = même direction/sens que son abatteur 
+# longueur = hauteur de l’arbre
+# largeur = DBH
+# hauteur de l’ellipse
+# diamètre de l’ellipse
+
+
+```
+
