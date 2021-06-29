@@ -14,6 +14,8 @@
 #' @return
 #' @export
 #'
+#' @importFrom sf st_multipoint
+#'
 #' @examples
 #' inventory = harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
 #' diversification = TRUE, specieslax = FALSE)$inventory
@@ -24,14 +26,14 @@
 #'
 selected <- function(
   inventory,
-  type = c("RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow", "manual"),
+  type,
   fuel = "0",
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
   otherloggingparameters = loggingparameters(),
-  VO = VO, # objective volume
-  HVinit = HVinit # initial Harvestable Volume
+  VO, # objective volume
+  HVinit # initial Harvestable Volume
 ){
 
   # Arguments check
@@ -39,20 +41,20 @@ selected <- function(
   if(!inherits(inventory, "data.frame"))
     stop("The 'inventory' argument of the 'selected' function must be a data.frame")
 
-  if(!any(unlist(lapply(list(diversification, specieslax, objectivelax), inherits, "logical"))))
-    stop("The 'diversification' and 'specieslax' argument of the 'selected' function must be logical") # any() don't take a list
+  if(!all(unlist(lapply(list(diversification, specieslax, objectivelax), inherits, "logical"))))
+    stop("The 'diversification', 'specieslax' and 'objectivelax' arguments of the 'selected' function must be logical") # any() don't take a list
 
-  if (!any(type != "RIL1" | type != "RIL2broken"| type != "RIL2"| type != "RIL3"| type != "RIL3fuel"|
-      type != "RIL3fuelhollow"| type !="manual"))
-  stop("The 'type' argument of the 'selected' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
+  if (!any(type == "RIL1" | type == "RIL2broken"| type == "RIL2"| type == "RIL3"| type == "RIL3fuel"|
+           type == "RIL3fuelhollow"| type =="manual"))
+    stop("The 'type' argument of the 'selected' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
-  if (!any(fuel != "0" | fuel != "1"| fuel != "2"))
-  stop("The 'fuel' argument of the 'selected' function must be '0', '1', or '2'")
+  if (!any(fuel == "0" | fuel == "1"| fuel == "2"))
+    stop("The 'fuel' argument of the 'selected' function must be '0', '1', or '2'")
 
   if(!inherits(otherloggingparameters, "list"))
     stop("The 'otherloggingparameters' argument of the 'selected' function must be a list")
 
-  if(!any(unlist(lapply(list(VO, HVinit), inherits, "numeric"))))
+  if(!all(unlist(lapply(list(VO, HVinit), inherits, "numeric"))))
     stop("The 'VO' and 'HVinit' arguments of the 'selected' function must be numeric")
 
 
@@ -121,7 +123,7 @@ selected <- function(
         inventory <- inventory %>%
           mutate(Selected = ifelse(HVupCommercial1 == VO & LoggingStatus == "harvestableUp", "1", NA))# if harvestableUp individuals are sufficient to have our volume, harvestableUp ind = selected ind
 
-        message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(VO- HVinit),") than the objective volume, the Minimum Falling Diameter (MinFD) of 1st economic rank species were increased. The objective volume has now been reached.")
+        message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(HVinit-VO),") than the objective volume, the Minimum Falling Diameter (MinFD) of 1st economic rank species were increased. The objective volume has now been reached.")
       }
 
       if (HVupCommercial1 > VO){
@@ -139,7 +141,7 @@ selected <- function(
           filter(Selected == "1")
         HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals only
 
-        message("The harvestable volume (=",paste(HVupCommercial1),") is always higher (by ",paste(VO- HVupCommercial1),") than your objective volume despite the increase in Minimum Falling Diameter (MinFD) (Initial harvestable volume = HVinit). In order to reach your objective volume, the trees were selected in decreasing order of volume until the objective volume was reached.")
+        message("The harvestable volume (=",paste(HVupCommercial1),") is always higher (by ",paste(HVupCommercial1-VO),") than your objective volume despite the increase in Minimum Falling Diameter (MinFD) (Initial harvestable volume = HVinit). In order to reach your objective volume, the trees were selected in decreasing order of volume until the objective volume was reached.")
       }
       if (HVupCommercial1 < VO){
 
@@ -156,7 +158,7 @@ selected <- function(
           filter(Selected == "1")
         HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals
 
-        message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(VO- HVinit),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased with retention of some stems with DBH lower than the UpMinFD to ensure that the objective volume was attained.")
+        message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(HVinit-VO),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased with retention of some stems with DBH lower than the UpMinFD to ensure that the objective volume was attained.")
       }
     }
 
@@ -172,7 +174,7 @@ selected <- function(
 
           mutate(Selected = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable",
                                    "1", NA))# if we have our volume, harvestable ind = selected ind
-        message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(VO- HVinit),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased. The objective volume has now been reached. It was not necessary to increase the MinFD of the other economic species")
+        message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(HVinit-VO),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased. The objective volume has now been reached. It was not necessary to increase the MinFD of the other economic species")
       }
 
       if (HVupCommercial1 < VO){
@@ -190,7 +192,7 @@ selected <- function(
           filter(Selected == "1")
         HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals, and 2nd rank no upgraded FD individuals
 
-        message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(VO- HVinit),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased with retention of some stems with DBH lower than the UpMinFD to ensure that the objective volume was attained. It was not necessary to raise the MinFDs of other economic species.")
+        message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(HVinit-VO),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased with retention of some stems with DBH lower than the UpMinFD to ensure that the objective volume was attained. It was not necessary to raise the MinFDs of other economic species.")
       }
 
       if (HVupCommercial1 > VO){
@@ -228,7 +230,7 @@ selected <- function(
           HVupCommercial12adjust <- sum(HarvestableTable$TreeHarvestableVolume) #45.44885 Harvestable volume, with upgraded FD individuals
         }
 
-        message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(VO- HVinit),") than the objective volume, it was necessary to increase the Minimum Falling Diameter (MinFD) of all species. The objective volume has now been reached.")
+        message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(HVinit-VO),") than the objective volume, it was necessary to increase the Minimum Falling Diameter (MinFD) of all species. The objective volume has now been reached.")
 
       }
     }
@@ -236,41 +238,60 @@ selected <- function(
 
   # Apply S. Schmitt's "Rotten" predictive model to identify "truly" hollow designated trees.
   inventory <- inventory %>%
-    mutate(ProbedHollowProba = ifelse(Selected == "1", otherloggingparameters$RottenModel(DBH), NULL)) %>%  #Estimates the probability of being probed hollow
+    mutate(ProbedHollowProba = ifelse(Selected == "1", otherloggingparameters$RottenModel(DBH), NA)) %>%  #Estimates the probability of being probed hollow
 
     # generate either "1" or "0" randomly for each line, depending on the proba associated with the line:
     rowwise() %>%
-    mutate(ProbedHollow = ifelse(!is.na(ProbedHollowProba), sample(c(1,0), size = 1, replace = F, prob = c(ProbedHollowProba, 1-ProbedHollowProba)), NA)) %>%  # 1 = hollow tree, 0 = not hollow
+    mutate(ProbedHollow = ifelse(!is.na(ProbedHollowProba),
+                                 sample(c(1,0), size = 1, replace = F, prob = c(ProbedHollowProba, 1-ProbedHollowProba)), NA)) %>%  # 1 = hollow tree, 0 = not hollow
     mutate(ProbedHollow = factor(as.numeric(ProbedHollow))) %>%
-    mutate(Selected = ifelse(ProbedHollow == "1", "0", Selected)) %>%  #hollow probed trees are deselected
+    mutate(Selected = ifelse(ProbedHollow == "1", "deselected", Selected)) %>%  #hollow probed trees are deselected
     #non-upgraded MinFD species:
     mutate(Up = ifelse(is.na(Up) , "0", Up))
 
-  if (type != "RIL3fuelhollow"| (type == "manual"& fuel !="2"))
-    HarvestableTable <- inventory %>%
-    filter(Selected == "1")
-  VolumewithHollowslost <- sum(HarvestableTable$TreeHarvestableVolume) #128.5047. Harvestable volume, with Hollows lost
-  VO - VolumewithHollowslost #34 m3 lost: the bonus is therefore generous here (37.5 m3 of bonus).
-
-  if (type == "RIL3fuelhollow"| (type == "manual"& fuel =="2")) {
-    # Hollow trees = fuelwood:
-    inventory <- inventory %>%
-      mutate(DeathCause = ifelse(ProbedHollow == "1", "hollowfuel", NA)) # remplacer NA par DeathCause dans le simulateur ONF
-
-
-    # Create 2 points vectors with coordinates of the probed hollow trees: "HollowTreesPoints" and "EnergywoodTreesPoints":
+  # Create a POINTS VECTOR with coordinates of the probed hollow trees:
+  if (any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
     HollowTreescoord <- inventory %>%
       filter(ProbedHollow == "1") %>%
       select(Xutm, Yutm)
 
     HollowTreesPoints  <- st_multipoint(x = as.matrix(HollowTreescoord))
+
+    # OUTPUTS list
+    selectedOutputs <- list(inventory = inventory,
+                            HollowTreesPoints = HollowTreesPoints,
+                            EnergywoodTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2))) # empty multipoint
+
+  } else {
+  selectedOutputs <- list(inventory = inventory,
+                          HollowTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2)), # empty multipoint
+                          EnergywoodTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2)))
+  }
+
+  if (type == "manual" && fuel !="2") {
+    HarvestableTable <- inventory %>%
+      filter(Selected == "1")
+    VolumewithHollowslost <- sum(HarvestableTable$TreeHarvestableVolume) #128.5047. Harvestable volume, with Hollows lost
+    VO - VolumewithHollowslost #34 m3 lost: the bonus is therefore generous here (37.5 m3 of bonus).
+  }
+
+  if ((type == "manual" && fuel =="2") && any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
+    # Hollow trees = fuelwood:
+    inventory <- inventory %>%
+      mutate(DeathCause = ifelse(ProbedHollow == "1", "hollowfuel", NA)) # remplacer NA par DeathCause dans le simulateur ONF
+
+    # Create a POINTS VECTOR with coordinates of the energywood trees:
+
     EnergywoodTreesPoints <- HollowTreesPoints
+
+
+    # OUTPUTS list
+    selectedOutputs <- list(inventory = inventory,
+                            HollowTreesPoints = HollowTreesPoints,
+                            EnergywoodTreesPoints = EnergywoodTreesPoints)
 
   }
 
-  return(inventory)
+  return(selectedOutputs) # return the new inventory and the 2 points vectors (HollowTrees and EnergywoodTrees)
 
-  # selectedOutputs <- list(inventory = inventory,
-  # HollowTreesPoints = HollowTreesPoints, EnergywoodTreesPoints = EnergywoodTreesPoints)
-  # return(selectedOutputs) # return the new inventory and the HVinit
-}
+  }

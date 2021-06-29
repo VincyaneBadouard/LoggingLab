@@ -6,25 +6,27 @@
 \usage{
 treeselection(
   inventory,
-  speciescriteria = SpeciesCriteria,
-  type = c("RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow",
-    "manual"),
-  fuel = "0",
   objective,
+  type,
+  fuel = "0",
+  diversification,
+  specieslax = FALSE,
+  objectivelax = FALSE,
+  speciescriteria = SpeciesCriteria,
   otherloggingparameters = loggingparameters()
 )
 }
 \arguments{
 \item{inventory}{(data.frame)}
 
-\item{speciescriteria}{(data.frame)}
+\item{objective}{Objective volume per hectare (numeric)  diversificationparam specieslaxparam objectivelax}
 
 \item{type}{"RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"(character)}
 
-\item{fuel}{no  exploitation = "0" (default),
-damage exploitation in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"}
+\item{fuel}{no  exploitation = "0" (default), damage exploitation in fuelwood = "1",
+exploitation of hollow trees and damage in fuelwood = "2"}
 
-\item{objective}{Objective volume per hectare (numeric)  diversificationparam specieslaxparam objectivelax}
+\item{speciescriteria}{(data.frame)}
 
 \item{otherloggingparameters}{(list) MainTrail (multiline)}
 }
@@ -39,5 +41,5 @@ inventory = addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 
 treeselection(inventory, SpeciesCriteria,
 type ="manual", fuel = "0",objective = 20, diversification = TRUE, specieslax = FALSE,
-objectivelax = FALSE, otherloggingparameters = loggingparameters(), MainTrail)
+objectivelax = FALSE, otherloggingparameters = loggingparameters()) # , MainTrail
 }

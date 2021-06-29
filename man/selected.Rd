@@ -6,15 +6,14 @@
 \usage{
 selected(
   inventory,
-  type = c("RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow",
-    "manual"),
+  type,
   fuel = "0",
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
   otherloggingparameters = loggingparameters(),
-  VO = VO,
-  HVinit = HVinit
+  VO,
+  HVinit
 )
 }
 \arguments{
