@@ -635,3 +635,62 @@ InventoryAddtreedim <- InventoryClean %>%
 
 ```
 
+# scenariosparameters
+pas de mode "manual", 
+si argument = NULL, prendre la valeur du scénario correspondante
+```{r}
+
+if (is.null(winching)){
+  if (Type == "RIL1")           winching = "0"
+  if (Type == "RIL2broken")     winching = "0"
+  if (Type == "RIL2")           winching = "1"
+  if (Type == "RIL3")           winching = "2"
+  if (Type == "RIL3fuel")       winching = "2"
+  if (Type == "RIL3fuelhollow") winching = "2"
+  
+}
+
+if (is.null(directionalfelling)){
+  if (Type == "RIL1")           directionalfelling = "0"
+  if (Type == "RIL2broken")     directionalfelling = "1"
+  if (Type == "RIL2")           directionalfelling = "1"
+  if (Type == "RIL3")           directionalfelling = "2"
+  if (Type == "RIL3fuel")       directionalfelling = "2"
+  if (Type == "RIL3fuelhollow") directionalfelling = "2"
+  
+}
+
+if (is.null(objective)){
+  if (Type == "RIL1")           objective = 25
+  if (Type == "RIL2broken")     objective = 25
+  if (Type == "RIL2")           objective = 25
+  if (Type == "RIL3")           objective = 30
+  if (Type == "RIL3fuel")       objective = 30
+  if (Type == "RIL3fuelhollow") objective = 30
+  
+}
+
+if (is.null(diversification)){
+  if (Type == "RIL1")           diversification = FALSE
+  if (Type == "RIL2broken")     diversification = FALSE
+  if (Type == "RIL2")           diversification = FALSE
+  if (Type == "RIL3")           diversification = TRUE
+  if (Type == "RIL3fuel")       diversification = TRUE
+  if (Type == "RIL3fuelhollow") diversification = TRUE
+  
+}
+
+# Type	SpatialDataType	Winching 	DirectionalFelling 	Objective 	Diversification 
+# RIL1	           SRTM	    0	           0	            20-25	         FALSE
+# RIL2broken	    LIDAR	    0	           1	            20-25	         FALSE
+# RIL2	          LIDAR     1	           1	            20-25	         FALSE
+# RIL3	          LIDAR	    2	           2	            25-30	          TRUE
+# RIL3fuel	      LIDAR	    2	           2	            25-30	          TRUE
+# RIL3fuelhollow	LIDAR	    2	           2	            25-30         	TRUE
+
+
+```
+
+
+
+
