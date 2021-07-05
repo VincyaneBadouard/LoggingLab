@@ -26,8 +26,8 @@
 #'
 selected <- function(
   inventory,
-  type,
-  fuel = "0",
+  type = "manual",
+  fuel,
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
@@ -41,14 +41,14 @@ selected <- function(
   if(!inherits(inventory, "data.frame"))
     stop("The 'inventory' argument of the 'selected' function must be a data.frame")
 
-  if(!all(unlist(lapply(list(diversification, specieslax, objectivelax), inherits, "logical"))))
+  if(!all(unlist(lapply(list(diversification, specieslax, objectivelax), inherits, "logical"))) && !is.null(diversification))
     stop("The 'diversification', 'specieslax' and 'objectivelax' arguments of the 'selected' function must be logical") # any() don't take a list
 
   if (!any(type == "RIL1" | type == "RIL2broken"| type == "RIL2"| type == "RIL3"| type == "RIL3fuel"|
-           type == "RIL3fuelhollow"| type =="manual"))
+           type == "RIL3fuelhollow"| type == "manual"))
     stop("The 'type' argument of the 'selected' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
-  if (!any(fuel == "0" | fuel == "1"| fuel == "2"))
+  if (!any(fuel == "0" | fuel == "1"| fuel == "2" | is.null(fuel)))
     stop("The 'fuel' argument of the 'selected' function must be '0', '1', or '2'")
 
   if(!inherits(otherloggingparameters, "list"))
@@ -56,6 +56,14 @@ selected <- function(
 
   if(!all(unlist(lapply(list(VO, HVinit), inherits, "numeric"))))
     stop("The 'VO' and 'HVinit' arguments of the 'selected' function must be numeric")
+
+  # Redefinition of the parameters according to the chosen scenario
+  scenariosparameters <- scenariosparameters(type = type, fuel = fuel, diversification = diversification)
+
+  fuel <- scenariosparameters$fuel
+  diversification <- scenariosparameters$diversification
+
+
 
 
   # if objective achieved at the first attempt
@@ -268,14 +276,14 @@ selected <- function(
                           EnergywoodTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2)))
   }
 
-  if (type == "manual" && fuel !="2") {
+  if (fuel !="2") {
     HarvestableTable <- inventory %>%
       filter(Selected == "1")
     VolumewithHollowslost <- sum(HarvestableTable$TreeHarvestableVolume) #128.5047. Harvestable volume, with Hollows lost
     VO - VolumewithHollowslost #34 m3 lost: the bonus is therefore generous here (37.5 m3 of bonus).
   }
 
-  if ((type == "manual" && fuel =="2") && any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
+  if ((fuel =="2") && any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
     # Hollow trees = fuelwood:
     inventory <- inventory %>%
       mutate(DeathCause = ifelse(ProbedHollow == "1", "hollowfuel", NA)) # remplacer NA par DeathCause dans le simulateur ONF

@@ -131,7 +131,7 @@ expect_false(any(TestDBHUp$Commercial == "2")) # no Commercial = "2" among the h
   expect_true(all(TestHollow$ProbedHollow == "0" || TestHollow$ProbedHollow == "1")) # ProbedHollow = "0" ou "1" if !is.na(ProbedHollowProba)
 
 
-  # if type == "manual"& fuel =="2" et que il y a des ProbedHollow == "1" : there are "hollowfuel" in DeathCause
+  # if fuel =="2" et que il y a des ProbedHollow == "1" : there are "hollowfuel" in DeathCause
   testinventory <- selected(inventory, type = "manual", fuel = "2", diversification = TRUE,
                             otherloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit)$inventory
 

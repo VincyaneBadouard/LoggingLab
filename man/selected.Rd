@@ -6,8 +6,8 @@
 \usage{
 selected(
   inventory,
-  type,
-  fuel = "0",
+  type = "manual",
+  fuel,
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
