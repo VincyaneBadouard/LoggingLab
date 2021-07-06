@@ -29,7 +29,7 @@
 #' @param TrunkHeightAllometry (function)
 #' @param TreeHeightAllometry log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344 log(DBH)^2 (function)
 #' @param CrownDiameterAllometry ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977 (ref)(function)
-#'
+#' @param RottenModel Estimates the probability of being probed hollow (default: 1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)
 #'
 #' @return A named list of 30 objects.
 
@@ -60,27 +60,40 @@ loggingparameters <- function(
   TreefallSuccessProportion = 0.6,
   MinTreefallOrientation = 30, #in degree
   MaxTreefallOrientation = 45, #in degree
-  TreeHollowPartForFuel = 1/3, #(Hollow) Part taken from hollow trees for fuel exploitation
+  TreeHollowPartForFuel = 1/3, #Part taken from hollow trees for fuel exploitation
   Purge = 0.14, # in m^3 of fuelwood/m^3 of logged trees
   MaxTrailDensity = 200, #in m/ha
   MaxLandingArea = 1500, #in square meters
 
-  ### Models
+  ### Models (peut-etre mettre les modèles dans un fichier .R chacun ac leure propre doc)
 
-  TreeHarvestableVolumeAllometry = function(aCoef, bCoef, DBH)
+  # my too much specific version
+  TreeHarvestableVolumeAllometry = function(DBH, aCoef, bCoef)
     aCoef + bCoef * (DBH/100)^2, # a and b depend on the forest location)(DBH in cm, in m in the formula)
 
+  # #Sylvain's version
+  # TreeHarvestableVolumeParameters = c("aCoef", "bCoeff"), # create a characters vectoc with the coef names
+  #
+  # TreeHarvestableVolumeAllometry = function(DBH, pars){
+  #   # pars1 and pars2 depend on the forest location)
+  #   if(length(pars) != 2) # check the parameters number
+  #     stop("You should have 2 parameters for the tree harvestable volume allometry")
+  #   return(pars[1] + pars[2] * (DBH/100)^2) #(DBH in cm, in m in the formula)
+  # },
+
   TrunkHeightAllometry = function(DBH, TreeHarvestableVolume) # compute the trunk height
-    TreeHarvestableVolume/(pi*(((DBH/100)/2)^2)),  # cylinderVolume = pi(DBH/2)^2 x H.
+    TreeHarvestableVolume/(pi*(((DBH/100)/2)^2)),  # CylinderVolume = pi(DBH/2)^2 x H.
   # DBH in cm, in m in the formula.
 
   TreeHeightAllometry = function(DBH) exp(0.07359191 + 1.34241216*log(DBH) + -0.12282344*log(DBH)^2),
 
   CrownDiameterAllometry = function(DBH, TreeHeight, alpha, beta)
-    exp(((log(DBH)- alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight
+    exp(((log(DBH)- alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight,
   # compute the crown diameter (CD) (ln(D) = alpha + beta ln(H*CD) + error, with error~N(0,sigma^2) and meansigma^2 = 0.0295966977. (Melaine's allometries))
 
-  # RottenModel = function() # Hollow trees identification
+  RottenModel = function(DBH) 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) # Hollow trees identification
+
+  # VisiblyDefectModel = function() #  Visible hollow trees identification
 ){
   list(
     ### Values
@@ -114,7 +127,8 @@ loggingparameters <- function(
     TreeHarvestableVolumeAllometry = TreeHarvestableVolumeAllometry,
     TrunkHeightAllometry = TrunkHeightAllometry,
     TreeHeightAllometry = TreeHeightAllometry,
-    CrownDiameterAllometry = CrownDiameterAllometry
-    # RottenModel = RottenModel
+    CrownDiameterAllometry = CrownDiameterAllometry,
+    RottenModel = RottenModel
+    # VisiblyDefectModel = VisiblyDefectModel
   )
 }

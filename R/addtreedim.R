@@ -11,17 +11,20 @@
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
 #' @importFrom tidyr unite
+#' @importFrom rlang .data
 #'
 #' @examples
 #' data(Paracou6_2016)
 #' data(ForestZoneVolumeParametersTable) # The volume parameters data in the global environment
-#' load(system.file("extdata", "ParamCrownDiameterAllometry.rda", package = "Maria"))
+#' data(ParamCrownDiameterAllometry)
 #'
 #' if (!("DBH" %in% names(Paracou6_2016))) {
 #' tibble::add_column(Paracou6_2016, DBH = NA) #if DBH doesn't exist create it
 #' Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
+#' Paracou6_2016 <- filter(Paracou6_2016, DBH >= 10)
 #'
 #' addtreedim(inventory = Paracou6_2016)
+#'
 addtreedim <- function(
   inventory,
   crowndiameterparameters = ParamCrownDiameterAllometry,
@@ -29,9 +32,13 @@ addtreedim <- function(
   otherloggingparameters = loggingparameters()
 
 ){
-  # Arguments check
-  if(!any(lapply(list(inventory, crowndiameterparameters, volumeparameters), inherits, "data.frame")))
-    stop("The function arguments must be data.frames")
+
+    # Arguments check
+  if(!any(unlist(lapply(list(inventory, crowndiameterparameters, volumeparameters), inherits, "data.frame"))))
+    stop("The function arguments must be data.frames") # any() don't take a list
+
+  if(!inherits(otherloggingparameters, "list"))
+    stop("The 'otherloggingparameters' argument of the 'addtreedim' function must be a list")
 
   # Crown diameter allometry parameters data preparation:
 
@@ -48,11 +55,20 @@ addtreedim <- function(
 
   # Variables computation:
 
+  # test otherloggingparameters$TreeHarvestableVolumeParameters in names(volumeparameters)
+
   inventory <- inventory %>%
 
     # TreeHarvestableVolume (m3)
-    left_join(volumeparameters) %>%
-    mutate(TreeHarvestableVolume = otherloggingparameters$TreeHarvestableVolumeAllometry(aCoef, bCoef, DBH)) %>%
+    left_join(volumeparameters, by = "Forest") %>%
+    mutate(TreeHarvestableVolume = otherloggingparameters$TreeHarvestableVolumeAllometry(DBH, aCoef, bCoef)) %>%
+#
+#    #Sylvain's version
+#     mutate(TreeHarvestableVolume = # the variable to compute
+#              otherloggingparameters$ # the list compute by the fct
+#              TreeHarvestableVolumeAllometry(DBH, # the element of the list
+#                                             pars = c({{otherloggingparameters$
+#                                                 TreeHarvestableVolumeParameters}}))) %>% # to recover parameters name as column names
 
     # TrunkHeight (m)
     mutate(TrunkHeight = otherloggingparameters$TrunkHeightAllometry(DBH, TreeHarvestableVolume)) %>%

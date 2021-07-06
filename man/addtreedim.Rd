@@ -29,11 +29,13 @@ Compute tree dimensions (Height, diameter, harvestable volume, including crown)
 \examples{
 data(Paracou6_2016)
 data(ForestZoneVolumeParametersTable) # The volume parameters data in the global environment
-load(system.file("extdata", "ParamCrownDiameterAllometry.rda", package = "Maria"))
+data(ParamCrownDiameterAllometry)
 
 if (!("DBH" \%in\% names(Paracou6_2016))) {
 tibble::add_column(Paracou6_2016, DBH = NA) #if DBH doesn't exist create it
 Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
+Paracou6_2016 <- filter(Paracou6_2016, DBH >= 10)
 
 addtreedim(inventory = Paracou6_2016)
+
 }

@@ -19,6 +19,7 @@ library(tidyr)
 library(schoolmath)
 library(ggplot2)
 library(reshape)
+library(sf)
 ```
 
 ```{r ParamCrownDiameterAllometry table code}
@@ -39,8 +40,10 @@ SpeciesCriteria <- read_delim("D:/VSC Kourou/DATA/SpeciesCriteria.csv",
                                                                                                               "2")), MinFD = col_number(), UpMinFD = col_number(), 
                                                                            MaxFD = col_number()), locale = locale(encoding = "Latin1"), 
                               trim_ws = TRUE) %>% 
-  separate(ScientificName, sep = " ", into = c("Genus", "Species"), remove = T) %>% 
-  unite(Genus, Species, col = "ScientificName", sep = "_", remove = F)
+  separate(ScientificName, sep = " ", into = c("Genus", "Species"), remove = T) 
+# unite(Genus, Species, col = "ScientificName", sep = "_", remove = F) 
+
+SpeciesCriteria$VernName <- tolower(SpeciesCriteria$VernName)
 
 usethis::use_data(SpeciesCriteria)
 ```
@@ -48,9 +51,10 @@ usethis::use_data(SpeciesCriteria)
 # Data loading
 ```{r}
 data(Paracou6_2016) #data inventory in the global environment
-data("ForestZoneVolumeParametersTable") # The volume parameters data in the global environment
+data(ForestZoneVolumeParametersTable) # The volume parameters data in the global environment
 # load(system.file("extdata", "BrokenParacou6_2016.rda", package = "Maria")) # the test inventory in the global environment
-load(system.file("extdata", "ParamCrownDiameterAllometry.rda", package = "Maria"))
+data(ParamCrownDiameterAllometry)
+data(SpeciesCriteria)
 ```
 ```{r}
 lapply(Paracou6_2016, class) #give the class of all the data variables
@@ -630,4 +634,63 @@ InventoryAddtreedim <- InventoryClean %>%
 #                                                !!!!!!!TREEHEIGHT EN ATTENTE!!!!!!
 
 ```
+
+# scenariosparameters
+pas de mode "manual", 
+si argument = NULL, prendre la valeur du scénario correspondante
+```{r}
+
+if (is.null(winching)){
+  if (Type == "RIL1")           winching = "0"
+  if (Type == "RIL2broken")     winching = "0"
+  if (Type == "RIL2")           winching = "1"
+  if (Type == "RIL3")           winching = "2"
+  if (Type == "RIL3fuel")       winching = "2"
+  if (Type == "RIL3fuelhollow") winching = "2"
+  
+}
+
+if (is.null(directionalfelling)){
+  if (Type == "RIL1")           directionalfelling = "0"
+  if (Type == "RIL2broken")     directionalfelling = "1"
+  if (Type == "RIL2")           directionalfelling = "1"
+  if (Type == "RIL3")           directionalfelling = "2"
+  if (Type == "RIL3fuel")       directionalfelling = "2"
+  if (Type == "RIL3fuelhollow") directionalfelling = "2"
+  
+}
+
+if (is.null(objective)){
+  if (Type == "RIL1")           objective = 25
+  if (Type == "RIL2broken")     objective = 25
+  if (Type == "RIL2")           objective = 25
+  if (Type == "RIL3")           objective = 30
+  if (Type == "RIL3fuel")       objective = 30
+  if (Type == "RIL3fuelhollow") objective = 30
+  
+}
+
+if (is.null(diversification)){
+  if (Type == "RIL1")           diversification = FALSE
+  if (Type == "RIL2broken")     diversification = FALSE
+  if (Type == "RIL2")           diversification = FALSE
+  if (Type == "RIL3")           diversification = TRUE
+  if (Type == "RIL3fuel")       diversification = TRUE
+  if (Type == "RIL3fuelhollow") diversification = TRUE
+  
+}
+
+# Type	SpatialDataType	Winching 	DirectionalFelling 	Objective 	Diversification 
+# RIL1	           SRTM	    0	           0	            20-25	         FALSE
+# RIL2broken	    LIDAR	    0	           1	            20-25	         FALSE
+# RIL2	          LIDAR     1	           1	            20-25	         FALSE
+# RIL3	          LIDAR	    2	           2	            25-30	          TRUE
+# RIL3fuel	      LIDAR	    2	           2	            25-30	          TRUE
+# RIL3fuelhollow	LIDAR	    2	           2	            25-30         	TRUE
+
+
+```
+
+
+
 

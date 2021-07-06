@@ -30,14 +30,15 @@ loggingparameters(
   Purge = 0.14,
   MaxTrailDensity = 200,
   MaxLandingArea = 1500,
-  TreeHarvestableVolumeAllometry = function(aCoef, bCoef, DBH) aCoef + bCoef *
+  TreeHarvestableVolumeAllometry = function(DBH, aCoef, bCoef) aCoef + bCoef *
     (DBH/100)^2,
   TrunkHeightAllometry = function(DBH, TreeHarvestableVolume) TreeHarvestableVolume/(pi
     * (((DBH/100)/2)^2)),
   TreeHeightAllometry = function(DBH) exp(0.07359191 + 1.34241216 * log(DBH) +
     -0.12282344 * log(DBH)^2),
   CrownDiameterAllometry = function(DBH, TreeHeight, alpha, beta) exp(((log(DBH) -
-    alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight
+    alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight,
+  RottenModel = function(DBH) 1/(1 + exp(-(-5.151 + 0.042 * DBH)))
 )
 }
 \arguments{
@@ -98,6 +99,8 @@ loggingparameters(
 \item{TreeHeightAllometry}{log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344 log(DBH)^2 (function)}
 
 \item{CrownDiameterAllometry}{ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977 (ref)(function)}
+
+\item{RottenModel}{Estimates the probability of being probed hollow (default: 1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)}
 }
 \value{
 A named list of 30 objects.
