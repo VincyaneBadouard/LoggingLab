@@ -16,7 +16,7 @@
 #' @export
 #'
 #' @examples
-#' inventory = addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
+#' inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 #'
 #'treeselection(inventory, SpeciesCriteria,
 #'type ="manual", fuel = "0",objective = 20, diversification = TRUE, specieslax = FALSE,
@@ -104,7 +104,7 @@ treeselection <- function(
   # créer les conditions et vecteurs vides dans les listes à retourner
   # Points vector with coordinates of the harvestable trees:
   HarvestableTreescoord <- inventory %>%
-    filter(LoggingStatus == "harvestable" |LoggingStatus == "harvestableUp" |LoggingStatus == "harvestable2nd") %>%
+    filter(LoggingStatus == "harvestable" |LoggingStatus == "harvestableUp" |LoggingStatus == "harvestable2nd") %>% # harvestableUp = DBH > MinFD individuals, harvestable2nd = eco2 individuals is specieslax
     select(Xutm, Yutm)
 
   HarvestableTreesPoints  <- st_multipoint(x = as.matrix(HarvestableTreescoord))

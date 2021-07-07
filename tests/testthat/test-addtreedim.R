@@ -64,6 +64,9 @@ test_that("addtreedim", {
   expect_true(all(0 < testinventory$CrownHeight & testinventory$CrownHeight < 100))
   expect_true(all(0 < testinventory$CrownDiameter & testinventory$CrownDiameter < 200))
 
+  expect_true(nrow(cleaninventory(Paracou6_2016)) == nrow(testinventory))
+
+
 })
 
 
