@@ -4,7 +4,7 @@ test_that("selected", {
   # Test data preparation
   inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
                           diversification = TRUE, specieslax = FALSE)$inventory
-  VO <- 20
+  VO <- 40
   HVinit <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
                        diversification = FALSE, specieslax = FALSE)$HVinit
   testinventory <- selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE,
@@ -34,6 +34,8 @@ test_that("selected", {
     inventory, type = "manual", diversification = TRUE, fuel = "0", otherloggingparameters = loggingparameters(),
     VO = "20", HVinit = HVinit),
     regexp = "The 'VO' and 'HVinit' arguments of the 'selected' function must be numeric")
+
+  expect_true(all(!is.na(testinventory$Selected))) # No NA is Selected colomn
 
 
   # if HVinit == VO : all the "harvestable" trees are Selected == "1"

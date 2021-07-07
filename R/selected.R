@@ -71,7 +71,7 @@ selected <- function(
     mutate(Selected = ifelse(HVinit == VO & LoggingStatus == "harvestable",
                              "1", NA))# if we have our volume, harvestable sp = selected sp
 
-  inventory <- add_column(inventory, Up = 0) # Create a column to indicate Which sp is FD uped. Or create this column d'office in speciescriteria. "0" = no uped, "1"= uped. dans speciescriteria ou inventory ?
+  inventory <- add_column(inventory, Up = 0) # Create a column to indicate Which sp is FD uped. "0" = no uped, "1"= uped dans inventory
 
 
   if (HVinit < VO){ #diversification is necessary, designate the secondary-economic-rank species too
@@ -254,8 +254,13 @@ selected <- function(
                                  sample(c(1,0), size = 1, replace = F, prob = c(ProbedHollowProba, 1-ProbedHollowProba)), NA)) %>%  # 1 = hollow tree, 0 = not hollow
     mutate(ProbedHollow = factor(as.numeric(ProbedHollow))) %>%
     mutate(Selected = ifelse(ProbedHollow == "1", "deselected", Selected)) %>%  #hollow probed trees are deselected
-    #non-upgraded MinFD species:
-    mutate(Up = ifelse(is.na(Up) , "0", Up))
+    # non-upgraded MinFD species:
+    mutate(Up = ifelse(is.na(Up) , "0", Up)) %>%
+    # No NA in Selected colomn
+    mutate(Selected = ifelse(is.na(Selected) , "0", Selected))
+
+  if (any(inventory$Selected == "deselected") && !any(inventory$Selected == "1")) #if there are "deselected" trees and  not of selected = 1
+    stop("No trees were selected because they were all probed hollow (",paste(sum(as.numeric(inventory$Selected == "deselected"), na.rm = TRUE))," probed hollow trees). Your objective volume may be too low (the few trees selected were found to be hollow).")
 
   # Create a POINTS VECTOR with coordinates of the probed hollow trees:
   if (any(inventory$ProbedHollow == "1", na.rm = TRUE)) {

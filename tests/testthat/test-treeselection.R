@@ -48,21 +48,22 @@ test_that("treeselection", {
 
   # Objective Volume:
   ## hollow trees harvested
-  objective <- 20
+  objective <- 40
   VO <- treeselection(inventory,
-                      type ="manual", fuel = "2", objective = 20, diversification = TRUE, specieslax = FALSE,
+                      type ="manual", fuel = "2", objective = 40, diversification = TRUE, specieslax = FALSE,
                       objectivelax = FALSE, SpeciesCriteria, otherloggingparameters = loggingparameters())$VO
 
   expect_true(VO == objective)
 
   ## hollow trees non-harvested
   VO <- treeselection(inventory,
-                      type ="manual", fuel = "0", objective = 20, diversification = TRUE, specieslax = FALSE,
+                      type ="manual", fuel = "0", objective = 40, diversification = TRUE, specieslax = FALSE,
                       objectivelax = FALSE, SpeciesCriteria, otherloggingparameters = loggingparameters())$VO
 
   expect_true(VO == objective + otherloggingparameters$ObjectiveBonus)
 
 
+  expect_true(nrow(inventory) == nrow(testinventory)) # check that the rows number don't change
 
 })
 

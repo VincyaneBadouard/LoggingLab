@@ -29,7 +29,6 @@ test_that("cleaninventory", {
   expect_error(cleaninventory(StopTestInventory), regexp = "Plot") # check if it is always the same plot
   expect_error(cleaninventory(StopTestInventory), regexp = "CensusYear") # and the same year
 
-
 })
 
 
