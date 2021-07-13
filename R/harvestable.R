@@ -45,10 +45,19 @@ harvestable <- function(
   HarverstableConditions <- HarverstableConditions & (inventory$DBH >= inventory$MinFD & inventory$DBH <= inventory$MaxFD) # harvestable individuals, accord by their DBH
 
   #select spatially
-  # HarverstableConditions <- HarverstableConditions & ()
-  ##slope
-  ##isolement
-  ##MainTrails out
+  PlotTopo <- raster::mask(x = DEM, # DEM en shapefile
+                           mask = Plot) # découpage de la topo par l'emprise du plot
+
+  PlotSlope <- raster::terrain(PlotTopo,
+                               opt = "slope",
+                               units = 'radians',
+                               neigbors = 8)
+
+  #HarverstableConditions <- HarverstableConditions & ()
+  ## dans une UP
+  ## slope otherloggingparameters$TreeMaxSlope
+  ##isolement otherloggingparameters$IsolateTreeMinDistance
+  ##MainTrails out (only for ONF plots)
 
   inventory <- inventory %>%
     mutate(LoggingStatus = ifelse(HarverstableConditions, #Under the above criteria, designate the harvestable species

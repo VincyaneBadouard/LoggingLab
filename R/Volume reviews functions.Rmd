@@ -1,0 +1,92 @@
+---
+title: "Volume reviews functions"
+author: "Vincyane Badouard"
+date: "12/07/2021"
+output: html_document
+---
+
+# timberharvestedvolume
+INPUT : inventory + fuel
+OUTPUT : LoggedVolume
+
+Si type != "RIL3fuelhollow"  ou (type == "manual"& fuel !="2"): 
+LoggedVolume =∑TreeHarvestableVolume  des arbres codés "Logged"= "1"
+
+Si type = "RIL3fuelhollow" ou (type == "manual"& fuel =="2"): NoHollowLoggedVolume = ∑TreeHarvestableVolume  des arbres codés "Logged"= "1"
+LoggedVolume = ∑NoHollowLoggedVolume  et ⅔ du volume de ceux codés ProbedHollow = "1".
+
+```{r}
+
+LoggedTable <- inventory %>%
+    filter(Logged == "1")
+
+if (fuel !="2") {                    # no hollow trees exploitation
+  
+  LoggedVolume <- sum(LoggedTable$TreeHarvestableVolume)
+}
+
+if (fuel =="2") {                   # with hollow trees exploitation
+  
+  HollowTable <- inventory %>%
+    filter(ProbedHollow = "1")
+  
+  NoHollowLoggedVolume <- sum(LoggedTable$TreeHarvestableVolume)
+  LoggedVolume <- sum(NoHollowLoggedVolume +
+                        1-(otherloggingparameters$TreeHollowPartForFuel)*(HollowTable$TreeHarvestableVolume))
+}
+
+```
+
+
+# exploitablefuelwoodvolume
+*si (fuel =="1" |fuel =="2"))*
+
+INPUT : inventory + LoggedVolume/NoHollowLoggedVolume
+OUTPUT : FuelVolume
+
+si type = "RIL3fuel" ou (type == "manual"& fuel =="1"):
+FuelVolume = ∑TreeHarvestableVolume  de bille des arbres codés "maintrail", "2ndtrail", "treefall2nd" ou "landing" dans la colonne "DeathCause",  0,14*LoggedVolume 
+
+si type = "RIL3fuelhollow" ou (type == "manual"& fuel =="2"):
+FuelVolume = ∑TreeHarvestableVolume  de bille des arbres codés "maintrail", "2ndtrail", "treefall2nd" ou "landing" dans la colonne "DeathCause", ⅓ du volume de la bille des arbres codés "hollowfuel" dans la colonne "DeathCause",  0,14*NoHollowLoggedVolume  
+
+```{r}
+
+DamageTable <- inventory %>%
+    filter(DeathCause = "maintrail" | DeathCause ="2ndtrail" | DeathCause = "treefall2nd" | DeathCause = "landing")
+
+if (fuel =="0"){
+  
+DamageVolume <- sum(DamageTable$TreeHarvestableVolume) # Damage volume, non used for fuel in this scenario
+
+}
+
+if (fuel =="1"){
+  
+FuelVolume <- sum(DamageTable$TreeHarvestableVolume + otherloggingparameters$Purge*LoggedVolume) # Damage and purge (0.14)
+
+}
+
+if (fuel =="2"){
+  
+  HollowTable <- inventory %>%
+    filter(DeathCause = "hollowfuel")
+           
+FuelVolume <- sum(DamageTable$TreeHarvestableVolume + 
+                    otherloggingparameters$TreeHollowPartForFuel *(HollowTable$TreeHarvestableVolume) + otherloggingparameters$Purge*NoHollowLoggedVolume)
+# damage + 1/3 of hollow trees volume + purge (0.14) of the healthy trees
+
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+

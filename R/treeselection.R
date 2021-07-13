@@ -18,10 +18,11 @@
 #' @examples
 #' inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 #'
-#'treeselection(inventory, SpeciesCriteria,
-#'type ="manual", fuel = "0",objective = 20, diversification = TRUE, specieslax = FALSE,
-#'objectivelax = FALSE, otherloggingparameters = loggingparameters()) # , MainTrail
-
+#'inventory <- treeselection(inventory, SpeciesCriteria,
+#'type ="manual", fuel = "2",objective = 20, diversification = TRUE, specieslax = FALSE,
+#'objectivelax = FALSE, otherloggingparameters = loggingparameters())$inventory # , MainTrail
+#'save(treeselectionoutputsfuel, file = "C:/Users/Utilisateur/AppData/Local/ProjetsR/Maria/treeselectionoutputsfuel.Rdata")
+#'
 treeselection <- function(
   inventory,
   objective,
@@ -92,11 +93,17 @@ treeselection <- function(
     ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),            # interne fucntion
     diversification = diversification, specieslax = specieslax)$HVinit           # the other output
 
-  inventory <- selected(
+  selectedOutputs <- selected(                                                   # outputs of the selected function
     inventory,
     type = type, fuel = fuel, diversification = diversification,
     specieslax = specieslax, objectivelax = objectivelax,
-    otherloggingparameters = otherloggingparameters, VO = VO, HVinit = HVinit)$inventory
+    otherloggingparameters = otherloggingparameters, VO = VO, HVinit = HVinit)
+
+  inventory <- selectedOutputs$inventory                                         # extract inventory of the selected outputs
+
+  HollowTreesPoints <- selectedOutputs$HollowTreesPoints                         # extract a pts vector of the selected outputs
+  EnergywoodTreesPoints <- selectedOutputs$EnergywoodTreesPoints                 # extract a pts vector of the selected outputs
+
 
   inventory <- futurereserve(inventory)
 
@@ -140,7 +147,9 @@ treeselection <- function(
                                HarvestableTreesPoints = HarvestableTreesPoints,
                                SelectedTreesPoints = SelectedTreesPoints,
                                FutureTreesPoints = FutureTreesPoints,
-                               ReserveTreesPoints = ReserveTreesPoints)
+                               ReserveTreesPoints = ReserveTreesPoints,
+                               HollowTreesPoints = HollowTreesPoints,
+                               EnergywoodTreesPoints = EnergywoodTreesPoints)
 
 
 
