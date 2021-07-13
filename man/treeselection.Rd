@@ -12,6 +12,8 @@ treeselection(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
+  DEM = DemParacou,
+  plotslope = PlotSlope,
   speciescriteria = SpeciesCriteria,
   otherloggingparameters = loggingparameters()
 )
@@ -32,6 +34,10 @@ exploitation of hollow trees and damage in fuelwood = "2"}
 
 \item{objectivelax}{Allow exploitation in case of non-achievement of the objective volume (if stand too poor), = FALSE by default (logical)}
 
+\item{DEM}{(RasterLayer)}
+
+\item{plotslope}{(RasterLayer)}
+
 \item{speciescriteria}{(data.frame)}
 
 \item{otherloggingparameters}{(list) MainTrail (multiline)}
@@ -45,7 +51,10 @@ treeselection
 \examples{
 inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 
-treeselection(inventory, SpeciesCriteria,
-type ="manual", fuel = "0",objective = 20, diversification = TRUE, specieslax = FALSE,
-objectivelax = FALSE, otherloggingparameters = loggingparameters()) # , MainTrail
+treeselectionoutputs <- treeselection(inventory, SpeciesCriteria,
+type ="manual", fuel = "2",objective = 20, diversification = FALSE, specieslax = FALSE,
+objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters()) # , MainTrail
+
+save(treeselectionoutputs, file = "C:/Users/Utilisateur/AppData/Local/ProjetsR/Maria/treeselectionoutputs.Rdata")
+
 }

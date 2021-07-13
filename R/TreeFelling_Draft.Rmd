@@ -16,12 +16,16 @@ inventory + polygone "Shadow" + vecteurs "TreefallSuccess", "TreefallFailure", "
 
 ```{r Give values to the arguments to work}
 
-# inventory = scndtrailsopening(treeselection(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))) #3539 rows (Paracou: 3620 rows)
+inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
+
+inventory <- treeselection(inventory, SpeciesCriteria, type = "manual", fuel = "0",objective = 20, diversification = TRUE, specieslax = FALSE, objectivelax = FALSE, otherloggingparameters = loggingparameters())$inventory
+
 speciescriteria = SpeciesCriteria
 type = "manual"
-fuel = "0"
+fuel = "2"
 objective = 20
 diversification = TRUE
+directionalfelling = "2"
 specieslax = FALSE
 objectivelax = FALSE
 otherloggingparameters = loggingparameters()
@@ -31,99 +35,179 @@ otherloggingparameters = loggingparameters()
 
 # Succès-échec
 ```{r}
+Accessible = Selected
 
-if (type == "RIL2broken" | type == "RIL2" | type == "RIL3"){
-  Inventory <- Inventory %>% 
+if (fuel == "0" && directionalfelling != "1"){
+  inventory <- inventory %>% 
     mutate(TreeFellingOrientationSuccess = ifelse(Accessible == "1", sample(c(1,0), size = 1, replace = F, prob = c(otherloggingparameters$TreefallSuccessProportion, 1-otherloggingparameters$TreefallSuccessProportion)), NA)) # Accessible = linked by 2ndtrails
-  #Tree coordinates  
-  TreefallSuccessCoord <- inventory %>% 
-    filter(TreeFellingOrientationSuccess == "1") %>% 
-    select(Xutm, Yutm)
-  TreefallFailCoord <- inventory %>% 
-    filter(TreeFellingOrientationSuccess == "0") %>% 
-    select(Xutm, Yutm)
   
-  TreefallSuccess  <- st_multipoint(x = as.matrix(TreefallSuccessCoord))   # Create treefelling success
-  TreefallFailure  <- st_multipoint(x = as.matrix(TreefallFailCoord))      # Create treefelling fails
+  #Tree coordinates 
+  if (any(inventory$TreeFellingOrientationSuccess == "1", na.rm = TRUE)) {
+    
+    TreefallSuccessCoord <- inventory %>% 
+      filter(TreeFellingOrientationSuccess == "1") %>% 
+      select(Xutm, Yutm)
+    
+    TreefallSuccess  <- st_multipoint(x = as.matrix(TreefallSuccessCoord))   # Create treefelling success
+  }
+  
+  if (any(inventory$TreeFellingOrientationSuccess == "0", na.rm = TRUE)) {
+    TreefallFailCoord <- inventory %>% 
+      filter(TreeFellingOrientationSuccess == "0") %>% 
+      select(Xutm, Yutm)
+    
+    TreefallFailure  <- st_multipoint(x = as.matrix(TreefallFailCoord))      # Create treefelling fails
+    
+  }
   
 }
 
-if (type == "RIL3fuel" | (type == "manual"& fuel =="1")) {
+if (fuel =="1") {
   
-  Inventory <- Inventory %>% 
+  inventory <- inventory %>% 
     mutate(TreeFellingOrientationSuccess = ifelse(Selected == "1", sample(c(1,0), size = 1, replace = F, prob = c(otherloggingparameters$TreefallSuccessProportion, 1-otherloggingparameters$TreefallSuccessProportion)), NA)) # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
-  #Tree coordinates  
-  TreefallSuccessCoord <- inventory %>% 
-    filter(TreeFellingOrientationSuccess == "1") %>% 
-    select(Xutm, Yutm)
-  TreefallFailCoord <- inventory %>% 
-    filter(TreeFellingOrientationSuccess == "0") %>% 
-    select(Xutm, Yutm)
   
-  TreefallSuccess  <- st_multipoint(x = as.matrix(TreefallSuccessCoord))   # Create treefelling success
-  TreefallFailure  <- st_multipoint(x = as.matrix(TreefallFailCoord))      # Create treefelling fails
+  #Tree coordinates 
+  if (any(inventory$TreeFellingOrientationSuccess == "1", na.rm = TRUE)) {
+    
+    TreefallSuccessCoord <- inventory %>% 
+      filter(TreeFellingOrientationSuccess == "1") %>% 
+      select(Xutm, Yutm)
+    
+    TreefallSuccess  <- st_multipoint(x = as.matrix(TreefallSuccessCoord))   # Create treefelling success
+  }
   
+  if (any(inventory$TreeFellingOrientationSuccess == "0", na.rm = TRUE)) {
+    TreefallFailCoord <- inventory %>% 
+      filter(TreeFellingOrientationSuccess == "0") %>% 
+      select(Xutm, Yutm)
+    
+    TreefallFailure  <- st_multipoint(x = as.matrix(TreefallFailCoord))      # Create treefelling fails
+    
+  }
 }
 
 # Abattre les creux : 
-if (type == "RIL3fuelhollow"  | (type == "manual"& fuel =="2")) {
+if (fuel =="2") {
   
-  Inventory <- Inventory %>% 
-    mutate(TreeFellingOrientationSuccess = ifelse(Selected == "1"| ProbbedHollow == "1", sample(c(1,0), size = 1, replace = F, prob = c(otherloggingparameters$TreefallSuccessProportion, 1-otherloggingparameters$TreefallSuccessProportion)), NA)) # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
-  #Tree coordinates  
-  TreefallSuccessCoord <- inventory %>% 
-    filter(TreeFellingOrientationSuccess == "1") %>% 
-    select(Xutm, Yutm)
-  TreefallFailCoord <- inventory %>% 
-    filter(TreeFellingOrientationSuccess == "0") %>% 
-    select(Xutm, Yutm)
+  inventory <- inventory %>% 
+    mutate(TreeFellingOrientationSuccess = ifelse(Selected == "1"| ProbedHollow == "1", sample(c(1,0), size = 1, replace = F, prob = c(otherloggingparameters$TreefallSuccessProportion, 1-otherloggingparameters$TreefallSuccessProportion)), NA)) # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
   
-  TreefallSuccess  <- st_multipoint(x = as.matrix(TreefallSuccessCoord))   # Create treefelling success
-  TreefallFailure  <- st_multipoint(x = as.matrix(TreefallFailCoord))      # Create treefelling fails
+  #Tree coordinates 
+  if (any(inventory$TreeFellingOrientationSuccess == "1", na.rm = TRUE)) {
+    
+    TreefallSuccessCoord <- inventory %>% 
+      filter(TreeFellingOrientationSuccess == "1") %>% 
+      select(Xutm, Yutm)
+    
+    TreefallSuccess  <- st_multipoint(x = as.matrix(TreefallSuccessCoord))   # Create treefelling success
+  }
+  
+  if (any(inventory$TreeFellingOrientationSuccess == "0", na.rm = TRUE)) {
+    TreefallFailCoord <- inventory %>% 
+      filter(TreeFellingOrientationSuccess == "0") %>% 
+      select(Xutm, Yutm)
+    
+    TreefallFailure  <- st_multipoint(x = as.matrix(TreefallFailCoord))      # Create treefelling fails
+    
+  }
 }
 
 ```
 
 
 
-
-```{r}
+# Polygons laboratory
+```{r polygon}
 # ex:
-outer = matrix(c(0,0,10,0,10,10,0,10,0,0),ncol=2, byrow=TRUE)
-hole1 = matrix(c(1,1,1,2,2,2,2,1,1,1),ncol=2, byrow=TRUE)
+outer = matrix(c(0,0,10,0,10,10,0,10,0,0),ncol=2, byrow=TRUE) # matrice de 2 colonnes (x, y)
+#      [,1] [,2]
+# [1,]    0    0 en bas à gauche
+# [2,]   10    0 en bas à droite 
+# [3,]   10   10 en haut à droite
+# [4,]    0   10 en haut à gauche
+# [5,]    0    0 retour en bas à gauche
+hole1 = matrix(c(1,1,1,2,2,2,2,1,1,1),ncol=2, byrow=TRUE) # le petit carré en bas à gauche
+#      [,1] [,2]
+# [1,]    1    1 en bas à gauche
+# [2,]    1    2 en haut à gauche
+# [3,]    2    2 en haut à droite
+# [4,]    2    1 en bas à droite
+# [5,]    1    1 retour en bas à gauche
 hole2 = matrix(c(5,5,5,6,6,6,6,5,5,5),ncol=2, byrow=TRUE)
 pts = list(outer, hole1, hole2)
 (pl1 = st_polygon(pts))
 plot(pl1)
-
-pts3 = lapply(pts, function(x) cbind(x, 0))
-(pl2 = st_polygon(pts3))
-(pl3 = st_polygon(pts3, "XYM"))
-plot(pl2)
-plot(pl3)
-
-pts4 = lapply(pts3, function(x) cbind(x, 0))
-(pl4 = st_polygon(pts4))
-plot(pl4)
-
+```
+```{r multipolygon}
 pol1 = list(outer, hole1, hole2) #1 list/polygon :  list with numeric matrices with points in rows
-pol2 = list(outer + 12, hole1 + 12)
-pol3 = list(outer + 24)
-mp = list(pol1,pol2,pol3) #list of lists with numeric matrices
+# [[1]]
+#      [,1] [,2] le gros carré
+# [1,]    0    0
+# [2,]   10    0
+# [3,]   10   10
+# [4,]    0   10
+# [5,]    0    0
+# 
+# [[2]]
+#      [,1] [,2] 1er trou
+# [1,]    1    1
+# [2,]    1    2
+# [3,]    2    2
+# [4,]    2    1
+# [5,]    1    1
+# 
+# [[3]]
+#      [,1] [,2] 2eme trou
+# [1,]    5    5
+# [2,]    5    6
+# [3,]    6    6
+# [4,]    6    5
+# [5,]    5    5
+
+pol2 = list(outer + 12, hole1 + 12) # même carré au quel on ajoute 12 à ts les x et tous les y
+# [[1]]
+#      [,1] [,2] # même carré au quel on ajoute 12 à ts les x et tous les y
+# [1,]   12   12
+# [2,]   22   12
+# [3,]   22   22
+# [4,]   12   22
+# [5,]   12   12
+# 
+# [[2]]
+#      [,1] [,2] # un des memes trous au quel on ajoute 12 à ts les x et tous les y
+# [1,]   13   13
+# [2,]   13   14
+# [3,]   14   14
+# [4,]   14   13
+# [5,]   13   13
+
+pol3 = list(outer + 24)  # même carré au quel on ajoute 24 à ts les x et tous les y
+mp = list(pol1,pol2,pol3) #list of lists of numeric matrices
 (mp1 = st_multipolygon(mp))
 plot(mp1)
+```
 
-pts3 = lapply(mp, function(x) lapply(x, function(y) cbind(y, 0)))
-(mp2 = st_multipolygon(pts3))
-(mp3 = st_multipolygon(pts3, "XYM"))
-plot(mp2)
-plot(mp3)
-
-pts4 = lapply(mp2, function(x) lapply(x, function(y) cbind(y, 0)))
-(mp4 = st_multipolygon(pts4))
-plot(mp4)
-
+```{r ellipse}
 library(nngeo)
+# 1 ellipse
+dat = data.frame(
+  x = 1, #centroid locations
+  y = 0, #centroid locations
+  ex = 0.5, #Size along x-axis
+  ey = 0.5, #Size along y-axis,
+  stringsAsFactors = FALSE
+)
+dat = st_as_sf(dat, coords = c("x", "y")) #centroids
+dat
+
+# Calculate ellipses
+el = st_ellipse(pnt = dat, ex = dat$ex, ey = dat$ey)
+
+# Plot 2
+plot(el, graticule = TRUE, axes = TRUE)
+
+# Several ellipses
 dat = data.frame(
   x = c(1, 1, -1, 3, 3), #centroid locations
   y = c(0, -3, 2, -2, 0), #centroid locations
@@ -141,30 +225,99 @@ el = st_ellipse(pnt = dat, ex = dat$ex, ey = dat$ey)
 plot(el, graticule = TRUE, axes = TRUE)
 
 
+```
+```{r Tree prototype}
+# Faire 1 polygone = 1 arbre (rectangle + ellipse)
+
+# 1 rectangle
+pts = list(matrix(c(0,0,0,5,2,6,2,0,0,0),ncol=2, byrow=TRUE)) # TrunkHeight = 6, DBH = 2, 0 = xarbre-DBH/2
+(Trunk = st_polygon(pts))
+plot(Trunk, graticule = TRUE, axes = TRUE)
+
+# 1 ellipse
 dat = data.frame(
-  x = c(1, 2), #centroid locations
-  y = c(0, -3), #centroid locations
-  ex = c(0.5, 2), #Size along x-axis
-  ey = c(0.5, 0.2), #Size along y-axis,
+  x = 1, #centroid locations (x) à la moitiée du diamètre du tronc
+  y = 7, #centroid locations (y) = hauteur du tronc + CrownHeight/2
+  ex = 2, #Size along x-axis (CrownDiameter/2)
+  ey = 1, #Size along y-axis (CrownHeight/2)
   stringsAsFactors = FALSE
 )
 dat = st_as_sf(dat, coords = c("x", "y")) #centroids
 dat
 
 # Calculate ellipses
-el = st_ellipse(pnt = dat, ex = dat$ex, ey = dat$ey)
+Crown = st_ellipse(pnt = dat, ex = dat$ex, ey = dat$ey)
 
-# Plot 2
-plot(el, graticule = TRUE, axes = TRUE)
+plot(Crown, graticule = TRUE, axes = TRUE)
+
+a <- st_difference(st_union(Crown, Trunk)) # -> multypolygon dont on garde que les points qui ne se superposent pas
+plot(a)
+
+ggplot() + # plot 2 polygones
+  geom_sf(data = Trunk) +
+  geom_sf(data = Crown) 
+# Multipolygone = tous les arbres
+```
+```{r Application with the real trees}
+# on prend les arbres sélectionnés
+SelectedTrees <- inventory %>% 
+  filter(Selected == "1") %>%
+  select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,CrownDiameter,Selected, Xutm, Yutm)
+
+# Pour 1 arbre
+
+# le tronc
+list(matrix(c('A','B',
+                    'C','D', 
+                    'E', 'F', 
+                    'G','H',
+                    'I', 'J') # retour
+                  ,ncol=2, byrow=TRUE))
 
 
+
+pts = list(matrix(c(SelectedTrees$Xutm[1]-(SelectedTrees$DBH[1]/100)/2, SelectedTrees$Yutm[1], 
+                    SelectedTrees$Xutm[1]-(SelectedTrees$DBH[1]/100)/2, SelectedTrees$Yutm[1] + SelectedTrees$TrunkHeight[1], 
+                    SelectedTrees$Xutm[1]+(SelectedTrees$DBH[1]/100)/2, SelectedTrees$Yutm[1] + SelectedTrees$TrunkHeight[1], 
+                    SelectedTrees$Xutm[1]+(SelectedTrees$DBH[1]/100)/2, SelectedTrees$Yutm[1],
+                    SelectedTrees$Xutm[1]-(SelectedTrees$DBH[1]/100)/2, SelectedTrees$Yutm[1]) # retour
+                  ,ncol=2, byrow=TRUE)) # DBH en cm à passer en m
+
+# pts[,3] <- c(rep(1:nrow(SelectedTrees), each=5))
+
+(Trunk = st_polygon(pts))
+plot(Trunk, graticule = TRUE, axes = TRUE)
+
+# le houppier
+dat = data.frame(
+  x = SelectedTrees$Xutm[1], #centroid locations (x) m^me x que l'arbre
+  y = SelectedTrees$Yutm[1] + SelectedTrees$TrunkHeight[1] + SelectedTrees$CrownHeight[1]/2, #centroid locations (y) = hauteur du tronc + CrownHeight/2
+  ex = SelectedTrees$CrownDiameter[1]/2, #Size along x-axis (CrownDiameter/2)
+  ey = SelectedTrees$CrownHeight[1]/2, #Size along y-axis (CrownHeight/2)
+  stringsAsFactors = FALSE
+)
+dat = st_as_sf(dat, coords = c("x", "y")) #centroids
+dat
+
+# Calculate ellipses
+Crown = st_ellipse(pnt = dat, ex = dat$ex, ey = dat$ey)
+
+plot(Crown, graticule = TRUE, axes = TRUE)
+
+a <- st_difference(st_union(Crown, Trunk)) # -> multypolygon dont on garde que les points qui ne se superposent pas
+plot(a)
+
+ggplot() + # plot 2 polygones
+  geom_sf(data = Trunk) +
+  geom_sf(data = Crown) 
+# Multipolygone = tous les arbres
 ```
 
 
 # Abattages selon le type d’EFI
 ```{r}
-
-if (type == "RIL1" | directionalfelling == "0"){
+## No directional felling
+if (directionalfelling == "0"){
   Coord = matrix(c(0,0,10,0,10,10,0,10,0,0),ncol=2, byrow=TRUE)
   pol1 = list() #1 list/polygon :  list with numeric matrices with points in rows
   pol2 = list()
@@ -183,7 +336,9 @@ if (type == "RIL1" | directionalfelling == "0"){
 # hauteur de l’ellipse CrownHeight
 # diamètre de l’ellipse CrownDiameter
 
-if (type == "RIL2broken" | type == "RIL2" | directionalfelling == "1") {
+
+## To direct only to avoid damage to future and reserve trees
+if (directionalfelling == "1") {
   
   
 }
@@ -204,7 +359,8 @@ if (type == "RIL2broken" | type == "RIL2" | directionalfelling == "1") {
 # hauteur de l’ellipse
 # diamètre de l’ellipse
 
-if (type == "RIL3" | directionalfelling == "2") {
+## To direct to avoid damage to future and reserve trees + track orientation
+if (directionalfelling == "2") {
   
   
 }
@@ -225,7 +381,7 @@ if (type == "RIL3" | directionalfelling == "2") {
 # orientation = 30-45◦, base du tronc vers la voie la plus proche (MainTrail ou 2ndTrail) MinTreefallOrientation MaxTreefallOrientation
 # Éviter à  100% les arbres "reserve" (vecteur "ReserveTreesPoints") et essayer d’éviter les arbres "future" (vecteur "AvenirTreesPoints")
 
-if (type == "RIL3fuel" | type == "RIL3fuelhollow"  | (type == "manual"& (fuel =="1" |fuel =="2"))) {
+if (fuel =="1" |fuel =="2") {
   
   
 }
@@ -247,7 +403,6 @@ if (type == "RIL3fuel" | type == "RIL3fuelhollow"  | (type == "manual"& (fuel ==
 # if (piste la plus proche (MainTrail ou 2ndTrail) à ⩽ 6 m de l’arbre & ⩽ 20% de l’entrée de la parcelle (= contact piste/bord parcelle) jusqu’à max 6 m de l’arbre (buffergrappin)  ("piste à grappin" ?)) : houppier vers cette piste.
 # Sinon : pied vers piste la plus proche (MainTrail ou 2ndTrail)
 # Éviter à  100% les arbres "reserve" (vecteur "ReserveTreesPoints") et essayer d’éviter les arbres "future" (vecteur "AvenirTreesPoints")
-
 
 ```
 

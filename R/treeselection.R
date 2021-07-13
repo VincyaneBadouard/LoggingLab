@@ -9,19 +9,26 @@
 #' @param diversification taking of other species in addition to the main commercial species (logical)
 #' @param specieslax Allow diversification if stand is too poor, = FALSE by default (logical)
 #' @param objectivelax Allow exploitation in case of non-achievement of the objective volume (if stand too poor), = FALSE by default (logical)
+#' @param DEM (RasterLayer)
+#' @param plotslope (RasterLayer)
 #' @param speciescriteria (data.frame)
 #' @param otherloggingparameters (list) MainTrail (multiline)
 #'
 #' @return
 #' @export
 #'
+#' @importFrom raster coordinates
+#' @importFrom topoDistance topoDist
+#'
 #' @examples
 #' inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 #'
-#'treeselection(inventory, SpeciesCriteria,
-#'type ="manual", fuel = "0",objective = 20, diversification = TRUE, specieslax = FALSE,
-#'objectivelax = FALSE, otherloggingparameters = loggingparameters()) # , MainTrail
-
+#'treeselectionoutputs <- treeselection(inventory, SpeciesCriteria,
+#'type ="manual", fuel = "2",objective = 20, diversification = FALSE, specieslax = FALSE,
+#'objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters()) # , MainTrail
+#'
+#'save(treeselectionoutputs, file = "C:/Users/Utilisateur/AppData/Local/ProjetsR/Maria/treeselectionoutputs.Rdata")
+#'
 treeselection <- function(
   inventory,
   objective,
@@ -30,6 +37,8 @@ treeselection <- function(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
+  DEM = DemParacou,
+  plotslope = PlotSlope,
   speciescriteria = SpeciesCriteria,
   otherloggingparameters = loggingparameters()
   # MainTrail
@@ -83,20 +92,26 @@ treeselection <- function(
 
   }
 
-
-  inventory <- harvestable(                                                      # interne fucntion
+  harvestableOutputs <- harvestable(                                                      # interne fucntion
     ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),            # interne fucntion
-    diversification = diversification, specieslax = specieslax)$inventory        # one of the output
+    diversification = diversification, specieslax = specieslax,
+    DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
 
-  HVinit <- harvestable(                                                         # interne fucntion
-    ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),            # interne fucntion
-    diversification = diversification, specieslax = specieslax)$HVinit           # the other output
+  inventory <- harvestableOutputs$inventory        # one of the output
 
-  inventory <- selected(
+  HVinit <- harvestableOutputs$HVinit           # the other output
+
+  selectedOutputs <- selected(                                                   # outputs of the selected function
     inventory,
     type = type, fuel = fuel, diversification = diversification,
     specieslax = specieslax, objectivelax = objectivelax,
-    otherloggingparameters = otherloggingparameters, VO = VO, HVinit = HVinit)$inventory
+    otherloggingparameters = otherloggingparameters, VO = VO, HVinit = HVinit)
+
+  inventory <- selectedOutputs$inventory                                         # extract inventory of the selected outputs
+
+  HollowTreesPoints <- selectedOutputs$HollowTreesPoints                         # extract a pts vector of the selected outputs
+  EnergywoodTreesPoints <- selectedOutputs$EnergywoodTreesPoints                 # extract a pts vector of the selected outputs
+
 
   inventory <- futurereserve(inventory)
 
@@ -140,7 +155,9 @@ treeselection <- function(
                                HarvestableTreesPoints = HarvestableTreesPoints,
                                SelectedTreesPoints = SelectedTreesPoints,
                                FutureTreesPoints = FutureTreesPoints,
-                               ReserveTreesPoints = ReserveTreesPoints)
+                               ReserveTreesPoints = ReserveTreesPoints,
+                               HollowTreesPoints = HollowTreesPoints,
+                               EnergywoodTreesPoints = EnergywoodTreesPoints)
 
 
 

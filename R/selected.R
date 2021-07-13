@@ -17,10 +17,13 @@
 #' @importFrom sf st_multipoint
 #'
 #' @examples
-#' inventory = harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-#' diversification = TRUE, specieslax = FALSE)$inventory
-#' HVinit = harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-#' diversification = TRUE, specieslax = FALSE)$HVinit
+#' harvestableOutputs <- harvestable(ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),
+#' diversification = diversification, specieslax = specieslax,
+#' DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
+#'
+#' inventory <- harvestableOutputs$inventory
+#' HVinit <- harvestableOutputs$HVinit
+#'
 #' selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
 #' otherloggingparameters = loggingparameters(), VO = 20, HVinit = HVinit)
 #'
@@ -112,9 +115,9 @@ selected <- function(
   if (HVinit > VO) {
 
     inventory <- inventory %>%
-      mutate(LoggingStatus = ifelse(
-        Commercial == "1" & (DBH >= UpMinFD & DBH <= MaxFD), #designate preferred individuals of first economic rank species, when the plot is species-rich.
-        "harvestableUp", LoggingStatus)) %>%
+      mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" &
+                                      Commercial == "1" & (DBH >= UpMinFD & DBH <= MaxFD), #designate preferred individuals of first economic rank species, when the plot is species-rich.
+                                    "harvestableUp", LoggingStatus)) %>%
 
       mutate(Up = ifelse(Commercial == "1", "1", Up))# to inform that the "1" ranks have been FD upgraded. Pas mieux de le faire à l'sp?
     # test "Commercial"= "1" pour les "harvestableUp"
@@ -276,9 +279,9 @@ selected <- function(
                             EnergywoodTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2))) # empty multipoint
 
   } else {
-  selectedOutputs <- list(inventory = inventory,
-                          HollowTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2)), # empty multipoint
-                          EnergywoodTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2)))
+    selectedOutputs <- list(inventory = inventory,
+                            HollowTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2)), # empty multipoint
+                            EnergywoodTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2)))
   }
 
   if (fuel !="2") {
@@ -307,4 +310,4 @@ selected <- function(
 
   return(selectedOutputs) # return the new inventory and the 2 points vectors (HollowTrees and EnergywoodTrees)
 
-  }
+}

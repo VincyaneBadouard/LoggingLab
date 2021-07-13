@@ -43,10 +43,13 @@ damage exploitation in fuelwood = "1", exploitation of hollow trees and damage i
 selected
 }
 \examples{
-inventory = harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-diversification = TRUE, specieslax = FALSE)$inventory
-HVinit = harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-diversification = TRUE, specieslax = FALSE)$HVinit
+harvestableOutputs <- harvestable(ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),
+diversification = diversification, specieslax = specieslax,
+DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
+
+inventory <- harvestableOutputs$inventory
+HVinit <- harvestableOutputs$HVinit
+
 selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
 otherloggingparameters = loggingparameters(), VO = 20, HVinit = HVinit)
 
