@@ -8,7 +8,6 @@ output: html_document
 inventory = ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
 
 #Taf de l'utilisateur
-
 ## Import du MNT de Paracou (1m de résolution, campagne LiDAR de 2016) ----
 DemParacou <- raster::raster("D:/VSC Kourou/DATA/GIS/Topo_P6_PARACOU.tif") # MNT (altitude)
 plot(DemParacou)
