@@ -11,10 +11,14 @@ inventory = ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Pa
 ## Import du MNT de Paracou (1m de résolution, campagne LiDAR de 2016) ----
 DemParacou <- raster::raster("D:/VSC Kourou/DATA/GIS/Topo_P6_PARACOU.tif") # MNT (altitude)
 plot(DemParacou)
+usethis::use_data(DemParacou)
+
 
 ## Import Parcelles de Paracou
 Plots <- rgdal::readOGR("D:/VSC Kourou/DATA/GIS/Plot_P6_PARACOU.shp") # limites du plot
 plot(Plots)
+usethis::use_data(Plots)
+
 
 
 ```
@@ -23,12 +27,16 @@ plot(Plots)
 PlotTopo <- raster::mask(x = DemParacou, # DEM en shapefile
                          mask = Plots) # découpage de la topo par l'emprise du plot
 plot(PlotTopo)
+usethis::use_data(PlotTopo)
+
 
 PlotSlope <- raster::terrain(PlotTopo, 
                              opt = "slope", # calcule des pentes 
                              units = 'radians', # en radian
                              neigbors = 8) # avec un voisinage de 8 cellules
 plot(PlotSlope)
+usethis::use_data(PlotSlope)
+
 ```
 
 ```{r}

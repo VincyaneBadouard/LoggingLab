@@ -1,10 +1,12 @@
 test_that("futurereserve", {
 
-  inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-                           diversification = TRUE)$inventory
+  inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
 
-  HVinit <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-                        diversification = TRUE)$HVinit
+  harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
+                                    DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
+
+  inventory <- harvestableOutputs$inventory
+  HVinit <- harvestableOutputs$HVinit
 
   inventory <- selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
                         otherloggingparameters = loggingparameters(), VO = 80, HVinit = HVinit)$inventory

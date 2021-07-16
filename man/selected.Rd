@@ -11,6 +11,7 @@ selected(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
+  DEM = DemParacou,
   otherloggingparameters = loggingparameters(),
   VO,
   HVinit
@@ -30,6 +31,8 @@ damage exploitation in fuelwood = "1", exploitation of hollow trees and damage i
 
 \item{objectivelax}{= FALSE by default (logical)}
 
+\item{DEM}{(RasterLayer)}
+
 \item{otherloggingparameters}{(list)}
 
 \item{VO}{(numeric value)}
@@ -43,14 +46,15 @@ damage exploitation in fuelwood = "1", exploitation of hollow trees and damage i
 selected
 }
 \examples{
-harvestableOutputs <- harvestable(ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),
-diversification = diversification, specieslax = specieslax,
+inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
+
+harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
 DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory
 HVinit <- harvestableOutputs$HVinit
 
-selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-otherloggingparameters = loggingparameters(), VO = 20, HVinit = HVinit)
+selecInventory <- selected(inventory, type = "manual", fuel = "2", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+otherloggingparameters = loggingparameters(), VO = 30, HVinit = HVinit)$inventory
 
 }

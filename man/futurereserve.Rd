@@ -24,11 +24,12 @@ futurereserve(
 futurereserve
 }
 \examples{
-inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-diversification = TRUE)$inventory
+harvestableOutputs <- harvestable(ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),
+diversification = diversification, specieslax = specieslax,
+DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
 
-HVinit <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-diversification = TRUE)$HVinit
+inventory <- harvestableOutputs$inventory
+HVinit <- harvestableOutputs$HVinit
 
 inventory <- selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
 otherloggingparameters = loggingparameters(), VO = 80, HVinit = HVinit)$inventory

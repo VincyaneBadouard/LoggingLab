@@ -15,12 +15,15 @@
 #'
 #' @export
 #'
-#' @importFrom raster coordinates
+#' @import sf
+#' @importFrom sp coordinates
+#' @importFrom sp proj4string
 #' @importFrom topoDistance topoDist
 #'
 #' @examples
-#' inventory = ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
-#' test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE, DEM = DemParacou, plotslope = PlotSlope,otherloggingparameters = loggingparameters())
+#' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
+#' test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
+#' DEM = DemParacou, plotslope = PlotSlope,otherloggingparameters = loggingparameters())
 #'
 harvestable <- function(
   inventory,
@@ -38,16 +41,18 @@ harvestable <- function(
   if(!any(unlist(lapply(list(diversification, specieslax), inherits, "logical"))))
     stop("The 'diversification' and 'specieslax' arguments of the 'harvestable' function must be logical") # any() don't take a list
 
+  if(!any(unlist(lapply(list(DEM, plotslope), inherits, "RasterLayer"))))
+    stop("The 'DEM' and 'plotslope' arguments of the 'harvestable' function must be RasterLayer")
+
+
   # Calculation of spatial information (distance and slope)
   SpatInventory <- inventory %>%
     filter(Commercial!= "0") %>%  # ne prendre que les individus d'sp commerciales, le temps de calcul est déjà bien assez long
     filter(DBH >= MinFD & DBH <= MaxFD) # ne prendre que les individus d'sp commerciales, le temps de calcul est déjà bien assez long
 
+  sp::coordinates(SpatInventory) <- ~ Xutm + Yutm # transformer l'inventaire en objet spatialisé en en informant les coordonnées
 
-
-  coordinates(SpatInventory) <- ~ Xutm + Yutm # transformer l'inventaire en objet spatialisé en en informant les coordonnées
-
-  proj4string(SpatInventory) <- raster::crs(DEM) # attribuer le crs de Paracou à notre inventaire spatialisé
+  sp::proj4string(SpatInventory) <- raster::crs(DEM) # attribuer le crs de Paracou à notre inventaire spatialisé
 
   Slope_tmp <- as_tibble(raster::extract(x = plotslope, y = SpatInventory)) # extrait les valeurs de pentes pour les points spatialisés de l'inventaire
 
@@ -93,7 +98,7 @@ harvestable <- function(
     dplyr::select(idTree, DistCrit, Slope, SlopeCrit)
 
   inventory <- inventory %>%
-    left_join(SlopeCritInventory) %>%
+    left_join(SlopeCritInventory, by = "idTree") %>%
     dplyr::select(-geometry)
 
   #select essences

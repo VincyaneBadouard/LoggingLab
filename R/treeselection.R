@@ -17,15 +17,18 @@
 #' @return
 #' @export
 #'
-#' @importFrom raster coordinates
+#' @import sf
+#' @importFrom sp coordinates
+#' @importFrom sp proj4string
+#' @importFrom sf st_as_sf
 #' @importFrom topoDistance topoDist
 #'
 #' @examples
 #' inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 #'
-#'treeselectionoutputs <- treeselection(inventory, SpeciesCriteria,
-#'type ="manual", fuel = "2",objective = 20, diversification = FALSE, specieslax = FALSE,
-#'objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters()) # , MainTrail
+#'treeselectionoutputs <- treeselection(inventory, objective = 20, type ="manual",
+#'fuel = "2", diversification = FALSE, specieslax = FALSE, objectivelax = FALSE,
+#'DEM = DemParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria, otherloggingparameters = loggingparameters()) # , MainTrail
 #'
 #'save(treeselectionoutputs, file = "C:/Users/Utilisateur/AppData/Local/ProjetsR/Maria/treeselectionoutputs.Rdata")
 #'
@@ -63,6 +66,9 @@ treeselection <- function(
   if (!any(fuel == "0" | fuel == "1"| fuel == "2"| is.null(fuel)))
     stop("The 'fuel' argument of the 'treeselection' function must be '0', '1', or '2'")
 
+  if(!any(unlist(lapply(list(DEM, plotslope), inherits, "RasterLayer"))))
+    stop("The 'DEM' and 'plotslope' arguments of the 'treeselection' function must be RasterLayer")
+
   if(!inherits(otherloggingparameters, "list"))
     stop("The 'otherloggingparameters' argument of the 'treeselection' function must be a list")
 
@@ -95,7 +101,7 @@ treeselection <- function(
   harvestableOutputs <- harvestable(                                                      # interne fucntion
     ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),            # interne fucntion
     diversification = diversification, specieslax = specieslax,
-    DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
+    DEM = DEM, plotslope = plotslope, otherloggingparameters = loggingparameters())
 
   inventory <- harvestableOutputs$inventory        # one of the output
 
@@ -118,32 +124,56 @@ treeselection <- function(
 
   # créer les conditions et vecteurs vides dans les listes à retourner
   # Points vector with coordinates of the harvestable trees:
-  HarvestableTreescoord <- inventory %>%
-    filter(LoggingStatus == "harvestable" |LoggingStatus == "harvestableUp" |LoggingStatus == "harvestable2nd") %>% # harvestableUp = DBH > MinFD individuals, harvestable2nd = eco2 individuals is specieslax
-    select(Xutm, Yutm)
+  HarvestableTreesPoints <- inventory %>%
+    filter(LoggingStatus == "harvestable" |LoggingStatus == "harvestableUp" |LoggingStatus == "harvestable2nd") # harvestableUp = DBH > MinFD individuals, harvestable2nd = eco2 individuals is specieslax
 
-  HarvestableTreesPoints  <- st_multipoint(x = as.matrix(HarvestableTreescoord))
+  if (dim(HarvestableTreesPoints)[1] != 0) {
+
+  sp::coordinates(HarvestableTreesPoints) <- ~ Xutm + Yutm
+
+  sp::proj4string(HarvestableTreesPoints) <- raster::crs(DEM)
+
+  HarvestableTreesPoints <- st_as_sf(as(HarvestableTreesPoints,"SpatialPoints"))
+  } else {HarvestableTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   # Points vector with coordinates of the selected trees:
-  SelectedTreescoord <- inventory %>%
-    filter(Selected == "1") %>%
-    select(Xutm, Yutm)
+  SelectedTreesPoints <- inventory %>%
+    filter(Selected == "1")
 
-  SelectedTreesPoints  <- st_multipoint(x = as.matrix(SelectedTreescoord))
+  if (dim(SelectedTreesPoints)[1] != 0) {
+
+  sp::coordinates(SelectedTreesPoints) <- ~ Xutm + Yutm
+
+  sp::proj4string(SelectedTreesPoints) <- raster::crs(DEM)
+
+  SelectedTreesPoints <- st_as_sf(as(SelectedTreesPoints,"SpatialPoints"))
+  } else {SelectedTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   # Points vector with coordinates of the future trees:
-  FutureTreescoord <- inventory %>%
-    filter(LoggingStatus == "future") %>%
-    select(Xutm, Yutm)
+  FutureTreesPoints <- inventory %>%
+    filter(LoggingStatus == "future")
 
-  FutureTreesPoints  <- st_multipoint(x = as.matrix(FutureTreescoord))
+  if (dim(FutureTreesPoints)[1] != 0) {
+
+  sp::coordinates(FutureTreesPoints) <- ~ Xutm + Yutm
+
+  sp::proj4string(FutureTreesPoints) <- raster::crs(DEM)
+
+  FutureTreesPoints <- st_as_sf(as(FutureTreesPoints,"SpatialPoints"))
+  } else {FutureTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   # Points vector with coordinates of the reserve trees:
-  ReserveTreescoord <- inventory %>%
-    filter(LoggingStatus == "reserve") %>%
-    select(Xutm, Yutm)
+  ReserveTreesPoints <- inventory %>%
+    filter(LoggingStatus == "reserve")
 
-  ReserveTreesPoints  <- st_multipoint(x = as.matrix(ReserveTreescoord))
+  if (dim(ReserveTreesPoints)[1] != 0) {
+
+      sp::coordinates(ReserveTreesPoints) <- ~ Xutm + Yutm
+
+      sp::proj4string(ReserveTreesPoints) <- raster::crs(DEM)
+
+      ReserveTreesPoints <- st_as_sf(as(ReserveTreesPoints,"SpatialPoints"))
+  } else {ReserveTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   #where specieslax was not necessary, consider eco2s as non-exploitable:
   inventory <- inventory %>%

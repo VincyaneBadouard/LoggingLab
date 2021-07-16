@@ -35,7 +35,8 @@ The function tells you the harvestable volume in the plot,
 and which trees are harvestable according to your harvestability criteria
 }
 \examples{
-inventory = ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
-test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE, DEM = DemParacou, plotslope = PlotSlope,otherloggingparameters = loggingparameters())
+inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
+test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
+DEM = DemParacou, plotslope = PlotSlope,otherloggingparameters = loggingparameters())
 
 }

@@ -323,9 +323,9 @@ if (HVinit > VO) {
     
     if (HVupCommercial1 == VO){
       inventoryE <- inventoryD %>%
-
-    mutate(Selected = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable",
-                             "1", NA))# if we have our volume, harvestable ind = selected ind
+        
+        mutate(Selected = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable",
+                                 "1", NA))# if we have our volume, harvestable ind = selected ind
       message("As the harvestable volume (=",paste(HVinit),") was higher (by ",paste(VO- HVinit),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased. The objective volume has now been reached. It was not necessary to increase the MinFD of the other economic species")
     }
     
@@ -351,10 +351,10 @@ if (HVinit > VO) {
       
       inventoryE <- inventoryD %>%
         mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" & Commercial == "2" & DBH >= UpMinFD, #designate preferred individuals of 2nd economic rank species too, when the plot is species-rich.
-      "harvestableUp", LoggingStatus)) %>%
+                                      "harvestableUp", LoggingStatus)) %>%
         
         mutate(Up = ifelse(Commercial == "2", "1", Up))# to inform that the "2" ranks have been FD upgraded. Pas mieux de le faire à l'sp?
-
+      
       HarvestableTable <- inventoryE %>%
         filter(LoggingStatus == "harvestableUp")
       
@@ -364,7 +364,7 @@ if (HVinit > VO) {
         inventoryF <- inventoryE %>%
           mutate(Selected = ifelse(LoggingStatus == "harvestableUp",
                                    "1", NA))# if we have our volume, harvestable ind = selected ind
-    
+        
       }
       if (HVupCommercial12 != VO){
         
@@ -397,7 +397,7 @@ inventoryG <- inventoryF %>%
   mutate(ProbedHollow = ifelse(!is.na(ProbedHollowProba), sample(c(1,0), size = 1, replace = F, prob = c(ProbedHollowProba, 1-ProbedHollowProba)), NA)) %>%  # 1 = hollow tree, 0 = not hollow
   mutate(ProbedHollow = factor(as.numeric(ProbedHollow))) %>% 
   mutate(Selected = ifelse(ProbedHollow == "1", "0", Selected)) %>%  #hollow probed trees are deselected
-   #non-upgraded MinFD species:
+  #non-upgraded MinFD species:
   mutate(Up = ifelse(is.na(Up) , "0", Up))
 
 if (type != "RIL3fuelhollow"| (type == "manual"& fuel !="2"))
@@ -411,15 +411,22 @@ if (type == "RIL3fuelhollow"| (type == "manual"& fuel =="2")) {
   inventoryH <- inventoryG %>%
     mutate(DeathCause = ifelse(ProbedHollow == "1", "hollowfuel", NA)) # remplacer NA par DeathCause dans le simulateur ONF
   
-
+  
   # Create 2 points vectors with coordinates of the probed hollow trees: "HollowTreesPoints" and "EnergywoodTreesPoints":
-HollowTreescoord <- inventoryG %>% 
-  filter(ProbedHollow == "1") %>% 
-  select(Xutm, Yutm)
-
-HollowTreesPoints  <- st_multipoint(x = as.matrix(HollowTreescoord))
-EnergywoodTreesPoints <- HollowTreesPoints
-
+  HollowTreescoord <- selecInventory %>% 
+    filter(ProbedHollow == "1")
+  
+  sp::coordinates(HollowTreescoord) <- ~ Xutm + Yutm # transformer l'inventaire en objet spatialisé en en informant les coordonnées
+  
+  sp::proj4string(HollowTreescoord) <- raster::crs(DEM) # attribuer le crs de Paracou à notre inventaire spatialisé
+  
+  HollowTreescoord <- st_as_sf(HollowTreescoord) %>% 
+    select(geometry)
+  
+  HollowTreesPoints  <- HollowTreescoord$geometry %>% st_cast("MULTIPOINT")
+  # HollowTreesPoints  <- st_multipoint(x = HollowTreescoord$geometry)
+  EnergywoodTreesPoints <- HollowTreesPoints
+  
 }
 
 ```
@@ -433,7 +440,7 @@ inventoryH <- inventoryG %>%
   mutate(LoggingStatus = ifelse(Commercial == "1" &
                                   (DBH >= otherloggingparameters$FutureTreesMinDiameter & DBH < MinFD),
                                 "future", LoggingStatus)) 
-  
+
 #Reserve
 # Randomly select the reserved trees (among the futures, as many as the number of trees exploited):
 
@@ -447,30 +454,40 @@ inventoryH$LoggingStatus[ReserveRows] <-"reserve"
 # Fin treeselection function
 ```{r}
 # Créer un vecteur ("HarvestableTreesPoints") de points de coordonnées des arbres LoggingStatus = "harvestable" ou "harvestableUp" ou "harvestable2nd".
-HarvestableTreescoord <- inventory %>%
-      filter(LoggingStatus == "harvestable" |LoggingStatus == "harvestableUp" |LoggingStatus == "harvestable2nd") %>%
-      select(Xutm, Yutm)
+
+HarvestableTreesPoints <- inventory %>% filter(LoggingStatus == "harvestable" | LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable2nd")
+
+if (dim(HarvestableTreesPoints)[1] != 0) {
+
+sp::coordinates(HarvestableTreesPoints) <- ~ Xutm + Yutm
+
+sp::proj4string(HarvestableTreesPoints) <- raster::crs(DEM)
+
+HarvestableTreesPoints <- st_as_sf(as(HarvestableTreesPoints,"SpatialPoints"))
+
+}
+HarvestableTreesPoints  <- HarvestableTreesPoints$geometry %>% st_cast("MULTIPOINT")
 
 HarvestableTreesPoints  <- st_multipoint(x = as.matrix(HarvestableTreescoord))
 
 # Créer un vecteur ("SelectedTreesPoints") de points de coordonnées des arbres Selected = 1.
 SelectedTreescoord <- inventory %>%
-      filter(Selected == "1") %>%
-      select(Xutm, Yutm)
+  filter(Selected == "1") %>%
+  select(Xutm, Yutm)
 
 SelectedTreesPoints  <- st_multipoint(x = as.matrix(SelectedTreescoord))
 
 # Créer un vecteur ("FutureTreesPoints") de points de coordonnées des arbres LoggingStatus = "future"
 FutureTreescoord <- inventory %>%
-      filter(LoggingStatus == "future") %>%
-      select(Xutm, Yutm)
+  filter(LoggingStatus == "future") %>%
+  select(Xutm, Yutm)
 
 FutureTreesPoints  <- st_multipoint(x = as.matrix(FutureTreescoord))
 
 # Créer un vecteur ("ReserveTreesPoints") de points de coordonnées des arbres LoggingStatus = "reserve".
 ReserveTreescoord <- inventory %>%
-      filter(LoggingStatus == "reserve") %>%
-      select(Xutm, Yutm)
+  filter(LoggingStatus == "reserve") %>%
+  select(Xutm, Yutm)
 
 ReserveTreesPoints  <- st_multipoint(x = as.matrix(ReserveTreescoord))
 

@@ -2,11 +2,16 @@ test_that("selected", {
 
   # Check the function arguments
   # Test data preparation
-  inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-                          diversification = TRUE, specieslax = FALSE)$inventory
+  inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
+
+  harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
+  DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
+
+  inventory <- harvestableOutputs$inventory
+  HVinit <- harvestableOutputs$HVinit
+
   VO <- 40
-  HVinit <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-                       diversification = FALSE, specieslax = FALSE)$HVinit
+
   testinventory <- selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE,
                             objectivelax = FALSE,
                             otherloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit)$inventory

@@ -4,10 +4,14 @@ test_that("harvestable", {
 
 MatrixInventory <- as.matrix(Paracou6_2016)
 
+
 expect_error(harvestable(MatrixInventory), regexp = "The 'inventory' argument of the 'harvestable' function must be a data.frame")
 
 expect_error(harvestable(Paracou6_2016, diversification = "1", specieslax = 2),
              regexp = "The 'diversification' and 'specieslax' arguments of the 'harvestable' function must be logical")
+
+expect_error(harvestable(Paracou6_2016, diversification = TRUE, specieslax = FALSE,
+            DEM = NULL, plotslope = NULL))
 
 # LoggingStatus column exist and have no NA
 ## Test data preparation

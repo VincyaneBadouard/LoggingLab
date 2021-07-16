@@ -51,9 +51,9 @@ treeselection
 \examples{
 inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 
-treeselectionoutputs <- treeselection(inventory, SpeciesCriteria,
-type ="manual", fuel = "2",objective = 20, diversification = FALSE, specieslax = FALSE,
-objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters()) # , MainTrail
+treeselectionoutputs <- treeselection(inventory, objective = 20, type ="manual",
+fuel = "2", diversification = FALSE, specieslax = FALSE, objectivelax = FALSE,
+DEM = DemParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria, otherloggingparameters = loggingparameters()) # , MainTrail
 
 save(treeselectionoutputs, file = "C:/Users/Utilisateur/AppData/Local/ProjetsR/Maria/treeselectionoutputs.Rdata")
 

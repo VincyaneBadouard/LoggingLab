@@ -7,6 +7,7 @@
 #' @param diversification (logical)
 #' @param specieslax = FALSE by default (logical)
 #' @param objectivelax = FALSE by default (logical)
+#' @param DEM (RasterLayer)
 #' @param otherloggingparameters (list)
 #' @param VO (numeric value)
 #' @param HVinit (numeric value)
@@ -14,18 +15,17 @@
 #' @return
 #' @export
 #'
-#' @importFrom sf st_multipoint
-#'
 #' @examples
-#' harvestableOutputs <- harvestable(ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),
-#' diversification = diversification, specieslax = specieslax,
+#' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
+#'
+#' harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
 #' DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
 #'
 #' inventory <- harvestableOutputs$inventory
 #' HVinit <- harvestableOutputs$HVinit
 #'
-#' selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-#' otherloggingparameters = loggingparameters(), VO = 20, HVinit = HVinit)
+#' selecInventory <- selected(inventory, type = "manual", fuel = "2", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+#' otherloggingparameters = loggingparameters(), VO = 30, HVinit = HVinit)$inventory
 #'
 selected <- function(
   inventory,
@@ -34,6 +34,7 @@ selected <- function(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
+  DEM = DemParacou,
   otherloggingparameters = loggingparameters(),
   VO, # objective volume
   HVinit # initial Harvestable Volume
@@ -267,21 +268,24 @@ selected <- function(
 
   # Create a POINTS VECTOR with coordinates of the probed hollow trees:
   if (any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
-    HollowTreescoord <- inventory %>%
-      filter(ProbedHollow == "1") %>%
-      select(Xutm, Yutm)
+    HollowTreesPoints <- inventory %>%
+      filter(ProbedHollow == "1")
 
-    HollowTreesPoints  <- st_multipoint(x = as.matrix(HollowTreescoord))
+      sp::coordinates(HollowTreesPoints) <- ~ Xutm + Yutm
+
+      sp::proj4string(HollowTreesPoints) <- raster::crs(DEM)
+
+      HollowTreesPoints <- st_as_sf(as(HollowTreesPoints,"SpatialPoints"))
 
     # OUTPUTS list
     selectedOutputs <- list(inventory = inventory,
                             HollowTreesPoints = HollowTreesPoints,
-                            EnergywoodTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2))) # empty multipoint
+                            EnergywoodTreesPoints = st_point(x = c(NA_real_, NA_real_))) # empty point
 
   } else {
     selectedOutputs <- list(inventory = inventory,
-                            HollowTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2)), # empty multipoint
-                            EnergywoodTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2)))
+                            HollowTreesPoints = st_point(x = c(NA_real_, NA_real_)), # empty point
+                            EnergywoodTreesPoints = st_point(x = c(NA_real_, NA_real_)))
   }
 
   if (fuel !="2") {
