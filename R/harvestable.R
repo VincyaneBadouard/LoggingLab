@@ -16,8 +16,7 @@
 #' @export
 #'
 #' @import sf
-#' @importFrom sp coordinates
-#' @importFrom sp proj4string
+#' @importFrom sp coordinates proj4string
 #' @importFrom topoDistance topoDist
 #' @importFrom  utils setTxtProgressBar txtProgressBar
 #'
@@ -60,8 +59,8 @@ harvestable <- function(
   SpatInventory <- st_as_sf(SpatInventory) %>%  # transformer l'inventaire spatialisé en objet sf
     add_column(DistCrit = FALSE) # Créer une colonne DistCrit FALSE par défaut
 
-  i = 1
-  ProgressBar <- txtProgressBar(min = 0, max = nrow(SpatInventory),style = 3) # barre de progression du calcul
+  # i = 1
+  # ProgressBar <- txtProgressBar(min = 0, max = nrow(SpatInventory),style = 3) # barre de progression du calcul
 
   # Calcul des distances entre les arbres de la même espèce
 
@@ -69,10 +68,15 @@ harvestable <- function(
 
     SpatInventorytmp <- SpatInventory %>% # SpatInventorytmp stocke 1 seul résulat, celui de chaque tour
       filter(ScientificName == SpecieI)
-    SpatInventorytmp <- as_Spatial(SpatInventorytmp)
 
-    distSp <- topoDist(DEM = PlotTopo, pts = SpatInventorytmp) # calcul des distances
-    distSp <- as_tibble(distSp)
+    # SpatInventorytmp <- as_Spatial(SpatInventorytmp)
+    # distSp <- topoDist(DEM = PlotTopo, pts = SpatInventorytmp) # calcul des distances topo
+    # distSp <- as_tibble(distSp)
+
+    distSp <- st_distance(SpatInventorytmp)
+    units(distSp) <- NULL
+    distSp <- suppressMessages(as_tibble(distSp, .name_repair = "universal"))
+
     distSp[distSp == 0] <- NA # ne pas prendre en compte les 0 dans la matrice, qui sont les dist de l'arbre à lui-même.
     distSp[distSp == Inf] <- NA # ne pas prendre en compte les Inf qui sont les arbres hors de parcelle.
 
@@ -82,8 +86,8 @@ harvestable <- function(
         SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < otherloggingparameters$IsolateTreeMinDistance # si la distance minimale à ses congénaires est < 100, il est exploitable
       }
       SpatInventory$DistCrit[SpatInventory$idTree == SpatInventorytmp$idTree[ind]] <- SpatInventorytmp$DistCrit[ind]
-      i = i+1 # et en informer la progress bar
-      setTxtProgressBar(ProgressBar, i)
+      # i = i+1 # et en informer la progress bar
+      # setTxtProgressBar(ProgressBar, i)
     }
   }
 
