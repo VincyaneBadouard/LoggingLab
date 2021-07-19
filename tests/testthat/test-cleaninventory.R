@@ -1,6 +1,7 @@
 test_that("cleaninventory", {
 
   #Check the function argument
+  data(Paracou6_2016)
   MatrixInventory <- as.matrix(Paracou6_2016)
   expect_error(cleaninventory(MatrixInventory), regexp = "inventory must be a data.frame")
 

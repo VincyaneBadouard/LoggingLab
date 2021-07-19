@@ -1,18 +1,22 @@
 test_that("harvestable", {
 
 # Check the function arguments
+data("Paracou6_2016")
+data(DemParacou)
 
 MatrixInventory <- as.matrix(Paracou6_2016)
-
 expect_error(harvestable(MatrixInventory), regexp = "The 'inventory' argument of the 'harvestable' function must be a data.frame")
 
 expect_error(harvestable(Paracou6_2016, diversification = "1", specieslax = 2),
              regexp = "The 'diversification' and 'specieslax' arguments of the 'harvestable' function must be logical")
 
+expect_error(harvestable(Paracou6_2016, diversification = TRUE, specieslax = FALSE,
+            DEM = NULL, plotslope = NULL))
+
 # LoggingStatus column exist and have no NA
 ## Test data preparation
 testinventory1 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-                             diversification = T, specieslax = F)$inventory
+                              diversification = T, specieslax = F)$inventory
 testinventory2 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
                               diversification = F, specieslax = T)$inventory
 testinventory3 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),

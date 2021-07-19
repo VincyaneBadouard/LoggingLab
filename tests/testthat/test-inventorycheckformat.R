@@ -3,6 +3,7 @@ test_that("inventorycheckformat", {
   # check if the stops work
 
   ## check the function argument
+  data(Paracou6_2016)
   MatrixInventory <- as.matrix(Paracou6_2016)
   expect_error(inventorycheckformat(MatrixInventory), regexp = "inventory must be a data.frame")
 

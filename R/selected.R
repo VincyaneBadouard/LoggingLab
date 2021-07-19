@@ -1,28 +1,45 @@
 #' selected
 #'
 #' @param inventory (data.frame)
-#' @param type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"(character)
-#' @param fuel no  exploitation = "0" (default),
-#' damage exploitation in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"
+#' @param type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
+#'   "RIL3fuelhollow" or "manual"(character)
+#' @param fuel no  exploitation = "0" (default), damage exploitation in fuelwood
+#'   = "1", exploitation of hollow trees and damage in fuelwood = "2"
 #' @param diversification (logical)
 #' @param specieslax = FALSE by default (logical)
 #' @param objectivelax = FALSE by default (logical)
+#' @param DEM (RasterLayer)
 #' @param otherloggingparameters (list)
 #' @param VO (numeric value)
 #' @param HVinit (numeric value)
 #'
-#' @return
+#' @return A FAIRE
+#'
 #' @export
 #'
-#' @importFrom sf st_multipoint
+#' @importFrom sp coordinates proj4string
+#' @importFrom raster crs
 #'
 #' @examples
-#' inventory = harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-#' diversification = TRUE, specieslax = FALSE)$inventory
-#' HVinit = harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-#' diversification = TRUE, specieslax = FALSE)$HVinit
-#' selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-#' otherloggingparameters = loggingparameters(), VO = 20, HVinit = HVinit)
+#'
+#' data(Paracou6_2016)
+#' data(DemParacou)
+#'
+#' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(
+#' inventorycheckformat(Paracou6_2016))))
+#'
+#' harvestableOutputs <- harvestable(inventory, diversification = TRUE,
+#'  specieslax = FALSE,
+#' DEM = DemParacou, plotslope = PlotSlope,
+#' otherloggingparameters = loggingparameters())
+#'
+#' inventory <- harvestableOutputs$inventory
+#' HVinit <- harvestableOutputs$HVinit
+#'
+#' selecInventory <- selected(inventory, type = "manual", fuel = "2",
+#' diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+#' otherloggingparameters = loggingparameters(), VO = 30,
+#' HVinit = HVinit)$inventory
 #'
 selected <- function(
   inventory,
@@ -31,6 +48,7 @@ selected <- function(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
+  DEM = DemParacou,
   otherloggingparameters = loggingparameters(),
   VO, # objective volume
   HVinit # initial Harvestable Volume
@@ -62,6 +80,24 @@ selected <- function(
 
   fuel <- scenariosparameters$fuel
   diversification <- scenariosparameters$diversification
+
+  # Global variables
+  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
+  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
+  DeathCause <- DistCrit <- Family <- NULL
+  ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
+  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
+  MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
+  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
+  PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
+  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
+  SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
+  TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
+  TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
+  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
+  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
+  beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
 
 
@@ -112,9 +148,9 @@ selected <- function(
   if (HVinit > VO) {
 
     inventory <- inventory %>%
-      mutate(LoggingStatus = ifelse(
-        Commercial == "1" & (DBH >= UpMinFD & DBH <= MaxFD), #designate preferred individuals of first economic rank species, when the plot is species-rich.
-        "harvestableUp", LoggingStatus)) %>%
+      mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" &
+                                      Commercial == "1" & (DBH >= UpMinFD & DBH <= MaxFD), #designate preferred individuals of first economic rank species, when the plot is species-rich.
+                                    "harvestableUp", LoggingStatus)) %>%
 
       mutate(Up = ifelse(Commercial == "1", "1", Up))# to inform that the "1" ranks have been FD upgraded. Pas mieux de le faire à l'sp?
     # test "Commercial"= "1" pour les "harvestableUp"
@@ -264,21 +300,24 @@ selected <- function(
 
   # Create a POINTS VECTOR with coordinates of the probed hollow trees:
   if (any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
-    HollowTreescoord <- inventory %>%
-      filter(ProbedHollow == "1") %>%
-      select(Xutm, Yutm)
+    HollowTreesPoints <- inventory %>%
+      filter(ProbedHollow == "1")
 
-    HollowTreesPoints  <- st_multipoint(x = as.matrix(HollowTreescoord))
+      sp::coordinates(HollowTreesPoints) <- ~ Xutm + Yutm
+
+      sp::proj4string(HollowTreesPoints) <- raster::crs(DEM)
+
+      HollowTreesPoints <- st_as_sf(as(HollowTreesPoints,"SpatialPoints"))
 
     # OUTPUTS list
     selectedOutputs <- list(inventory = inventory,
                             HollowTreesPoints = HollowTreesPoints,
-                            EnergywoodTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2))) # empty multipoint
+                            EnergywoodTreesPoints = st_point(x = c(NA_real_, NA_real_))) # empty point
 
   } else {
-  selectedOutputs <- list(inventory = inventory,
-                          HollowTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2)), # empty multipoint
-                          EnergywoodTreesPoints = st_multipoint(x = matrix(numeric(0), 0, 2)))
+    selectedOutputs <- list(inventory = inventory,
+                            HollowTreesPoints = st_point(x = c(NA_real_, NA_real_)), # empty point
+                            EnergywoodTreesPoints = st_point(x = c(NA_real_, NA_real_)))
   }
 
   if (fuel !="2") {
@@ -307,4 +346,4 @@ selected <- function(
 
   return(selectedOutputs) # return the new inventory and the 2 points vectors (HollowTrees and EnergywoodTrees)
 
-  }
+}

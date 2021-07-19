@@ -20,6 +20,9 @@ library(schoolmath)
 library(ggplot2)
 library(reshape)
 library(sf)
+library(nngeo)
+library(raster)
+library(topoDistance)
 ```
 
 ```{r ParamCrownDiameterAllometry table code}

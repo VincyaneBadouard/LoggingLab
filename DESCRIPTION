@@ -14,16 +14,16 @@ Authors@R:
            family = "Gaquiere",
            role = "aut",
            email = "gaquiere.thomas@yahoo.com"),
+      person(given = "Sylvain",
+           family = "Schmitt",
+           role = "aut",
+           email = "sylvain.m.schmitt@gmail.com"),
       person(given = "Géraldine",
            family = "Derroire",
            role = "ctb",
-           email = "geraldine.derroire@cirad.fr"),
-      person(given = "Sylvain",
-           family = "Schmitt",
-           role = "ctb",
-           email = "sylvain.m.schmitt@gmail.com")
+           email = "geraldine.derroire@cirad.fr")
            )
-Description: This package allows to simulate different forms of logging on a forest.
+Description: Allows to simulate different forms of logging on a forest.
 URL: https://github.com/VincyaneBadouard/Maria.git
 License: GPL-3
 Encoding: UTF-8
@@ -36,12 +36,19 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Depends: 
-    R (>= 2.10)
+    R (>= 3.6)
 Config/testthat/edition: 3
 Imports: 
     magrittr (>= 2.0.1),
     dplyr (>= 1.0.5),
     tibble (>= 3.1.0),
     tidyr (>= 1.1.2),
-    rlang (>= 0.4.10)
+    rlang (>= 0.4.10),
+    raster (>= 3.4.5),
+    sp (>= 1.4.4),
+    sf (>= 0.9.8),
+    nngeo (>= 0.4.2),
+    topoDistance (>= 1.0.1),
+    methods (>= 3.6.1),
+    utils (>= 3.6.1)
 BugReports: https://github.com/VincyaneBadouard/Maria/issues

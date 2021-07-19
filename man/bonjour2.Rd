@@ -2,7 +2,7 @@
 % Please edit documentation in R/bonjour2.R
 \name{bonjour2}
 \alias{bonjour2}
-\title{Say "Bonjour 2 times !" with a name}
+\title{Say "Bonjour 2 times !" with a name.}
 \usage{
 bonjour2(nom = "Maria", verbose = TRUE)
 }
@@ -15,5 +15,5 @@ bonjour2(nom = "Maria", verbose = TRUE)
 A character string "Bonjour! Name Bonjour! Name"
 }
 \description{
-Say "Bonjour 2 times !" with a name
+Say "Bonjour 2 times !" with a name.
 }

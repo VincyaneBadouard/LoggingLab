@@ -12,6 +12,8 @@ treeselection(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
+  DEM = DemParacou,
+  plotslope = PlotSlope,
   speciescriteria = SpeciesCriteria,
   otherloggingparameters = loggingparameters()
 )
@@ -21,31 +23,47 @@ treeselection(
 
 \item{objective}{Objective volume per hectare (numeric)}
 
-\item{type}{"RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"(character)}
+\item{type}{"RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow"
+or "manual"(character)}
 
 \item{fuel}{no  exploitation = "0", damage exploitation in fuelwood = "1",
 exploitation of hollow trees and damage in fuelwood = "2"}
 
-\item{diversification}{taking of other species in addition to the main commercial species (logical)}
+\item{diversification}{taking of other species in addition to the main
+commercial species (logical)}
 
-\item{specieslax}{Allow diversification if stand is too poor, = FALSE by default (logical)}
+\item{specieslax}{Allow diversification if stand is too poor, = FALSE by
+default (logical)}
 
-\item{objectivelax}{Allow exploitation in case of non-achievement of the objective volume (if stand too poor), = FALSE by default (logical)}
+\item{objectivelax}{Allow exploitation in case of non-achievement of the
+objective volume (if stand too poor), = FALSE by default (logical)}
+
+\item{DEM}{(RasterLayer)}
+
+\item{plotslope}{(RasterLayer)}
 
 \item{speciescriteria}{(data.frame)}
 
 \item{otherloggingparameters}{(list) MainTrail (multiline)}
 }
 \value{
-
+A FAIRE
 }
 \description{
 treeselection
 }
 \examples{
+
+data(Paracou6_2016)
+data(DemParacou)
+
 inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 
-treeselection(inventory, SpeciesCriteria,
-type ="manual", fuel = "0",objective = 20, diversification = TRUE, specieslax = FALSE,
-objectivelax = FALSE, otherloggingparameters = loggingparameters()) # , MainTrail
+treeselectionoutputs <- treeselection(inventory, objective = 20,
+type ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
+objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+speciescriteria = SpeciesCriteria,
+otherloggingparameters = loggingparameters()) #  MainTrail
+
+
 }

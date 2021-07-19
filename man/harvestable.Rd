@@ -4,7 +4,14 @@
 \alias{harvestable}
 \title{harvestable}
 \usage{
-harvestable(inventory, diversification, specieslax = FALSE)
+harvestable(
+  inventory,
+  diversification,
+  specieslax = FALSE,
+  DEM = DemParacou,
+  plotslope = PlotSlope,
+  otherloggingparameters = loggingparameters()
+)
 }
 \arguments{
 \item{inventory}{(data.frame)}
@@ -12,6 +19,12 @@ harvestable(inventory, diversification, specieslax = FALSE)
 \item{diversification}{(logical)}
 
 \item{specieslax}{= FALSE by default (logical)}
+
+\item{DEM}{(RasterLayer)}
+
+\item{plotslope}{(RasterLayer)}
+
+\item{otherloggingparameters}{(list)}
 }
 \value{
 Your inventory with the exploitability criteria, and if they are validated for each of the trees.
@@ -22,7 +35,12 @@ The function tells you the harvestable volume in the plot,
 and which trees are harvestable according to your harvestability criteria
 }
 \examples{
-inventory = ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
-harvestable(inventory, diversification = TRUE, specieslax = FALSE)
+
+data(Paracou6_2016)
+data(DemParacou)
+
+inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
+test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
+DEM = DemParacou, plotslope = PlotSlope,otherloggingparameters = loggingparameters())
 
 }

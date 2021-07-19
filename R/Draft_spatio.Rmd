@@ -1,0 +1,169 @@
+---
+title: "Draft_spatio"
+author: "Vincyane Badouard"
+date: "13/07/2021"
+output: html_document
+---
+```{r}
+inventory = ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
+
+#Taf de l'utilisateur
+## Import du MNT de Paracou (1m de résolution, campagne LiDAR de 2016) ----
+DemParacou <- raster::raster("D:/VSC Kourou/DATA/GIS/Topo_P6_PARACOU.tif") # MNT (altitude)
+plot(DemParacou)
+usethis::use_data(DemParacou)
+
+
+## Import Parcelles de Paracou
+Plots <- rgdal::readOGR("D:/VSC Kourou/DATA/GIS/Plot_P6_PARACOU.shp") # limites du plot
+plot(Plots)
+usethis::use_data(Plots)
+
+
+
+```
+```{r}
+# Fourni par le module de def d'UP
+PlotTopo <- raster::mask(x = DemParacou, # DEM en shapefile
+                         mask = Plots) # découpage de la topo par l'emprise du plot
+plot(PlotTopo)
+usethis::use_data(PlotTopo)
+
+
+PlotSlope <- raster::terrain(PlotTopo, 
+                             opt = "slope", # calcule des pentes 
+                             units = 'radians', # en radian
+                             neigbors = 8) # avec un voisinage de 8 cellules
+plot(PlotSlope)
+usethis::use_data(PlotSlope)
+
+```
+
+```{r}
+# Attribuer à chaque arbre sa pente
+SpatInventory <- inventory %>% 
+  filter(Commercial!= "0") # %>% 
+  # filter(DBH >= MinFD & DBH <= MaxFD) # ne prendre que les individus d'sp commerciales, le temps de calcul est déjà bien assez long
+
+
+coordinates(SpatInventory) <- ~ Xutm + Yutm # transformer l'inventaire en objet spatialisé en en informant les coordonnées
+
+proj4string(SpatInventory) <- raster::crs(DemParacou) # attribuer le crs de Paracou à notre inventaire spatialisé
+
+Slope_tmp <- as_tibble(raster::extract(x = PlotSlope, y = SpatInventory)) # extrait les valeurs de pentes pour les points spatialisés de l'inventaire
+
+SpatInventory <- st_as_sf(SpatInventory) %>%  # transformer l'inventaire spatialisé en objet sf
+  add_column(DistCrit = FALSE) # Créer une colonne DistCrit FALSE par défaut
+i = 1
+ProgressBar <- txtProgressBar(min = 0, max = nrow(SpatInventory),style = 3) # barre de progression du calcul
+
+# Calcul des distances entre les arbres de la même espèce
+
+for (SpecieI in unique(SpatInventory$ScientificName)) {
+
+    SpatInventorytmp <- SpatInventory %>% # SpatInventorytmp stocke 1 seul résulat, celui de chaque tour
+      filter(ScientificName == SpecieI)
+    SpatInventorytmp <- as_Spatial(SpatInventorytmp)
+
+    distSp <- topoDist(DEM = PlotTopo, pts = SpatInventorytmp) # calcul des distances
+    distSp <- as_tibble(distSp)
+    distSp[distSp == 0] <- NA # ne pas prendre en compte les 0 dans la matrice, qui sont les dist de l'arbre à lui-même.
+    distSp[distSp == Inf] <- NA # ne pas prendre en compte les Inf qui sont les arbres hors de parcelle.
+
+    for (ind in 1:dim(distSp)[2]) { # 2 pour colonne
+      if (all(is.na(distSp[,ind]))) {FALSE # si toutes la colonne contient des NA c'est un Inf donc on ne le veut pas
+      }else{
+        SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < otherloggingparameters$IsolateTreeMinDistance # si la distance minimale à ses congénaires est < 100, il est exploitable
+      }
+      SpatInventory$DistCrit[SpatInventory$idTree == SpatInventorytmp$idTree[ind]] <- SpatInventorytmp$DistCrit[ind]
+      i = i+1 # et en informer la progress bar
+      setTxtProgressBar(ProgressBar, i)
+    }
+
+
+
+    # SpatInventory <- SpatInventory %>%
+    #    mutate(DistCrit = ifelse(idTree == SpatInventorytmp$idTree, SpatInventorytmp$DistCrit, DistCrit)) # donner l'info à l'inventaire sp par sp
+
+  }
+
+SlopeCritInventory <- SpatInventory %>%   # SpatInventory <- SpatInventory before
+  add_column(Slope = Slope_tmp$value) %>% # ajouter les valeurs de pentes par arbre
+  # les NaN ce sont les valeurs infinies, qui témoignent d'un plateau donc pente = 0
+  mutate(Slope = ifelse(is.nan(Slope), 0, Slope)) %>% 
+  mutate(SlopeCrit = if_else(
+    condition = Slope <= atan(otherloggingparameters$TreeMaxSlope/100), # si pente <= 22% l'arbre est exploitable (on est en radian)
+    TRUE,
+    FALSE)) %>% 
+  dplyr::select(idTree, DistCrit, Slope, SlopeCrit)
+
+inventory <- inventory %>% 
+  left_join(SlopeCritInventory) %>% 
+  dplyr::select(-geometry)
+
+summary(SlopeCritInventory)
+test_inventory <- test$inventory
+coordinates(test_inventory) <- ~ Xutm + Yutm
+proj4string(test_inventory) <- raster::crs(DemParacou)
+test_inventory <- st_as_sf(test_inventory)
+
+ggplot(test_inventory %>% filter(Commercial != "0")) + geom_sf(aes(color = LoggingStatus == "harvestable"))
+
+
+##MainTrails out (only for ONF plots)
+
+```
+
+```{r}
+harvestable <- function(
+  inventory,
+  diversification,
+  specieslax = FALSE
+){
+  # Arguments check
+  
+  if(!inherits(inventory, "data.frame"))
+    stop("The 'inventory' argument of the 'harvestable' function must be a data.frame")
+  
+  if(!any(unlist(lapply(list(diversification, specieslax), inherits, "logical"))))
+    stop("The 'diversification' and 'specieslax' arguments of the 'harvestable' function must be logical") # any() don't take a list
+  
+  
+  # Il manque les scénarios dans les conditions -_-
+  
+  #select essences
+  HarverstableConditions <- # = 1 boolean vector
+    if (diversification || (!diversification && specieslax)) {
+      inventory$Commercial =="1"| inventory$Commercial == "2" # now or maybe after we will diversify
+    } else if (!diversification && !specieslax) {
+      inventory$Commercial == "1" # We will never diversify
+    }
+  
+  
+  #select diameters
+  HarverstableConditions <- HarverstableConditions & (inventory$DBH >= inventory$MinFD & inventory$DBH <= inventory$MaxFD) # harvestable individuals, accord by their DBH
+  
+  
+  inventory <- inventory %>%
+    mutate(LoggingStatus = ifelse(HarverstableConditions, #Under the above criteria, designate the harvestable species
+                                  "harvestable", "non-harvestable")) %>%
+    mutate(LoggingStatus = ifelse(Commercial == "0", #The non-commercial species are non-harvestable.
+                                  "non-harvestable", LoggingStatus)) %>%
+    
+    mutate(LoggingStatus = ifelse(
+      !diversification &
+        specieslax & #designate the secondarily harvestable species, because diversification only if necessary
+        LoggingStatus == "harvestable" &
+        Commercial == "2",
+      "harvestable2nd", LoggingStatus))
+  
+  HarvestableTable <- inventory %>%
+    filter(LoggingStatus == "harvestable")
+  HVinit <- sum(HarvestableTable$TreeHarvestableVolume) #compute the harvestable volume in the plot for these criteria
+  
+  harvestableOutputs <- list(inventory = inventory, HVinit = HVinit)
+  return(harvestableOutputs) # return the new inventory and the HVinit
+}
+
+```
+

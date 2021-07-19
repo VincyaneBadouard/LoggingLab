@@ -2,6 +2,7 @@ test_that("ONFGuyafortaxojoin", {
 
   # Check the function arguments
 
+  data(Paracou6_2016)
   MatrixInventory <- as.matrix(Paracou6_2016)
   Matrixspeciescriteria <- as.matrix(SpeciesCriteria)
 

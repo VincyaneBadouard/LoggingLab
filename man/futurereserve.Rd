@@ -18,20 +18,31 @@ futurereserve(
 \item{otherloggingparameters}{(list)}
 }
 \value{
-
+A FAIRE
 }
 \description{
 futurereserve
 }
 \examples{
-inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-diversification = TRUE)$inventory
 
-HVinit <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-diversification = TRUE)$HVinit
+data(Paracou6_2016)
+data(DemParacou)
 
-inventory <- selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-otherloggingparameters = loggingparameters(), VO = 80, HVinit = HVinit)$inventory
+inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(
+inventorycheckformat(Paracou6_2016))))
+
+harvestableOutputs <- harvestable(inventory, diversification = TRUE,
+ specieslax = FALSE,
+DEM = DemParacou, plotslope = PlotSlope,
+otherloggingparameters = loggingparameters())
+
+inventory <- harvestableOutputs$inventory
+HVinit <- harvestableOutputs$HVinit
+
+inventory <- selected(inventory, type = "manual", fuel = "0",
+diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+otherloggingparameters = loggingparameters(), VO = 30,
+ HVinit = HVinit)$inventory
 
 futurereserve(inventory)
 

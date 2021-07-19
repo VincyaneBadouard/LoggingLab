@@ -27,52 +27,52 @@ scenariosparameters <- function(
 ){
   # Objective volume
   if (is.null(objective)){
-    if (type == "RIL1")           objective = 25
-    if (type == "RIL2broken")     objective = 25
-    if (type == "RIL2")           objective = 25
-    if (type == "RIL3")           objective = 30
-    if (type == "RIL3fuel")       objective = 30
-    if (type == "RIL3fuelhollow") objective = 30
+    if (type == "RIL1")           objective <- 25
+    if (type == "RIL2broken")     objective <- 25
+    if (type == "RIL2")           objective <- 25
+    if (type == "RIL3")           objective <- 30
+    if (type == "RIL3fuel")       objective <- 30
+    if (type == "RIL3fuelhollow") objective <- 30
 
   }
 # Fuelwood exploitation
   if (is.null(fuel)){
-    if (type == "RIL1")           fuel = "0"
-    if (type == "RIL2broken")     fuel = "0"
-    if (type == "RIL2")           fuel = "0"
-    if (type == "RIL3")           fuel = "0"
-    if (type == "RIL3fuel")       fuel = "1"
-    if (type == "RIL3fuelhollow") fuel = "2"
+    if (type == "RIL1")           fuel <- "0"
+    if (type == "RIL2broken")     fuel <- "0"
+    if (type == "RIL2")           fuel <- "0"
+    if (type == "RIL3")           fuel <- "0"
+    if (type == "RIL3fuel")       fuel <- "1"
+    if (type == "RIL3fuelhollow") fuel <- "2"
 
   }
 #
   if (is.null(diversification)){
-    if (type == "RIL1")           diversification = FALSE
-    if (type == "RIL2broken")     diversification = FALSE
-    if (type == "RIL2")           diversification = FALSE
-    if (type == "RIL3")           diversification = TRUE
-    if (type == "RIL3fuel")       diversification = TRUE
-    if (type == "RIL3fuelhollow") diversification = TRUE
+    if (type == "RIL1")           diversification <- FALSE
+    if (type == "RIL2broken")     diversification <- FALSE
+    if (type == "RIL2")           diversification <- FALSE
+    if (type == "RIL3")           diversification <- TRUE
+    if (type == "RIL3fuel")       diversification <- TRUE
+    if (type == "RIL3fuelhollow") diversification <- TRUE
 
   }
 
   if (is.null(winching)){
-    if (type == "RIL1")           winching = "0"
-    if (type == "RIL2broken")     winching = "0"
-    if (type == "RIL2")           winching = "1"
-    if (type == "RIL3")           winching = "2"
-    if (type == "RIL3fuel")       winching = "2"
-    if (type == "RIL3fuelhollow") winching = "2"
+    if (type == "RIL1")           winching <- "0"
+    if (type == "RIL2broken")     winching <- "0"
+    if (type == "RIL2")           winching <- "1"
+    if (type == "RIL3")           winching <- "2"
+    if (type == "RIL3fuel")       winching <- "2"
+    if (type == "RIL3fuelhollow") winching <- "2"
 
   }
 
   if (is.null(directionalfelling)){
-    if (type == "RIL1")           directionalfelling = "0"
-    if (type == "RIL2broken")     directionalfelling = "1"
-    if (type == "RIL2")           directionalfelling = "1"
-    if (type == "RIL3")           directionalfelling = "2"
-    if (type == "RIL3fuel")       directionalfelling = "2"
-    if (type == "RIL3fuelhollow") directionalfelling = "2"
+    if (type == "RIL1")           directionalfelling <- "0"
+    if (type == "RIL2broken")     directionalfelling <- "1"
+    if (type == "RIL2")           directionalfelling <- "1"
+    if (type == "RIL3")           directionalfelling <- "2"
+    if (type == "RIL3fuel")       directionalfelling <- "2"
+    if (type == "RIL3fuelhollow") directionalfelling <- "2"
 
   }
 
