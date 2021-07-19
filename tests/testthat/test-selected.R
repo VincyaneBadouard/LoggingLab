@@ -2,6 +2,9 @@ test_that("selected", {
 
   # Check the function arguments
   # Test data preparation
+  data(Paracou6_2016)
+  data(DemParacou)
+
   inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
 
   harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
@@ -135,8 +138,9 @@ test_that("selected", {
     filter(Selected == "1"| Selected == "deselected")
 
   expect_true(all(!is.na(TestHollow$ProbedHollowProba))) # ProbedHollowProba for the Selected == "1" or == "deselected"
-  expect_true(all(TestHollow$ProbedHollow == "0" || TestHollow$ProbedHollow == "1")) # ProbedHollow = "0" ou "1" if !is.na(ProbedHollowProba)
+  expect_true(all(TestHollow$ProbedHollow %in% c("0","1"))) # ProbedHollow = "0" ou "1" if !is.na(ProbedHollowProba)
 
+  # expect_true(all(TestHollow$ProbedHollow == "0" || TestHollow$ProbedHollow == "1")) # doest works with the check..
 
   # if fuel =="2" et que il y a des ProbedHollow == "1" : there are "hollowfuel" in DeathCause
   testinventory <- suppressMessages(selected(inventory, type = "manual", fuel = "2", diversification = TRUE,

@@ -25,10 +25,14 @@ futurereserve
 }
 \examples{
 
-\dontrun{
-harvestableOutputs <- harvestable(ONFGuyafortaxojoin(inventory,
-speciescriteria = speciescriteria),
-diversification = diversification, specieslax = specieslax,
+data(Paracou6_2016)
+data(DemParacou)
+
+inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(
+inventorycheckformat(Paracou6_2016))))
+
+harvestableOutputs <- harvestable(inventory, diversification = TRUE,
+ specieslax = FALSE,
 DEM = DemParacou, plotslope = PlotSlope,
 otherloggingparameters = loggingparameters())
 
@@ -36,11 +40,10 @@ inventory <- harvestableOutputs$inventory
 HVinit <- harvestableOutputs$HVinit
 
 inventory <- selected(inventory, type = "manual", fuel = "0",
- diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-otherloggingparameters = loggingparameters(), VO = 80,
+diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+otherloggingparameters = loggingparameters(), VO = 30,
  HVinit = HVinit)$inventory
 
 futurereserve(inventory)
-}
 
 }

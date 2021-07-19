@@ -41,6 +41,24 @@ addtreedim <- function(
   if(!inherits(otherloggingparameters, "list"))
     stop("The 'otherloggingparameters' argument of the 'addtreedim' function must be a list")
 
+  # Global variables
+  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
+  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
+  DeathCause <- DistCrit <- Family  <- Zone <- NULL
+  ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
+  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
+  MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
+  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
+  PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
+  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
+  SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
+  TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
+  TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
+  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
+  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
+  beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
+
   # Crown diameter allometry parameters data preparation:
 
   spParamCrownDiameter <- crowndiameterparameters %>% #parameters at species scale
@@ -107,8 +125,8 @@ addtreedim <- function(
     mutate(Taxo = ifelse(is.na(Taxo), "mean", Taxo)) %>% #if species,genus&family parameters are absent, take parameters mean
     select(-Taxo.species, -Taxo.genus, -Taxo.family) %>% #remove obsolete columns
     # compute the crown diameter
-    mutate(CrownDiameter = otherloggingparameters$CrownDiameterAllometry(DBH, TreeHeight, alpha, beta))
-  # %>% select(-aCoef, -bCoef, -alpha, -beta)
+    mutate(CrownDiameter = otherloggingparameters$CrownDiameterAllometry(DBH, TreeHeight, alpha, beta)) %>%
+    select(-aCoef, -bCoef, -alpha, -beta, -Zone)
 
 
 

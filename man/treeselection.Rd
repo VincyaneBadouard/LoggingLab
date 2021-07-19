@@ -53,6 +53,10 @@ A FAIRE
 treeselection
 }
 \examples{
+
+data(Paracou6_2016)
+data(DemParacou)
+
 inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 
 treeselectionoutputs <- treeselection(inventory, objective = 20,

@@ -3,6 +3,7 @@ test_that("addtreedim", {
   # Check the function argument
 
   ## check the database class
+  data(Paracou6_2016)
   MatrixInventory <- as.matrix(Paracou6_2016)
   crowndiameterparameters <- as.matrix(ParamCrownDiameterAllometry)
   volumeparameters <- as.matrix(ForestZoneVolumeParametersTable)

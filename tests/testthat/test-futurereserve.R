@@ -1,5 +1,8 @@
 test_that("futurereserve", {
 
+  data(Paracou6_2016)
+  data(DemParacou)
+
   inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
 
   harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,

@@ -2,6 +2,9 @@ test_that("treeselection", {
 
   # Check the function arguments
 
+  data(Paracou6_2016)
+  data(DemParacou)
+
   MatrixInventory <- as.matrix(Paracou6_2016)
   Matrixspeciescriteria <- as.matrix(SpeciesCriteria)
 

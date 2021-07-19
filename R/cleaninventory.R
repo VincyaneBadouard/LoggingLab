@@ -21,10 +21,14 @@ cleaninventory <- function(
   inventory
 ){
 
+  # Argument check
+  if (!inherits(inventory, "data.frame"))
+    stop("inventory must be a data.frame")
+
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DemParacou <- DistCrit <- Family <- NULL
+  DeathCause <- DistCrit <- Family <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
@@ -38,10 +42,6 @@ cleaninventory <- function(
   VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
-
-  # Argument check
-  if (!inherits(inventory, "data.frame"))
-    stop("inventory must be a data.frame")
 
   if (!("DBH" %in% names(inventory))) {
     inventory <- mutate(inventory, DBH = ifelse(is.na(CircCorr), Circ/pi, CircCorr/pi))

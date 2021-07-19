@@ -10,10 +10,14 @@
 #'
 #' @examples
 #'
-#' \dontrun{
-#' harvestableOutputs <- harvestable(ONFGuyafortaxojoin(inventory,
-#' speciescriteria = speciescriteria),
-#' diversification = diversification, specieslax = specieslax,
+#' data(Paracou6_2016)
+#' data(DemParacou)
+#'
+#' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(
+#' inventorycheckformat(Paracou6_2016))))
+#'
+#' harvestableOutputs <- harvestable(inventory, diversification = TRUE,
+#'  specieslax = FALSE,
 #' DEM = DemParacou, plotslope = PlotSlope,
 #' otherloggingparameters = loggingparameters())
 #'
@@ -21,12 +25,11 @@
 #' HVinit <- harvestableOutputs$HVinit
 #'
 #' inventory <- selected(inventory, type = "manual", fuel = "0",
-#'  diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-#' otherloggingparameters = loggingparameters(), VO = 80,
+#' diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+#' otherloggingparameters = loggingparameters(), VO = 30,
 #'  HVinit = HVinit)$inventory
 #'
 #' futurereserve(inventory)
-#' }
 #'
 futurereserve <- function(
   inventory,
@@ -42,6 +45,24 @@ futurereserve <- function(
   #
   # if(!inherits(otherloggingparameters, "list"))
   #   stop("The 'otherloggingparameters' argument of the 'futurereserve' function must be a list")
+
+  # Global variables
+  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
+  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
+  DeathCause <- DistCrit <- Family <- NULL
+  ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
+  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
+  MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
+  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
+  PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
+  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
+  SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
+  TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
+  TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
+  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
+  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
+  beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
 
   #Future: select essence and diameters

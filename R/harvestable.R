@@ -18,9 +18,14 @@
 #' @import sf
 #' @importFrom sp coordinates proj4string
 #' @importFrom topoDistance topoDist
+#' @importFrom raster crs extract
 #' @importFrom  utils setTxtProgressBar txtProgressBar
 #'
 #' @examples
+#'
+#' data(Paracou6_2016)
+#' data(DemParacou)
+#'
 #' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
 #' test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
 #' DEM = DemParacou, plotslope = PlotSlope,otherloggingparameters = loggingparameters())
@@ -33,6 +38,7 @@ harvestable <- function(
   plotslope = PlotSlope,
   otherloggingparameters = loggingparameters()
 ){
+
   # Arguments check
 
   if(!inherits(inventory, "data.frame"))
@@ -44,6 +50,24 @@ harvestable <- function(
   if(!any(unlist(lapply(list(DEM, plotslope), inherits, "RasterLayer"))))
     stop("The 'DEM' and 'plotslope' arguments of the 'harvestable' function must be RasterLayer")
 
+  # Global variables
+  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
+  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
+  DeathCause <- DistCrit <- Family <- NULL
+  ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
+  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
+  MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
+  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
+  PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
+  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
+  SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
+  TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
+  TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
+  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
+  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
+  beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
+
 
   # Calculation of spatial information (distance and slope)
   SpatInventory <- inventory %>%
@@ -54,7 +78,7 @@ harvestable <- function(
 
   sp::proj4string(SpatInventory) <- raster::crs(DEM) # attribuer le crs de Paracou à notre inventaire spatialisé
 
-  Slope_tmp <- as_tibble(raster::extract(x = plotslope, y = SpatInventory)) # extrait les valeurs de pentes pour les points spatialisés de l'inventaire
+  SlopeTmp <- as_tibble(raster::extract(x = plotslope, y = SpatInventory)) # extrait les valeurs de pentes pour les points spatialisés de l'inventaire
 
   SpatInventory <- st_as_sf(SpatInventory) %>%  # transformer l'inventaire spatialisé en objet sf
     add_column(DistCrit = FALSE) # Créer une colonne DistCrit FALSE par défaut
@@ -93,7 +117,7 @@ harvestable <- function(
 
 
   SlopeCritInventory <- SpatInventory %>%   # SpatInventory <- SpatInventory before
-    add_column(Slope = Slope_tmp$value) %>% # ajouter les valeurs de pentes par arbre
+    add_column(Slope = SlopeTmp$value) %>% # ajouter les valeurs de pentes par arbre
     # les NaN ce sont les valeurs infinies, qui témoignent d'un plateau donc pente = 0
     mutate(Slope = ifelse(is.nan(Slope), 0, Slope)) %>%
     mutate(SlopeCrit = if_else(

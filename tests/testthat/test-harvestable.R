@@ -2,6 +2,8 @@ test_that("harvestable", {
 
 # Check the function arguments
 data("Paracou6_2016")
+data(DemParacou)
+
 MatrixInventory <- as.matrix(Paracou6_2016)
 expect_error(harvestable(MatrixInventory), regexp = "The 'inventory' argument of the 'harvestable' function must be a data.frame")
 
