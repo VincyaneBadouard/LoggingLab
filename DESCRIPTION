@@ -14,14 +14,14 @@ Authors@R:
            family = "Gaquiere",
            role = "aut",
            email = "gaquiere.thomas@yahoo.com"),
+      person(given = "Sylvain",
+           family = "Schmitt",
+           role = "aut",
+           email = "sylvain.m.schmitt@gmail.com"),
       person(given = "Géraldine",
            family = "Derroire",
            role = "ctb",
-           email = "geraldine.derroire@cirad.fr"),
-      person(given = "Sylvain",
-           family = "Schmitt",
-           role = "ctb",
-           email = "sylvain.m.schmitt@gmail.com")
+           email = "geraldine.derroire@cirad.fr")
            )
 Description: Allows to simulate different forms of logging on a forest.
 URL: https://github.com/VincyaneBadouard/Maria.git
