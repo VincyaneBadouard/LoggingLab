@@ -1,82 +1,82 @@
 test_that("harvestable", {
 
-# Check the function arguments
-
-MatrixInventory <- as.matrix(Paracou6_2016)
-
-
-expect_error(harvestable(MatrixInventory), regexp = "The 'inventory' argument of the 'harvestable' function must be a data.frame")
-
-expect_error(harvestable(Paracou6_2016, diversification = "1", specieslax = 2),
-             regexp = "The 'diversification' and 'specieslax' arguments of the 'harvestable' function must be logical")
-
-expect_error(harvestable(Paracou6_2016, diversification = TRUE, specieslax = FALSE,
-            DEM = NULL, plotslope = NULL))
-
-# LoggingStatus column exist and have no NA
-## Test data preparation
-testinventory1 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-                             diversification = T, specieslax = F)$inventory
-testinventory2 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-                              diversification = F, specieslax = T)$inventory
-testinventory3 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-                              diversification = F, specieslax = F)$inventory
-
-
-expect_false(any(is.na(testinventory1$LoggingStatus)))
-expect_false(any(is.na(testinventory2$LoggingStatus)))
-
-# Commercial == "0" are  LoggingStatus =="non-harvestable"
-TestCommercial <- testinventory1 %>%
-  filter(Commercial == "0")
-
-expect_true(all(TestCommercial$LoggingStatus =="non-harvestable"))
-
-TestCommercial <- testinventory2 %>%
-  filter(Commercial == "0")
-
-expect_true(all(TestCommercial$LoggingStatus =="non-harvestable"))
-
-# "harvestable": DBH >= MinFD & DBH <= MaxFD
-
-# "harvestable": Commercial == "1" ou "2" if diversification=T, or  diversification=F & specieslax=T
-testinventory1a <- testinventory1 %>%
-  filter(Commercial == "2")
-testinventory2a <- testinventory2 %>%
-  filter(Commercial == "2")
-
-expect_true(any(testinventory1a$LoggingStatus =="harvestable"))
-expect_true(any(testinventory2a$LoggingStatus =="harvestable2nd"))
-
-
-
-# "harvestable": Commercial == "1"  diversification=F & specieslax=F
-testinventory3a <- testinventory3 %>%
-  filter(Commercial != "1")
-expect_true(all(testinventory3a$LoggingStatus =="non-harvestable"))
-
-
-# "harvestable": check spatial!! A FAIRE
-
-# HVinit = sum of "TreeHarvestableVolume" values of "harvestable" trees.
-## Test data preparation
-HVinit1 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-                              diversification = T, specieslax = F)$HVinit
-HVinit2 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-                              diversification = F, specieslax = T)$HVinit
-HVinit3 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
-                              diversification = F, specieslax = F)$HVinit
-
-HarvestableTable1 <- testinventory1 %>%
-  filter(LoggingStatus == "harvestable")
-HarvestableTable2 <- testinventory2 %>%
-  filter(LoggingStatus == "harvestable")
-HarvestableTable3 <- testinventory3 %>%
-  filter(LoggingStatus == "harvestable")
-
-expect_true(HVinit1 == sum(HarvestableTable1$TreeHarvestableVolume))
-expect_true(HVinit2 == sum(HarvestableTable2$TreeHarvestableVolume))
-expect_true(HVinit3 == sum(HarvestableTable3$TreeHarvestableVolume))
+# # Check the function arguments
+#
+# MatrixInventory <- as.matrix(Paracou6_2016)
+#
+#
+# expect_error(harvestable(MatrixInventory), regexp = "The 'inventory' argument of the 'harvestable' function must be a data.frame")
+#
+# expect_error(harvestable(Paracou6_2016, diversification = "1", specieslax = 2),
+#              regexp = "The 'diversification' and 'specieslax' arguments of the 'harvestable' function must be logical")
+#
+# expect_error(harvestable(Paracou6_2016, diversification = TRUE, specieslax = FALSE,
+#             DEM = NULL, plotslope = NULL))
+#
+# # LoggingStatus column exist and have no NA
+# ## Test data preparation
+# testinventory1 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
+#                              diversification = T, specieslax = F)$inventory
+# testinventory2 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
+#                               diversification = F, specieslax = T)$inventory
+# testinventory3 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
+#                               diversification = F, specieslax = F)$inventory
+#
+#
+# expect_false(any(is.na(testinventory1$LoggingStatus)))
+# expect_false(any(is.na(testinventory2$LoggingStatus)))
+#
+# # Commercial == "0" are  LoggingStatus =="non-harvestable"
+# TestCommercial <- testinventory1 %>%
+#   filter(Commercial == "0")
+#
+# expect_true(all(TestCommercial$LoggingStatus =="non-harvestable"))
+#
+# TestCommercial <- testinventory2 %>%
+#   filter(Commercial == "0")
+#
+# expect_true(all(TestCommercial$LoggingStatus =="non-harvestable"))
+#
+# # "harvestable": DBH >= MinFD & DBH <= MaxFD
+#
+# # "harvestable": Commercial == "1" ou "2" if diversification=T, or  diversification=F & specieslax=T
+# testinventory1a <- testinventory1 %>%
+#   filter(Commercial == "2")
+# testinventory2a <- testinventory2 %>%
+#   filter(Commercial == "2")
+#
+# expect_true(any(testinventory1a$LoggingStatus =="harvestable"))
+# expect_true(any(testinventory2a$LoggingStatus =="harvestable2nd"))
+#
+#
+#
+# # "harvestable": Commercial == "1"  diversification=F & specieslax=F
+# testinventory3a <- testinventory3 %>%
+#   filter(Commercial != "1")
+# expect_true(all(testinventory3a$LoggingStatus =="non-harvestable"))
+#
+#
+# # "harvestable": check spatial!! A FAIRE
+#
+# # HVinit = sum of "TreeHarvestableVolume" values of "harvestable" trees.
+# ## Test data preparation
+# HVinit1 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
+#                               diversification = T, specieslax = F)$HVinit
+# HVinit2 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
+#                               diversification = F, specieslax = T)$HVinit
+# HVinit3 <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
+#                               diversification = F, specieslax = F)$HVinit
+#
+# HarvestableTable1 <- testinventory1 %>%
+#   filter(LoggingStatus == "harvestable")
+# HarvestableTable2 <- testinventory2 %>%
+#   filter(LoggingStatus == "harvestable")
+# HarvestableTable3 <- testinventory3 %>%
+#   filter(LoggingStatus == "harvestable")
+#
+# expect_true(HVinit1 == sum(HarvestableTable1$TreeHarvestableVolume))
+# expect_true(HVinit2 == sum(HarvestableTable2$TreeHarvestableVolume))
+# expect_true(HVinit3 == sum(HarvestableTable3$TreeHarvestableVolume))
 
 })
 

@@ -4,21 +4,29 @@
 #' @param speciescriteria (data.frame)
 #' @param otherloggingparameters (list)
 #'
-#' @return
+#' @return A FAIRE
+#'
 #' @export
 #'
 #' @examples
-#' harvestableOutputs <- harvestable(ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),
+#'
+#' \dontrun{
+#' harvestableOutputs <- harvestable(ONFGuyafortaxojoin(inventory,
+#' speciescriteria = speciescriteria),
 #' diversification = diversification, specieslax = specieslax,
-#' DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
+#' DEM = DemParacou, plotslope = PlotSlope,
+#' otherloggingparameters = loggingparameters())
 #'
 #' inventory <- harvestableOutputs$inventory
 #' HVinit <- harvestableOutputs$HVinit
 #'
-#' inventory <- selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-#' otherloggingparameters = loggingparameters(), VO = 80, HVinit = HVinit)$inventory
+#' inventory <- selected(inventory, type = "manual", fuel = "0",
+#'  diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+#' otherloggingparameters = loggingparameters(), VO = 80,
+#'  HVinit = HVinit)$inventory
 #'
 #' futurereserve(inventory)
+#' }
 #'
 futurereserve <- function(
   inventory,

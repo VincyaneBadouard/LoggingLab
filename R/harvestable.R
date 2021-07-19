@@ -19,6 +19,7 @@
 #' @importFrom sp coordinates
 #' @importFrom sp proj4string
 #' @importFrom topoDistance topoDist
+#' @importFrom  utils setTxtProgressBar txtProgressBar
 #'
 #' @examples
 #' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))

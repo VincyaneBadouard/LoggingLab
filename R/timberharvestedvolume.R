@@ -12,6 +12,8 @@
 #' @export
 #'
 #' @examples
+#'
+#' \dontrun{
 #' inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 #'
 #' inventory <- treeselection(inventory, SpeciesCriteria,
@@ -25,7 +27,7 @@
 #' inventory <- adjustedsecondtrails()$inventory
 #'
 #' timberharvestedvolume(inventory, fuel = "2", otherloggingparameters = loggingparameters())
-#'
+#' }
 #'
 timberharvestedvolume <- function(
   inventory,

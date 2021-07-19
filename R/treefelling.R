@@ -1,11 +1,13 @@
 #' treefelling
 #'
 #' @param inventory (data.frame)
-#' @param type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"(character)
+#' @param type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
+#'   "RIL3fuelhollow" or "manual"(character)
 #' @param fuel no  exploitation = "0", damage exploitation in fuelwood = "1",
-#' exploitation of hollow trees and damage in fuelwood = "2"
-#' @param directionalfelling directional felling = "0" (absent),
-#' "1" (only to avoid damage to future and reserve trees), "2" (avoid damage to future and reserve trees + track orientation)
+#'   exploitation of hollow trees and damage in fuelwood = "2"
+#' @param directionalfelling directional felling = "0" (absent), "1" (only to
+#'   avoid damage to future and reserve trees), "2" (avoid damage to future and
+#'   reserve trees + track orientation)
 #' @param otherloggingparameters (list)
 #' @param AccessibleTreesPoints (MULTIPOINT)
 #' @param SelectedTreesPoints (MULTIPOINT)
@@ -15,17 +17,23 @@
 #' @param HollowTreesPoints (MULTIPOINT)
 #' @param FuelwoodTreesPoints (MULTIPOINT) MainTrail 2ndTrail
 #'
-#' @return "Shadow" polygons +  "TreefallSuccess", "TreefallFailure", "DamageTreesPoints", "DeadTreesPoints" vectors
+#' @return "Shadow" polygons +  "TreefallSuccess", "TreefallFailure",
+#'   "DamageTreesPoints", "DeadTreesPoints" vectors
 #' @export
 #'
 #' @examples
 #'
+#' \dontrun{
 #' inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 #'
-#' inventory <- treeselection(inventory, SpeciesCriteria, type = "manual", fuel = "0",objective = 20,
-#' diversification = TRUE, specieslax = FALSE, objectivelax = FALSE, otherloggingparameters = loggingparameters())$inventory
+#' inventory <- treeselection(inventory, SpeciesCriteria, type = "manual",
+#' fuel = "0",objective = 20,
+#' diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+#' otherloggingparameters = loggingparameters())$inventory
 #'
-#' treefelling(inventory, type = "manual", fuel = "2", directionalfelling = "2", otherloggingparameters = loggingparameters())
+#' treefelling(inventory, type = "manual", fuel = "2", directionalfelling = "2",
+#'  otherloggingparameters = loggingparameters())
+#'  }
 #'
 treefelling <- function(
   inventory,

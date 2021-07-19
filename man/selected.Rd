@@ -20,10 +20,11 @@ selected(
 \arguments{
 \item{inventory}{(data.frame)}
 
-\item{type}{"RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"(character)}
+\item{type}{"RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
+"RIL3fuelhollow" or "manual"(character)}
 
-\item{fuel}{no  exploitation = "0" (default),
-damage exploitation in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"}
+\item{fuel}{no  exploitation = "0" (default), damage exploitation in fuelwood
+= "1", exploitation of hollow trees and damage in fuelwood = "2"}
 
 \item{diversification}{(logical)}
 
@@ -40,21 +41,26 @@ damage exploitation in fuelwood = "1", exploitation of hollow trees and damage i
 \item{HVinit}{(numeric value)}
 }
 \value{
-
+A FAIRE
 }
 \description{
 selected
 }
 \examples{
-inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
+inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(
+inventorycheckformat(Paracou6_2016))))
 
-harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
-DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
+harvestableOutputs <- harvestable(inventory, diversification = TRUE,
+ specieslax = FALSE,
+DEM = DemParacou, plotslope = PlotSlope,
+otherloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory
 HVinit <- harvestableOutputs$HVinit
 
-selecInventory <- selected(inventory, type = "manual", fuel = "2", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-otherloggingparameters = loggingparameters(), VO = 30, HVinit = HVinit)$inventory
+selecInventory <- selected(inventory, type = "manual", fuel = "2",
+diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+otherloggingparameters = loggingparameters(), VO = 30,
+HVinit = HVinit)$inventory
 
 }

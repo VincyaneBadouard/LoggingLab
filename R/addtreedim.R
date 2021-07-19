@@ -20,8 +20,9 @@
 #'
 #' if (!("DBH" %in% names(Paracou6_2016))) {
 #' tibble::add_column(Paracou6_2016, DBH = NA) #if DBH doesn't exist create it
-#' Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
-#' Paracou6_2016 <- filter(Paracou6_2016, DBH >= 10)
+#' Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi
+#' } # and compute it
+#' Paracou6_2016 <- dplyr::filter(Paracou6_2016, DBH >= 10)
 #'
 #' addtreedim(inventory = Paracou6_2016)
 #'
@@ -107,6 +108,8 @@ addtreedim <- function(
     select(-Taxo.species, -Taxo.genus, -Taxo.family) %>% #remove obsolete columns
     # compute the crown diameter
     mutate(CrownDiameter = otherloggingparameters$CrownDiameterAllometry(DBH, TreeHeight, alpha, beta))
+  # %>% select(-aCoef, -bCoef, -alpha, -beta)
+
 
 
   return(inventory)

@@ -3,34 +3,41 @@
 #' @param inventory (data.frame)
 #' @param objective Objective volume per hectare (numeric)
 
-#' @param type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"(character)
-#' @param fuel no  exploitation = "0", damage exploitation in fuelwood = "1",
-#' exploitation of hollow trees and damage in fuelwood = "2"
-#' @param diversification taking of other species in addition to the main commercial species (logical)
-#' @param specieslax Allow diversification if stand is too poor, = FALSE by default (logical)
-#' @param objectivelax Allow exploitation in case of non-achievement of the objective volume (if stand too poor), = FALSE by default (logical)
-#' @param DEM (RasterLayer)
-#' @param plotslope (RasterLayer)
-#' @param speciescriteria (data.frame)
-#' @param otherloggingparameters (list) MainTrail (multiline)
+#'@param type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow"
+#'  or "manual"(character)
+#'@param fuel no  exploitation = "0", damage exploitation in fuelwood = "1",
+#'  exploitation of hollow trees and damage in fuelwood = "2"
+#'@param diversification taking of other species in addition to the main
+#'  commercial species (logical)
+#'@param specieslax Allow diversification if stand is too poor, = FALSE by
+#'  default (logical)
+#'@param objectivelax Allow exploitation in case of non-achievement of the
+#'  objective volume (if stand too poor), = FALSE by default (logical)
+#'@param DEM (RasterLayer)
+#'@param plotslope (RasterLayer)
+#'@param speciescriteria (data.frame)
+#'@param otherloggingparameters (list) MainTrail (multiline)
 #'
-#' @return
-#' @export
+#'@return A FAIRE
 #'
-#' @import sf
-#' @importFrom sp coordinates
-#' @importFrom sp proj4string
-#' @importFrom sf st_as_sf
-#' @importFrom topoDistance topoDist
+#'@export
+#'
+#'@import sf
+#'@importFrom sp coordinates
+#'@importFrom sp proj4string
+#'@importFrom sf st_as_sf
+#'@importFrom topoDistance topoDist
+#'@importFrom methods as
 #'
 #' @examples
 #' inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 #'
-#'treeselectionoutputs <- treeselection(inventory, objective = 20, type ="manual",
-#'fuel = "2", diversification = FALSE, specieslax = FALSE, objectivelax = FALSE,
-#'DEM = DemParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria, otherloggingparameters = loggingparameters()) # , MainTrail
+#'treeselectionoutputs <- treeselection(inventory, objective = 20,
+#'type ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
+#'objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+#'speciescriteria = SpeciesCriteria,
+#' otherloggingparameters = loggingparameters()) #  MainTrail
 #'
-#'save(treeselectionoutputs, file = "C:/Users/Utilisateur/AppData/Local/ProjetsR/Maria/treeselectionoutputs.Rdata")
 #'
 treeselection <- function(
   inventory,
