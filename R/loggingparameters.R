@@ -140,7 +140,7 @@ loggingparameters <- function(
     MaxTrailDensity = MaxTrailDensity,
     MaxLandingArea = MaxLandingArea,
 
-    ### Allometry
+    ### Models
     TreeHarvestableVolumeAllometry = TreeHarvestableVolumeAllometry,
     TrunkHeightAllometry = TrunkHeightAllometry,
     TreeHeightAllometry = TreeHeightAllometry,
