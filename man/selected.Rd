@@ -6,42 +6,55 @@
 \usage{
 selected(
   inventory,
-  type = "manual",
+  scenario = "manual",
   fuel,
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
   DEM = DemParacou,
-  otherloggingparameters = loggingparameters(),
+  advancedloggingparameters = loggingparameters(),
   VO,
   HVinit
 )
 }
 \arguments{
-\item{inventory}{(data.frame)}
+\item{inventory}{your inventory (see the inputs formats and metadata in the
+\code{\link{vignette}}) (data.frame)}
 
-\item{type}{"RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
-"RIL3fuelhollow" or "manual"(character)}
+\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+\code{\link{vignette}})}
 
-\item{fuel}{no  exploitation = "0" (default), damage exploitation in fuelwood
-= "1", exploitation of hollow trees and damage in fuelwood = "2"}
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", damage
+exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+fuelwood = "2"}
 
-\item{diversification}{(logical)}
+\item{diversification}{Taking of other species in addition to the main
+commercial species (2 levels of commercial species in the
+\code{\link{SpeciesCriteria}} table) (logical)}
 
-\item{specieslax}{= FALSE by default (logical)}
+\item{specieslax}{Allow diversification if stand is too poor, = FALSE by
+default (logical)}
 
-\item{objectivelax}{= FALSE by default (logical)}
+\item{objectivelax}{Allow exploitation in case of non-achievement of the
+objective volume (if stand too poor), = FALSE by default (logical)}
 
-\item{DEM}{(RasterLayer)}
+\item{DEM}{Digital terrain model (DTM) of the inventoried plot (LiDAR or
+SRTM) (default: \code{\link{DemParacou}}) (RasterLayer)}
 
-\item{otherloggingparameters}{(list)}
+\item{advancedloggingparameters}{Other parameters of the logging simulator
+\code{\link{loggingparameters}} (list) MainTrail (multiline)}
 
-\item{VO}{(numeric value)}
+\item{VO}{The objective volume with or without a bonus (if hollow trees
+exploitation)(numeric value) (see the \code{\link{loggingparameters}})}
 
-\item{HVinit}{(numeric value)}
+\item{HVinit}{the harvestable volume in the plot for your criteria
+(\code{\link{SpeciesCriteria}}) (numeric value)}
 }
 \value{
-A FAIRE
+Your inventory with the trees selected for harvesting (depending on
+the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
+EnergywoodTrees)
 }
 \description{
 selected
@@ -57,14 +70,18 @@ inventorycheckformat(Paracou6_2016))))
 harvestableOutputs <- harvestable(inventory, diversification = TRUE,
  specieslax = FALSE,
 DEM = DemParacou, plotslope = PlotSlope,
-otherloggingparameters = loggingparameters())
+advancedloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory
 HVinit <- harvestableOutputs$HVinit
 
-selecInventory <- selected(inventory, type = "manual", fuel = "2",
+selecInventory <- selected(inventory, scenario = "manual", fuel = "2",
 diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-otherloggingparameters = loggingparameters(), VO = 30,
+advancedloggingparameters = loggingparameters(), VO = 30,
 HVinit = HVinit)$inventory
 
+}
+\seealso{
+\code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
+\code{\link{DemParacou}}, \code{\link{loggingparameters}}
 }

@@ -7,7 +7,7 @@
 inventorycheckformat(inventory)
 }
 \arguments{
-\item{inventory}{(dataframe) Your inventory data or the "Paracou6_2016" test data#'}
+\item{inventory}{Your inventory data or the "Paracou6_2016" test data#' (dataframe)}
 }
 \value{
 Stop the function if the format is not the one required.

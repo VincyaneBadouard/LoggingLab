@@ -1,24 +1,50 @@
-#' treeselection
+#'treeselection
 #'
-#' @param inventory (data.frame)
-#' @param objective Objective volume per hectare (numeric)
-
-#'@param type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow"
-#'  or "manual"(character)
-#'@param fuel no  exploitation = "0", damage exploitation in fuelwood = "1",
-#'  exploitation of hollow trees and damage in fuelwood = "2"
-#'@param diversification taking of other species in addition to the main
-#'  commercial species (logical)
+#'@param inventory your inventory (see the inputs formats and metadata in the \code{\link{vignette}}) (data.frame)
+#'
+#'@param objective Objective volume per hectare (numeric)
+#'
+#'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
+#'  "RIL3fuelhollow" or "manual"(character) (see the \code{\link{vignette}})
+#'
+#'@param fuel Fuel wood exploitation: no exploitation = "0", damage exploitation
+#'  in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"
+#'
+#'@param diversification Taking of other species in addition to the main
+#'  commercial species (2 levels of commercial species in the
+#'  \code{\link{SpeciesCriteria}} table) (logical)
+#'
 #'@param specieslax Allow diversification if stand is too poor, = FALSE by
 #'  default (logical)
+#'
 #'@param objectivelax Allow exploitation in case of non-achievement of the
 #'  objective volume (if stand too poor), = FALSE by default (logical)
-#'@param DEM (RasterLayer)
-#'@param plotslope (RasterLayer)
-#'@param speciescriteria (data.frame)
-#'@param otherloggingparameters (list) MainTrail (multiline)
 #'
-#'@return A FAIRE
+#'@param DEM Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
+#'  (default: \code{\link{DemParacou}}) (RasterLayer)
+#'
+#'@param plotslope Slopes (in radians) of the inventoried plot (with a
+#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
+#'
+#'@param speciescriteria Table of species exploitability criteria : species
+#'  names, economic interest level, minimum and maximum felling diameter, in the
+#'  same format of \code{\link{SpeciesCriteria}} (data.frame)
+#'
+#'@param advancedloggingparameters Other parameters of the logging simulator
+#'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
+#'
+#'@return A list with:
+#'  - your inventory with: "DistCrit", "Slope", "SlopeCrit",
+#'  "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
+#'  "ProbedHollow" new columns (see the outputs metadata in the \code{\link{vignette}}).
+#'  - the objective volume with or without a bonus (if hollow trees
+#'  exploitation)
+#'  - 6 sets of spatial points: harvestable, selected, future and
+#'  reserve, hollow and energy wood trees
+#'
+#'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}}, \code{\link{DemParacou}},
+#'  \code{\link{PlotSlope}}, \code{\link{loggingparameters}}
+#'
 #'
 #'@export
 #'
@@ -29,6 +55,7 @@
 #'@importFrom topoDistance topoDist
 #'@importFrom methods as
 #'
+#'
 #' @examples
 #'
 #' data(Paracou6_2016)
@@ -37,16 +64,16 @@
 #' inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 #'
 #'treeselectionoutputs <- treeselection(inventory, objective = 20,
-#'type ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
+#'scenario ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
 #'objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
 #'speciescriteria = SpeciesCriteria,
-#' otherloggingparameters = loggingparameters()) #  MainTrail
+#' advancedloggingparameters = loggingparameters()) #  MainTrail
 #'
 #'
 treeselection <- function(
   inventory,
   objective,
-  type = "manual",
+  scenario = "manual",
   fuel,
   diversification,
   specieslax = FALSE,
@@ -54,7 +81,7 @@ treeselection <- function(
   DEM = DemParacou,
   plotslope = PlotSlope,
   speciescriteria = SpeciesCriteria,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
   # MainTrail
 
 ){
@@ -64,24 +91,29 @@ treeselection <- function(
   if(!any(unlist(lapply(list(inventory, speciescriteria), inherits, "data.frame"))))
     stop("The 'inventory' and 'speciescriteria' arguments of the 'treeselection' function must be data.frame")
 
-  if(!inherits(objective, "numeric") && !is.null(objective))
-    stop("The 'objective' argument of the 'treeselection' function must be numeric")
+  # if(!inherits(objective, "numeric") && !is.null(objective))
+  #   stop("The 'objective' argument of the 'treeselection' function must be numeric")
 
   if(!all(unlist(lapply(list(diversification, specieslax, objectivelax), inherits, "logical"))) && !is.null(diversification))
     stop("The 'diversification', 'specieslax' and 'objectivelax' arguments of the 'treeselection' function must be logical") # any() don't take a list
 
-  if (!any(type == "RIL1" | type == "RIL2broken"| type == "RIL2"| type == "RIL3"| type == "RIL3fuel"|
-           type == "RIL3fuelhollow"| type =="manual"))
-    stop("The 'type' argument of the 'treeselection' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
+  # if (!any(scenario == "RIL1" | scenario == "RIL2broken"| scenario == "RIL2"| scenario == "RIL3"| scenario == "RIL3fuel"|
+  #          scenario == "RIL3fuelhollow"| scenario =="manual"))
+  #   stop("The 'scenario' argument of the 'treeselection' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
-  if (!any(fuel == "0" | fuel == "1"| fuel == "2"| is.null(fuel)))
-    stop("The 'fuel' argument of the 'treeselection' function must be '0', '1', or '2'")
+  # if (!any(fuel == "0" | fuel == "1"| fuel == "2"| is.null(fuel)))
+  #   stop("The 'fuel' argument of the 'treeselection' function must be '0', '1', or '2'")
 
   if(!any(unlist(lapply(list(DEM, plotslope), inherits, "RasterLayer"))))
     stop("The 'DEM' and 'plotslope' arguments of the 'treeselection' function must be RasterLayer")
 
-  if(!inherits(otherloggingparameters, "list"))
-    stop("The 'otherloggingparameters' argument of the 'treeselection' function must be a list")
+  if(!inherits(advancedloggingparameters, "list"))
+    stop("The 'advancedloggingparameters' argument of the 'treeselection' function must be a list")
+
+  if(scenario == "manual" &&
+     (is.null(objective) || is.null(fuel) || is.null(diversification)))
+    stop("If you choose the 'manual' mode,
+         you must fill in the arguments 'objective', 'fuel' and 'diversification'")
 
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
@@ -102,7 +134,7 @@ treeselection <- function(
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
   # Redefinition of the parameters according to the chosen scenario
-  scenariosparameters <- scenariosparameters(objective = objective, type = type, fuel = fuel,
+  scenariosparameters <- scenariosparameters(scenario = scenario, objective = objective, fuel = fuel,
                                              diversification = diversification)
 
   objective <- scenariosparameters$objective
@@ -115,7 +147,7 @@ treeselection <- function(
 
   # inventory <- inventory %>%
   # Visible defect trees detection:
-  # mutate(VisibleDefectProba = otherloggingparameters$VisiblyRottenModel(DBH)) %>%
+  # mutate(VisibleDefectProba = advancedloggingparameters$VisiblyRottenModel(DBH)) %>%
   # mutate(VisibleDefect = sample(c(0,1), size = 1, replace = F, prob = VisibleDefectProba)) # 1 = default tree, 0 = no visible default (là ma fct ne sait pas qd elle doit mettre 0 ou 1)
 
   # filter(VisibleDefect == "0") %>%
@@ -123,14 +155,14 @@ treeselection <- function(
   # Compute the objective volume with or without bonus:
   if (fuel =="2") {VO = objective
   }else{
-    VO = objective + otherloggingparameters$ObjectiveBonus # to compensate for the designated hollow wood.
+    VO = objective + advancedloggingparameters$ObjectiveBonus # to compensate for the designated hollow wood.
 
   }
 
   harvestableOutputs <- harvestable(                                                      # interne fucntion
     ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),            # interne fucntion
     diversification = diversification, specieslax = specieslax,
-    DEM = DEM, plotslope = plotslope, otherloggingparameters = loggingparameters())
+    DEM = DEM, plotslope = plotslope, advancedloggingparameters = loggingparameters())
 
   inventory <- harvestableOutputs$inventory        # one of the output
 
@@ -138,9 +170,9 @@ treeselection <- function(
 
   selectedOutputs <- selected(                                                   # outputs of the selected function
     inventory,
-    type = type, fuel = fuel, diversification = diversification,
+    scenario = scenario, fuel = fuel, diversification = diversification,
     specieslax = specieslax, objectivelax = objectivelax,
-    otherloggingparameters = otherloggingparameters, VO = VO, HVinit = HVinit)
+    advancedloggingparameters = advancedloggingparameters, VO = VO, HVinit = HVinit)
 
   inventory <- selectedOutputs$inventory                                         # extract inventory of the selected outputs
 
@@ -158,11 +190,11 @@ treeselection <- function(
 
   if (dim(HarvestableTreesPoints)[1] != 0) {
 
-  sp::coordinates(HarvestableTreesPoints) <- ~ Xutm + Yutm
+    sp::coordinates(HarvestableTreesPoints) <- ~ Xutm + Yutm
 
-  sp::proj4string(HarvestableTreesPoints) <- raster::crs(DEM)
+    sp::proj4string(HarvestableTreesPoints) <- raster::crs(DEM)
 
-  HarvestableTreesPoints <- st_as_sf(as(HarvestableTreesPoints,"SpatialPoints"))
+    HarvestableTreesPoints <- st_as_sf(as(HarvestableTreesPoints,"SpatialPoints"))
   } else {HarvestableTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   # Points vector with coordinates of the selected trees:
@@ -171,11 +203,11 @@ treeselection <- function(
 
   if (dim(SelectedTreesPoints)[1] != 0) {
 
-  sp::coordinates(SelectedTreesPoints) <- ~ Xutm + Yutm
+    sp::coordinates(SelectedTreesPoints) <- ~ Xutm + Yutm
 
-  sp::proj4string(SelectedTreesPoints) <- raster::crs(DEM)
+    sp::proj4string(SelectedTreesPoints) <- raster::crs(DEM)
 
-  SelectedTreesPoints <- st_as_sf(as(SelectedTreesPoints,"SpatialPoints"))
+    SelectedTreesPoints <- st_as_sf(as(SelectedTreesPoints,"SpatialPoints"))
   } else {SelectedTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   # Points vector with coordinates of the future trees:
@@ -184,11 +216,11 @@ treeselection <- function(
 
   if (dim(FutureTreesPoints)[1] != 0) {
 
-  sp::coordinates(FutureTreesPoints) <- ~ Xutm + Yutm
+    sp::coordinates(FutureTreesPoints) <- ~ Xutm + Yutm
 
-  sp::proj4string(FutureTreesPoints) <- raster::crs(DEM)
+    sp::proj4string(FutureTreesPoints) <- raster::crs(DEM)
 
-  FutureTreesPoints <- st_as_sf(as(FutureTreesPoints,"SpatialPoints"))
+    FutureTreesPoints <- st_as_sf(as(FutureTreesPoints,"SpatialPoints"))
   } else {FutureTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   # Points vector with coordinates of the reserve trees:
@@ -197,11 +229,11 @@ treeselection <- function(
 
   if (dim(ReserveTreesPoints)[1] != 0) {
 
-      sp::coordinates(ReserveTreesPoints) <- ~ Xutm + Yutm
+    sp::coordinates(ReserveTreesPoints) <- ~ Xutm + Yutm
 
-      sp::proj4string(ReserveTreesPoints) <- raster::crs(DEM)
+    sp::proj4string(ReserveTreesPoints) <- raster::crs(DEM)
 
-      ReserveTreesPoints <- st_as_sf(as(ReserveTreesPoints,"SpatialPoints"))
+    ReserveTreesPoints <- st_as_sf(as(ReserveTreesPoints,"SpatialPoints"))
   } else {ReserveTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   #where specieslax was not necessary, consider eco2s as non-exploitable:
@@ -221,6 +253,6 @@ treeselection <- function(
 
 
   return(treeselectionOutputs) # return the new inventory, the objective volume,
-  # and the 4 points vectors (Harvestable, Selected, Future and Reserve Trees)
-#faut rajouter les ouputs des fcts internes
+  # and the 4 points vectors (Harvestable, Selected, Future and Reserve,
+  # Hollow and Energywood Trees)
 }

@@ -11,8 +11,9 @@ cleaninventory(inventory)
 (data.frame)}
 }
 \value{
-inventory (data.frame).Stop the function if the tree identifiers
-(idTree) are not unique, or if there are different plots in the inventory.
+your inventory (data.frame) with the DBH (Diameter at Breast Height)
+if it does not exist. Stop the function if the tree identifiers (idTree) are
+not unique, or if there are different plots or years in the inventory.
 }
 \description{
 Select trees according to the protocol: alive, unique, at the

@@ -2,29 +2,37 @@
 % Please edit documentation in R/addtreedim.R
 \name{addtreedim}
 \alias{addtreedim}
-\title{Compute tree dimensions (Height, diameter, harvestable volume, including crown)}
+\title{Compute tree dimensions (Height, diameter, harvestable volume, including
+crown)}
 \usage{
 addtreedim(
   inventory,
   crowndiameterparameters = ParamCrownDiameterAllometry,
   volumeparameters = ForestZoneVolumeParametersTable,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
 \item{inventory}{(data.frame)}
 
-\item{crowndiameterparameters}{(data.frame)}
+\item{crowndiameterparameters}{Crown diameter allometry parameters table to
+compute the crown diameter of each tree, depend to its DBH (Diameter at
+Breast Height) and its species, genus or family (data.frame)}
 
-\item{volumeparameters}{(data.frame)}
+\item{volumeparameters}{Volume parameters table to compute the harvestable
+volume of each tree, depend to its geographic zone if several locations
+(data.frame)}
 
-\item{otherloggingparameters}{(list)}
+\item{advancedloggingparameters}{Other parameters of the logging simulator
+(list)}
 }
 \value{
-inventory (data.frame) with additional variables (TreeHeight, TreeHarvestableVolume, TrunkHeight, CrownHeight, CrownDiameter)
+inventory (data.frame) with additional variables (TreeHeight,
+TreeHarvestableVolume, TrunkHeight, CrownHeight, CrownDiameter)
 }
 \description{
-Compute tree dimensions (Height, diameter, harvestable volume, including crown)
+Compute tree dimensions (Height, diameter, harvestable volume, including
+crown)
 }
 \examples{
 data(Paracou6_2016)

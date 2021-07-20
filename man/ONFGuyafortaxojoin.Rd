@@ -7,13 +7,17 @@
 ONFGuyafortaxojoin(inventory, speciescriteria = SpeciesCriteria)
 }
 \arguments{
-\item{inventory}{(data.frame)}
+\item{inventory}{your inventory (see the inputs formats and metadata in the
+\code{\link{vignette}}) (data.frame)}
 
-\item{speciescriteria}{mettre le lien vers le doc de la table (data.frame)}
+\item{speciescriteria}{Table of species exploitability criteria : species
+names, economic interest level, minimum and maximum felling diameter, in
+the same format of \code{\link{SpeciesCriteria}} (data.frame)}
 }
 \value{
-The forest inventory with economic informations (economic name, rank, mimimum/maximum falling diameter, upped mimimum falling diameter)
-per individuals (data.frame)
+The forest inventory with economic informations (economic name, rank,
+mimimum/maximum falling diameter, upped mimimum falling diameter) per
+individuals (data.frame)
 }
 \description{
 Joins a commercial criteria table to a forest inventory
@@ -22,4 +26,7 @@ Joins a commercial criteria table to a forest inventory
 data(Paracou6_2016)
 ONFGuyafortaxojoin(Paracou6_2016, SpeciesCriteria)
 
+}
+\seealso{
+\code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}}
 }

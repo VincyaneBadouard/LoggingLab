@@ -7,7 +7,7 @@
 treeselection(
   inventory,
   objective,
-  type = "manual",
+  scenario = "manual",
   fuel,
   diversification,
   specieslax = FALSE,
@@ -15,22 +15,23 @@ treeselection(
   DEM = DemParacou,
   plotslope = PlotSlope,
   speciescriteria = SpeciesCriteria,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
-\item{inventory}{(data.frame)}
+\item{inventory}{your inventory (see the inputs formats and metadata in the \code{\link{vignette}}) (data.frame)}
 
 \item{objective}{Objective volume per hectare (numeric)}
 
-\item{type}{"RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow"
-or "manual"(character)}
+\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
+"RIL3fuelhollow" or "manual"(character) (see the \code{\link{vignette}})}
 
-\item{fuel}{no  exploitation = "0", damage exploitation in fuelwood = "1",
-exploitation of hollow trees and damage in fuelwood = "2"}
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", damage exploitation
+in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"}
 
-\item{diversification}{taking of other species in addition to the main
-commercial species (logical)}
+\item{diversification}{Taking of other species in addition to the main
+commercial species (2 levels of commercial species in the
+\code{\link{SpeciesCriteria}} table) (logical)}
 
 \item{specieslax}{Allow diversification if stand is too poor, = FALSE by
 default (logical)}
@@ -38,16 +39,30 @@ default (logical)}
 \item{objectivelax}{Allow exploitation in case of non-achievement of the
 objective volume (if stand too poor), = FALSE by default (logical)}
 
-\item{DEM}{(RasterLayer)}
+\item{DEM}{Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
+(default: \code{\link{DemParacou}}) (RasterLayer)}
 
-\item{plotslope}{(RasterLayer)}
+\item{plotslope}{Slopes (in radians) of the inventoried plot (with a
+neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 
-\item{speciescriteria}{(data.frame)}
+\item{speciescriteria}{Table of species exploitability criteria : species
+names, economic interest level, minimum and maximum felling diameter, in the
+same format of \code{\link{SpeciesCriteria}} (data.frame)}
 
-\item{otherloggingparameters}{(list) MainTrail (multiline)}
+\item{advancedloggingparameters}{Other parameters of the logging simulator
+\code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
-A FAIRE
+A list with:
+\itemize{
+\item your inventory with: "DistCrit", "Slope", "SlopeCrit",
+"LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
+"ProbedHollow" new columns (see the outputs metadata in the \code{\link{vignette}}).
+\item the objective volume with or without a bonus (if hollow trees
+exploitation)
+\item 6 sets of spatial points: harvestable, selected, future and
+reserve, hollow and energy wood trees
+}
 }
 \description{
 treeselection
@@ -60,10 +75,14 @@ data(DemParacou)
 inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 
 treeselectionoutputs <- treeselection(inventory, objective = 20,
-type ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
+scenario ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
 objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
 speciescriteria = SpeciesCriteria,
-otherloggingparameters = loggingparameters()) #  MainTrail
+advancedloggingparameters = loggingparameters()) #  MainTrail
 
 
+}
+\seealso{
+\code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}}, \code{\link{DemParacou}},
+\code{\link{PlotSlope}}, \code{\link{loggingparameters}}
 }

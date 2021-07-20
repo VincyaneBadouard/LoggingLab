@@ -6,31 +6,31 @@ test_that("futurereserve", {
   inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
 
   harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
-                                    DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
+                                    DEM = DemParacou, plotslope = PlotSlope, advancedloggingparameters = loggingparameters())
 
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
-  inventory <- suppressMessages(selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-                                         otherloggingparameters = loggingparameters(), VO = 80, HVinit = HVinit)$inventory)
+  inventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+                                         advancedloggingparameters = loggingparameters(), VO = 80, HVinit = HVinit)$inventory)
 
   testinventory <- futurereserve(inventory)
 
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 
-  # Future = Commercial == "1" & (DBH >= otherloggingparameters$FutureTreesMinDiameter & DBH < MinFD)
+  # Future = Commercial == "1" & (DBH >= advancedloggingparameters$FutureTreesMinDiameter & DBH < MinFD)
   FutureTrees <- testinventory %>%
     filter(LoggingStatus == "future")
 
   expect_true(all(FutureTrees$Commercial == "1"))
-  expect_true(all(FutureTrees$DBH >= otherloggingparameters$FutureTreesMinDiameter & FutureTrees$DBH < FutureTrees$MinFD))
+  expect_true(all(FutureTrees$DBH >= advancedloggingparameters$FutureTreesMinDiameter & FutureTrees$DBH < FutureTrees$MinFD))
 
   # Reserve
   ReserveTrees <- testinventory %>%
     filter(LoggingStatus =="reserve")
 
   expect_true(all(ReserveTrees$Commercial == "1")) # = Commercial == "1"
-  expect_true(all(ReserveTrees$DBH >= otherloggingparameters$FutureTreesMinDiameter
+  expect_true(all(ReserveTrees$DBH >= advancedloggingparameters$FutureTreesMinDiameter
                   & ReserveTrees$DBH < ReserveTrees$MinFD))# = Future trees
 
 

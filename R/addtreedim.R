@@ -1,11 +1,19 @@
-#' Compute tree dimensions (Height, diameter, harvestable volume, including crown)
+#' Compute tree dimensions (Height, diameter, harvestable volume, including
+#' crown)
 #'
 #' @param inventory (data.frame)
-#' @param crowndiameterparameters (data.frame)
-#' @param volumeparameters (data.frame)
-#' @param otherloggingparameters (list)
+#' @param crowndiameterparameters Crown diameter allometry parameters table to
+#'   compute the crown diameter of each tree, depend to its DBH (Diameter at
+#'   Breast Height) and its species, genus or family (data.frame)
+#' @param volumeparameters Volume parameters table to compute the harvestable
+#'   volume of each tree, depend to its geographic zone if several locations
+#'   (data.frame)
+#' @param advancedloggingparameters Other parameters of the logging simulator
+#'   (list)
 #'
-#' @return inventory (data.frame) with additional variables (TreeHeight, TreeHarvestableVolume, TrunkHeight, CrownHeight, CrownDiameter)
+#' @return inventory (data.frame) with additional variables (TreeHeight,
+#'   TreeHarvestableVolume, TrunkHeight, CrownHeight, CrownDiameter)
+#'
 #' @export
 #' @import dplyr
 #' @importFrom dplyr left_join
@@ -30,16 +38,16 @@ addtreedim <- function(
   inventory,
   crowndiameterparameters = ParamCrownDiameterAllometry,
   volumeparameters = ForestZoneVolumeParametersTable,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 
 ){
 
-    # Arguments check
+  # Arguments check
   if(!any(unlist(lapply(list(inventory, crowndiameterparameters, volumeparameters), inherits, "data.frame"))))
     stop("The function arguments must be data.frames") # any() don't take a list
 
-  if(!inherits(otherloggingparameters, "list"))
-    stop("The 'otherloggingparameters' argument of the 'addtreedim' function must be a list")
+  if(!inherits(advancedloggingparameters, "list"))
+    stop("The 'advancedloggingparameters' argument of the 'addtreedim' function must be a list")
 
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
@@ -74,26 +82,26 @@ addtreedim <- function(
 
   # Variables computation:
 
-  # test otherloggingparameters$TreeHarvestableVolumeParameters in names(volumeparameters)
+  # test advancedloggingparameters$TreeHarvestableVolumeParameters in names(volumeparameters)
 
   inventory <- inventory %>%
 
     # TreeHarvestableVolume (m3)
     left_join(volumeparameters, by = "Forest") %>%
-    mutate(TreeHarvestableVolume = otherloggingparameters$TreeHarvestableVolumeAllometry(DBH, aCoef, bCoef)) %>%
-#
-#    #Sylvain's version
-#     mutate(TreeHarvestableVolume = # the variable to compute
-#              otherloggingparameters$ # the list compute by the fct
-#              TreeHarvestableVolumeAllometry(DBH, # the element of the list
-#                                             pars = c({{otherloggingparameters$
-#                                                 TreeHarvestableVolumeParameters}}))) %>% # to recover parameters name as column names
+    mutate(TreeHarvestableVolume = advancedloggingparameters$TreeHarvestableVolumeAllometry(DBH, aCoef, bCoef)) %>%
+    #
+    #    #Sylvain's version
+    #     mutate(TreeHarvestableVolume = # the variable to compute
+    #              advancedloggingparameters$ # the list compute by the fct
+    #              TreeHarvestableVolumeAllometry(DBH, # the element of the list
+    #                                             pars = c({{advancedloggingparameters$
+    #                                                 TreeHarvestableVolumeParameters}}))) %>% # to recover parameters name as column names
 
     # TrunkHeight (m)
-    mutate(TrunkHeight = otherloggingparameters$TrunkHeightAllometry(DBH, TreeHarvestableVolume)) %>%
+    mutate(TrunkHeight = advancedloggingparameters$TrunkHeightAllometry(DBH, TreeHarvestableVolume)) %>%
 
     # TreeHeight (m)
-    mutate(TreeHeight = otherloggingparameters$TreeHeightAllometry(DBH)) %>%
+    mutate(TreeHeight = advancedloggingparameters$TreeHeightAllometry(DBH)) %>%
 
 
     # CrownHeight (m)
@@ -125,7 +133,7 @@ addtreedim <- function(
     mutate(Taxo = ifelse(is.na(Taxo), "mean", Taxo)) %>% #if species,genus&family parameters are absent, take parameters mean
     select(-Taxo.species, -Taxo.genus, -Taxo.family) %>% #remove obsolete columns
     # compute the crown diameter
-    mutate(CrownDiameter = otherloggingparameters$CrownDiameterAllometry(DBH, TreeHeight, alpha, beta)) %>%
+    mutate(CrownDiameter = advancedloggingparameters$CrownDiameterAllometry(DBH, TreeHeight, alpha, beta)) %>%
     select(-aCoef, -bCoef, -alpha, -beta, -Zone)
 
 

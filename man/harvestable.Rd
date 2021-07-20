@@ -10,29 +10,37 @@ harvestable(
   specieslax = FALSE,
   DEM = DemParacou,
   plotslope = PlotSlope,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
-\item{inventory}{(data.frame)}
+\item{inventory}{your inventory (see the inputs formats and metadata in the
+\code{\link{vignette}}) (data.frame)}
 
-\item{diversification}{(logical)}
+\item{diversification}{Taking of other species in addition to the main
+commercial species (2 levels of commercial species in the
+\code{\link{SpeciesCriteria}} table) (logical)}
 
-\item{specieslax}{= FALSE by default (logical)}
+\item{specieslax}{Allow diversification if stand is too poor, = FALSE by
+default (logical)}
 
-\item{DEM}{(RasterLayer)}
+\item{DEM}{Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
+(default: \code{\link{DemParacou}}) (RasterLayer)}
 
-\item{plotslope}{(RasterLayer)}
+\item{plotslope}{Slopes (in radians) of the inventoried plot (with a
+neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 
-\item{otherloggingparameters}{(list)}
+\item{advancedloggingparameters}{Other parameters of the logging simulator
+\code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
-Your inventory with the exploitability criteria, and if they are validated for each of the trees.
-The function returns the harvestable volume too, in the plot for these criteria.
+Your inventory with the exploitability criteria, and if they are
+validated for each of the trees. The function returns the harvestable volume
+too, in the plot for these criteria.
 }
 \description{
-The function tells you the harvestable volume in the plot,
-and which trees are harvestable according to your harvestability criteria
+The function tells you the harvestable volume in the plot, and
+which trees are harvestable according to your harvestability criteria
 }
 \examples{
 
@@ -41,6 +49,11 @@ data(DemParacou)
 
 inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
 test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
-DEM = DemParacou, plotslope = PlotSlope,otherloggingparameters = loggingparameters())
+DEM = DemParacou, plotslope = PlotSlope,advancedloggingparameters = loggingparameters())
 
+}
+\seealso{
+\code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
+\code{\link{DemParacou}}, \code{\link{PlotSlope}},
+\code{\link{loggingparameters}}
 }

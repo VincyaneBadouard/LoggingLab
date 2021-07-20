@@ -3,7 +3,7 @@
 #' @param inventory (data.frame)
 #' @param fuel no  exploitation = "0", damage exploitation in fuelwood = "1",
 #' exploitation of hollow trees and damage in fuelwood = "2"
-#' @param otherloggingparameters (list)
+#' @param advancedloggingparameters (list)
 #'
 #' @return A list with the logged volume (LoggedVolume)
 #' and when fuel = "2", the logged volume without the hollow trees (NoHollowLoggedVolume),
@@ -19,8 +19,8 @@
 #' inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 #'
 #' inventory <- treeselection(inventory, SpeciesCriteria,
-#' type ="manual", fuel = "2", objective = 20, diversification = TRUE, specieslax = FALSE,
-#' objectivelax = FALSE, otherloggingparameters = loggingparameters())$inventory
+#' scenario ="manual", fuel = "2", objective = 20, diversification = TRUE, specieslax = FALSE,
+#' objectivelax = FALSE, advancedloggingparameters = loggingparameters())$inventory
 #'
 #' inventory <- secondtrailsopening()$inventory
 #'
@@ -28,13 +28,13 @@
 #'
 #' inventory <- adjustedsecondtrails()$inventory
 #'
-#' timberharvestedvolume(inventory, fuel = "2", otherloggingparameters = loggingparameters())
+#' timberharvestedvolume(inventory, fuel = "2", advancedloggingparameters = loggingparameters())
 #' }
 #'
 timberharvestedvolume <- function(
   inventory,
   fuel,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 ){
 
   # Global variables
@@ -75,7 +75,7 @@ timberharvestedvolume <- function(
 
     NoHollowLoggedVolume <- sum(LoggedTable$TreeHarvestableVolume)
     LoggedVolume <- sum(NoHollowLoggedVolume +
-                          1-(otherloggingparameters$TreeHollowPartForFuel)*(HollowTable$TreeHarvestableVolume))
+                          1-(advancedloggingparameters$TreeHollowPartForFuel)*(HollowTable$TreeHarvestableVolume))
 
     outputs <- list(LoggedVolume = LoggedVolume,
                     NoHollowLoggedVolume = NoHollowLoggedVolume
