@@ -19,7 +19,7 @@ treeselection(
 )
 }
 \arguments{
-\item{inventory}{(data.frame)}
+\item{inventory}{your inventory (see the inputs formats and metadata in the \code{\link{vignette}}) (data.frame)}
 
 \item{objective}{Objective volume per hectare (numeric)}
 
@@ -39,11 +39,11 @@ default (logical)}
 \item{objectivelax}{Allow exploitation in case of non-achievement of the
 objective volume (if stand too poor), = FALSE by default (logical)}
 
-\item{DEM}{Digital terrain model (DTM) of the inventoried plot (LiDAR or
-SRTM)(RasterLayer)}
+\item{DEM}{Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
+(default: \code{\link{DemParacou}}) (RasterLayer)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
-neighbourhood of 8 cells) (RasterLayer)}
+neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the
@@ -53,13 +53,16 @@ same format of \code{\link{SpeciesCriteria}} (data.frame)}
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
-The new inventory with:
-the commercial name (ONFName), the commercial level (Commercial), the "MinFD", "UpMinFD", "MaxFD",
-"DistCrit", "Slope", "SlopeCrit", "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba", "ProbedHollow"
-
-the objective volume with or without a bonus (if
-hollow trees exploitation), and the 6 set of specialised points:
-harvestable, selected, future and reserve, hollow and energy wood trees
+A list with:
+\itemize{
+\item your inventory with: "DistCrit", "Slope", "SlopeCrit",
+"LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
+"ProbedHollow" new columns (see the outputs metadata in the \code{\link{vignette}}).
+\item the objective volume with or without a bonus (if hollow trees
+exploitation)
+\item 6 sets of spatial points: harvestable, selected, future and
+reserve, hollow and energy wood trees
+}
 }
 \description{
 treeselection
@@ -80,5 +83,6 @@ otherloggingparameters = loggingparameters()) #  MainTrail
 
 }
 \seealso{
-\code{\link{SpeciesCriteria}}
+\code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}}, \code{\link{DemParacou}},
+\code{\link{PlotSlope}}, \code{\link{loggingparameters}}
 }

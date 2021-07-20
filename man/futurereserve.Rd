@@ -11,14 +11,17 @@ futurereserve(
 )
 }
 \arguments{
-\item{inventory}{(data.frame)}
+\item{inventory}{your inventory (see the inputs formats and metadata in the \code{\link{vignette}}) (data.frame)}
 
-\item{speciescriteria}{(data.frame)}
+\item{speciescriteria}{Table of species exploitability criteria : species
+names, economic interest level, minimum and maximum felling diameter, in the
+same format of \code{\link{SpeciesCriteria}} (data.frame)}
 
-\item{otherloggingparameters}{(list)}
+\item{otherloggingparameters}{Other parameters of the logging simulator
+\code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
-A FAIRE
+your inventory with selected future and reserve trees, for your logging criteria (\code{\link{SpeciesCriteria}})
 }
 \description{
 futurereserve
@@ -46,4 +49,7 @@ otherloggingparameters = loggingparameters(), VO = 30,
 
 futurereserve(inventory)
 
+}
+\seealso{
+\code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}}, \code{\link{loggingparameters}}
 }

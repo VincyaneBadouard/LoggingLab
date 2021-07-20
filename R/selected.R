@@ -1,24 +1,50 @@
 #' selected
 #'
-#' @param inventory (data.frame)
-#' @param type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
-#'   "RIL3fuelhollow" or "manual"(character)
-#' @param fuel no  exploitation = "0" (default), damage exploitation in fuelwood
-#'   = "1", exploitation of hollow trees and damage in fuelwood = "2"
-#' @param diversification (logical)
-#' @param specieslax = FALSE by default (logical)
-#' @param objectivelax = FALSE by default (logical)
-#' @param DEM (RasterLayer)
-#' @param otherloggingparameters (list)
-#' @param VO (numeric value)
-#' @param HVinit (numeric value)
+#' @param inventory your inventory (see the inputs formats and metadata in the
+#'   \code{\link{vignette}}) (data.frame)
 #'
-#' @return A FAIRE
+#' @param type Type of logging: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+#'   \code{\link{vignette}})
+#'
+#' @param fuel Fuel wood exploitation: no exploitation = "0", damage
+#'   exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+#'   fuelwood = "2"
+#'
+#' @param diversification Taking of other species in addition to the main
+#'   commercial species (2 levels of commercial species in the
+#'   \code{\link{SpeciesCriteria}} table) (logical)
+#'
+#' @param specieslax Allow diversification if stand is too poor, = FALSE by
+#'   default (logical)
+#'
+#' @param objectivelax Allow exploitation in case of non-achievement of the
+#'   objective volume (if stand too poor), = FALSE by default (logical)
+#'
+#' @param DEM Digital terrain model (DTM) of the inventoried plot (LiDAR or
+#'   SRTM) (default: \code{\link{DemParacou}}) (RasterLayer)
+#'
+#' @param otherloggingparameters Other parameters of the logging simulator
+#'   \code{\link{loggingparameters}} (list) MainTrail (multiline)
+#'
+#' @param VO The objective volume with or without a bonus (if hollow trees
+#'   exploitation)(numeric value) (see the \code{\link{loggingparameters}})
+#'
+#' @param HVinit the harvestable volume in the plot for your criteria
+#'   (\code{\link{SpeciesCriteria}}) (numeric value)
+#'
+#' @return Your inventory with the trees selected for harvesting (depending on
+#'   the logging type chosen), and 2 sets of spatial points: (HollowTrees and
+#'   EnergywoodTrees)
+#'
+#' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
+#'   \code{\link{DemParacou}}, \code{\link{loggingparameters}}
 #'
 #' @export
 #'
 #' @importFrom sp coordinates proj4string
 #' @importFrom raster crs
+#'
 #'
 #' @examples
 #'
@@ -303,11 +329,11 @@ selected <- function(
     HollowTreesPoints <- inventory %>%
       filter(ProbedHollow == "1")
 
-      sp::coordinates(HollowTreesPoints) <- ~ Xutm + Yutm
+    sp::coordinates(HollowTreesPoints) <- ~ Xutm + Yutm
 
-      sp::proj4string(HollowTreesPoints) <- raster::crs(DEM)
+    sp::proj4string(HollowTreesPoints) <- raster::crs(DEM)
 
-      HollowTreesPoints <- st_as_sf(as(HollowTreesPoints,"SpatialPoints"))
+    HollowTreesPoints <- st_as_sf(as(HollowTreesPoints,"SpatialPoints"))
 
     # OUTPUTS list
     selectedOutputs <- list(inventory = inventory,

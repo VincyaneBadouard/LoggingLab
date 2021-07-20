@@ -46,9 +46,11 @@ loggingparameters(
 
 \item{MaxAreaSlope}{Maximum area slope. Default = 27, in \% (double)}
 
-\item{MaxTrailCenterlineSlope}{Maximum main&2nd trail centerline slope. Default = 22, in \% (double)}
+\item{MaxTrailCenterlineSlope}{Maximum main&2nd trail centerline slope.
+Default = 22, in \% (double)}
 
-\item{MaxTrailCrossSlope}{Maximum main&2nd trail cross slope. Default = 4, in \% (double)}
+\item{MaxTrailCrossSlope}{Maximum main&2nd trail cross slope. Default = 4, in
+\% (double)}
 
 \item{GrappleMaxslope}{Grapple maximum slope. Default = 20, in \% (double)}
 
@@ -56,9 +58,11 @@ loggingparameters(
 
 \item{PlateauMaxSlope}{Plateau maximum slope. Default = 5, in \% (double)}
 
-\item{SlopeDistance}{Distance to compute slope. Default = 6, in m (3m for each side) (double)}
+\item{SlopeDistance}{Distance to compute slope. Default = 6, in m (3m for
+each side) (double)}
 
-\item{WaterSourcesBufferZone}{Water sources buffer zone. Default = 30, in m (double)}
+\item{WaterSourcesBufferZone}{Water sources buffer zone. Default = 30, in m
+(double)}
 
 \item{MinMainTrailWidth}{Minimum main trail width. Default = 5, in m (double)}
 
@@ -74,33 +78,44 @@ loggingparameters(
 
 \item{GrappleLength}{Grapple. Default = 6, in m (double)}
 
-\item{IsolateTreeMinDistance}{Isolate tree minimum distance. Default = 100, in m (double)}
+\item{IsolateTreeMinDistance}{Isolate tree minimum distance. Default = 100,
+in m (double)}
 
-\item{FutureTreesMinDiameter}{Future trees minimum diameter. Default = 35, in cm (double)}
+\item{FutureTreesMinDiameter}{Future trees minimum diameter. Default = 35, in
+cm (double)}
 
-\item{TreefallSuccessProportion}{TreefallSuccess proportion. Default = 0.6, (double)}
+\item{TreefallSuccessProportion}{TreefallSuccess proportion. Default = 0.6,
+(double)}
 
-\item{MinTreefallOrientation}{Minimum treefall orientation. Default = 30, in degree (double)}
+\item{MinTreefallOrientation}{Minimum treefall orientation. Default = 30, in
+degree (double)}
 
-\item{MaxTreefallOrientation}{Maximum treefall orientation. Default = 45, in degree (double)}
+\item{MaxTreefallOrientation}{Maximum treefall orientation. Default = 45, in
+degree (double)}
 
-\item{TreeHollowPartForFuel}{Part taken from hollow trees for fuel exploitation. Default = 1/3 (double)}
+\item{TreeHollowPartForFuel}{Part taken from hollow trees for fuel
+exploitation. Default = 1/3 (double)}
 
-\item{Purge}{Purge. Default = 0.14, in m^3 of fuelwood/m^3 of logged trees (double)}
+\item{Purge}{Purge. Default = 0.14, in m^3 of fuelwood/m^3 of logged trees
+(double)}
 
 \item{MaxTrailDensity}{Maximum TrailDensity. Default = 200, in m/ha (double)}
 
-\item{MaxLandingArea}{Maximum landing area. Default = 1500) in square meters (double)}
+\item{MaxLandingArea}{Maximum landing area. Default = 1500) in square meters
+(double)}
 
 \item{TreeHarvestableVolumeAllometry}{(function)}
 
 \item{TrunkHeightAllometry}{(function)}
 
-\item{TreeHeightAllometry}{log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344 log(DBH)^2 (function)}
+\item{TreeHeightAllometry}{log(H) = 0.07359191 + 1.34241216 log(DBH) +
+-0.12282344 log(DBH)^2 (function)}
 
-\item{CrownDiameterAllometry}{ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977 (ref)(function)}
+\item{CrownDiameterAllometry}{ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
+and mean σ^2 = 0.0295966977 (ref)(function)}
 
-\item{RottenModel}{Estimates the probability of being probed hollow (default: 1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)}
+\item{RottenModel}{Estimates the probability of being probed hollow (default:
+1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)}
 }
 \value{
 A named list of 30 objects.
@@ -110,4 +125,5 @@ Other parameters of the logging simulator
 }
 \examples{
 loggingparameters(MinDBHValue = 5)
+
 }

@@ -1,41 +1,50 @@
 #'treeselection
 #'
-#'@param inventory (data.frame)
+#'@param inventory your inventory (see the inputs formats and metadata in the \code{\link{vignette}}) (data.frame)
+#'
 #'@param objective Objective volume per hectare (numeric)
 #'
 #'@param type Type of logging: "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
 #'  "RIL3fuelhollow" or "manual"(character) (see the \code{\link{vignette}})
+#'
 #'@param fuel Fuel wood exploitation: no exploitation = "0", damage exploitation
 #'  in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"
+#'
 #'@param diversification Taking of other species in addition to the main
 #'  commercial species (2 levels of commercial species in the
 #'  \code{\link{SpeciesCriteria}} table) (logical)
+#'
 #'@param specieslax Allow diversification if stand is too poor, = FALSE by
 #'  default (logical)
+#'
 #'@param objectivelax Allow exploitation in case of non-achievement of the
 #'  objective volume (if stand too poor), = FALSE by default (logical)
-#'@param DEM Digital terrain model (DTM) of the inventoried plot (LiDAR or
-#'  SRTM)(RasterLayer)
+#'
+#'@param DEM Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
+#'  (default: \code{\link{DemParacou}}) (RasterLayer)
+#'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
-#'  neighbourhood of 8 cells) (RasterLayer)
+#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
+#'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the
 #'  same format of \code{\link{SpeciesCriteria}} (data.frame)
+#'
 #'@param otherloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
-#'@return The new inventory with:
-#'the commercial name (ONFName), the commercial level (Commercial), the "MinFD", "UpMinFD", "MaxFD",
-#'"DistCrit", "Slope", "SlopeCrit", "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba", "ProbedHollow"
+#'@return A list with:
+#'  - your inventory with: "DistCrit", "Slope", "SlopeCrit",
+#'  "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
+#'  "ProbedHollow" new columns (see the outputs metadata in the \code{\link{vignette}}).
+#'  - the objective volume with or without a bonus (if hollow trees
+#'  exploitation)
+#'  - 6 sets of spatial points: harvestable, selected, future and
+#'  reserve, hollow and energy wood trees
 #'
+#'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}}, \code{\link{DemParacou}},
+#'  \code{\link{PlotSlope}}, \code{\link{loggingparameters}}
 #'
-#'
-#'
-#'
-#'
-#'the objective volume with or without a bonus (if
-#'  hollow trees exploitation), and the 6 set of specialised points:
-#'  harvestable, selected, future and reserve, hollow and energy wood trees
 #'
 #'@export
 #'
@@ -46,7 +55,6 @@
 #'@importFrom topoDistance topoDist
 #'@importFrom methods as
 #'
-#'@seealso  \code{\link{SpeciesCriteria}}
 #'
 #' @examples
 #'

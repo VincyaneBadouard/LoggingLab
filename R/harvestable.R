@@ -1,25 +1,42 @@
-#' harvestable
+#'harvestable
 #'
-#' @description The function tells you the harvestable volume in the plot,
-#'and which trees are harvestable according to your harvestability criteria
+#'@description The function tells you the harvestable volume in the plot, and
+#'  which trees are harvestable according to your harvestability criteria
 #'
-#' @param inventory (data.frame)
-#' @param diversification (logical)
-#' @param specieslax = FALSE by default (logical)
-#' @param DEM (RasterLayer)
-#' @param plotslope (RasterLayer)
-#' @param otherloggingparameters (list)
+#'@param inventory your inventory (see the inputs formats and metadata in the
+#'  \code{\link{vignette}}) (data.frame)
+#'@param diversification Taking of other species in addition to the main
+#'  commercial species (2 levels of commercial species in the
+#'  \code{\link{SpeciesCriteria}} table) (logical)
 #'
-#' @return Your inventory with the exploitability criteria, and if they are validated for each of the trees.
-#' The function returns the harvestable volume too, in the plot for these criteria.
+#'@param specieslax Allow diversification if stand is too poor, = FALSE by
+#'  default (logical)
 #'
-#' @export
+#'@param DEM Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
+#'  (default: \code{\link{DemParacou}}) (RasterLayer)
 #'
-#' @import sf
-#' @importFrom sp coordinates proj4string
-#' @importFrom topoDistance topoDist
-#' @importFrom raster crs extract
-#' @importFrom  utils setTxtProgressBar txtProgressBar
+#'@param plotslope Slopes (in radians) of the inventoried plot (with a
+#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
+#'
+#'@param otherloggingparameters Other parameters of the logging simulator
+#'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
+#'
+#'@return Your inventory with the exploitability criteria, and if they are
+#'  validated for each of the trees. The function returns the harvestable volume
+#'  too, in the plot for these criteria.
+#'
+#' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
+#'  \code{\link{DemParacou}}, \code{\link{PlotSlope}},
+#'  \code{\link{loggingparameters}}
+#'
+#'@export
+#'
+#'@import sf
+#'@importFrom sp coordinates proj4string
+#'@importFrom topoDistance topoDist
+#'@importFrom raster crs extract
+#'@importFrom  utils setTxtProgressBar txtProgressBar
+#'
 #'
 #' @examples
 #'
