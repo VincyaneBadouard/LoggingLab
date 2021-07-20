@@ -5,8 +5,8 @@
 \title{scenariosparameters}
 \usage{
 scenariosparameters(
+  scenario,
   objective = NULL,
-  type,
   fuel = NULL,
   diversification = NULL,
   winching = NULL,
@@ -14,19 +14,23 @@ scenariosparameters(
 )
 }
 \arguments{
-\item{objective}{Objective volume per hectare (numeric)}
+\item{scenario}{"RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow"
+or "manual"(character)}
 
-\item{type}{"RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"(character)}
+\item{objective}{Objective volume per hectare (numeric)}
 
 \item{fuel}{no  exploitation = "0", damage exploitation in fuelwood = "1",
 exploitation of hollow trees and damage in fuelwood = "2"}
 
-\item{diversification}{taking of other species in addition to the main commercial species (logical)}
+\item{diversification}{taking of other species in addition to the main
+commercial species (logical)}
 
-\item{winching}{no cable or grapple = "0", only cable = "1", grapple + cable = "2"}
+\item{winching}{no cable or grapple = "0", only cable = "1", grapple + cable =
+"2"}
 
-\item{directionalfelling}{directional felling = "0" (absent),
-"1" (only to avoid damage to future and reserve trees), "2" (avoid damage to future and reserve trees + track orientation)}
+\item{directionalfelling}{directional felling = "0" (absent), "1" (only to
+avoid damage to future and reserve trees), "2" (avoid damage to future and
+reserve trees + track orientation)}
 }
 \value{
 A named list of 5 objects.
@@ -35,7 +39,7 @@ A named list of 5 objects.
 scenariosparameters
 }
 \examples{
-scenariosparameters(objective = NULL, type = "RIL1",
+scenariosparameters(scenario = "RIL1", objective = NULL,
 fuel = NULL, diversification = NULL, winching = NULL, directionalfelling = NULL)
 
 }

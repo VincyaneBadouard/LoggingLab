@@ -1,10 +1,17 @@
 #' futurereserve
 #'
-#' @param inventory (data.frame)
-#' @param speciescriteria (data.frame)
-#' @param otherloggingparameters (list)
+#' @param inventory your inventory (see the inputs formats and metadata in the \code{\link{vignette}}) (data.frame)
 #'
-#' @return A FAIRE
+#' @param speciescriteria Table of species exploitability criteria : species
+#'  names, economic interest level, minimum and maximum felling diameter, in the
+#'  same format of \code{\link{SpeciesCriteria}} (data.frame)
+#'
+#' @param advancedloggingparameters Other parameters of the logging simulator
+#'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
+#'
+#' @return your inventory with selected future and reserve trees, for your logging criteria (\code{\link{SpeciesCriteria}})
+#'
+#' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}}, \code{\link{loggingparameters}}
 #'
 #' @export
 #'
@@ -19,14 +26,14 @@
 #' harvestableOutputs <- harvestable(inventory, diversification = TRUE,
 #'  specieslax = FALSE,
 #' DEM = DemParacou, plotslope = PlotSlope,
-#' otherloggingparameters = loggingparameters())
+#' advancedloggingparameters = loggingparameters())
 #'
 #' inventory <- harvestableOutputs$inventory
 #' HVinit <- harvestableOutputs$HVinit
 #'
-#' inventory <- selected(inventory, type = "manual", fuel = "0",
+#' inventory <- selected(inventory, scenario = "manual", fuel = "0",
 #' diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-#' otherloggingparameters = loggingparameters(), VO = 30,
+#' advancedloggingparameters = loggingparameters(), VO = 30,
 #'  HVinit = HVinit)$inventory
 #'
 #' futurereserve(inventory)
@@ -34,7 +41,7 @@
 futurereserve <- function(
   inventory,
   speciescriteria = SpeciesCriteria,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 
 ){
 
@@ -43,8 +50,8 @@ futurereserve <- function(
   # if(!any(unlist(lapply(list(inventory, speciescriteria), inherits, "data.frame"))))
   #   stop("The 'inventory' and 'speciescriteria' arguments of the 'futurereserve' function must be data.frame")
   #
-  # if(!inherits(otherloggingparameters, "list"))
-  #   stop("The 'otherloggingparameters' argument of the 'futurereserve' function must be a list")
+  # if(!inherits(advancedloggingparameters, "list"))
+  #   stop("The 'advancedloggingparameters' argument of the 'futurereserve' function must be a list")
 
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
@@ -69,7 +76,7 @@ futurereserve <- function(
 
   inventory <- inventory %>%
     mutate(LoggingStatus = ifelse(Commercial == "1" &
-                                    (DBH >= otherloggingparameters$FutureTreesMinDiameter & DBH < MinFD),
+                                    (DBH >= advancedloggingparameters$FutureTreesMinDiameter & DBH < MinFD),
                                   "future", LoggingStatus))
 
   #Reserve

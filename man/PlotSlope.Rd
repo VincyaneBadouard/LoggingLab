@@ -11,6 +11,6 @@ SpatialPolygonsDataFrame
 PlotSlope
 }
 \description{
-Slopes (radians) of the plot 6 of Paracou (with a neighbourhood of 8 cells) (French Guiana)
+Slopes (in radians) of the plot 6 of Paracou (with a neighbourhood of 8 cells) (French Guiana)
 }
 \keyword{datasets}

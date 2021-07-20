@@ -12,7 +12,7 @@ Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and compute it
 inventory = Paracou6_2016
 crowndiameterparameters = ParamCrownDiameterAllometry
 volumeparameters = ForestZoneVolumeParametersTable
-otherloggingparameters = loggingparameters()
+advancedloggingparameters = loggingparameters()
 
 
 spParamCrownDiameter <- crowndiameterparameters %>% #parameters at species scale
@@ -32,13 +32,13 @@ prout <- inventory %>%
 
   # TreeHarvestableVolume (m3)
   left_join(volumeparameters) %>%
-  mutate(TreeHarvestableVolume = otherloggingparameters$TreeHarvestableVolumeAllometry(aCoef, bCoef, DBH)) %>%
+  mutate(TreeHarvestableVolume = advancedloggingparameters$TreeHarvestableVolumeAllometry(aCoef, bCoef, DBH)) %>%
 
   # TrunkHeight (m)
-  mutate(TrunkHeight = otherloggingparameters$TrunkHeightAllometry(DBH, TreeHarvestableVolume)) %>%
+  mutate(TrunkHeight = advancedloggingparameters$TrunkHeightAllometry(DBH, TreeHarvestableVolume)) %>%
 
   # TreeHeight (m)
-  mutate(TreeHeight = otherloggingparameters$TreeHeightAllometry(DBH)) %>%
+  mutate(TreeHeight = advancedloggingparameters$TreeHeightAllometry(DBH)) %>%
 
 
   # CrownHeight (m)
@@ -70,7 +70,7 @@ unite(Genus, Species, col = "ScientificName", sep = "_", remove = F) %>% # creat
   mutate(Taxo = ifelse(is.na(Taxo), "mean", Taxo)) %>% #if species,genus&family parameters are absent, take parameters mean
   select(-Taxo.species, -Taxo.genus, -Taxo.family) %>% #remove obsolete columns
   # compute the crown diameter
-  mutate(CrownDiameter = otherloggingparameters$CrownDiameterAllometry(DBH, TreeHeight, alpha, beta))
+  mutate(CrownDiameter = advancedloggingparameters$CrownDiameterAllometry(DBH, TreeHeight, alpha, beta))
 
 
 return(inventory)

@@ -18,17 +18,17 @@ inventory + polygone "Shadow" + vecteurs "TreefallSuccess", "TreefallFailure", "
 
 inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 
-inventory <- treeselection(inventory, SpeciesCriteria, type = "manual", fuel = "0",objective = 20, diversification = TRUE, specieslax = FALSE, objectivelax = FALSE, otherloggingparameters = loggingparameters())$inventory
+inventory <- treeselection(inventory, SpeciesCriteria, scenario = "manual", fuel = "0",objective = 20, diversification = TRUE, specieslax = FALSE, objectivelax = FALSE, advancedloggingparameters = loggingparameters())$inventory
 
 speciescriteria = SpeciesCriteria
-type = "manual"
+scenario = "manual"
 fuel = "2"
 objective = 20
 diversification = TRUE
 directionalfelling = "2"
 specieslax = FALSE
 objectivelax = FALSE
-otherloggingparameters = loggingparameters()
+advancedloggingparameters = loggingparameters()
 # MainTrail
 
 ```
@@ -39,7 +39,7 @@ Accessible = Selected
 
 if (fuel == "0" && directionalfelling != "1"){
   inventory <- inventory %>% 
-    mutate(TreeFellingOrientationSuccess = ifelse(Accessible == "1", sample(c(1,0), size = 1, replace = F, prob = c(otherloggingparameters$TreefallSuccessProportion, 1-otherloggingparameters$TreefallSuccessProportion)), NA)) # Accessible = linked by 2ndtrails
+    mutate(TreeFellingOrientationSuccess = ifelse(Accessible == "1", sample(c(1,0), size = 1, replace = F, prob = c(advancedloggingparameters$TreefallSuccessProportion, 1-advancedloggingparameters$TreefallSuccessProportion)), NA)) # Accessible = linked by 2ndtrails
   
   #Tree coordinates 
   if (any(inventory$TreeFellingOrientationSuccess == "1", na.rm = TRUE)) {
@@ -65,7 +65,7 @@ if (fuel == "0" && directionalfelling != "1"){
 if (fuel =="1") {
   
   inventory <- inventory %>% 
-    mutate(TreeFellingOrientationSuccess = ifelse(Selected == "1", sample(c(1,0), size = 1, replace = F, prob = c(otherloggingparameters$TreefallSuccessProportion, 1-otherloggingparameters$TreefallSuccessProportion)), NA)) # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
+    mutate(TreeFellingOrientationSuccess = ifelse(Selected == "1", sample(c(1,0), size = 1, replace = F, prob = c(advancedloggingparameters$TreefallSuccessProportion, 1-advancedloggingparameters$TreefallSuccessProportion)), NA)) # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
   
   #Tree coordinates 
   if (any(inventory$TreeFellingOrientationSuccess == "1", na.rm = TRUE)) {
@@ -91,7 +91,7 @@ if (fuel =="1") {
 if (fuel =="2") {
   
   inventory <- inventory %>% 
-    mutate(TreeFellingOrientationSuccess = ifelse(Selected == "1"| ProbedHollow == "1", sample(c(1,0), size = 1, replace = F, prob = c(otherloggingparameters$TreefallSuccessProportion, 1-otherloggingparameters$TreefallSuccessProportion)), NA)) # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
+    mutate(TreeFellingOrientationSuccess = ifelse(Selected == "1"| ProbedHollow == "1", sample(c(1,0), size = 1, replace = F, prob = c(advancedloggingparameters$TreefallSuccessProportion, 1-advancedloggingparameters$TreefallSuccessProportion)), NA)) # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
   
   #Tree coordinates 
   if (any(inventory$TreeFellingOrientationSuccess == "1", na.rm = TRUE)) {

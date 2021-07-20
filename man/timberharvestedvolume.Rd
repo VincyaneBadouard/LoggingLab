@@ -7,7 +7,7 @@
 timberharvestedvolume(
   inventory,
   fuel,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
@@ -16,7 +16,7 @@ timberharvestedvolume(
 \item{fuel}{no  exploitation = "0", damage exploitation in fuelwood = "1",
 exploitation of hollow trees and damage in fuelwood = "2"}
 
-\item{otherloggingparameters}{(list)}
+\item{advancedloggingparameters}{(list)}
 }
 \value{
 A list with the logged volume (LoggedVolume)
@@ -34,8 +34,8 @@ data(Paracou6_2016)
 inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 
 inventory <- treeselection(inventory, SpeciesCriteria,
-type ="manual", fuel = "2", objective = 20, diversification = TRUE, specieslax = FALSE,
-objectivelax = FALSE, otherloggingparameters = loggingparameters())$inventory
+scenario ="manual", fuel = "2", objective = 20, diversification = TRUE, specieslax = FALSE,
+objectivelax = FALSE, advancedloggingparameters = loggingparameters())$inventory
 
 inventory <- secondtrailsopening()$inventory
 
@@ -43,7 +43,7 @@ inventory <- treefelling()$inventory
 
 inventory <- adjustedsecondtrails()$inventory
 
-timberharvestedvolume(inventory, fuel = "2", otherloggingparameters = loggingparameters())
+timberharvestedvolume(inventory, fuel = "2", advancedloggingparameters = loggingparameters())
 }
 
 }

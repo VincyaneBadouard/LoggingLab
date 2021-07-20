@@ -10,9 +10,9 @@ test_that("addtreedim", {
 
   expect_error(addtreedim(MatrixInventory, crowndiameterparameters, volumeparameters), regexp = "The function arguments must be data.frames")
 
-  ## check the class argument for "otherloggingparameters"
+  ## check the class argument for "advancedloggingparameters"
   Matrixloggingparameters <- as.matrix(loggingparameters())
-  expect_error(addtreedim(Paracou6_2016, otherloggingparameters = Matrixloggingparameters), regexp = "The 'otherloggingparameters' argument of the 'addtreedim' function must be a list")
+  expect_error(addtreedim(Paracou6_2016, advancedloggingparameters = Matrixloggingparameters), regexp = "The 'advancedloggingparameters' argument of the 'addtreedim' function must be a list")
 
   # Test data preparation
   testinventory <- Paracou6_2016 %>% # compute the new inventory

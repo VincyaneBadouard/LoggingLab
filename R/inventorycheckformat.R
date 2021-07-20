@@ -1,6 +1,6 @@
 #' Check & format your inventory data for the package "Maria"
 #'
-#' @param inventory (dataframe) Your inventory data or the "Paracou6_2016" test data#'
+#' @param inventory Your inventory data or the "Paracou6_2016" test data#' (dataframe)
 #' @return Stop the function if the format is not the one required.
 #' @export
 #'
@@ -22,7 +22,8 @@ inventorycheckformat <- function(
     stop("inventory must be a data.frame")
 
   # Variables presence check
-  # (Plot, CensusYear, idTree, Family, Genus, Species, CircCorr, CodeAlive, CommercialSp, UTMZone, Lat, Lon, VernName, Xfield, Yfield, Xutm, Yutm)
+  # (Plot, CensusYear, idTree, Family, Genus, Species, CircCorr, CodeAlive,
+  # CommercialSp, UTMZone, Lat, Lon, VernName, Xfield, Yfield, Xutm, Yutm)
   if(!("Plot" %in% names(inventory))) {
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop, "Plot variable is not found.")
