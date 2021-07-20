@@ -1,30 +1,44 @@
-#' scenariosparameters
+#'scenariosparameters
 #'
-#' @param objective Objective volume per hectare (numeric)
-#' @param type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"(character)
-#' @param fuel no  exploitation = "0", damage exploitation in fuelwood = "1",
-#' exploitation of hollow trees and damage in fuelwood = "2"
-#' @param diversification  taking of other species in addition to the main commercial species (logical)
-#' @param winching no cable or grapple = "0", only cable = "1", grapple + cable = "2"
-#' @param directionalfelling directional felling = "0" (absent),
-#' "1" (only to avoid damage to future and reserve trees), "2" (avoid damage to future and reserve trees + track orientation)
+#'@param type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow"
+#'  or "manual"(character)
+#'@param objective Objective volume per hectare (numeric)
+#'@param fuel no  exploitation = "0", damage exploitation in fuelwood = "1",
+#'  exploitation of hollow trees and damage in fuelwood = "2"
+#'@param diversification  taking of other species in addition to the main
+#'  commercial species (logical)
+#'@param winching no cable or grapple = "0", only cable = "1", grapple + cable =
+#'  "2"
+#'@param directionalfelling directional felling = "0" (absent), "1" (only to
+#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
+#'  reserve trees + track orientation)
 #'
-#' @return A named list of 5 objects.
-#' @export
+#'@return A named list of 5 objects.
+#'@export
 #'
 #' @examples
 #'scenariosparameters(objective = NULL, type = "RIL1",
 #'fuel = NULL, diversification = NULL, winching = NULL, directionalfelling = NULL)
 #'
 scenariosparameters <- function(
-  objective = NULL,
   type,
+  objective = NULL,
   fuel = NULL,
   diversification = NULL,
   winching = NULL,
   directionalfelling = NULL
-
 ){
+  # check inputs
+  if(!(type %in% c("RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow", "manual")))
+    stop(paste('type should be in "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"; not',
+               type))
+  if(!(class(objective) %in% c("numeric", "NULL")))
+    stop("objective should be numeric or null.")
+  if(!all(unlist(lapply(list(fuel, directionalfelling, winching), class)) %in% c("character", "NULL")))
+    stop("fuel, winching, and directionalfelling should be character or null.")
+  if(!(class(diversification) %in% c("logical", "NULL")))
+    stop("diversification should be logical or null.")
+
   # Objective volume
   if (is.null(objective)){
     if (type == "RIL1")           objective <- 25
@@ -33,8 +47,8 @@ scenariosparameters <- function(
     if (type == "RIL3")           objective <- 30
     if (type == "RIL3fuel")       objective <- 30
     if (type == "RIL3fuelhollow") objective <- 30
-
   }
+
 # Fuelwood exploitation
   if (is.null(fuel)){
     if (type == "RIL1")           fuel <- "0"
@@ -43,8 +57,8 @@ scenariosparameters <- function(
     if (type == "RIL3")           fuel <- "0"
     if (type == "RIL3fuel")       fuel <- "1"
     if (type == "RIL3fuelhollow") fuel <- "2"
-
   }
+
 #
   if (is.null(diversification)){
     if (type == "RIL1")           diversification <- FALSE
