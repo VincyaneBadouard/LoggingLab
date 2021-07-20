@@ -2,13 +2,17 @@
 #'
 #' @param MinDBHValue Mimimum DBH value. Default = 10, in cm (double)
 #' @param MaxAreaSlope Maximum area slope. Default = 27, in % (double)
-#' @param MaxTrailCenterlineSlope Maximum main&2nd trail centerline slope. Default = 22, in % (double)
-#' @param MaxTrailCrossSlope Maximum main&2nd trail cross slope. Default = 4, in % (double)
+#' @param MaxTrailCenterlineSlope Maximum main&2nd trail centerline slope.
+#'   Default = 22, in % (double)
+#' @param MaxTrailCrossSlope Maximum main&2nd trail cross slope. Default = 4, in
+#'   % (double)
 #' @param GrappleMaxslope Grapple maximum slope. Default = 20, in % (double)
 #' @param TreeMaxSlope Trees slope. Default = 22, in % (double)
 #' @param PlateauMaxSlope Plateau maximum slope. Default = 5, in % (double)
-#' @param SlopeDistance Distance to compute slope. Default = 6, in m (3m for each side) (double)
-#' @param WaterSourcesBufferZone Water sources buffer zone. Default = 30, in m (double)
+#' @param SlopeDistance Distance to compute slope. Default = 6, in m (3m for
+#'   each side) (double)
+#' @param WaterSourcesBufferZone Water sources buffer zone. Default = 30, in m
+#'   (double)
 #' @param MinMainTrailWidth Minimum main trail width. Default = 5, in m (double)
 #' @param MaxMainTrailWidth Maximum main trail width. Default = 6, in m (double)
 #' @param ScndTrailWidth 2nd trail width. Default = 4, in m (double)
@@ -16,28 +20,41 @@
 #' @param ObjectiveBonus Objective bonus. Default = 30, in % (20;30%) (double)
 #' @param CableLength Cable. Default = 40, in m (double)
 #' @param GrappleLength Grapple. Default = 6, in m (double)
-#' @param IsolateTreeMinDistance Isolate tree minimum distance. Default = 100, in m (double)
-#' @param FutureTreesMinDiameter Future trees minimum diameter. Default = 35, in cm (double)
-#' @param TreefallSuccessProportion TreefallSuccess proportion. Default = 0.6, (double)
-#' @param MinTreefallOrientation Minimum treefall orientation. Default = 30, in degree (double)
-#' @param MaxTreefallOrientation Maximum treefall orientation. Default = 45, in degree (double)
-#' @param TreeHollowPartForFuel Part taken from hollow trees for fuel exploitation. Default = 1/3 (double)
-#' @param Purge Purge. Default = 0.14, in m^3 of fuelwood/m^3 of logged trees (double)
+#' @param IsolateTreeMinDistance Isolate tree minimum distance. Default = 100,
+#'   in m (double)
+#' @param FutureTreesMinDiameter Future trees minimum diameter. Default = 35, in
+#'   cm (double)
+#' @param TreefallSuccessProportion TreefallSuccess proportion. Default = 0.6,
+#'   (double)
+#' @param MinTreefallOrientation Minimum treefall orientation. Default = 30, in
+#'   degree (double)
+#' @param MaxTreefallOrientation Maximum treefall orientation. Default = 45, in
+#'   degree (double)
+#' @param TreeHollowPartForFuel Part taken from hollow trees for fuel
+#'   exploitation. Default = 1/3 (double)
+#' @param Purge Purge. Default = 0.14, in m^3 of fuelwood/m^3 of logged trees
+#'   (double)
 #' @param MaxTrailDensity Maximum TrailDensity. Default = 200, in m/ha (double)
-#' @param MaxLandingArea Maximum landing area. Default = 1500) in square meters (double)
+#' @param MaxLandingArea Maximum landing area. Default = 1500) in square meters
+#'   (double)
 #' @param TreeHarvestableVolumeAllometry (function)
 #' @param TrunkHeightAllometry (function)
-#' @param TreeHeightAllometry log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344 log(DBH)^2 (function)
-#' @param CrownDiameterAllometry ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and meanσ^2 = 0.0295966977 (ref)(function)
-#' @param RottenModel Estimates the probability of being probed hollow (default: 1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)
+#' @param TreeHeightAllometry log(H) = 0.07359191 + 1.34241216 log(DBH) +
+#'   -0.12282344 log(DBH)^2 (function)
+#' @param CrownDiameterAllometry ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
+#'   and mean σ^2 = 0.0295966977 (ref)(function)
+#' @param RottenModel Estimates the probability of being probed hollow (default:
+#'   1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)
 #'
 #' @return A named list of 30 objects.
-
+#'
 #' @export
+#'
 #' @importFrom stats rnorm
 #'
 #' @examples
 #' loggingparameters(MinDBHValue = 5)
+#'
 loggingparameters <- function(
   MinDBHValue = 10, #in cm
   MaxAreaSlope = 27, #in %
@@ -123,7 +140,7 @@ loggingparameters <- function(
     MaxTrailDensity = MaxTrailDensity,
     MaxLandingArea = MaxLandingArea,
 
-    ### Models
+    ### Allometry
     TreeHarvestableVolumeAllometry = TreeHarvestableVolumeAllometry,
     TrunkHeightAllometry = TrunkHeightAllometry,
     TreeHeightAllometry = TreeHeightAllometry,
