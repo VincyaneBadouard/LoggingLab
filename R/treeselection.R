@@ -1,24 +1,41 @@
-#' treeselection
+#'treeselection
 #'
-#' @param inventory (data.frame)
-#' @param objective Objective volume per hectare (numeric)
-
-#'@param type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow"
-#'  or "manual"(character)
-#'@param fuel no  exploitation = "0", damage exploitation in fuelwood = "1",
-#'  exploitation of hollow trees and damage in fuelwood = "2"
-#'@param diversification taking of other species in addition to the main
-#'  commercial species (logical)
+#'@param inventory (data.frame)
+#'@param objective Objective volume per hectare (numeric)
+#'
+#'@param type Type of logging: "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
+#'  "RIL3fuelhollow" or "manual"(character) (see the \code{\link{vignette}})
+#'@param fuel Fuel wood exploitation: no exploitation = "0", damage exploitation
+#'  in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"
+#'@param diversification Taking of other species in addition to the main
+#'  commercial species (2 levels of commercial species in the
+#'  \code{\link{SpeciesCriteria}} table) (logical)
 #'@param specieslax Allow diversification if stand is too poor, = FALSE by
 #'  default (logical)
 #'@param objectivelax Allow exploitation in case of non-achievement of the
 #'  objective volume (if stand too poor), = FALSE by default (logical)
-#'@param DEM (RasterLayer)
-#'@param plotslope (RasterLayer)
-#'@param speciescriteria (data.frame)
-#'@param otherloggingparameters (list) MainTrail (multiline)
+#'@param DEM Digital terrain model (DTM) of the inventoried plot (LiDAR or
+#'  SRTM)(RasterLayer)
+#'@param plotslope Slopes (in radians) of the inventoried plot (with a
+#'  neighbourhood of 8 cells) (RasterLayer)
+#'@param speciescriteria Table of species exploitability criteria : species
+#'  names, economic interest level, minimum and maximum felling diameter, in the
+#'  same format of \code{\link{SpeciesCriteria}} (data.frame)
+#'@param otherloggingparameters Other parameters of the logging simulator
+#'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
-#'@return A FAIRE
+#'@return The new inventory with:
+#'the commercial name (ONFName), the commercial level (Commercial), the "MinFD", "UpMinFD", "MaxFD",
+#'"DistCrit", "Slope", "SlopeCrit", "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba", "ProbedHollow"
+#'
+#'
+#'
+#'
+#'
+#'
+#'the objective volume with or without a bonus (if
+#'  hollow trees exploitation), and the 6 set of specialised points:
+#'  harvestable, selected, future and reserve, hollow and energy wood trees
 #'
 #'@export
 #'
@@ -28,6 +45,8 @@
 #'@importFrom raster crs extract
 #'@importFrom topoDistance topoDist
 #'@importFrom methods as
+#'
+#'@seealso  \code{\link{SpeciesCriteria}}
 #'
 #' @examples
 #'
@@ -158,11 +177,11 @@ treeselection <- function(
 
   if (dim(HarvestableTreesPoints)[1] != 0) {
 
-  sp::coordinates(HarvestableTreesPoints) <- ~ Xutm + Yutm
+    sp::coordinates(HarvestableTreesPoints) <- ~ Xutm + Yutm
 
-  sp::proj4string(HarvestableTreesPoints) <- raster::crs(DEM)
+    sp::proj4string(HarvestableTreesPoints) <- raster::crs(DEM)
 
-  HarvestableTreesPoints <- st_as_sf(as(HarvestableTreesPoints,"SpatialPoints"))
+    HarvestableTreesPoints <- st_as_sf(as(HarvestableTreesPoints,"SpatialPoints"))
   } else {HarvestableTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   # Points vector with coordinates of the selected trees:
@@ -171,11 +190,11 @@ treeselection <- function(
 
   if (dim(SelectedTreesPoints)[1] != 0) {
 
-  sp::coordinates(SelectedTreesPoints) <- ~ Xutm + Yutm
+    sp::coordinates(SelectedTreesPoints) <- ~ Xutm + Yutm
 
-  sp::proj4string(SelectedTreesPoints) <- raster::crs(DEM)
+    sp::proj4string(SelectedTreesPoints) <- raster::crs(DEM)
 
-  SelectedTreesPoints <- st_as_sf(as(SelectedTreesPoints,"SpatialPoints"))
+    SelectedTreesPoints <- st_as_sf(as(SelectedTreesPoints,"SpatialPoints"))
   } else {SelectedTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   # Points vector with coordinates of the future trees:
@@ -184,11 +203,11 @@ treeselection <- function(
 
   if (dim(FutureTreesPoints)[1] != 0) {
 
-  sp::coordinates(FutureTreesPoints) <- ~ Xutm + Yutm
+    sp::coordinates(FutureTreesPoints) <- ~ Xutm + Yutm
 
-  sp::proj4string(FutureTreesPoints) <- raster::crs(DEM)
+    sp::proj4string(FutureTreesPoints) <- raster::crs(DEM)
 
-  FutureTreesPoints <- st_as_sf(as(FutureTreesPoints,"SpatialPoints"))
+    FutureTreesPoints <- st_as_sf(as(FutureTreesPoints,"SpatialPoints"))
   } else {FutureTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   # Points vector with coordinates of the reserve trees:
@@ -197,11 +216,11 @@ treeselection <- function(
 
   if (dim(ReserveTreesPoints)[1] != 0) {
 
-      sp::coordinates(ReserveTreesPoints) <- ~ Xutm + Yutm
+    sp::coordinates(ReserveTreesPoints) <- ~ Xutm + Yutm
 
-      sp::proj4string(ReserveTreesPoints) <- raster::crs(DEM)
+    sp::proj4string(ReserveTreesPoints) <- raster::crs(DEM)
 
-      ReserveTreesPoints <- st_as_sf(as(ReserveTreesPoints,"SpatialPoints"))
+    ReserveTreesPoints <- st_as_sf(as(ReserveTreesPoints,"SpatialPoints"))
   } else {ReserveTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   #where specieslax was not necessary, consider eco2s as non-exploitable:
@@ -221,6 +240,6 @@ treeselection <- function(
 
 
   return(treeselectionOutputs) # return the new inventory, the objective volume,
-  # and the 4 points vectors (Harvestable, Selected, Future and Reserve Trees)
-#faut rajouter les ouputs des fcts internes
+  # and the 4 points vectors (Harvestable, Selected, Future and Reserve,
+  # Hollow and Energywood Trees)
 }
