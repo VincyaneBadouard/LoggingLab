@@ -9,7 +9,7 @@ addtreedim(
   inventory,
   crowndiameterparameters = ParamCrownDiameterAllometry,
   volumeparameters = ForestZoneVolumeParametersTable,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
@@ -23,7 +23,7 @@ Breast Height) and its species, genus or family (data.frame)}
 volume of each tree, depend to its geographic zone if several locations
 (data.frame)}
 
-\item{otherloggingparameters}{Other parameters of the logging simulator
+\item{advancedloggingparameters}{Other parameters of the logging simulator
 (list)}
 }
 \value{

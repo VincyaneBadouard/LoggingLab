@@ -1,6 +1,6 @@
-#' Other parameters of the logging simulator
+#' Advanced parameters of the logging simulator
 #'
-#' @param MinDBHValue Mimimum DBH value. Default = 10, in cm (double)
+#' @param MinDBHValue Minimum DBH value. Default = 10, in cm (double)
 #' @param MaxAreaSlope Maximum area slope. Default = 27, in % (double)
 #' @param MaxTrailCenterlineSlope Maximum main&2nd trail centerline slope.
 #'   Default = 22, in % (double)

@@ -6,13 +6,13 @@
 \usage{
 selected(
   inventory,
-  type = "manual",
+  scenario = "manual",
   fuel,
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
   DEM = DemParacou,
-  otherloggingparameters = loggingparameters(),
+  advancedloggingparameters = loggingparameters(),
   VO,
   HVinit
 )
@@ -21,7 +21,7 @@ selected(
 \item{inventory}{your inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
-\item{type}{Type of logging: "RIL1", "RIL2broken", "RIL2", "RIL3",
+\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 \code{\link{vignette}})}
 
@@ -42,7 +42,7 @@ objective volume (if stand too poor), = FALSE by default (logical)}
 \item{DEM}{Digital terrain model (DTM) of the inventoried plot (LiDAR or
 SRTM) (default: \code{\link{DemParacou}}) (RasterLayer)}
 
-\item{otherloggingparameters}{Other parameters of the logging simulator
+\item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
 
 \item{VO}{The objective volume with or without a bonus (if hollow trees
@@ -53,7 +53,7 @@ exploitation)(numeric value) (see the \code{\link{loggingparameters}})}
 }
 \value{
 Your inventory with the trees selected for harvesting (depending on
-the logging type chosen), and 2 sets of spatial points: (HollowTrees and
+the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
 EnergywoodTrees)
 }
 \description{
@@ -70,14 +70,14 @@ inventorycheckformat(Paracou6_2016))))
 harvestableOutputs <- harvestable(inventory, diversification = TRUE,
  specieslax = FALSE,
 DEM = DemParacou, plotslope = PlotSlope,
-otherloggingparameters = loggingparameters())
+advancedloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory
 HVinit <- harvestableOutputs$HVinit
 
-selecInventory <- selected(inventory, type = "manual", fuel = "2",
+selecInventory <- selected(inventory, scenario = "manual", fuel = "2",
 diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-otherloggingparameters = loggingparameters(), VO = 30,
+advancedloggingparameters = loggingparameters(), VO = 30,
 HVinit = HVinit)$inventory
 
 }

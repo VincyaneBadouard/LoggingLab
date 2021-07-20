@@ -3,7 +3,7 @@
 #' @param inventory your inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
 #'
-#' @param type Type of logging: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#' @param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'   \code{\link{vignette}})
 #'
@@ -24,7 +24,7 @@
 #' @param DEM Digital terrain model (DTM) of the inventoried plot (LiDAR or
 #'   SRTM) (default: \code{\link{DemParacou}}) (RasterLayer)
 #'
-#' @param otherloggingparameters Other parameters of the logging simulator
+#' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
 #' @param VO The objective volume with or without a bonus (if hollow trees
@@ -34,7 +34,7 @@
 #'   (\code{\link{SpeciesCriteria}}) (numeric value)
 #'
 #' @return Your inventory with the trees selected for harvesting (depending on
-#'   the logging type chosen), and 2 sets of spatial points: (HollowTrees and
+#'   the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
 #'   EnergywoodTrees)
 #'
 #' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
@@ -57,25 +57,25 @@
 #' harvestableOutputs <- harvestable(inventory, diversification = TRUE,
 #'  specieslax = FALSE,
 #' DEM = DemParacou, plotslope = PlotSlope,
-#' otherloggingparameters = loggingparameters())
+#' advancedloggingparameters = loggingparameters())
 #'
 #' inventory <- harvestableOutputs$inventory
 #' HVinit <- harvestableOutputs$HVinit
 #'
-#' selecInventory <- selected(inventory, type = "manual", fuel = "2",
+#' selecInventory <- selected(inventory, scenario = "manual", fuel = "2",
 #' diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-#' otherloggingparameters = loggingparameters(), VO = 30,
+#' advancedloggingparameters = loggingparameters(), VO = 30,
 #' HVinit = HVinit)$inventory
 #'
 selected <- function(
   inventory,
-  type = "manual",
+  scenario = "manual",
   fuel,
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
   DEM = DemParacou,
-  otherloggingparameters = loggingparameters(),
+  advancedloggingparameters = loggingparameters(),
   VO, # objective volume
   HVinit # initial Harvestable Volume
 ){
@@ -88,21 +88,26 @@ selected <- function(
   if(!all(unlist(lapply(list(diversification, specieslax, objectivelax), inherits, "logical"))) && !is.null(diversification))
     stop("The 'diversification', 'specieslax' and 'objectivelax' arguments of the 'selected' function must be logical") # any() don't take a list
 
-  if (!any(type == "RIL1" | type == "RIL2broken"| type == "RIL2"| type == "RIL3"| type == "RIL3fuel"|
-           type == "RIL3fuelhollow"| type == "manual"))
-    stop("The 'type' argument of the 'selected' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
+  # if (!any(scenario == "RIL1" | scenario == "RIL2broken"| scenario == "RIL2"| scenario == "RIL3"| scenario == "RIL3fuel"|
+  #          scenario == "RIL3fuelhollow"| scenario == "manual"))
+  #   stop("The 'scenario' argument of the 'selected' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
-  if (!any(fuel == "0" | fuel == "1"| fuel == "2" | is.null(fuel)))
-    stop("The 'fuel' argument of the 'selected' function must be '0', '1', or '2'")
+  # if (!any(fuel == "0" | fuel == "1"| fuel == "2" | is.null(fuel)))
+  #   stop("The 'fuel' argument of the 'selected' function must be '0', '1', or '2'")
 
-  if(!inherits(otherloggingparameters, "list"))
-    stop("The 'otherloggingparameters' argument of the 'selected' function must be a list")
+  if(!inherits(advancedloggingparameters, "list"))
+    stop("The 'advancedloggingparameters' argument of the 'selected' function must be a list")
+
+  if(scenario == "manual" &&
+     (is.null(fuel) || is.null(diversification)))
+    stop("If you choose the 'manual' mode,
+         you must fill in the arguments 'fuel' and 'diversification'")
 
   if(!all(unlist(lapply(list(VO, HVinit), inherits, "numeric"))))
     stop("The 'VO' and 'HVinit' arguments of the 'selected' function must be numeric")
 
   # Redefinition of the parameters according to the chosen scenario
-  scenariosparameters <- scenariosparameters(type = type, fuel = fuel, diversification = diversification)
+  scenariosparameters <- scenariosparameters(scenario = scenario, fuel = fuel, diversification = diversification)
 
   fuel <- scenariosparameters$fuel
   diversification <- scenariosparameters$diversification
@@ -308,7 +313,7 @@ selected <- function(
 
   # Apply S. Schmitt's "Rotten" predictive model to identify "truly" hollow designated trees.
   inventory <- inventory %>%
-    mutate(ProbedHollowProba = ifelse(Selected == "1", otherloggingparameters$RottenModel(DBH), NA)) %>%  #Estimates the probability of being probed hollow
+    mutate(ProbedHollowProba = ifelse(Selected == "1", advancedloggingparameters$RottenModel(DBH), NA)) %>%  #Estimates the probability of being probed hollow
 
     # generate either "1" or "0" randomly for each line, depending on the proba associated with the line:
     rowwise() %>%

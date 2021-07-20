@@ -10,7 +10,7 @@ harvestable(
   specieslax = FALSE,
   DEM = DemParacou,
   plotslope = PlotSlope,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
@@ -30,7 +30,7 @@ default (logical)}
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 
-\item{otherloggingparameters}{Other parameters of the logging simulator
+\item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
@@ -49,7 +49,7 @@ data(DemParacou)
 
 inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
 test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
-DEM = DemParacou, plotslope = PlotSlope,otherloggingparameters = loggingparameters())
+DEM = DemParacou, plotslope = PlotSlope,advancedloggingparameters = loggingparameters())
 
 }
 \seealso{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/loggingparameters.R
 \name{loggingparameters}
 \alias{loggingparameters}
-\title{Other parameters of the logging simulator}
+\title{Advanced parameters of the logging simulator}
 \usage{
 loggingparameters(
   MinDBHValue = 10,
@@ -42,7 +42,7 @@ loggingparameters(
 )
 }
 \arguments{
-\item{MinDBHValue}{Mimimum DBH value. Default = 10, in cm (double)}
+\item{MinDBHValue}{Minimum DBH value. Default = 10, in cm (double)}
 
 \item{MaxAreaSlope}{Maximum area slope. Default = 27, in \% (double)}
 
@@ -121,7 +121,7 @@ and mean σ^2 = 0.0295966977 (ref)(function)}
 A named list of 30 objects.
 }
 \description{
-Other parameters of the logging simulator
+Advanced parameters of the logging simulator
 }
 \examples{
 loggingparameters(MinDBHValue = 5)

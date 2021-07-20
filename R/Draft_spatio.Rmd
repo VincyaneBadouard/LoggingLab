@@ -73,7 +73,7 @@ for (SpecieI in unique(SpatInventory$ScientificName)) {
     for (ind in 1:dim(distSp)[2]) { # 2 pour colonne
       if (all(is.na(distSp[,ind]))) {FALSE # si toutes la colonne contient des NA c'est un Inf donc on ne le veut pas
       }else{
-        SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < otherloggingparameters$IsolateTreeMinDistance # si la distance minimale à ses congénaires est < 100, il est exploitable
+        SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < advancedloggingparameters$IsolateTreeMinDistance # si la distance minimale à ses congénaires est < 100, il est exploitable
       }
       SpatInventory$DistCrit[SpatInventory$idTree == SpatInventorytmp$idTree[ind]] <- SpatInventorytmp$DistCrit[ind]
       i = i+1 # et en informer la progress bar
@@ -92,7 +92,7 @@ SlopeCritInventory <- SpatInventory %>%   # SpatInventory <- SpatInventory befor
   # les NaN ce sont les valeurs infinies, qui témoignent d'un plateau donc pente = 0
   mutate(Slope = ifelse(is.nan(Slope), 0, Slope)) %>% 
   mutate(SlopeCrit = if_else(
-    condition = Slope <= atan(otherloggingparameters$TreeMaxSlope/100), # si pente <= 22% l'arbre est exploitable (on est en radian)
+    condition = Slope <= atan(advancedloggingparameters$TreeMaxSlope/100), # si pente <= 22% l'arbre est exploitable (on est en radian)
     TRUE,
     FALSE)) %>% 
   dplyr::select(idTree, DistCrit, Slope, SlopeCrit)

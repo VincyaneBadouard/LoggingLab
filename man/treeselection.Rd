@@ -7,7 +7,7 @@
 treeselection(
   inventory,
   objective,
-  type = "manual",
+  scenario = "manual",
   fuel,
   diversification,
   specieslax = FALSE,
@@ -15,7 +15,7 @@ treeselection(
   DEM = DemParacou,
   plotslope = PlotSlope,
   speciescriteria = SpeciesCriteria,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
@@ -23,7 +23,7 @@ treeselection(
 
 \item{objective}{Objective volume per hectare (numeric)}
 
-\item{type}{Type of logging: "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
+\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
 "RIL3fuelhollow" or "manual"(character) (see the \code{\link{vignette}})}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", damage exploitation
@@ -49,7 +49,7 @@ neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 names, economic interest level, minimum and maximum felling diameter, in the
 same format of \code{\link{SpeciesCriteria}} (data.frame)}
 
-\item{otherloggingparameters}{Other parameters of the logging simulator
+\item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
@@ -75,10 +75,10 @@ data(DemParacou)
 inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 
 treeselectionoutputs <- treeselection(inventory, objective = 20,
-type ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
+scenario ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
 objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
 speciescriteria = SpeciesCriteria,
-otherloggingparameters = loggingparameters()) #  MainTrail
+advancedloggingparameters = loggingparameters()) #  MainTrail
 
 
 }

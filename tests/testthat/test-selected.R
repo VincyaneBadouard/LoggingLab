@@ -8,16 +8,16 @@ test_that("selected", {
   inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
 
   harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
-                                    DEM = DemParacou, plotslope = PlotSlope, otherloggingparameters = loggingparameters())
+                                    DEM = DemParacou, plotslope = PlotSlope, advancedloggingparameters = loggingparameters())
 
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
   VO <- 40
 
-  testinventory <- suppressMessages(selected(inventory, type = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE,
+  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE,
                                              objectivelax = FALSE,
-                                             otherloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
+                                             advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
 
   MatrixInventory <- as.matrix(Paracou6_2016)
 
@@ -28,28 +28,33 @@ test_that("selected", {
   expect_error(suppressMessages(selected(inventory, diversification = "1", specieslax = 2, objectivelax = "a")),
                regexp = "The 'diversification', 'specieslax' and 'objectivelax' arguments of the 'selected' function must be logical")
 
-  expect_error(suppressMessages(selected(inventory, diversification = TRUE, type = "CL")),
-               regexp = "The 'type' argument of the 'selected' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
+#   expect_error(suppressMessages(selected(inventory, diversification = TRUE, scenario = "CL")),
+#                regexp = "The 'scenario' argument of the 'selected' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
-  expect_error(suppressMessages(selected(inventory, type = "manual", diversification = TRUE, fuel = TRUE)),
-               regexp = "The 'fuel' argument of the 'selected' function must be '0', '1', or '2'")
+  # expect_error(suppressMessages(selected(inventory, scenario = "manual", diversification = TRUE, fuel = TRUE)),
+  #              regexp = "The 'fuel' argument of the 'selected' function must be '0', '1', or '2'")
 
-  expect_error(suppressMessages(selected(inventory, type = "manual", fuel = "0", diversification = TRUE,
-                                         otherloggingparameters = as.matrix(loggingparameters()))),
-               regexp = "The 'otherloggingparameters' argument of the 'selected' function must be a list")
+  expect_error(suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE,
+                                         advancedloggingparameters = as.matrix(loggingparameters()))),
+               regexp = "The 'advancedloggingparameters' argument of the 'selected' function must be a list")
 
   expect_error(suppressMessages(selected(
-    inventory, type = "manual", diversification = TRUE, fuel = "0", otherloggingparameters = loggingparameters(),
+    inventory, scenario = "manual", diversification = TRUE, fuel = "0", advancedloggingparameters = loggingparameters(),
     VO = "20", HVinit = HVinit)),
     regexp = "The 'VO' and 'HVinit' arguments of the 'selected' function must be numeric")
+
+  expect_error(suppressMessages(selected(inventory, scenario = "manual",
+                             fuel = NULL, diversification = T)),
+               regexp = "If you choose the 'manual' mode,
+         you must fill in the arguments 'fuel' and 'diversification'")
 
   expect_true(all(!is.na(testinventory$Selected))) # No NA is Selected colomn
 
 
   # if HVinit == VO : all the "harvestable" trees are Selected == "1"
   VO <- HVinit
-  testinventory <- suppressMessages(selected(inventory, type = "manual", fuel = "0", diversification = TRUE,
-                                             otherloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
+  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE,
+                                             advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
   if (HVinit == VO){
     TestRareWorld <- testinventory %>%
       filter(LoggingStatus =="harvestable")
@@ -65,46 +70,46 @@ test_that("selected", {
   inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
                            diversification = FALSE, specieslax = TRUE)$inventory
 
-  testinventory <- suppressMessages(selected(inventory, type = "manual", fuel = "0", diversification = FALSE, specieslax = TRUE, objectivelax = TRUE,
-                                             otherloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
+  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = FALSE, specieslax = TRUE, objectivelax = TRUE,
+                                             advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
   Testspecieslax <- testinventory %>%
     filter(Selected == "1")
 
   expect_true(any(Testspecieslax$LoggingStatus =="harvestable2nd")) # there are "harvestable2nd" among the Selected
 
   ### objectivelax = FALSE
-  expect_error(suppressMessages(selected(inventory, type = "manual", fuel = "0", diversification = FALSE, specieslax = TRUE, objectivelax = FALSE,
-                                         otherloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory,
+  expect_error(suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = FALSE, specieslax = TRUE, objectivelax = FALSE,
+                                         advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory,
                "By default or by your choice, the simulation stops")
 
   # if (!diversification && !specieslax && objectivelax)
   inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
                            diversification = FALSE,  specieslax = FALSE)$inventory
 
-  expect_message(selected(inventory, type = "manual", fuel = "0", diversification = FALSE,  specieslax = FALSE, objectivelax = TRUE,
-                          otherloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit)$inventory,
+  expect_message(selected(inventory, scenario = "manual", fuel = "0", diversification = FALSE,  specieslax = FALSE, objectivelax = TRUE,
+                          advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit)$inventory,
                  "In this case you have chosen to continue logging without diversifying your species.")
 
   # if (diversification && objectivelax)
   inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
                            diversification = TRUE)$inventory
 
-  expect_message(selected(inventory, type = "manual", fuel = "0", diversification = TRUE, objectivelax = TRUE,
-                          otherloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit)$inventory,
+  expect_message(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, objectivelax = TRUE,
+                          advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit)$inventory,
                  "In this case you have chosen to continue logging.")
 
   ## if ((!specieslax & !objectivelax) | (diversification && !objectivelax))
   inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))),
                            diversification = TRUE)$inventory
 
-  expect_error(suppressMessages(selected(inventory, type = "manual", fuel = "0", diversification = TRUE, objectivelax = FALSE,
-                                         otherloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory,
+  expect_error(suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, objectivelax = FALSE,
+                                         advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory,
                "By default or by your choice, the simulation stops.")
 
   # if HVinit > VO
   VO <- HVinit - 20
-  testinventory <- suppressMessages(selected(inventory, type = "manual", fuel = "0", diversification = FALSE, objectivelax = FALSE,
-                                             otherloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
+  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = FALSE, objectivelax = FALSE,
+                                             advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
 
   TestUp <- testinventory %>%
     filter(Commercial == "1")
@@ -131,8 +136,8 @@ test_that("selected", {
 
 
   # Hollow (Rotten model)
-  testinventory <- suppressMessages(selected(inventory, type = "manual", fuel = "0", diversification = TRUE,
-                                             otherloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
+  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE,
+                                             advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
 
   TestHollow <- testinventory %>%
     filter(Selected == "1"| Selected == "deselected")
@@ -143,8 +148,8 @@ test_that("selected", {
   # expect_true(all(TestHollow$ProbedHollow == "0" || TestHollow$ProbedHollow == "1")) # doest works with the check..
 
   # if fuel =="2" et que il y a des ProbedHollow == "1" : there are "hollowfuel" in DeathCause
-  testinventory <- suppressMessages(selected(inventory, type = "manual", fuel = "2", diversification = TRUE,
-                                             otherloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
+  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "2", diversification = TRUE,
+                                             advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
 
   if (any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
     expect_true(any(testinventory$DeathCause == "hollowfuel"))
@@ -159,12 +164,12 @@ test_that("selected", {
 
 # check args
 # inventory (data.frame)
-# type "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"(character)
+# scenario "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"(character)
 # fuel "0","1"ou "2" (character)
 # diversification (logical)
 # specieslax (logical)
 # objectivelax (logical)é
-# otherloggingparameters (list)
+# advancedloggingparameters (list)
 # VO (numeric value)
 # HVinit (numeric value)
 
@@ -194,6 +199,6 @@ test_that("selected", {
 # ProbedHollowProba !is.na pour les Selected == "1" ou == "deselected" (Rotten) ah non ils ont été déselectionnés
 # ProbedHollown = "0" ou "1" if !is.na(ProbedHollowProba)
 
-# if type == "RIL3fuelhollow"| (type == "manual"& fuel =="2") : ya des "hollowfuel" dans DeathCause
+# if scenario == "RIL3fuelhollow"| (scenario == "manual"& fuel =="2") : ya des "hollowfuel" dans DeathCause
 
 # 2 points vectors with coordinates of the probed hollow trees: "HollowTreesPoints" and "EnergywoodTreesPoints"

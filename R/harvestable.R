@@ -18,7 +18,7 @@
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
 #'
-#'@param otherloggingparameters Other parameters of the logging simulator
+#'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
 #'@return Your inventory with the exploitability criteria, and if they are
@@ -45,7 +45,7 @@
 #'
 #' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
 #' test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
-#' DEM = DemParacou, plotslope = PlotSlope,otherloggingparameters = loggingparameters())
+#' DEM = DemParacou, plotslope = PlotSlope,advancedloggingparameters = loggingparameters())
 #'
 harvestable <- function(
   inventory,
@@ -53,7 +53,7 @@ harvestable <- function(
   specieslax = FALSE,
   DEM = DemParacou,
   plotslope = PlotSlope,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 ){
 
   # Arguments check
@@ -124,7 +124,7 @@ harvestable <- function(
     for (ind in 1:dim(distSp)[2]) { # 2 pour colonne
       if (all(is.na(distSp[,ind]))) {FALSE # si toutes la colonne contient des NA c'est un Inf donc on ne le veut pas
       }else{
-        SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < otherloggingparameters$IsolateTreeMinDistance # si la distance minimale à ses congénaires est < 100, il est exploitable
+        SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < advancedloggingparameters$IsolateTreeMinDistance # si la distance minimale à ses congénaires est < 100, il est exploitable
       }
       SpatInventory$DistCrit[SpatInventory$idTree == SpatInventorytmp$idTree[ind]] <- SpatInventorytmp$DistCrit[ind]
       # i = i+1 # et en informer la progress bar
@@ -138,7 +138,7 @@ harvestable <- function(
     # les NaN ce sont les valeurs infinies, qui témoignent d'un plateau donc pente = 0
     mutate(Slope = ifelse(is.nan(Slope), 0, Slope)) %>%
     mutate(SlopeCrit = if_else(
-      condition = Slope <= atan(otherloggingparameters$TreeMaxSlope/100), # si pente <= 22% l'arbre est exploitable (on est en radian)
+      condition = Slope <= atan(advancedloggingparameters$TreeMaxSlope/100), # si pente <= 22% l'arbre est exploitable (on est en radian)
       TRUE,
       FALSE)) %>%
     dplyr::select(idTree, DistCrit, Slope, SlopeCrit)

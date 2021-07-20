@@ -7,7 +7,7 @@
 futurereserve(
   inventory,
   speciescriteria = SpeciesCriteria,
-  otherloggingparameters = loggingparameters()
+  advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
@@ -17,7 +17,7 @@ futurereserve(
 names, economic interest level, minimum and maximum felling diameter, in the
 same format of \code{\link{SpeciesCriteria}} (data.frame)}
 
-\item{otherloggingparameters}{Other parameters of the logging simulator
+\item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
@@ -37,14 +37,14 @@ inventorycheckformat(Paracou6_2016))))
 harvestableOutputs <- harvestable(inventory, diversification = TRUE,
  specieslax = FALSE,
 DEM = DemParacou, plotslope = PlotSlope,
-otherloggingparameters = loggingparameters())
+advancedloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory
 HVinit <- harvestableOutputs$HVinit
 
-inventory <- selected(inventory, type = "manual", fuel = "0",
+inventory <- selected(inventory, scenario = "manual", fuel = "0",
 diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-otherloggingparameters = loggingparameters(), VO = 30,
+advancedloggingparameters = loggingparameters(), VO = 30,
  HVinit = HVinit)$inventory
 
 futurereserve(inventory)
