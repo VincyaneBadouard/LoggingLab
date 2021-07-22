@@ -9,14 +9,15 @@ test_that("cleaninventory", {
   TestInventory <- Paracou6_2016
   TestInventory[10, "CodeAlive"] <- "FALSE" # Some FALSE in CodeAlive
   TestInventory[4, "CircCorr"] <- 6 # DBH < 10
+  CleanedInventory <- cleaninventory(TestInventory)
 
   #check if CodeAlive == TRUE
-  expect_true(all(cleaninventory(TestInventory)$CodeAlive == "TRUE"))
+  expect_true(all(CleanedInventory$CodeAlive == "TRUE"))
 
   #check if DBH >= 10 (check if DBH exists in the same way)
-  expect_true(all(cleaninventory(TestInventory)$DBH >= 10 & cleaninventory(TestInventory)$DBH < 900))#the largest known tree: 825 cm
+  expect_true(all(CleanedInventory$DBH >= 10 & cleaninventory(TestInventory)$DBH < 900))#the largest known tree: 825 cm
 
-  expect_false(any(is.na(cleaninventory(TestInventory)$DBH))) #check that all the DBH are computed
+  expect_false(any(is.na(CleanedInventory$DBH))) #check that all the DBH are computed
 
 
   #check if the stops work
@@ -26,9 +27,10 @@ test_that("cleaninventory", {
   StopTestInventory[5, "Plot"] <- "100" # a tree in another plot
   StopTestInventory[20, "CensusYear"] <- 2017 # different years inventory
 
-  expect_error(cleaninventory(StopTestInventory), regexp = "idTree") # check if idTree's are unique
-  expect_error(cleaninventory(StopTestInventory), regexp = "Plot") # check if it is always the same plot
-  expect_error(cleaninventory(StopTestInventory), regexp = "CensusYear") # and the same year
+  errors <- capture_error(cleaninventory(StopTestInventory))
+  expect_match(errors$message, regexp = "idTree") # check if idTree's are unique
+  expect_match(errors$message, regexp = "Plot") # check if it is always the same plot
+  expect_match(errors$message, regexp = "CensusYear") # and the same year
 
 })
 
