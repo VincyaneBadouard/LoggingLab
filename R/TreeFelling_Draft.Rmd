@@ -15,10 +15,18 @@ vecteur "AccessibleTreesPoints", "SelectedTreesPoints",  "AvenirTreesPoints",  "
 inventory + polygone "Shadow" + vecteurs "TreefallSuccess", "TreefallFailure", "DamageTreesPoints", "DeadTreesPoints"
 
 ```{r Give values to the arguments to work}
+data(Paracou6_2016)
+data(DemParacou)
 
 inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 
-inventory <- treeselection(inventory, SpeciesCriteria, scenario = "manual", fuel = "0",objective = 20, diversification = TRUE, specieslax = FALSE, objectivelax = FALSE, advancedloggingparameters = loggingparameters())$inventory
+inventory <- treeselection(inventory, objective = 20, scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
+objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria,
+advancedloggingparameters = loggingparameters())$inventory
+
+SelectedTrees <- inventory %>% 
+  filter(Selected == "1") %>%
+  dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,CrownDiameter,Selected, Xutm, Yutm)
 
 speciescriteria = SpeciesCriteria
 scenario = "manual"
@@ -28,6 +36,7 @@ diversification = TRUE
 directionalfelling = "2"
 specieslax = FALSE
 objectivelax = FALSE
+DEM = DemParacou
 advancedloggingparameters = loggingparameters()
 # MainTrail
 
@@ -138,6 +147,13 @@ hole2 = matrix(c(5,5,5,6,6,6,6,5,5,5),ncol=2, byrow=TRUE)
 pts = list(outer, hole1, hole2)
 (pl1 = st_polygon(pts))
 plot(pl1)
+
+list(matrix(c('A','B',
+                    'C','D', 
+                    'E', 'F', 
+                    'G','H',
+                    'I', 'J') # retour
+                  ,ncol=2, byrow=TRUE))
 ```
 ```{r multipolygon}
 pol1 = list(outer, hole1, hole2) #1 list/polygon :  list with numeric matrices with points in rows
@@ -262,20 +278,17 @@ ggplot() + # plot 2 polygones
 # on prend les arbres sélectionnés
 SelectedTrees <- inventory %>% 
   filter(Selected == "1") %>%
-  select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,CrownDiameter,Selected, Xutm, Yutm)
+  dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,CrownDiameter,Selected, Xutm, Yutm)
+
+# sp::coordinates(SelectedTrees) <- ~ Xutm + Yutm
+# 
+# sp::proj4string(SelectedTrees) <- raster::crs(DEM)
+# 
+# SelectedTrees <- st_as_sf(as(SelectedTrees,"SpatialPoints"))
 
 # Pour 1 arbre
 
 # le tronc
-list(matrix(c('A','B',
-                    'C','D', 
-                    'E', 'F', 
-                    'G','H',
-                    'I', 'J') # retour
-                  ,ncol=2, byrow=TRUE))
-
-
-
 pts = list(matrix(c(SelectedTrees$Xutm[1]-(SelectedTrees$DBH[1]/100)/2, SelectedTrees$Yutm[1], 
                     SelectedTrees$Xutm[1]-(SelectedTrees$DBH[1]/100)/2, SelectedTrees$Yutm[1] + SelectedTrees$TrunkHeight[1], 
                     SelectedTrees$Xutm[1]+(SelectedTrees$DBH[1]/100)/2, SelectedTrees$Yutm[1] + SelectedTrees$TrunkHeight[1], 
@@ -307,10 +320,52 @@ plot(Crown, graticule = TRUE, axes = TRUE)
 a <- st_difference(st_union(Crown, Trunk)) # -> multypolygon dont on garde que les points qui ne se superposent pas
 plot(a)
 
+# Polygon orientation
+DescTools::Rotate(x= SelectedTrees$Xutm[1], y = SelectedTrees$Yutm[1] + SelectedTrees$TrunkHeight[1] + SelectedTrees$CrownHeight[1]/2,
+                  theta = pi/sample(0:180, size = 1))
+
 ggplot() + # plot 2 polygones
   geom_sf(data = Trunk) +
   geom_sf(data = Crown) 
 # Multipolygone = tous les arbres
+```
+```{r}
+for (ind in c(1:nrow(SelectedTrees))) {
+  pts[ind] = list(matrix(c(SelectedTrees$Xutm[ind]-(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind], 
+                    SelectedTrees$Xutm[ind]-(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind] + SelectedTrees$TrunkHeight[ind], 
+                    SelectedTrees$Xutm[ind]+(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind] + SelectedTrees$TrunkHeight[ind], 
+                    SelectedTrees$Xutm[ind]+(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind],
+                    SelectedTrees$Xutm[ind]-(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind]) # retour
+                  ,ncol=2, byrow=TRUE)) # DBH en cm à passer en m
+
+(Trunk[ind] = st_polygon(pts[ind]))
+
+# le houppier
+dat[ind] = data.frame(
+  x = SelectedTrees$Xutm[ind], #centroid locations (x) m^me x que l'arbre
+  y = SelectedTrees$Yutm[ind] + SelectedTrees$TrunkHeight[ind] + SelectedTrees$CrownHeight[ind]/2, #centroid locations (y) = hauteur du tronc + CrownHeight/2
+  ex = SelectedTrees$CrownDiameter[ind]/2, #Size along x-axis (CrownDiameter/2)
+  ey = SelectedTrees$CrownHeight[ind]/2, #Size along y-axis (CrownHeight/2)
+  stringsAsFactors = FALSE
+)
+dat[ind] = st_as_sf(dat[ind], coords = c("x", "y")) #centroids
+
+# Calculate ellipses
+Crown[ind] = st_ellipse(pnt = dat[ind], ex = dat[ind]$ex, ey = dat$ey) # ne fctne pas
+a[ind] <- st_difference(st_union(Crown[ind], Trunk[ind])) # -> multypolygon dont on garde que les points qui ne se superposent pas
+
+
+}
+plot(Trunk, graticule = TRUE, axes = TRUE)
+plot(Crown, graticule = TRUE, axes = TRUE)
+plot(a)
+ggplot() + # plot 2 polygones
+  geom_sf(data = Trunk) +
+  geom_sf(data = Crown) 
+
+
+
+
 ```
 
 

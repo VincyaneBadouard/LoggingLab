@@ -12,7 +12,7 @@ test_that("futurereserve", {
   HVinit <- harvestableOutputs$HVinit
 
   inventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-                                         advancedloggingparameters = loggingparameters(), VO = 80, HVinit = HVinit)$inventory)
+                                         DEM = DemParacou, advancedloggingparameters = loggingparameters(), VO = 80, HVinit = HVinit)$inventory)
 
   testinventory <- futurereserve(inventory)
 

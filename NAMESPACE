@@ -3,7 +3,6 @@
 export("%>%")
 export(ONFGuyafortaxojoin)
 export(addtreedim)
-export(bonjour)
 export(cleaninventory)
 export(exploitablefuelwoodvolume)
 export(futurereserve)

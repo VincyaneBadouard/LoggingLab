@@ -11,7 +11,7 @@ selected(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
-  DEM = DemParacou,
+  DEM,
   advancedloggingparameters = loggingparameters(),
   VO,
   HVinit
@@ -53,8 +53,8 @@ exploitation)(numeric value) (see the \code{\link{loggingparameters}})}
 }
 \value{
 Your inventory with the trees selected for harvesting (depending on
-the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
-EnergywoodTrees)
+the logging scenario chosen), and 2 sets of spatial points: (HollowTrees
+and EnergywoodTrees)
 }
 \description{
 selected
@@ -63,6 +63,7 @@ selected
 
 data(Paracou6_2016)
 data(DemParacou)
+data(PlotSlope)
 
 inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(
 inventorycheckformat(Paracou6_2016))))
@@ -77,7 +78,7 @@ HVinit <- harvestableOutputs$HVinit
 
 selecInventory <- selected(inventory, scenario = "manual", fuel = "2",
 diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-advancedloggingparameters = loggingparameters(), VO = 30,
+DEM = DemParacou, advancedloggingparameters = loggingparameters(), VO = 30,
 HVinit = HVinit)$inventory
 
 }

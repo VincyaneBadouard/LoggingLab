@@ -112,6 +112,50 @@ loggingparameters <- function(
 
   # VisiblyDefectModel = function() #  Visible hollow trees identification
 ){
+
+  # Arguments check
+  lapply(c(
+    MinDBHValue,
+    MaxAreaSlope,
+    MaxTrailCenterlineSlope,
+    MaxTrailCrossSlope,
+    GrappleMaxslope,
+    TreeMaxSlope,
+    PlateauMaxSlope,
+    SlopeDistance,
+    WaterSourcesBufferZone,
+    MinMainTrailWidth,
+    MaxMainTrailWidth,
+    ScndTrailWidth,
+    BigTrees,
+    ObjectiveBonus,
+    CableLength,
+    GrappleLength,
+    IsolateTreeMinDistance,
+    FutureTreesMinDiameter,
+    TreefallSuccessProportion,
+    MinTreefallOrientation,
+    MaxTreefallOrientation,
+    TreeHollowPartForFuel,
+    Purge,
+    MaxTrailDensity,
+    MaxLandingArea), function(element)
+      if(!inherits(element, "numeric"))
+        stop("You have assigned a non-numerical value to one of the arguments of the 'loggingparameters' function
+         waiting for a numerical value. Look at the help page for the 'loggingparameters' function (?loggingparameters)"))
+
+  lapply(c(
+    TreeHarvestableVolumeAllometry,
+    TrunkHeightAllometry,
+    TreeHeightAllometry,
+    CrownDiameterAllometry,
+    RottenModel), function(element)
+      if(!inherits(element, "function"))
+        stop("One of the arguments of the 'loggingparameters' function you want to fill in waiting for an object of function class.
+             Look at the help page for the 'loggingparameters' function (?loggingparameters)"))
+
+
+  # Function
   list(
     ### Values
     MinDBHValue = MinDBHValue,

@@ -27,7 +27,7 @@ NULL
          role = "ctb",
           "geraldine.derroire@cirad.fr"),
   person("Sylvain","Schmitt",
-         role = "ctb",
+         role = "aut",
           "sylvain.m.schmitt@gmail.com "'),
     Maria.desc.license = "GPL-3"
 

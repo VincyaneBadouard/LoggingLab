@@ -1,17 +1,20 @@
 #' futurereserve
 #'
-#' @param inventory your inventory (see the inputs formats and metadata in the \code{\link{vignette}}) (data.frame)
+#' @param inventory your inventory (see the inputs formats and metadata in the
+#'   \code{\link{vignette}}) (data.frame)
 #'
 #' @param speciescriteria Table of species exploitability criteria : species
-#'  names, economic interest level, minimum and maximum felling diameter, in the
-#'  same format of \code{\link{SpeciesCriteria}} (data.frame)
+#'   names, economic interest level, minimum and maximum felling diameter, in
+#'   the same format of \code{\link{SpeciesCriteria}} (data.frame)
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
-#'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
+#'   \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
-#' @return your inventory with selected future and reserve trees, for your logging criteria (\code{\link{SpeciesCriteria}})
+#' @return your inventory with selected future and reserve trees, for your
+#'   logging criteria (\code{\link{SpeciesCriteria}})
 #'
-#' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}}, \code{\link{loggingparameters}}
+#' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
+#'   \code{\link{loggingparameters}}
 #'
 #' @export
 #'
@@ -19,6 +22,7 @@
 #'
 #' data(Paracou6_2016)
 #' data(DemParacou)
+#' data(PlotSlope)
 #'
 #' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(
 #' inventorycheckformat(Paracou6_2016))))
@@ -33,6 +37,7 @@
 #'
 #' inventory <- selected(inventory, scenario = "manual", fuel = "0",
 #' diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+#' DEM = DemParacou,
 #' advancedloggingparameters = loggingparameters(), VO = 30,
 #'  HVinit = HVinit)$inventory
 #'

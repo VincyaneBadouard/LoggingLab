@@ -60,6 +60,7 @@
 #'
 #' data(Paracou6_2016)
 #' data(DemParacou)
+#' data(PlotSlope)
 #'
 #' inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 #'
@@ -78,8 +79,8 @@ treeselection <- function(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
-  DEM = DemParacou,
-  plotslope = PlotSlope,
+  DEM,
+  plotslope,
   speciescriteria = SpeciesCriteria,
   advancedloggingparameters = loggingparameters()
   # MainTrail
@@ -171,7 +172,7 @@ treeselection <- function(
   selectedOutputs <- selected(                                                   # outputs of the selected function
     inventory,
     scenario = scenario, fuel = fuel, diversification = diversification,
-    specieslax = specieslax, objectivelax = objectivelax,
+    specieslax = specieslax, objectivelax = objectivelax, DEM = DEM,
     advancedloggingparameters = advancedloggingparameters, VO = VO, HVinit = HVinit)
 
   inventory <- selectedOutputs$inventory                                         # extract inventory of the selected outputs

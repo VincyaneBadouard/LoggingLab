@@ -34,8 +34,8 @@
 #'   (\code{\link{SpeciesCriteria}}) (numeric value)
 #'
 #' @return Your inventory with the trees selected for harvesting (depending on
-#'   the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
-#'   EnergywoodTrees)
+#'   the logging scenario chosen), and 2 sets of spatial points: (HollowTrees
+#'   and EnergywoodTrees)
 #'
 #' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'   \code{\link{DemParacou}}, \code{\link{loggingparameters}}
@@ -50,6 +50,7 @@
 #'
 #' data(Paracou6_2016)
 #' data(DemParacou)
+#' data(PlotSlope)
 #'
 #' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(
 #' inventorycheckformat(Paracou6_2016))))
@@ -64,7 +65,7 @@
 #'
 #' selecInventory <- selected(inventory, scenario = "manual", fuel = "2",
 #' diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-#' advancedloggingparameters = loggingparameters(), VO = 30,
+#' DEM = DemParacou, advancedloggingparameters = loggingparameters(), VO = 30,
 #' HVinit = HVinit)$inventory
 #'
 selected <- function(
@@ -74,7 +75,7 @@ selected <- function(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
-  DEM = DemParacou,
+  DEM,
   advancedloggingparameters = loggingparameters(),
   VO, # objective volume
   HVinit # initial Harvestable Volume
@@ -216,7 +217,7 @@ selected <- function(
           filter(Selected == "1")
         HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals only
 
-        message("The harvestable volume (=",paste(HVupCommercial1),") is always higher (by ",paste(HVupCommercial1-VO),") than your objective volume despite the increase in Minimum Falling Diameter (MinFD) (Initial harvestable volume = HVinit). In order to reach your objective volume, the trees were selected in decreasing order of volume until the objective volume was reached.")
+        message("The harvestable volume (=",paste(HVupCommercial1),")is always higher (by ",paste(HVupCommercial1-VO),") than your objective volume despite the increase in Minimum Falling Diameter (MinFD) (Initial harvestable volume = ",paste(HVinit),"). In order to reach your objective volume, the trees were selected in decreasing order of volume until the objective volume was reached.")
       }
       if (HVupCommercial1 < VO){
 

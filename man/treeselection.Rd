@@ -12,8 +12,8 @@ treeselection(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
-  DEM = DemParacou,
-  plotslope = PlotSlope,
+  DEM,
+  plotslope,
   speciescriteria = SpeciesCriteria,
   advancedloggingparameters = loggingparameters()
 )
@@ -71,6 +71,7 @@ treeselection
 
 data(Paracou6_2016)
 data(DemParacou)
+data(PlotSlope)
 
 inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 

@@ -25,7 +25,7 @@
 #'  validated for each of the trees. The function returns the harvestable volume
 #'  too, in the plot for these criteria.
 #'
-#' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
+#'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{DemParacou}}, \code{\link{PlotSlope}},
 #'  \code{\link{loggingparameters}}
 #'
@@ -42,6 +42,7 @@
 #'
 #' data(Paracou6_2016)
 #' data(DemParacou)
+#' data(PlotSlope)
 #'
 #' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
 #' test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
@@ -51,8 +52,8 @@ harvestable <- function(
   inventory,
   diversification,
   specieslax = FALSE,
-  DEM = DemParacou,
-  plotslope = PlotSlope,
+  DEM,
+  plotslope,
   advancedloggingparameters = loggingparameters()
 ){
 

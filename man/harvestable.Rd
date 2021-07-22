@@ -8,8 +8,8 @@ harvestable(
   inventory,
   diversification,
   specieslax = FALSE,
-  DEM = DemParacou,
-  plotslope = PlotSlope,
+  DEM,
+  plotslope,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -46,6 +46,7 @@ which trees are harvestable according to your harvestability criteria
 
 data(Paracou6_2016)
 data(DemParacou)
+data(PlotSlope)
 
 inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))
 test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,

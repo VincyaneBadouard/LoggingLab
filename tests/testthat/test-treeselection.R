@@ -36,11 +36,11 @@ test_that("treeselection", {
 
 
   expect_error(treeselection(Paracou6_2016, objective = 20, scenario ="manual", fuel = "0", diversification = TRUE,
-                             advancedloggingparameters = as.matrix(loggingparameters())),
+                             DEM = DemParacou, plotslope = PlotSlope, advancedloggingparameters = as.matrix(loggingparameters())),
                regexp = "The 'advancedloggingparameters' argument of the 'treeselection' function must be a list")
 
   expect_error(treeselection(Paracou6_2016, scenario = "manual",
-                                   objective = 20, fuel = NULL, diversification = T),
+                             objective = 20, fuel = NULL, diversification = T, DEM = DemParacou, plotslope = PlotSlope,),
                regexp = "If you choose the 'manual' mode,
          you must fill in the arguments 'objective', 'fuel' and 'diversification'")
 
@@ -62,18 +62,19 @@ test_that("treeselection", {
   # Objective Volume:
   ## hollow trees harvested
   objective <- 40
-  VO <- suppressMessages(treeselection(inventory,
+  VO_1 <- suppressMessages(treeselection(inventory,
                                        scenario ="manual", fuel = "2", objective = 40, diversification = TRUE, specieslax = FALSE,
-                                       objectivelax = FALSE))$VO
+                                       objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope))$VO
 
-  expect_true(VO == objective)
+
+  expect_true(VO_1 == objective)
 
   ## hollow trees non-harvested
-  VO <- suppressMessages(treeselection(inventory,
+  VO_2 <- suppressMessages(treeselection(inventory,
                                        scenario ="manual", fuel = "0", objective = 40, diversification = TRUE, specieslax = FALSE,
-                                       objectivelax = FALSE))$VO
+                                       objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope))$VO
 
-  expect_true(VO == objective + advancedloggingparameters$ObjectiveBonus)
+  expect_true(VO_2 == objective + advancedloggingparameters$ObjectiveBonus)
 
 
   expect_true(nrow(inventory) == nrow(testinventory)) # check that the rows number don't change
