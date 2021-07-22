@@ -11,14 +11,16 @@ test_that("inventorycheckformat", {
   ## check if all the variables are detected
   ### Create the test inventory
   DetectVar <- Paracou6_2016 %>%
-    dplyr::select(-Species,-CensusYear,-idTree,-Family,-Genus,-Species,-CircCorr,-CodeAlive,-CommercialSp,-UTMZone,-Lat,-Lon,-Xfield,-Yfield,-Xutm,-Yutm) %>%
+    dplyr::select(-Species,-CensusYear,-idTree,-Family,-Genus,-Species,-CircCorr,-CodeAlive,
+                  -CommercialSp,-UTMZone,-Lat,-Lon,-Xfield,-Yfield,-Xutm,-Yutm) %>%
     dplyr::rename(Vernacular = VernName) %>%
     dplyr::rename(PLOT = Plot)
 
   ### Test
+  errors <- capture_error(inventorycheckformat(DetectVar))
   lapply(c("Plot","CensusYear","idTree","Family","Genus","Species","CircCorr","CodeAlive","CommercialSp",
            "UTMZone","Lat","Lon","VernName","Xfield","Yfield","Xutm","Yutm"), function(element)
-             expect_error(inventorycheckformat(DetectVar), regexp = element))
+             expect_match(errors$message, regexp = element))
 
   ## check if class to detect are the right ones
   ### Create the test inventory
@@ -31,9 +33,10 @@ test_that("inventorycheckformat", {
     dplyr::mutate_if(is.logical, as.factor)
 
   ### Test
+  errors <- capture_error(inventorycheckformat(RightClasses))
   lapply(c("Plot","CensusYear","idTree","Family","Genus","Species","CircCorr","CodeAlive","CommercialSp",
            "UTMZone","Lat","Lon","VernName","Xfield","Yfield","Xutm","Yutm"), function(element)
-             expect_error(inventorycheckformat(RightClasses), regexp = element))
+             expect_match(errors$message, regexp = element))
 
   expect_identical(inventorycheckformat(Paracou6_2016), Paracou6_2016) # test if the function's ouptut is the same that its input
 
