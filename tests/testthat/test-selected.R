@@ -3,6 +3,8 @@ test_that("selected", {
   # Check the function arguments
   # Test data preparation
   data(Paracou6_2016)
+  # Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
+
   data(DemParacou)
   data(PlotSlope)
 

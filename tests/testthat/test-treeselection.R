@@ -3,6 +3,8 @@ test_that("treeselection", {
   # Check the function arguments
 
   data(Paracou6_2016)
+  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
+
   data(DemParacou)
 
   MatrixInventory <- as.matrix(Paracou6_2016)

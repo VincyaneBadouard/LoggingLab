@@ -1,6 +1,8 @@
 test_that("futurereserve", {
 
   data(Paracou6_2016)
+  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
+
   data(DemParacou)
 
   inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016))))

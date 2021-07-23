@@ -21,8 +21,8 @@ data(DemParacou)
 inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
 
 inventory <- treeselection(inventory, objective = 20, scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
-objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria,
-advancedloggingparameters = loggingparameters())$inventory
+                           objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria,
+                           advancedloggingparameters = loggingparameters())$inventory
 
 SelectedTrees <- inventory %>% 
   filter(Selected == "1") %>%
@@ -149,11 +149,11 @@ pts = list(outer, hole1, hole2)
 plot(pl1)
 
 list(matrix(c('A','B',
-                    'C','D', 
-                    'E', 'F', 
-                    'G','H',
-                    'I', 'J') # retour
-                  ,ncol=2, byrow=TRUE))
+              'C','D', 
+              'E', 'F', 
+              'G','H',
+              'I', 'J') # retour
+            ,ncol=2, byrow=TRUE))
 ```
 ```{r multipolygon}
 pol1 = list(outer, hole1, hole2) #1 list/polygon :  list with numeric matrices with points in rows
@@ -318,43 +318,209 @@ Crown = st_ellipse(pnt = dat, ex = dat$ex, ey = dat$ey)
 plot(Crown, graticule = TRUE, axes = TRUE)
 
 a <- st_difference(st_union(Crown, Trunk)) # -> multypolygon dont on garde que les points qui ne se superposent pas
+# a <- st_cast(a, "POLYGON")
 plot(a)
-
-# Polygon orientation
-DescTools::Rotate(x= SelectedTrees$Xutm[1], y = SelectedTrees$Yutm[1] + SelectedTrees$TrunkHeight[1] + SelectedTrees$CrownHeight[1]/2,
-                  theta = pi/sample(0:180, size = 1))
 
 ggplot() + # plot 2 polygones
   geom_sf(data = Trunk) +
   geom_sf(data = Crown) 
 # Multipolygone = tous les arbres
 ```
+
+# Treefelling orientation
+(voir shéma sur google slides)
+1) choper le point (Trail) de la pistele plus proche de l'emplacement de l'arbre (Foot)
+2) calculer l'angle (theta) entre le vecteur que forme la hauteur de l'arbre et le vecteur opposé à celui formé entre le point "Foot" et le point "Trail", par rapport au point "Foot"
+3) rotation du polygone d'un angle de 60 +/- theta °
+
+```{r}
+# Create a polygon ScndTrail
+pts = list(matrix(c(286520, 583134,
+                    286520, 583240, 
+                    286524, 583240, 
+                    286524, 583134,
+                    286520, 583134) # retour
+                  ,ncol=2, byrow=TRUE)) # DBH en cm à passer en m
+
+(ScndTrail = st_polygon(pts))
+ggplot() + # plot 2 polygones
+  geom_sf(data = a) +
+  geom_sf(data = ScndTrail) 
+
+# Find the point (Trail) on the ScndTrail closest to the location of the tree (Foot)
+Foot <- st_point(c(SelectedTrees$Xutm[1],SelectedTrees$Yutm[1]))
+
+NearestPoints <- st_nearest_points(Foot, ScndTrail) # from the Foot of the tree to the ScndTrail
+
+NearestPoint <- st_cast(NearestPoints, "POINT") # to have start (Foot) and end (Trail) points
+Trail <- NearestPoint[[2]] # the point (Trail) on the ScndTrail closest to the location of the tree (Foot)
+
+ggplot() + # plot 2 polygones
+  geom_sf(data = a) + # the tree (polygone)
+  geom_sf(data = Foot) + # the foot of the tree (point)
+  geom_sf(data = ScndTrail) + # the 2nd trail (polygone)
+  geom_sf(data = NearestPoints) + # the shortest way from the foot to the trail
+  geom_sf(data = Trail) # the point on the ScndTrail closest to the location of the tree (Foot)
+
+
+Trail[1]
+
+# Compute theta angle
+theta <- as.numeric(matlib::angle(c(Foot[1] - Foot[1], Foot[2] + SelectedTrees$TreeHeight[1]),
+                                  c(Foot[1] - Trail[1], Foot[2] -Trail[2]), degree = TRUE))
+
+
+```
+# Tree rotation
+ref : https://github.com/jeffreyevans/spatialEco/blob/master/R/rotate.polygon.R
+```{r}
+
+RotatePolygon <- function(p, angle, fixed) { # angle in the clockwise direction
+  
+  p.coords <- sf::st_coordinates(p)[,1:2] # Polygone coordinates extraction
+  
+  p.center <- suppressWarnings(sf::st_coordinates(fixed))
+  
+  rotate.coords <- function(xy, a, center) {
+    
+    co <- cos(-a * pi / 180)
+    
+    si <- sin(-a * pi / 180)
+    
+    adj <- matrix(rep(center, nrow(xy)), ncol=2, byrow=TRUE) # matrix with fixed point coordinates
+    
+    xy <- xy-adj
+    
+    cbind(co * xy[,1] - si * xy[,2],si * xy[,1] + co * xy[,2]) + adj
+  }
+  
+  p.rotate <- rotate.coords(p.coords, a = angle, center = c(p.center[1], 
+                                                            p.center[2]))
+  
+  Turned <- sf::st_sfc(sf::st_polygon(list(p.rotate))) # create the turned polygon
+  
+  return(Turned)
+  
+}
+
+TurnedTrunkA <- RotatePolygon(Trunk, angle = 60 - theta, fixed = Foot) # turned trunk
+TurnedCrownA <- RotatePolygon(Crown, angle = 60 - theta, fixed = Foot) # turned crown
+TurnedTrunkB <- RotatePolygon(Trunk, angle = 300 - theta, fixed = Foot) # turned trunk (angle in the clockwise direction: 360-60-theta)
+TurnedCrownB <- RotatePolygon(Crown, angle = 300 - theta, fixed = Foot) # turned crown (angle in the clockwise direction)
+
+# For a random direction felling
+RandomAngle <- sample(c(0:180), size = 1)
+RandomTrunk <- RotatePolygon(Trunk, angle = RandomAngle, fixed = Foot) # turned trunk
+RandomCrown <- RotatePolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
+
+
+
+ggplot() + # plot 2 polygones
+  geom_sf(data = a) + # the tree (polygone)
+  geom_sf(data = Foot) + # the foot of the tree (point)
+  geom_sf(data = ScndTrail) + # the 2nd trail (polygone)
+  geom_sf(data = NearestPoints) + # the shortest way from the foot to the trail
+  geom_sf(data = Trail) + # the point on the ScndTrail closest to the location of the tree (Foot)
+  geom_sf(data = TurnedTrunkA) +
+  geom_sf(data = TurnedCrownA) +
+  geom_sf(data = TurnedTrunkB) +
+  geom_sf(data = TurnedCrownB) +
+  geom_sf(data = RandomTrunk) +
+  geom_sf(data = RandomCrown)
+
+```
+
+# Create the line to pull the tree
+```{r}
+p = NearestPoints
+angle = 60
+fixed = "foot"
+
+RotateLine <- function(p, angle = 60,  
+    fixed = c("foot", "center", "lower.left", "upper.right")) {
+# if(class(p)[1] != "sf") p <- sf::st_as_sf(p)
+p.coords <- sf::st_coordinates(p)[,1:2] # Polygone coordinates extraction
+
+if(fixed[1] == "foot") {
+p.center <- suppressWarnings(sf::st_coordinates(Foot))
+
+} else if (fixed[1] == "center") {
+  p.center <- suppressWarnings(sf::st_coordinates(sf::st_centroid(p)))
+  
+} else if(fixed[1] == "lower.left") {
+  
+  p.center <- c(min(sf::st_coordinates(p)[,1]),
+                min(sf::st_coordinates(p)[,2]))
+  
+} else if(fixed[1] == "upper.right") {
+  p.center <- c(max(sf::st_coordinates(p)[,1]),
+                max(sf::st_coordinates(p)[,2]))
+}
+
+rotate.coords <- function(xy, a, center) {
+  
+  co <- cos(-a * pi / 180)
+  
+  si <- sin(-a * pi / 180)
+  
+  adj <- matrix(rep(center, nrow(xy)), ncol=2, byrow=TRUE) # matrix with fixed point coordinates
+  
+  xy <- xy-adj
+  
+  cbind(co * xy[,1] - si * xy[,2],si * xy[,1] + co * xy[,2]) + adj
+}
+
+p.rotate <- rotate.coords(p.coords, a = angle, center = c(p.center[1], 
+                                                          p.center[2]))
+
+Turned <- sf::st_sfc(sf::st_linestring(p.rotate)) # create the new polygon
+
+return(Turned)
+
+}
+
+Trace <- RotateLine(NearestPoints, angle = 60, fixed = "foot")
+
+ggplot() + # plot 2 polygones
+  geom_sf(data = a) + # the tree (polygone)
+  geom_sf(data = Foot) + # the foot of the tree (point)
+  geom_sf(data = ScndTrail) + # the 2nd trail (polygone)
+  geom_sf(data = NearestPoints) + # the shortest way from the foot to the trail
+  geom_sf(data = Trail) + # the point on the ScndTrail closest to the location of the tree (Foot)
+  geom_sf(data = TurnedTrunk) +
+  geom_sf(data = TurnedCrown) +
+  geom_sf(data = Trace)
+
+```
+
+# All the selected trees
+
 ```{r}
 for (ind in c(1:nrow(SelectedTrees))) {
   pts[ind] = list(matrix(c(SelectedTrees$Xutm[ind]-(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind], 
-                    SelectedTrees$Xutm[ind]-(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind] + SelectedTrees$TrunkHeight[ind], 
-                    SelectedTrees$Xutm[ind]+(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind] + SelectedTrees$TrunkHeight[ind], 
-                    SelectedTrees$Xutm[ind]+(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind],
-                    SelectedTrees$Xutm[ind]-(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind]) # retour
-                  ,ncol=2, byrow=TRUE)) # DBH en cm à passer en m
-
-(Trunk[ind] = st_polygon(pts[ind]))
-
-# le houppier
-dat[ind] = data.frame(
-  x = SelectedTrees$Xutm[ind], #centroid locations (x) m^me x que l'arbre
-  y = SelectedTrees$Yutm[ind] + SelectedTrees$TrunkHeight[ind] + SelectedTrees$CrownHeight[ind]/2, #centroid locations (y) = hauteur du tronc + CrownHeight/2
-  ex = SelectedTrees$CrownDiameter[ind]/2, #Size along x-axis (CrownDiameter/2)
-  ey = SelectedTrees$CrownHeight[ind]/2, #Size along y-axis (CrownHeight/2)
-  stringsAsFactors = FALSE
-)
-dat[ind] = st_as_sf(dat[ind], coords = c("x", "y")) #centroids
-
-# Calculate ellipses
-Crown[ind] = st_ellipse(pnt = dat[ind], ex = dat[ind]$ex, ey = dat$ey) # ne fctne pas
-a[ind] <- st_difference(st_union(Crown[ind], Trunk[ind])) # -> multypolygon dont on garde que les points qui ne se superposent pas
-
-
+                           SelectedTrees$Xutm[ind]-(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind] + SelectedTrees$TrunkHeight[ind], 
+                           SelectedTrees$Xutm[ind]+(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind] + SelectedTrees$TrunkHeight[ind], 
+                           SelectedTrees$Xutm[ind]+(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind],
+                           SelectedTrees$Xutm[ind]-(SelectedTrees$DBH[ind]/100)/2, SelectedTrees$Yutm[ind]) # retour
+                         ,ncol=2, byrow=TRUE)) # DBH en cm à passer en m
+  
+  (Trunk[ind] = st_polygon(pts[ind]))
+  
+  # le houppier
+  dat[ind] = data.frame(
+    x = SelectedTrees$Xutm[ind], #centroid locations (x) m^me x que l'arbre
+    y = SelectedTrees$Yutm[ind] + SelectedTrees$TrunkHeight[ind] + SelectedTrees$CrownHeight[ind]/2, #centroid locations (y) = hauteur du tronc + CrownHeight/2
+    ex = SelectedTrees$CrownDiameter[ind]/2, #Size along x-axis (CrownDiameter/2)
+    ey = SelectedTrees$CrownHeight[ind]/2, #Size along y-axis (CrownHeight/2)
+    stringsAsFactors = FALSE
+  )
+  # dat[ind] = st_as_sf(dat[ind], coords = c("x", "y")) #centroids
+  
+  # Calculate ellipses
+  # Crown[ind] = st_ellipse(pnt = dat[ind], ex = dat[ind]$ex, ey = dat$ey) # ne fctne pas
+  # a[ind] <- st_difference(st_union(Crown[ind], Trunk[ind])) # -> multypolygon dont on garde que les points qui ne se superposent pas
+  
+  
 }
 plot(Trunk, graticule = TRUE, axes = TRUE)
 plot(Crown, graticule = TRUE, axes = TRUE)
@@ -385,7 +551,7 @@ if (directionalfelling == "0"){
 } 
 # créer un polygone par arbre ("Shadow"):
 # origine = coordonnées de l’arbre (vecteurs "AccessibleTreesPoints")
-# sommet = 1 point au hasard
+# orientation = angle au hasard
 # longueur = hauteur de l’arbre TreeHeight
 # largeur = DBH
 # hauteur de l’ellipse CrownHeight

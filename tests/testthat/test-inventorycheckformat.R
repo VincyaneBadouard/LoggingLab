@@ -4,6 +4,8 @@ test_that("inventorycheckformat", {
 
   ## check the function argument
   data(Paracou6_2016)
+  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
+
   MatrixInventory <- as.matrix(Paracou6_2016)
   expect_error(inventorycheckformat(MatrixInventory), regexp = "inventory must be a data.frame")
 

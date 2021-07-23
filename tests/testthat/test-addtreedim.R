@@ -4,6 +4,8 @@ test_that("addtreedim", {
 
   ## check the database class
   data(Paracou6_2016)
+  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
+
   MatrixInventory <- as.matrix(Paracou6_2016)
   crowndiameterparameters <- as.matrix(ParamCrownDiameterAllometry)
   volumeparameters <- as.matrix(ForestZoneVolumeParametersTable)

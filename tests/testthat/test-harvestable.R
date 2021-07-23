@@ -2,6 +2,8 @@ test_that("harvestable", {
 
   # Check the function arguments
   data("Paracou6_2016")
+  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
+
   data(DemParacou)
   data(PlotSlope)
 
