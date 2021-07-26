@@ -31,10 +31,10 @@ advancedloggingparameters = loggingparameters()
 ```
 
 ```{r}
-felling <- function (inventory, SelectedTrees) {
+felling <- function (inventory, SelectedTrees, fuel, directionalfelling, advancedloggingparameters = loggingparameters()) {
   
-  # # Take selected trees
-  # SelectedTrees <- inventory %>% 
+  # Take selected trees
+  # SelectedTrees <- inventory %>%
   #   filter(Selected == "1") %>%
   #   dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,CrownDiameter,Selected, Xutm, Yutm)
   
@@ -68,29 +68,24 @@ felling <- function (inventory, SelectedTrees) {
   
   a <- st_difference(st_union(Crown, Trunk)) # -> multypolygon of which we keep only the points that do not overlap
   
-  ggplot() + # plot 2 polygones
-    geom_sf(data = Trunk) +
-    geom_sf(data = Crown) 
-  
-  ggplot() +
-    geom_sf(data = a) # plot the multypolygon
-  
   # Treefelling orientation
   
-  # Create a polygon ScndTrail
-  pts = list(matrix(c(286520, 583134,
-                      286520, 583240, 
-                      286524, 583240, 
-                      286524, 583134,
-                      286520, 583134) # the return
-                    ,ncol=2, byrow=TRUE)) # DBH en cm à passer en m
+  # Create 2 polygons ScndTrail
+  pol1 <- list(matrix(c(286503, 583134,
+                        286503, 583240, 
+                        286507, 583240, 
+                        286507, 583134,
+                        286503, 583134) # the return
+                      ,ncol=2, byrow=TRUE)) 
+  pol2 <- list(matrix(c(286650, 583134,
+                        286650, 583240, 
+                        286654, 583240, 
+                        286654, 583134,
+                        286650, 583134) # the return
+                      ,ncol=2, byrow=TRUE))
   
-  (ScndTrail <- st_polygon(pts))
-  
-  ggplot() + 
-    geom_sf(data = a) + # the tree
-    geom_sf(data = ScndTrail) # the 2nd trail
-  
+  PolList = list(pol1,pol2) #list of lists of numeric matrices
+  (ScndTrail = st_multipolygon(PolList))
   
   # Find the point (Trail) on the ScndTrail closest to the location of the tree (Foot)
   Foot <- st_point(c(SelectedTrees$Xutm[1],SelectedTrees$Yutm[1])) # tree foot point
@@ -99,13 +94,6 @@ felling <- function (inventory, SelectedTrees) {
   
   NearestPoint <- st_cast(NearestPoints, "POINT") # to have start (Foot) and end (Trail) points
   Trail <- NearestPoint[[2]] # the point (Trail) on the ScndTrail closest to the location of the tree (Foot)
-  
-  ggplot() + # plot 2 polygones
-    geom_sf(data = a) + # the tree (polygone)
-    geom_sf(data = Foot) + # the foot of the tree (point)
-    geom_sf(data = ScndTrail) + # the 2nd trail (polygone)
-    geom_sf(data = NearestPoints) + # the shortest way from the foot to the trail (linestring)
-    geom_sf(data = Trail) # the point on the ScndTrail closest to the location of the tree (Foot)
   
   # Compute theta angle
   theta <- as.numeric(matlib::angle(c(Foot[1] - Foot[1], Foot[2] + SelectedTrees$TreeHeight[1]),
@@ -141,27 +129,60 @@ felling <- function (inventory, SelectedTrees) {
     
   }
   
-  TurnedTrunkA <- RotatePolygon(Trunk, angle = 60 - theta, fixed = Foot) # turned trunk
-  TurnedCrownA <- RotatePolygon(Crown, angle = 60 - theta, fixed = Foot) # turned crown
-  TurnedTrunkB <- RotatePolygon(Trunk, angle = 300 - theta, fixed = Foot) # turned trunk (angle in the clockwise direction: 360-60-theta)
-  TurnedCrownB <- RotatePolygon(Crown, angle = 300 - theta, fixed = Foot) # turned crown (angle in the clockwise direction)
-  
   # For a random direction felling
-  RandomAngle <- sample(c(0:180), size = 1)
-  RandomTrunk <- RotatePolygon(Trunk, angle = RandomAngle, fixed = Foot) # turned trunk
-  RandomCrown <- RotatePolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
+  if(directionalfelling == "0" && (fuel !="1" |fuel !="2")){
+    RandomAngle <- sample(c(0:180), size = 1)
+    TrunkA <- RotatePolygon(Trunk, angle = RandomAngle, fixed = Foot) # turned trunk
+    CrownA <- RotatePolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
+    TrunkB <- NULL
+    CrownB <- NULL
+  }
+  
+  # To direct only to avoid damage to future and reserve trees
+  # if (directionalfelling == "1"&& (fuel !="1" |fuel !="2")) {
+  #   
+  #   
+  # }
+  
+  # To direct to avoid damage to future and reserve trees + track orientation. Winching: Foot before.
+  if(directionalfelling == "2"&& (fuel !="1" |fuel !="2")){
+    TrunkA <- RotatePolygon(Trunk, angle = 240 + theta, fixed = Foot) # turned trunk
+    CrownA <- RotatePolygon(Crown, angle = 240 + theta, fixed = Foot) # turned crown
+    TrunkB <- RotatePolygon(Trunk, angle = 120 + theta, fixed = Foot) # turned trunk 
+    CrownB <- RotatePolygon(Crown, angle = 120 + theta, fixed = Foot) # turned crown
+  }
+  
+  # Fuelwood exploitation in the crowns
+  if(fuel =="1" |fuel =="2"){
+    
+    TrailDist <- st_distance(Foot, Trail)
+    
+    # ADD SLOPE CRITERIA !!!
+    
+    if(TrailDist <= advancedloggingparameters$GrappleLength){ # <= 6m (= grapple length) -> winching by grapple
+      TrunkA <- RotatePolygon(Trunk, angle = theta + 60 , fixed = Foot) # turned trunk
+      CrownA <- RotatePolygon(Crown, angle = theta + 60 , fixed = Foot) # turned crown
+      TrunkB <- RotatePolygon(Trunk, angle = 300 + theta, fixed = Foot) # turned trunk
+      CrownB <- RotatePolygon(Crown, angle = 300 + theta, fixed = Foot) # turned crown
+    } else { # > 6m -> winching by cable
+      TrunkA <- RotatePolygon(Trunk, angle = 240 + theta, fixed = Foot) # turned trunk
+      CrownA <- RotatePolygon(Crown, angle = 240 + theta, fixed = Foot) # turned crown
+      TrunkB <- RotatePolygon(Trunk, angle = 120 + theta, fixed = Foot) # turned trunk 
+      CrownB <- RotatePolygon(Crown, angle = 120 + theta, fixed = Foot) # turned crown
+    }
+    
+    
+  }
   
   FellingOuputs <- list(a = a,
                         Foot = Foot,
                         ScndTrail = ScndTrail,
                         NearestPoints = NearestPoints,
                         Trail = Trail,
-                        TurnedTrunkA = TurnedTrunkA,
-                        TurnedCrownA = TurnedCrownA,
-                        TurnedTrunkB = TurnedTrunkB,
-                        TurnedCrownB = TurnedCrownB,
-                        RandomTrunk = RandomTrunk,
-                        RandomCrown = RandomCrown)
+                        TrunkA = TrunkA,
+                        CrownA = CrownA,
+                        TrunkB = TrunkB,
+                        CrownB = CrownB)
   
   return(FellingOuputs)
   
@@ -180,39 +201,35 @@ EachTree <- list(SelectedTrees[1,],
                  SelectedTrees[3,])
 
 AllTheFellingTrees <- lapply(EachTree, function(element)
-  felling(inventory, element))
+  felling(inventory, element,  fuel = "2", directionalfelling = "2"))
 
-# a <- st_union(st_union(AllTheFellingTrees[[1]]$a, AllTheFellingTrees[[2]]$a), AllTheFellingTrees[[3]]$a)
+a <- st_union(st_union(AllTheFellingTrees[[1]]$a, AllTheFellingTrees[[2]]$a), AllTheFellingTrees[[3]]$a)
 
-# Foot <- st_union(st_union(AllTheFellingTrees[[1]]$Foot, AllTheFellingTrees[[2]]$Foot), AllTheFellingTrees[[3]]$Foot)
+Foot <- st_union(st_union(AllTheFellingTrees[[1]]$Foot, AllTheFellingTrees[[2]]$Foot), AllTheFellingTrees[[3]]$Foot)
 
 ScndTrail <- st_union(st_union(AllTheFellingTrees[[1]]$ScndTrail, AllTheFellingTrees[[2]]$ScndTrail), AllTheFellingTrees[[3]]$ScndTrail)
 
 NearestPoints <-  st_union(st_union(AllTheFellingTrees[[1]]$NearestPoints, AllTheFellingTrees[[2]]$NearestPoints), AllTheFellingTrees[[3]]$NearestPoints)
 # Trail <- Trail
-TurnedTrunkA <- st_union(st_union(AllTheFellingTrees[[1]]$TurnedTrunkA, AllTheFellingTrees[[2]]$TurnedTrunkA), AllTheFellingTrees[[3]]$TurnedTrunkA)
+TrunkA <- st_union(st_union(AllTheFellingTrees[[1]]$TrunkA, AllTheFellingTrees[[2]]$TrunkA), AllTheFellingTrees[[3]]$TrunkA)
 
-TurnedCrownA <- st_union(st_union(AllTheFellingTrees[[1]]$TurnedCrownA, AllTheFellingTrees[[2]]$TurnedCrownA), AllTheFellingTrees[[3]]$TurnedCrownA)
+CrownA <- st_union(st_union(AllTheFellingTrees[[1]]$CrownA, AllTheFellingTrees[[2]]$CrownA), AllTheFellingTrees[[3]]$CrownA)
 
-TurnedTrunkB <- st_union(st_union(AllTheFellingTrees[[1]]$TurnedTrunkB, AllTheFellingTrees[[2]]$TurnedTrunkB), AllTheFellingTrees[[3]]$TurnedTrunkB)
+TrunkB <- st_union(st_union(AllTheFellingTrees[[1]]$TrunkB, AllTheFellingTrees[[2]]$TrunkB), AllTheFellingTrees[[3]]$TrunkB)
 
-TurnedCrownB <- st_union(st_union(AllTheFellingTrees[[1]]$TurnedCrownB, AllTheFellingTrees[[2]]$TurnedCrownB), AllTheFellingTrees[[3]]$TurnedCrownB)
-# RandomTrunk <- RandomTrunk
-# RandomCrown <- RandomCrown
+CrownB <- st_union(st_union(AllTheFellingTrees[[1]]$CrownB, AllTheFellingTrees[[2]]$CrownB), AllTheFellingTrees[[3]]$CrownB)
 
 
 ggplot() + # plot 2 polygones
-  # geom_sf(data = a) + # the tree (polygone)
-  # geom_sf(data = Foot) + # the foot of the tree (point)
+  geom_sf(data = a, colour = "red") + # default tree position (polygone)
+  geom_sf(data = Foot) + # the foot of the tree (point)
   geom_sf(data = ScndTrail) + # the 2nd trail (polygone)
   geom_sf(data = NearestPoints) + # the shortest way from the foot to the trail
   # geom_sf(data = Trail) + # the point on the ScndTrail closest to the location of the tree (Foot)
-  geom_sf(data = TurnedTrunkA) +
-  geom_sf(data = TurnedCrownA) +
-  geom_sf(data = TurnedTrunkB) +
-  geom_sf(data = TurnedCrownB)
-  # geom_sf(data = RandomTrunk) +
-  # geom_sf(data = RandomCrown)
+  geom_sf(data = TrunkA, colour = "green") + # Foot before
+  geom_sf(data = CrownA, colour = "green") +
+  geom_sf(data = TrunkB, colour = "green") +
+  geom_sf(data = CrownB, colour = "green")
 
 ```
 

@@ -4,7 +4,6 @@
 #' @format A tibble with 72 rows and 8 variables:
 #' \describe{
 #'   \item{VernName}{Species vernacular/economic name (character)}
-#'   \item{ScientificName}{Species scientific name (character)}
 #'   \item{Genus}{Genus associated at the vernacular name (character)}
 #'   \item{Species}{Species (without genus part) associated at the vernacular name (character)}
 #'   \item{Commercial}{Economic interest level ("1" for principal economic species, "2" for a diversification goal) (factor)}

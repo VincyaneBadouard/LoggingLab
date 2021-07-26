@@ -3,7 +3,7 @@ test_that("selected", {
   # Check the function arguments
   # Test data preparation
   data(Paracou6_2016)
-  # Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
+  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
 
   data(DemParacou)
   data(PlotSlope)
@@ -16,7 +16,7 @@ test_that("selected", {
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
-  VO <- 40
+  VO <- 10
 
   testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE,
                                              objectivelax = FALSE, DEM = DemParacou,
@@ -60,7 +60,7 @@ test_that("selected", {
                                              advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
   if (HVinit == VO){
     TestRareWorld <- testinventory %>%
-      filter(LoggingStatus =="harvestable")
+      dplyr::filter(LoggingStatus == "harvestable")
 
     expect_true(all(TestRareWorld$Selected == "1" |TestRareWorld$Selected == "deselected")) #deselected = probbedhollow trees
   }
@@ -77,7 +77,7 @@ test_that("selected", {
                                              diversification = FALSE, specieslax = TRUE, objectivelax = TRUE, DEM = DemParacou,
                                              advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
   Testspecieslax <- testinventory %>%
-    filter(Selected == "1")
+    dplyr::filter(Selected == "1")
 
   expect_true(any(Testspecieslax$LoggingStatus =="harvestable2nd")) # there are "harvestable2nd" among the Selected
 
@@ -119,9 +119,9 @@ test_that("selected", {
                                              advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
 
   TestUp <- testinventory %>%
-    filter(Commercial == "1")
+    dplyr::filter(Commercial == "1")
   TestDBHUp <- testinventory %>%
-    filter(LoggingStatus =="harvestableUp")
+    dplyr::filter(LoggingStatus =="harvestableUp")
 
   expect_true(any(TestDBHUp$LoggingStatus =="harvestableUp")) # There are harvestableUp among the Commercial = "1"
   expect_true(all(TestDBHUp$DBH >= TestDBHUp$UpMinFD)) # DBH >= UpMinFD
@@ -148,7 +148,7 @@ test_that("selected", {
                                              VO = VO, HVinit = HVinit))$inventory
 
   TestHollow <- testinventory %>%
-    filter(Selected == "1"| Selected == "deselected")
+    dplyr::filter(Selected == "1"| Selected == "deselected")
 
   expect_true(all(!is.na(TestHollow$ProbedHollowProba))) # ProbedHollowProba for the Selected == "1" or == "deselected"
   expect_true(all(TestHollow$ProbedHollow %in% c("0","1"))) # ProbedHollow = "0" ou "1" if !is.na(ProbedHollowProba)

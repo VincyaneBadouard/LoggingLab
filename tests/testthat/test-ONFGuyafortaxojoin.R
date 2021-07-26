@@ -3,18 +3,31 @@ test_that("ONFGuyafortaxojoin", {
   # Check the function arguments
 
   data(Paracou6_2016)
-  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
+  data(SpeciesCriteria)
+
+  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:500)
 
   MatrixInventory <- as.matrix(Paracou6_2016)
+
+
   Matrixspeciescriteria <- as.matrix(SpeciesCriteria)
 
   expect_error(ONFGuyafortaxojoin(MatrixInventory, Matrixspeciescriteria), regexp = "The function arguments must be data.frames")
 
 
+  # speciescriteria columns check
+
+  Badspeciescriteria <- SpeciesCriteria %>%
+    dplyr::rename(Vernacular = VernName)
+
+  testinventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
+
+  expect_error(ONFGuyafortaxojoin(testinventory, Badspeciescriteria), regexp = "The columns requested in the data frame given in the speciescriteria argument are not found")
+
   # Check variables class
 
   ## Test data preparation
-  testinventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))) # compute the new inventory
+  testinventory <- ONFGuyafortaxojoin(testinventory) # compute the new inventory
 
   TestList <- list( # list the variables to check
     testinventory$MinFD,

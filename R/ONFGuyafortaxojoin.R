@@ -19,6 +19,7 @@
 #'
 #' @examples
 #' data(Paracou6_2016)
+#' data(SpeciesCriteria)
 #' ONFGuyafortaxojoin(Paracou6_2016, SpeciesCriteria)
 #'
 ONFGuyafortaxojoin <- function(
@@ -29,9 +30,18 @@ ONFGuyafortaxojoin <- function(
 
   # Arguments check
 
-  if(!any(unlist(lapply(list(inventory, speciescriteria), inherits, "data.frame"))))
+    if(!any(unlist(lapply(list(inventory, speciescriteria), inherits, "data.frame"))))
     stop("The function arguments must be data.frames") # any() don't take a list
 
+  # speciescriteria columns check
+
+  lapply(list("VernName", "Genus", "Species", "Commercial", "MinFD", "UpMinFD", "MaxFD"),
+         function(element)
+    if(!(element %in% names(speciescriteria))) {
+
+    stop("The columns requested in the data frame given in the speciescriteria argument are not found (see the vignette for the format of this dataframe")
+  }
+)
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
