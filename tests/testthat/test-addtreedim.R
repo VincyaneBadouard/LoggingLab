@@ -18,7 +18,7 @@ test_that("addtreedim", {
 
   # Test data preparation
   testinventory <- Paracou6_2016 %>% # compute the new inventory
-    cleaninventory() %>%
+  inventorycheckformat() %>%
     addtreedim()
 
   TestList <- list( # list the variables to check
@@ -67,7 +67,7 @@ test_that("addtreedim", {
   expect_true(all(0 < testinventory$CrownHeight & testinventory$CrownHeight < 100))
   expect_true(all(0 < testinventory$CrownDiameter & testinventory$CrownDiameter < 200))
 
-  expect_true(nrow(cleaninventory(Paracou6_2016)) == nrow(testinventory))
+  expect_true(nrow(inventorycheckformat(Paracou6_2016)) == nrow(testinventory))
 
 
 })

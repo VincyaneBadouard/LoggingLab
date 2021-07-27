@@ -20,7 +20,7 @@ test_that("ONFGuyafortaxojoin", {
   Badspeciescriteria <- SpeciesCriteria %>%
     dplyr::rename(Vernacular = VernName)
 
-  testinventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
+  testinventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 
   expect_error(ONFGuyafortaxojoin(testinventory, Badspeciescriteria), regexp = "The columns requested in the data frame given in the speciescriteria argument are not found")
 

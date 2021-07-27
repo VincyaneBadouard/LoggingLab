@@ -21,6 +21,24 @@ inventorycheckformat <- function(
   if (!inherits(inventory, "data.frame"))
     stop("inventory must be a data.frame")
 
+  # Global variables
+  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
+  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
+  DeathCause <- DistCrit <- Family <- NULL
+  ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
+  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
+  MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
+  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
+  PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
+  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
+  SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
+  TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
+  TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
+  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
+  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
+  beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
+
   # Variables presence check
   # (Plot, CensusYear, idTree, Family, Genus, Species, CircCorr, CodeAlive,
   # CommercialSp, UTMZone, Lat, Lon, VernName, Xfield, Yfield, Xutm, Yutm)
@@ -181,6 +199,38 @@ inventorycheckformat <- function(
   if(("DBH" %in% names(inventory) & !inherits(inventory$DBH, "numeric"))) {
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop, "DBH variable should be numeric.")
+  }
+
+  if (!GoodData)# inverse value of the object
+    stop(paste ("Your inventory does not comply.", GeneralStop))
+
+  #if DBH (cm) doesn't exist create it
+  if (!("DBH" %in% names(inventory)) && ("CircCorr" %in% names(inventory))) {
+    inventory <- mutate(inventory, DBH = ifelse(is.na(CircCorr), Circ/pi, CircCorr/pi))
+  }
+
+  # Filter
+  inventory <- inventory %>%
+    filter(CodeAlive == "TRUE") %>% #only alive trees
+    filter(DBH >= 10) # DBH >= 10, Circ = perimeter of the circle? =! diameter !
+
+  if (any(duplicated(inventory$idTree))) {
+    GoodData <- FALSE
+    GeneralStop <- paste (GeneralStop, "Tree identifiers (idTree) are not unique.")
+    # stop function if the tree identifiers (idTree) are not unique
+  }
+
+  # length(unique(inventory$Plot)) == 1
+  if (!length(unique(inventory$Plot)) == 1){ #all the Plot values are equal?
+    GoodData <- FALSE
+    GeneralStop <- paste (GeneralStop,"Your inventory concerns different plots
+                          (Plot). Our function simulates logging at the plot level.")
+  }
+
+  if (!length(unique(inventory$CensusYear)) == 1) {#all is the same year?
+    GoodData <- FALSE
+    GeneralStop <- paste (GeneralStop,"Your inventory concerns different years
+                          (CensusYear). Our function simulates logging at 1 year scale.")
   }
 
   if (!GoodData)# inverse value of the object

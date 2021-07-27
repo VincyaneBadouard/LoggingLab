@@ -31,7 +31,7 @@ timberharvestedvolume
 \dontrun{
 data(Paracou6_2016)
 
-inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
+inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 
 inventory <- treeselection(inventory, SpeciesCriteria,
 scenario ="manual", fuel = "2", objective = 20, diversification = TRUE, specieslax = FALSE,

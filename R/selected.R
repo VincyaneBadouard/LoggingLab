@@ -52,8 +52,8 @@
 #' data(DemParacou)
 #' data(PlotSlope)
 #'
-#' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(
-#' inventorycheckformat(Paracou6_2016))))
+#' inventory <- ONFGuyafortaxojoin(addtreedim(
+#' inventorycheckformat(Paracou6_2016)))
 #'
 #' harvestableOutputs <- harvestable(inventory, diversification = TRUE,
 #'  specieslax = FALSE,

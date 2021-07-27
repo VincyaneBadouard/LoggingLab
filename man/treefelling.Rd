@@ -60,7 +60,7 @@ treefelling
 \dontrun{
 data(Paracou6_2016)
 
-inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
+inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 
 inventory <- treeselection(inventory, SpeciesCriteria, scenario = "manual",
 fuel = "0",objective = 20,

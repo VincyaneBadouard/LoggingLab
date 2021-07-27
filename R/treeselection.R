@@ -62,7 +62,7 @@
 #' data(DemParacou)
 #' data(PlotSlope)
 #'
-#' inventory <- addtreedim(cleaninventory(inventorycheckformat(Paracou6_2016)))
+#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 #'
 #'treeselectionoutputs <- treeselection(inventory, objective = 20,
 #'scenario ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,

@@ -18,11 +18,13 @@ test_that("inventorycheckformat", {
     dplyr::rename(Vernacular = VernName) %>%
     dplyr::rename(PLOT = Plot)
 
+
   ### Test
   errors <- capture_error(inventorycheckformat(DetectVar))
   lapply(c("Plot","CensusYear","idTree","Family","Genus","Species","CircCorr","CodeAlive","CommercialSp",
            "UTMZone","Lat","Lon","VernName","Xfield","Yfield","Xutm","Yutm"), function(element)
              expect_match(errors$message, regexp = element))
+
 
   ## check if class to detect are the right ones
   ### Create the test inventory
@@ -40,7 +42,33 @@ test_that("inventorycheckformat", {
            "UTMZone","Lat","Lon","VernName","Xfield","Yfield","Xutm","Yutm"), function(element)
              expect_match(errors$message, regexp = element))
 
-  expect_identical(inventorycheckformat(Paracou6_2016), Paracou6_2016) # test if the function's ouptut is the same that its input
+
+  #Create the test inventory
+  TestInventory <- Paracou6_2016
+  TestInventory[10, "CodeAlive"] <- FALSE # Some FALSE in CodeAlive
+  TestInventory[4, "CircCorr"] <- 6 # DBH < 10
+  CleanedInventory <- inventorycheckformat(TestInventory)
+
+  #check if CodeAlive == TRUE
+  expect_true(all(CleanedInventory$CodeAlive == "TRUE"))
+
+  #check if DBH >= 10 (check if DBH exists in the same way)
+  expect_true(all(CleanedInventory$DBH >= 10 & inventorycheckformat(TestInventory)$DBH < 900))#the largest known tree: 825 cm
+
+  expect_false(any(is.na(CleanedInventory$DBH))) #check that all the DBH are computed
+
+
+  #check if the stops work
+  ##Create the test inventory
+  StopTestInventory <- Paracou6_2016
+  StopTestInventory[1:3, "idTree"] <- 200L # create a 3 time present tree
+  StopTestInventory[5, "Plot"] <- "100" # a tree in another plot
+  StopTestInventory[20, "CensusYear"] <- 2017L # different years inventory
+
+
+  errors <- capture_error(inventorycheckformat(StopTestInventory))
+  lapply(c("idTree","CensusYear","Plot"), function(element)
+  expect_match(errors$message, regexp = element)) # check if idTree's are unique, if it is always the same plot and the same year
 
 })
 
