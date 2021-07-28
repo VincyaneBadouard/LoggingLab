@@ -179,4 +179,10 @@ treefelling <- function(
     }
   }
 
+  treefellingOutputs <- list(inventory = inventory,
+                             TreefallSuccess = TreefallSuccess,
+                             TreefallFailure = TreefallFailure)
+
+  return(treefellingOutputs)
+
 }

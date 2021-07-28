@@ -88,7 +88,7 @@ addtreedim <- function(
 
     # TreeHarvestableVolume (m3)
     left_join(volumeparameters, by = "Forest") %>%
-    mutate(TreeHarvestableVolume = advancedloggingparameters$TreeHarvestableVolumeAllometry(DBH, aCoef, bCoef)) %>%
+    dplyr::mutate(TreeHarvestableVolume = advancedloggingparameters$TreeHarvestableVolumeAllometry(DBH, aCoef, bCoef)) %>%
     #
     #    #Sylvain's version
     #     mutate(TreeHarvestableVolume = # the variable to compute
