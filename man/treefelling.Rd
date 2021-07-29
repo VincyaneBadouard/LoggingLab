@@ -9,14 +9,9 @@ treefelling(
   scenario = "manual",
   fuel,
   directionalfelling,
-  advancedloggingparameters = loggingparameters(),
-  AccessibleTreesPoints,
-  SelectedTreesPoints,
-  AvenirTreesPoints,
-  ReserveTreesPoints,
-  DeadTreesPoints,
-  HollowTreesPoints,
-  FuelwoodTreesPoints
+  MainTrail,
+  ScndTrail,
+  advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
@@ -32,21 +27,11 @@ exploitation of hollow trees and damage in fuelwood = "2"}
 avoid damage to future and reserve trees), "2" (avoid damage to future and
 reserve trees + track orientation)}
 
+\item{MainTrail}{(MULTIPOLYGON)}
+
+\item{ScndTrail}{(MULTIPOLYGON)}
+
 \item{advancedloggingparameters}{(list)}
-
-\item{AccessibleTreesPoints}{(MULTIPOINT)}
-
-\item{SelectedTreesPoints}{(MULTIPOINT)}
-
-\item{AvenirTreesPoints}{(MULTIPOINT)}
-
-\item{ReserveTreesPoints}{(MULTIPOINT)}
-
-\item{DeadTreesPoints}{(MULTIPOINT)}
-
-\item{HollowTreesPoints}{(MULTIPOINT)}
-
-\item{FuelwoodTreesPoints}{(MULTIPOINT) MainTrail 2ndTrail}
 }
 \value{
 "Shadow" polygons +  "TreefallSuccess", "TreefallFailure",
@@ -63,7 +48,7 @@ data(Paracou6_2016)
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 
 inventory <- treeselection(inventory, SpeciesCriteria, scenario = "manual",
-fuel = "0",objective = 20,
+fuel = "2",objective = 25,
 diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
 advancedloggingparameters = loggingparameters())$inventory
 

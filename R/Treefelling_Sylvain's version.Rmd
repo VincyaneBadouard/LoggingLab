@@ -13,8 +13,14 @@ inventory <- treeselection(inventory, objective = 20, scenario ="manual", fuel =
                            advancedloggingparameters = loggingparameters())$inventory
 ```
 
-# Create 2 polygons ScndTrail
+# Create a MainTrail and 2 polygons ScndTrail
 ```{r}
+MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
+                                        286400, 583250,
+                                        286655, 583250,
+                                        286655, 583130,
+                                        286400, 583130) # the return
+                                      ,ncol=2, byrow=TRUE))
 
 pol1 <- list(matrix(c(286503, 583134,
                       286503, 583240, 
@@ -40,9 +46,14 @@ ScndTrail = st_multipolygon(PolList)
 
 successfail <- function(
   inventory,
-  fuel = "2",
-  directionalfelling = "2",
+  fuel,
+  directionalfelling,
   advancedloggingparameters = loggingparameters()) {
+  
+  if (fuel == "0" && directionalfelling == "0"){
+    inventory <- inventory %>% 
+      mutate(TreeFellingOrientationSuccess = 0)
+  }
   
   if (fuel == "0" && directionalfelling != "0"){
     inventory <- inventory %>% 
@@ -65,6 +76,8 @@ successfail <- function(
     
   }
   
+  inventory$TreeFellingOrientationSuccess <- as.character(inventory$TreeFellingOrientationSuccess) 
+  
   return(inventory)
   
 }
@@ -74,7 +87,7 @@ successfail <- function(
 # Rotation function  
 
 ```{r}
-RotatePolygon <- function(p, angle, fixed) { # angle in the clockwise direction
+rotatepolygon <- function(p, angle, fixed) { # angle in the clockwise direction
   p.coords <- sf::st_coordinates(p)[,1:2] # Polygone coordinates extraction
   p.center <- suppressWarnings(sf::st_coordinates(fixed))
   rotate.coords <- function(xy, a, center) {
@@ -94,12 +107,16 @@ RotatePolygon <- function(p, angle, fixed) { # angle in the clockwise direction
 # Tree creation function  
 
 ```{r}
-
+dat <- SelectedTrees[1,]
 st_tree <- function(dat,
-                    trail = ScndTrail,
+                    ScndTrail = ScndTrail,
+                    MainTrail = MainTrail,
                     fuel, 
                     directionalfelling, 
                     advancedloggingparameters = loggingparameters()){
+  
+  Trail <- st_union(MainTrail, ScndTrail) # Our trail will be MainTrail or ScndTrail
+  
   Crown <- dat %>% 
     mutate(xCrown = Xutm, 
            yCrown = Yutm + TrunkHeight + CrownHeight/2,
@@ -117,16 +134,16 @@ st_tree <- function(dat,
   
   # Foot <- st_point(as.numeric(dat[,c("Xutm", "Yutm")])) # Tree coordinates (point)
   
-  # Find the point (Trail) on the ScndTrail closest to the location of the tree (Foot)
+  # Find the point (TrailPt) on the Trail closest to the location of the tree (Foot)
   Foot <- st_point(c(dat$Xutm,dat$Yutm)) # tree foot point
   
-  NearestPoints <- st_nearest_points(Foot, ScndTrail) # from the Foot of the tree to the ScndTrail (linestring)
+  NearestPoints <- st_nearest_points(Foot, Trail) # from the Foot of the tree to the Trail (linestring)
   
-  NearestPoint <- st_cast(NearestPoints, "POINT") # to have start (Foot) and end (Trail) points
-  Trail <- NearestPoint[[2]] # the point (Trail) on the ScndTrail closest to the location of the tree (Foot)
+  NearestPoint <- st_cast(NearestPoints, "POINT") # to have start (Foot) and end (TrailPt) points
+  TrailPt <- NearestPoint[[2]] # the point (TrailPt) on the Trail closest to the location of the tree (Foot)
   
   theta <- as.numeric(matlib::angle(c(Foot[1] - Foot[1], Foot[2] + dat$TreeHeight[1]),
-                                    c(Foot[1] - Trail[1], Foot[2] -Trail[2]), degree = TRUE))
+                                    c(Foot[1] - TrailPt[1], Foot[2] -TrailPt[2]), degree = TRUE))
   
   
   # Scenarios
@@ -134,20 +151,20 @@ st_tree <- function(dat,
   if(directionalfelling == "0" && (fuel !="1" |fuel !="2")){
     RandomAngle <- sample(c(0:180), size = 1)
     A <- st_difference(st_union(
-      RotatePolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
-      RotatePolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
+      rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
+      rotatepolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
     )) 
   }
   
   # To direct only to avoid damage to future and reserve trees
   # if (directionalfelling == "1"&& (fuel !="1" |fuel !="2")) {
-  #   if(dat$TreeFellingOrientationSuccess == 1){
+  #   if(dat$TreeFellingOrientationSuccess == "1"){
   
   # }else{ # else random felling
   # RandomAngle <- sample(c(0:180), size = 1)
   #   A <- st_difference(st_union(
-  #   RotatePolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
-  #   RotatePolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
+  #   rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
+  #   rotatepolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
   #   ))
   # }
   #   
@@ -155,21 +172,21 @@ st_tree <- function(dat,
   
   # To direct to avoid damage to future and reserve trees + track orientation. Winching: Foot before.
   if(directionalfelling == "2"&& (fuel !="1" |fuel !="2")){
-    if(dat$TreeFellingOrientationSuccess == 1){
+    if(dat$TreeFellingOrientationSuccess == "1"){
       A <- st_difference(st_union(
-        RotatePolygon(Trunk, angle = 240 + theta, fixed = Foot), # turned trunk
-        RotatePolygon(Crown, angle = 240 + theta, fixed = Foot) # turned crown
+        rotatepolygon(Trunk, angle = 240 + theta, fixed = Foot), # turned trunk
+        rotatepolygon(Crown, angle = 240 + theta, fixed = Foot) # turned crown
       ))
       B <- st_difference(st_union(
-        RotatePolygon(Trunk, angle = 120 + theta, fixed = Foot), # turned trunk 
-        RotatePolygon(Crown, angle = 120 + theta, fixed = Foot) # turned crown
+        rotatepolygon(Trunk, angle = 120 + theta, fixed = Foot), # turned trunk 
+        rotatepolygon(Crown, angle = 120 + theta, fixed = Foot) # turned crown
       ))
     }else{ # else random felling
       RandomAngle <- sample(c(0:180), size = 1)
       
       A <- st_difference(st_union(
-        RotatePolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
-        RotatePolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
+        rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
+        rotatepolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
       ))
     }
     
@@ -178,36 +195,36 @@ st_tree <- function(dat,
   # Fuelwood exploitation in the crowns
   if(fuel =="1" |fuel =="2"){
     
-    TrailDist <- st_distance(Foot, Trail)
+    TrailDist <- st_distance(Foot, TrailPt)
     
     # ADD SLOPE CRITERIA !!!
     
-    if(dat$TreeFellingOrientationSuccess == 1){
+    if(dat$TreeFellingOrientationSuccess == "1"){
       
       if(TrailDist <= advancedloggingparameters$GrappleLength){ # <= 6m (= grapple length) -> winching by grapple
         A <- st_difference(st_union(
-          RotatePolygon(Trunk, angle = theta + 60 , fixed = Foot), # turned trunk
-          RotatePolygon(Crown, angle = theta + 60 , fixed = Foot) # turned crown
+          rotatepolygon(Trunk, angle = theta + 60 , fixed = Foot), # turned trunk
+          rotatepolygon(Crown, angle = theta + 60 , fixed = Foot) # turned crown
         ))
         B <- st_difference(st_union(
-          RotatePolygon(Trunk, angle = 300 + theta, fixed = Foot), # turned trunk
-          RotatePolygon(Crown, angle = 300 + theta, fixed = Foot) # turned crown
+          rotatepolygon(Trunk, angle = 300 + theta, fixed = Foot), # turned trunk
+          rotatepolygon(Crown, angle = 300 + theta, fixed = Foot) # turned crown
         ))
       } else { # > 6m -> winching by cable
         A <- st_difference(st_union(
-          RotatePolygon(Trunk, angle = 240 + theta, fixed = Foot), # turned trunk
-          RotatePolygon(Crown, angle = 240 + theta, fixed = Foot) # turned crown
+          rotatepolygon(Trunk, angle = 240 + theta, fixed = Foot), # turned trunk
+          rotatepolygon(Crown, angle = 240 + theta, fixed = Foot) # turned crown
         ))
         B <- st_difference(st_union(
-          RotatePolygon(Trunk, angle = 120 + theta, fixed = Foot), # turned trunk 
-          RotatePolygon(Crown, angle = 120 + theta, fixed = Foot) # turned crown
+          rotatepolygon(Trunk, angle = 120 + theta, fixed = Foot), # turned trunk 
+          rotatepolygon(Crown, angle = 120 + theta, fixed = Foot) # turned crown
         ))
       }
     }else{ # else random felling
       RandomAngle <- sample(c(0:180), size = 1)
       A <- st_difference(st_union(
-        RotatePolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
-        RotatePolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
+        rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
+        rotatepolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
       ))
     }
     
@@ -215,7 +232,7 @@ st_tree <- function(dat,
   
   FellingOuputs <- list(Foot = Foot,
                         NearestPoints = NearestPoints,
-                        Trail = Trail,
+                        TrailPt = TrailPt,
                         A = A)
   
   return(FellingOuputs)
@@ -239,10 +256,10 @@ SelectedTrees <- inventory %>%
   filter(Selected == "1") %>%
   dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,CrownDiameter,Selected, Xutm, Yutm, TreeFellingOrientationSuccess)
 
-
+# To extract de the shortest ways
 NearestPoints <- SelectedTrees %>%
   group_by(idTree) %>% 
-  do(geometry = st_tree(., fuel = "2", directionalfelling ="2", advancedloggingparameters = loggingparameters())$NearestPoints) %>% 
+  do(geometry = st_tree(., ScndTrail = ScndTrail, MainTrail = MainTrail, fuel = "2", directionalfelling ="2", advancedloggingparameters = loggingparameters())$NearestPoints) %>% 
   mutate(geometry = as(geometry, "sfc_LINESTRING")) %>% # list -> sfc_MULTIPOLYGON
   st_as_sf()
 
@@ -251,18 +268,22 @@ FellingTrees <- SelectedTrees %>%
   # mutate(angle = list(c(0, 30))) %>% # for each row, a list of 2 values -> a dataframe in a dataframe
   # unnest(angle) %>% # display the small dataframe in the big dataframe in one
   group_by(idTree) %>% # for each tree and each given angle 
-  do(geometry = st_tree(., fuel = "2", directionalfelling ="2", advancedloggingparameters = loggingparameters())$A) %>% # inform geometry. # Filling a column from a function whose input is a table
+  do(geometry = st_tree(., ScndTrail = ScndTrail, MainTrail = MainTrail, fuel = "2", directionalfelling ="2", advancedloggingparameters = loggingparameters())$A) %>% # inform geometry. # Filling a column from a function whose input is a table
   mutate(geometry = as(geometry, "sfc_MULTIPOLYGON")) %>% # list -> sfc_MULTIPOLYGON
   st_as_sf()
 
 
 # Marche pas encore
 FellingTrees <- inventory %>% 
-  # mutate(angle = list(c(0, 30))) %>% # for each row, a list of 2 values -> a dataframe in a dataframe
-  # unnest(angle) %>% # display the small dataframe in the big dataframe in one
   group_by(idTree) %>% # for each tree and each given angle 
-  do(geometry = ifelse(!is.na(TreeFellingOrientationSuccess),
-       st_tree(., fuel = "2", directionalfelling ="2", advancedloggingparameters = loggingparameters())$A, NULL)) %>% # inform geometry. # Filling a column from a function whose input is a table
+  do(geometry =  # inform geometry. # Filling a column from a function whose input is a table
+       ifelse(!is.na(.$TreeFellingOrientationSuccess),
+              st_tree(.,
+                      ScndTrail = ScndTrail,
+                      MainTrail = MainTrail,
+                      fuel = "2", directionalfelling ="2",
+                      advancedloggingparameters = loggingparameters())$A,
+              NULL)) %>%
   mutate(geometry = as(geometry, "sfc_MULTIPOLYGON")) %>% # list -> sfc_MULTIPOLYGON
   st_as_sf()
 
@@ -278,9 +299,99 @@ FellingTrees <- inventory %>%
 
 ggplot() +
   # geom_sf(data = Foot) +
-  geom_sf(data = ScndTrail) +
+  geom_sf(data = Trail) +
   geom_sf(data = NearestPoints) +
-  # geom_sf(data = Trail) +
+  # geom_sf(data = TrailPt) +
   geom_sf(data = FellingTrees)
+```
+
+```{r}
+st_tree(SelectedTrees[1,],
+        ScndTrail = ScndTrail,
+        MainTrail = MainTrail,
+        fuel = "2", directionalfelling ="2",
+        advancedloggingparameters = loggingparameters())$A
+
+
+
+FellingTrees <- inventory %>%
+  group_by(idTree) %>% 
+  mutate(geometry =
+           ifelse(!is.na(TreeFellingOrientationSuccess),
+                  "A", "B"))
+
+FellingTrees <- inventory %>%
+  group_by(idTree) %>% 
+  do(geometry =
+       ifelse(!is.na(.$TreeFellingOrientationSuccess),
+              tolower("A"), "B"))
+
+
+FellingTrees <- inventory %>% 
+  group_by(idTree) %>% # for each tree and each given angle 
+  do(geometry =  # inform geometry. # Filling a column from a function whose input is a table
+       ifelse(!is.na(.$TreeFellingOrientationSuccess),
+              st_tree(.,
+                      ScndTrail = ScndTrail,
+                      MainTrail = MainTrail,
+                      fuel = "2", directionalfelling ="2",
+                      advancedloggingparameters = loggingparameters())$A,
+              NULL)) %>%
+  mutate(geometry = as(geometry, "sfc_MULTIPOLYGON")) %>% # list -> sfc_MULTIPOLYGON
+  st_as_sf()
+
+felttress <- NA
+inventory %>% 
+  filter(!is.na(TreeFellingOrientationSuccess)) %>% 
+  group_by(idTree) %>% # for each tree and each given angle 
+  do(geometry =  # inform geometry. # Filling a column from a function whose input is a table
+       st_tree(.,
+               ScndTrail = ScndTrail,
+               MainTrail = MainTrail,
+               fuel = "2", directionalfelling = "2",
+               advancedloggingparameters = loggingparameters())$A) %>%
+  mutate(geometry = as(geometry, "sfc_MULTIPOLYGON")) %>% # list -> sfc_MULTIPOLYGON
+  st_as_sf() %>% 
+  mutate(geometry = st_as_text(geometry))
+
+
+left_join(inventory, poly) %>% 
+  ggplot() +
+  geom_sf()
+
+?sf
+st_as_text(poly$geometry)
+
+
+felttrees <- inventory %>% 
+  filter(!is.na(TreeFellingOrientationSuccess)) %>% 
+  group_by(idTree) %>% 
+  do(treepolygon = 
+       st_tree(.,
+               ScndTrail = ScndTrail,
+               MainTrail = MainTrail,
+               fuel = "2", directionalfelling = "2",
+               advancedloggingparameters = loggingparameters())$A %>% 
+       st_as_text()) %>% 
+  unnest(treepolygon)
+
+inventory2 <- left_join(inventory, felttrees)
+
+get_treepolygon <- function(inventory){
+  inventory %>% 
+    filter(!is.na(treepolygon)) %>%
+    st_as_sf(wkt = "treepolygon")
+}
+
+ggplot() +
+  geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
+  geom_sf(data = get_treepolygon(inventory2), fill = "red")
+
+st_intersection(
+  get_treepolygon(inventory2),
+  st_as_sf(inventory, coords = c("Xutm", "Yutm"))
+) %>% 
+  ggplot() +
+  geom_sf()
 ```
 
