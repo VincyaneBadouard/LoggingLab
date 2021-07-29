@@ -23,6 +23,7 @@ library(sf)
 library(nngeo)
 library(raster)
 library(topoDistance)
+library(BIOMASS)
 ```
 
 ```{r ParamCrownDiameterAllometry table code}

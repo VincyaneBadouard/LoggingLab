@@ -3,13 +3,13 @@
 #'@param scenario "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow"
 #'  or "manual"(character)
 #'@param objective Objective volume per hectare (numeric)
-#'@param fuel no  exploitation = "0", damage exploitation in fuelwood = "1",
+#'@param fuel No  exploitation = "0", damage exploitation in fuelwood = "1",
 #'  exploitation of hollow trees and damage in fuelwood = "2"
-#'@param diversification  taking of other species in addition to the main
+#'@param diversification  Taking of other species in addition to the main
 #'  commercial species (logical)
 #'@param winching no cable or grapple = "0", only cable = "1", grapple + cable =
 #'  "2"
-#'@param directionalfelling directional felling = "0" (absent), "1" (only to
+#'@param directionalfelling Directional felling = "0" (absent), "1" (only to
 #'  avoid damage to future and reserve trees), "2" (avoid damage to future and
 #'  reserve trees + track orientation)
 #'

@@ -16,7 +16,7 @@ test_that("selected", {
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
-  VO <- 10
+  VO <- 20
 
   testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE,
                                              objectivelax = FALSE, DEM = DemParacou,

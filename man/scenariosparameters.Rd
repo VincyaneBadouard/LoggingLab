@@ -19,16 +19,16 @@ or "manual"(character)}
 
 \item{objective}{Objective volume per hectare (numeric)}
 
-\item{fuel}{no  exploitation = "0", damage exploitation in fuelwood = "1",
+\item{fuel}{No  exploitation = "0", damage exploitation in fuelwood = "1",
 exploitation of hollow trees and damage in fuelwood = "2"}
 
-\item{diversification}{taking of other species in addition to the main
+\item{diversification}{Taking of other species in addition to the main
 commercial species (logical)}
 
 \item{winching}{no cable or grapple = "0", only cable = "1", grapple + cable =
 "2"}
 
-\item{directionalfelling}{directional felling = "0" (absent), "1" (only to
+\item{directionalfelling}{Directional felling = "0" (absent), "1" (only to
 avoid damage to future and reserve trees), "2" (avoid damage to future and
 reserve trees + track orientation)}
 }

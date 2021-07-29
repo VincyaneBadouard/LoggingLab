@@ -9,14 +9,9 @@ treefelling(
   scenario = "manual",
   fuel,
   directionalfelling,
-  advancedloggingparameters = loggingparameters(),
-  AccessibleTreesPoints,
-  SelectedTreesPoints,
-  AvenirTreesPoints,
-  ReserveTreesPoints,
-  DeadTreesPoints,
-  HollowTreesPoints,
-  FuelwoodTreesPoints
+  MainTrail,
+  ScndTrail,
+  advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
@@ -32,21 +27,11 @@ exploitation of hollow trees and damage in fuelwood = "2"}
 avoid damage to future and reserve trees), "2" (avoid damage to future and
 reserve trees + track orientation)}
 
+\item{MainTrail}{(MULTIPOLYGON)}
+
+\item{ScndTrail}{(MULTIPOLYGON)}
+
 \item{advancedloggingparameters}{(list)}
-
-\item{AccessibleTreesPoints}{(MULTIPOINT)}
-
-\item{SelectedTreesPoints}{(MULTIPOINT)}
-
-\item{AvenirTreesPoints}{(MULTIPOINT)}
-
-\item{ReserveTreesPoints}{(MULTIPOINT)}
-
-\item{DeadTreesPoints}{(MULTIPOINT)}
-
-\item{HollowTreesPoints}{(MULTIPOINT)}
-
-\item{FuelwoodTreesPoints}{(MULTIPOINT) MainTrail 2ndTrail}
 }
 \value{
 "Shadow" polygons +  "TreefallSuccess", "TreefallFailure",
@@ -58,17 +43,57 @@ treefelling
 \examples{
 
 \dontrun{
-data(Paracou6_2016)
+
+MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
+                                        286400, 583250,
+                                        286655, 583250,
+                                        286655, 583130,
+                                        286400, 583130) # the return
+                                     ,ncol=2, byrow=TRUE))
+
+pol1 <- list(matrix(c(286503, 583134,
+                      286503, 583240,
+                      286507, 583240,
+                      286507, 583134,
+                      286503, 583134) # the return
+                   ,ncol=2, byrow=TRUE))
+pol2 <- list(matrix(c(286650, 583134,
+                      286650, 583240,
+                      286654, 583240,
+                      286654, 583134,
+                      286650, 583134) # the return
+                   ,ncol=2, byrow=TRUE))
+
+PolList = list(pol1,pol2) #list of lists of numeric matrices
+ScndTrail <- st_multipolygon(PolList)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+inventory <- treeselection(inventory, objective = 30, scenario ="manual",
+ fuel = "2", diversification = TRUE, specieslax = FALSE,
+ objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+ speciescriteria = SpeciesCriteria,
+ advancedloggingparameters = loggingparameters())$inventory
 
-inventory <- treeselection(inventory, SpeciesCriteria, scenario = "manual",
-fuel = "0",objective = 20,
-diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-advancedloggingparameters = loggingparameters())$inventory
+inventory <- treefelling(inventory, scenario = "manual", fuel = "2",
+directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
+advancedloggingparameters = loggingparameters())
 
-treefelling(inventory, scenario = "manual", fuel = "2", directionalfelling = "2",
- advancedloggingparameters = loggingparameters())
+get_treepolygon <- function(inventory){ # function from text (wkt) to sf
+inventory \%>\%
+  filter(!is.na(treepolygon)) \%>\%
+  st_as_sf(wkt = "treepolygon")
+}
+library(ggplot2)
+ggplot() +
+  geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
+  geom_sf(data = get_treepolygon(inventory), fill = "red") # trees polygons
+
+st_intersection( # trees under the fallen trees
+  get_treepolygon(inventory),
+  st_as_sf(inventory, coords = c("Xutm", "Yutm"))
+) \%>\%
+  ggplot() +
+  geom_sf()
  }
 
 }
