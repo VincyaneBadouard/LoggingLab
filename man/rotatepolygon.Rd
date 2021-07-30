@@ -5,6 +5,8 @@
 \title{rotatepolygon}
 \usage{
 rotatepolygon(p, angle, fixed)
+
+rotatepolygon(p, angle, fixed)
 }
 \arguments{
 \item{p}{Polygon (POLYGON)}
@@ -15,11 +17,58 @@ rotatepolygon(p, angle, fixed)
 }
 \value{
 Your polygon oriented at the given angle
+
+Your polygon oriented at the given angle
 }
 \description{
 Orient your polygon to a given angle and fixed point.
+
+Orient your polygon to a given angle and fixed point.
 }
 \examples{
+data(Paracou6_2016)
+data(DemParacou)
+data(PlotSlope)
+data(SpeciesCriteria)
+
+inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+inventory <- treeselection(inventory, objective = 20, scenario ="manual",
+ fuel = "2", diversification = TRUE, specieslax = FALSE,
+ objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+ speciescriteria = SpeciesCriteria,
+ advancedloggingparameters = loggingparameters())$inventory
+
+inventory <- inventory \%>\%
+     filter(Selected == "1") \%>\%
+     dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,CrownDiameter,Selected, Xutm, Yutm)
+dat <- inventory[1,]
+
+Foot <- st_point(c(dat$Xutm,dat$Yutm)) # tree foot point
+Crown <- dat \%>\%
+mutate(xCrown = Xutm,
+       yCrown = Yutm + TrunkHeight + CrownHeight/2,
+       exCrown = CrownDiameter/2,
+       eyCrown = CrownHeight/2) \%>\%
+st_as_sf(coords = c("xCrown", "yCrown")) # ellipse centroid coordinates
+Crown <- st_ellipse(Crown, Crown$exCrown, Crown$eyCrown) # create the ellipse
+Trunk <- with(dat, # and the trunk
+              st_polygon(list(matrix(c(Xutm-(DBH/100)/2, Yutm,
+                                      Xutm-(DBH/100)/2, Yutm + TrunkHeight,
+                                      Xutm+(DBH/100)/2, Yutm + TrunkHeight,
+                                      Xutm+(DBH/100)/2, Yutm,
+                                      Xutm-(DBH/100)/2, Yutm) # the return
+                                    ,ncol=2, byrow=TRUE))))
+ RandomAngle <- sample(c(0:180), size = 1)
+
+ TreeP <- st_difference(st_union(
+ rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
+ rotatepolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
+ ))
+
+ ggplot2::ggplot() +
+  ggplot2::geom_sf(data = st_union(Trunk, Crown), colour = "red") +
+  ggplot2::geom_sf(data = TreeP, colour = "green")
+
 data(Paracou6_2016)
 data(DemParacou)
 data(PlotSlope)

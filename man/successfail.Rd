@@ -10,6 +10,13 @@ successfail(
   directionalfelling,
   advancedloggingparameters = loggingparameters()
 )
+
+successfail(
+  inventory,
+  fuel,
+  directionalfelling,
+  advancedloggingparameters = loggingparameters()
+)
 }
 \arguments{
 \item{inventory}{your inventory (see the inputs formats and metadata in the
@@ -29,14 +36,32 @@ reserve trees + track orientation)}
 \value{
 Your inventory with: "TreeFellingOrientationSuccess" new column (see
 the outputs metadata in the \code{\link{vignette}}).
+
+Your inventory with: "TreeFellingOrientationSuccess" new column (see
+the outputs metadata in the \code{\link{vignette}}).
 }
 \description{
 Defines whether the directed fall of the tree is successful or
 not by drawing in a Bernoulli distribution where the probability of success
 is by default 60\%, and can be changed with the
 \code{advancedloggingparameters} argument.
+
+Defines whether the directed fall of the tree is successful or
+not by drawing in a Bernoulli distribution where the probability of success
+is by default 60\%, and can be changed with the
+\code{advancedloggingparameters} argument.
 }
 \examples{
+inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+inventory <- treeselection(inventory, objective = 20, scenario ="manual",
+ fuel = "2", diversification = TRUE, specieslax = FALSE,
+ objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+ speciescriteria = SpeciesCriteria,
+ advancedloggingparameters = loggingparameters())$inventory
+
+successfail(inventory,fuel = "2",directionalfelling = "2",
+advancedloggingparameters = loggingparameters())
+
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 inventory <- treeselection(inventory, objective = 20, scenario ="manual",
  fuel = "2", diversification = TRUE, specieslax = FALSE,

@@ -268,8 +268,7 @@ FellingTrees <- SelectedTrees %>%
   # unnest(angle) %>% # display the small dataframe in the big dataframe in one
   group_by(idTree) %>% # for each tree and each given angle 
   do(geometry = st_tree(., ScndTrail = ScndTrail, MainTrail = MainTrail, fuel = "2", directionalfelling ="2", advancedloggingparameters = loggingparameters())$A) %>% # inform geometry. # Filling a column from a function whose input is a table
-  mutate(geometry = as(geometry, "sfc_MULTIPOLYGON")) %>% # list -> sfc_MULTIPOLYGON
-  st_as_sf()
+
 
 # or version more Sf (to test)
 # pol <- st_as_sf(SelectedTrees, 
@@ -283,49 +282,72 @@ FellingTrees <- SelectedTrees %>%
 
 ggplot() +
   # geom_sf(data = Foot) +
-  geom_sf(data = ScndTrail) +
-  geom_sf(data = MainTrail) +
-  geom_sf(data = NearestPoints) +
   # geom_sf(data = TrailPt) +
   geom_sf(data = FellingTrees)
 ```
 
 ```{r}
 
+st_tree(SelectedTrees[1,],
+        ScndTrail = ScndTrail,
+        MainTrail = MainTrail,
+        fuel = "2", directionalfelling ="2",
+        advancedloggingparameters = loggingparameters())$A
+
+
+
+FellingTrees <- inventory %>%
+  group_by(idTree) %>% 
+  mutate(geometry =
+           ifelse(!is.na(TreeFellingOrientationSuccess),
+                  "A", "B"))
+
+FellingTrees <- inventory %>%
+  group_by(idTree) %>% 
+  do(geometry =
+       ifelse(!is.na(.$TreeFellingOrientationSuccess),
+              tolower("A"), "B"))
+
+
+FellingTrees <- inventory %>% 
+  group_by(idTree) %>% # for each tree and each given angle 
+  do(geometry =  # inform geometry. # Filling a column from a function whose input is a table
+       ifelse(!is.na(.$TreeFellingOrientationSuccess),
+              st_tree(.,
+                      ScndTrail = ScndTrail,
+                      MainTrail = MainTrail,
+                      fuel = "2", directionalfelling ="2",
+                      advancedloggingparameters = loggingparameters())$A,
+              NULL)) %>%
+  mutate(geometry = as(geometry, "sfc_MULTIPOLYGON")) %>% # list -> sfc_MULTIPOLYGON
+  st_as_sf()
+
 felttress <- NA
+inventory %>% 
+  filter(!is.na(TreeFellingOrientationSuccess)) %>% 
+  group_by(idTree) %>% # for each tree and each given angle 
+  do(geometry =  # inform geometry. # Filling a column from a function whose input is a table
+       st_tree(.,
+               ScndTrail = ScndTrail,
+               MainTrail = MainTrail,
+               fuel = "2", directionalfelling = "2",
+               advancedloggingparameters = loggingparameters())$A) %>%
+  mutate(geometry = as(geometry, "sfc_MULTIPOLYGON")) %>% # list -> sfc_MULTIPOLYGON
+  st_as_sf() %>% 
+  mutate(geometry = st_as_text(geometry))
 
-# Compute fellingtree succes and fails
-inventory <- successfail(
-  inventory,
-  fuel = "2",
-  directionalfelling = "2",
-  advancedloggingparameters = loggingparameters())
 
-# poly <- inventory %>% 
-#   filter(!is.na(TreeFellingOrientationSuccess)) %>% 
-#   group_by(idTree) %>% # for each tree 
-#   do(geometry =  # inform geometry. # Filling a column from a function whose input is a table
-#        st_tree(.,
-#                ScndTrail = ScndTrail,
-#                MainTrail = MainTrail,
-#                fuel = "2", directionalfelling = "2",
-#                advancedloggingparameters = loggingparameters())$A) %>%
-#   mutate(geometry = as(geometry, "sfc_MULTIPOLYGON")) %>% # list -> sfc_MULTIPOLYGON
-#   st_as_sf() %>% 
-#   mutate(geometry = st_as_text(geometry)) # as text to easy join with a non spacial table
-# 
-# 
-# left_join(inventory, poly) %>% 
-#   ggplot() +
-#   geom_sf()
-# 
-# st_as_text(poly$geometry)
+left_join(inventory, poly) %>% 
+  ggplot() +
+  geom_sf()
+
+?sf
+st_as_text(poly$geometry)
 
 
 felttrees <- inventory %>% 
   filter(!is.na(TreeFellingOrientationSuccess)) %>% 
-  group_by(idTree) %>% # for each tree
-  do(treepolygon = # inform geometry. # Filling a column from a function whose input is a table
+
        st_tree(.,
                ScndTrail = ScndTrail,
                MainTrail = MainTrail,
@@ -337,6 +359,12 @@ felttrees <- inventory %>%
 inventory <- left_join(inventory, felttrees) # join spatial filtered inventory and non spatial complete inventory
 
 get_treepolygon <- function(inventory){ # function from text (wkt) to sf
+       st_as_text()) %>% 
+  unnest(treepolygon)
+
+inventory2 <- left_join(inventory, felttrees)
+
+get_treepolygon <- function(inventory){
   inventory %>% 
     filter(!is.na(treepolygon)) %>%
     st_as_sf(wkt = "treepolygon")
@@ -348,6 +376,11 @@ ggplot() +
 
 st_intersection( # trees under the fallen trees
   get_treepolygon(inventory),
+  geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
+  geom_sf(data = get_treepolygon(inventory2), fill = "red")
+
+st_intersection(
+  get_treepolygon(inventory2),
   st_as_sf(inventory, coords = c("Xutm", "Yutm"))
 ) %>% 
   ggplot() +
