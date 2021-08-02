@@ -6,28 +6,15 @@
 \usage{
 st_tree(
   dat,
-  MainTrail = MainTrail,
-  ScndTrail = ScndTrail,
   fuel,
   directionalfelling,
-  advancedloggingparameters = loggingparameters()
-)
-
-st_tree(
-  dat,
   MainTrail = MainTrail,
   ScndTrail = ScndTrail,
-  fuel,
-  directionalfelling,
   advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
 \item{dat}{(dataframe)}
-
-\item{MainTrail}{(MULTIPOLYGON)}
-
-\item{ScndTrail}{(MULTIPOLYGON)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", damage
 exploitation in fuelwood = "1", exploitation of hollow trees and damage in
@@ -37,12 +24,14 @@ fuelwood = "2"}
 avoid damage to future and reserve trees), "2" (avoid damage to future and
 reserve trees + track orientation)}
 
+\item{MainTrail}{(sfg)}
+
+\item{ScndTrail}{(sfg)}
+
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-
-
 
 }
 \description{
@@ -54,65 +43,8 @@ grapple (see the \code{GrappleLength} argument of the
 made from the base of the tree towards the trail. The orientation of the
 fall succeeds or fails according to a Bernoulli law where the probability of success
 is by default 60\%, and can be changed with the \code{advancedloggingparameters} argument.
-
-Simulates the tree (multipolygon) falling towards the trail or
-not, at a given angle. If it has been decided to exploit fuelwood, the tree
-crowns will be directed towards the trail if they can be accessed with a
-grapple (see the \code{GrappleLength} argument of the
-\code{\link{loggingparameters}} function). In other cases, the fall will be
-made from the base of the tree towards the trail. The orientation of the
-fall succeeds or fails according to a Bernoulli law where the probability of success
-is by default 60\%, and can be changed with the \code{advancedloggingparameters} argument.
 }
 \examples{
-MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
-                                        286400, 583250,
-                                        286655, 583250,
-                                        286655, 583130,
-                                        286400, 583130) # the return
-                                     ,ncol=2, byrow=TRUE))
-
-pol1 <- list(matrix(c(286503, 583134,
-                      286503, 583240,
-                      286507, 583240,
-                      286507, 583134,
-                      286503, 583134) # the return
-                   ,ncol=2, byrow=TRUE))
-pol2 <- list(matrix(c(286650, 583134,
-                      286650, 583240,
-                      286654, 583240,
-                      286654, 583134,
-                      286650, 583134) # the return
-                   ,ncol=2, byrow=TRUE))
-
-PolList = list(pol1,pol2) #list of lists of numeric matrices
-ScndTrail <- st_multipolygon(PolList)
-
-inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
-inventory <- treeselection(inventory, objective = 20, scenario ="manual",
- fuel = "2", diversification = TRUE, specieslax = FALSE,
- objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
- speciescriteria = SpeciesCriteria,
- advancedloggingparameters = loggingparameters())$inventory
-
-inventory <- successfail(inventory,fuel = "2",directionalfelling = "2",
-advancedloggingparameters = loggingparameters())
-
-inventory <- inventory \%>\%
-     filter(Selected == "1") \%>\%
-     dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,CrownDiameter,Selected, Xutm, Yutm, TreeFellingOrientationSuccess)
-dat <- inventory[1,]
-
-rslt <- st_tree(dat, ScndTrail = ScndTrail, MainTrail = MainTrail,
- fuel = "0", directionalfelling = "2",
- advancedloggingparameters = loggingparameters())
-
-ggplot2::ggplot() +
-  ggplot2::geom_sf(data = rslt$Foot) +
-  ggplot2::geom_sf(data = rslt$Trail) +
-  ggplot2::geom_sf(data = rslt$NearestPoints) +
-  ggplot2::geom_sf(data = rslt$TrailPt) +
-  ggplot2::geom_sf(data = rslt$A)
 MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
                                         286400, 583250,
                                         286655, 583250,
@@ -152,8 +84,9 @@ inventory <- inventory \%>\%
      CrownDiameter,Selected, Xutm, Yutm, TreeFellingOrientationSuccess)
 dat <- inventory[1,]
 
-rslt <- st_tree(dat, MainTrail = MainTrail, ScndTrail = ScndTrail,
+rslt <- st_tree(dat,
  fuel = "0", directionalfelling = "2",
+ MainTrail = MainTrail, ScndTrail = ScndTrail,
  advancedloggingparameters = loggingparameters())
 
 library(ggplot2)
@@ -165,7 +98,5 @@ ggplot() +
   geom_sf(data = rslt$A)
 }
 \seealso{
-\code{\link{loggingparameters}}
-
 \code{\link{loggingparameters}}
 }

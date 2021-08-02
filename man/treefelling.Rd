@@ -27,9 +27,9 @@ exploitation of hollow trees and damage in fuelwood = "2"}
 avoid damage to future and reserve trees), "2" (avoid damage to future and
 reserve trees + track orientation)}
 
-\item{MainTrail}{(MULTIPOLYGON)}
+\item{MainTrail}{(sfg)}
 
-\item{ScndTrail}{(MULTIPOLYGON)}
+\item{ScndTrail}{(sfg)}
 
 \item{advancedloggingparameters}{(list)}
 }

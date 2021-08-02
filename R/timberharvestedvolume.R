@@ -55,6 +55,9 @@ timberharvestedvolume <- function(
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
+
+  # Arguments check
+
   LoggedTable <- inventory %>%
     filter(Logged == "1")
 

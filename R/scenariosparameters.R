@@ -107,12 +107,12 @@ scenariosparameters <- function(
 }
 
 # scenario	SpatialDatatype	Winching 	DirectionalFelling 	Objective 	Diversification
-# RIL1	           SRTM	    0	           0	            20-25	         FALSE
-# RIL2broken	    LIDAR	    0	           1	            20-25	         FALSE
-# RIL2	          LIDAR     1	           1	            20-25	         FALSE
-# RIL3	          LIDAR	    2	           2	            25-30	          TRUE
-# RIL3fuel	      LIDAR	    2	           2	            25-30	          TRUE
-# RIL3fuelhollow	LIDAR	    2	           2	            25-30         	TRUE
+# RIL1	           SRTM	    0	           0	              20-25	         FALSE
+# RIL2broken	    LIDAR	    0	           1	              20-25	         FALSE
+# RIL2	          LIDAR     1	           1	              20-25	         FALSE
+# RIL3	          LIDAR	    2	           2	              25-30	          TRUE
+# RIL3fuel	      LIDAR	    2	           2	              25-30	          TRUE
+# RIL3fuelhollow	LIDAR	    2	           2	              25-30         	TRUE
 
 
 

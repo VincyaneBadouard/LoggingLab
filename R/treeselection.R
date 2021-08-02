@@ -92,18 +92,18 @@ treeselection <- function(
   if(!any(unlist(lapply(list(inventory, speciescriteria), inherits, "data.frame"))))
     stop("The 'inventory' and 'speciescriteria' arguments of the 'treeselection' function must be data.frame")
 
-  # if(!inherits(objective, "numeric") && !is.null(objective))
-  #   stop("The 'objective' argument of the 'treeselection' function must be numeric")
+  if(!inherits(objective, "numeric") && !is.null(objective))
+    stop("The 'objective' argument of the 'treeselection' function must be numeric")
 
   if(!all(unlist(lapply(list(diversification, specieslax, objectivelax), inherits, "logical"))) && !is.null(diversification))
     stop("The 'diversification', 'specieslax' and 'objectivelax' arguments of the 'treeselection' function must be logical") # any() don't take a list
 
-  # if (!any(scenario == "RIL1" | scenario == "RIL2broken"| scenario == "RIL2"| scenario == "RIL3"| scenario == "RIL3fuel"|
-  #          scenario == "RIL3fuelhollow"| scenario =="manual"))
-  #   stop("The 'scenario' argument of the 'treeselection' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
+  if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"|| scenario == "RIL3"|| scenario == "RIL3fuel"||
+           scenario == "RIL3fuelhollow"|| scenario =="manual"))
+    stop("The 'scenario' argument of the 'treeselection' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
-  # if (!any(fuel == "0" | fuel == "1"| fuel == "2"| is.null(fuel)))
-  #   stop("The 'fuel' argument of the 'treeselection' function must be '0', '1', or '2'")
+  if (!any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
+    stop("The 'fuel' argument of the 'treeselection' function must be '0', '1', or '2'")
 
   if(!any(unlist(lapply(list(DEM, plotslope), inherits, "RasterLayer"))))
     stop("The 'DEM' and 'plotslope' arguments of the 'treeselection' function must be RasterLayer")

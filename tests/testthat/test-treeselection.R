@@ -16,21 +16,21 @@ test_that("treeselection", {
                              speciescriteria = Matrixspeciescriteria),
                regexp = "The 'inventory' and 'speciescriteria' arguments of the 'treeselection' function must be data.frame")
 
-  # expect_error(treeselection(Paracou6_2016, scenario ="manual", fuel = "0", diversification = TRUE,
-  #                            objective = "RIL"),
-  #              regexp = "The 'objective' argument of the 'treeselection' function must be numeric")
+  expect_error(treeselection(Paracou6_2016, scenario ="manual", fuel = "0", diversification = TRUE,
+                             objective = "RIL"),
+               regexp = "The 'objective' argument of the 'treeselection' function must be numeric")
 
   expect_error(treeselection(Paracou6_2016, scenario ="manual", fuel = "0", objective = 20,
                              diversification = "1", specieslax = 2, objectivelax = "a"),
                regexp = "The 'diversification', 'specieslax' and 'objectivelax' arguments of the 'treeselection' function must be logical")
 
-  # expect_error(treeselection(Paracou6_2016, fuel = "0", diversification = TRUE, objective = 20,
-  #                            scenario = "CL"),
-  #              regexp = "The 'scenario' argument of the 'treeselection' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
+  expect_error(treeselection(Paracou6_2016, fuel = "0", diversification = TRUE, objective = 20,
+                             scenario = "CL"),
+               regexp = "The 'scenario' argument of the 'treeselection' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
-  # expect_error(treeselection(Paracou6_2016, scenario ="manual", objective = 20, diversification = TRUE,
-  #                            fuel = TRUE),
-  #              regexp = "The 'fuel' argument of the 'treeselection' function must be '0', '1', or '2'")
+  expect_error(treeselection(Paracou6_2016, scenario ="manual", objective = 20, diversification = TRUE,
+                             fuel = TRUE),
+               regexp = "The 'fuel' argument of the 'treeselection' function must be '0', '1', or '2'")
 
   expect_error(treeselection(Paracou6_2016, objective = 20, scenario ="manual", fuel = "2",
                              diversification = FALSE, specieslax = FALSE, objectivelax = FALSE,
@@ -42,7 +42,7 @@ test_that("treeselection", {
                regexp = "The 'advancedloggingparameters' argument of the 'treeselection' function must be a list")
 
   expect_error(treeselection(Paracou6_2016, scenario = "manual",
-                             objective = 20, fuel = NULL, diversification = T, DEM = DemParacou, plotslope = PlotSlope,),
+                             objective = 20, fuel = NULL, diversification = T, DEM = DemParacou, plotslope = PlotSlope),
                regexp = "If you choose the 'manual' mode,
          you must fill in the arguments 'objective', 'fuel' and 'diversification'")
 
