@@ -56,7 +56,7 @@ Trunk <- with(dat, # and the trunk
                                       Xutm+(DBH/100)/2, Yutm,
                                       Xutm-(DBH/100)/2, Yutm) # the return
                                     ,ncol=2, byrow=TRUE))))
- RandomAngle <- as.numeric(sample(c(0:180), size = 1))
+ RandomAngle <- as.numeric(sample(c(0:359.9), size = 1))
 
  TreeP <- st_difference(st_union(
  rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk

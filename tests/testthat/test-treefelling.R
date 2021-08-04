@@ -83,7 +83,6 @@ test_that("treefelling", {
          you must fill in the arguments 'fuel' and 'directionalfelling'")
 
 
-  expect_s3_class(testinventory$TreeFellingOrientationSuccess, "factor")
   expect_type(testinventory$TreePolygon, "character")
 
 

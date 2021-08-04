@@ -5,13 +5,6 @@ test_that("st_tree", {
   # Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
   MatrixInventory <- as.matrix(Paracou6_2016)
 
-  MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
-                                          286400, 583250,
-                                          286655, 583250,
-                                          286655, 583130,
-                                          286400, 583130)
-                                        ,ncol=2, byrow=TRUE))
-
   pol1 <- list(matrix(c(286503, 583134,
                         286503, 583240,
                         286507, 583240,
@@ -27,21 +20,21 @@ test_that("st_tree", {
 
   PolList = list(pol1,pol2)
   ScndTrail <- st_multipolygon(PolList)
+  MainTrail <- ScndTrail
 
 
   inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
   inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
-                             fuel = "2", diversification = TRUE, specieslax = FALSE,
-                             objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
-                             speciescriteria = SpeciesCriteria,
-                             advancedloggingparameters = loggingparameters())$inventory)
-  inventory <- successfail(inventory,fuel = "2",directionalfelling = "2",
-                           advancedloggingparameters = loggingparameters())
+                                              fuel = "2", diversification = TRUE, specieslax = FALSE,
+                                              objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+                                              speciescriteria = SpeciesCriteria,
+                                              advancedloggingparameters = loggingparameters())$inventory)
   inventory <- inventory %>%
     dplyr::filter(Selected == "1") %>%
     dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
-                  CrownDiameter,Selected, Xutm, Yutm, TreeFellingOrientationSuccess)
-  dat <- inventory[1,]
+                  CrownDiameter,Selected, Xutm, Yutm)
+  dat <- inventory[1,] %>%
+    add_column(TreeFellingOrientationSuccess = "1")
 
   Rslt <- st_tree(dat,
                   fuel = "0", directionalfelling = "2",
@@ -77,7 +70,7 @@ test_that("st_tree", {
                        advancedloggingparameters = as.matrix(loggingparameters())),
                regexp = "The 'advancedloggingparameters' argument of the 'st_tree' function must be a list")
 
-  # results:
+  # Results class:
   ## $Foot is a POINT
   expect_s3_class(Rslt$Foot, "POINT")
 
@@ -87,16 +80,18 @@ test_that("st_tree", {
   ## $TrailPt is a POINT,
   expect_s3_class(Rslt$TrailPt, "POINT")
 
-  ## $Trail is a multipolygon,
-  expect_s3_class(Rslt$Trail, "MULTIPOLYGON") # 'XY'/'GEOMETRYCOLLECTION'/'sfg'
-
   ## $A is multipolygons
   expect_s3_class(Rslt$A, "sfc_MULTIPOLYGON")
 
+  # Check the angle between the tree and the trail
 
-  # check the angle
+  Arrival <- st_point(as.numeric(unlist( # sfc to sfg
+    sf::st_centroid(Rslt$A))))
 
 
+  expect_equal(as.numeric(matlib::angle(c(Rslt$TrailPt[1] - Rslt$TrailPt[1], (Rslt$TrailPt[2]+10) - Rslt$TrailPt[2]),
+                                       c(Arrival[1] - Rslt$Foot[1], Arrival[2] - Rslt$Foot[2]),
+                                       degree = TRUE)), 30)
 })
 
 
@@ -107,4 +102,14 @@ test_that("st_tree", {
 # $TrailPt is a POINT,
 # $Trail is a multipolygon,
 # $A is multipolygons
-# check the angle
+# Check the angle between the tree and the trail
+
+# ggplot() +
+#   geom_sf(data = Rslt$Foot) +
+#   geom_sf(data = Rslt$Trail) +
+#   geom_sf(data = Rslt$NearestPoints) +
+#   geom_sf(data = Rslt$TrailPt) +
+#   geom_sf(data = Rslt$A)+
+#   geom_sf(data = Arrival)
+
+

@@ -141,9 +141,8 @@ st_tree <- function(dat,
   NearestPoint <- st_cast(NearestPoints, "POINT") # to have start (Foot) and end (TrailPt) points
   TrailPt <- NearestPoint[[2]] # the point (TrailPt) on the Trail closest to the location of the tree (Foot)
   
-  theta <- as.numeric(matlib::angle(c(Foot[1] - Foot[1], Foot[2] + dat$TreeHeight[1]),
-                                    c(Foot[1] - TrailPt[1], Foot[2] -TrailPt[2]), degree = TRUE))
-  
+  theta <- as.numeric(matlib::angle(c(Foot[1] - Foot[1], dat$TreeHeight),
+                                    c(TrailPt[1] - Foot[1], TrailPt[2] - Foot[2]), degree = TRUE))
   
   # Scenarios
   # For a random direction felling
@@ -268,46 +267,31 @@ FellingTrees <- SelectedTrees %>%
   # unnest(angle) %>% # display the small dataframe in the big dataframe in one
   group_by(idTree) %>% # for each tree and each given angle 
   do(geometry = st_tree(., ScndTrail = ScndTrail, MainTrail = MainTrail, fuel = "2", directionalfelling ="2", advancedloggingparameters = loggingparameters())$A) %>% # inform geometry. # Filling a column from a function whose input is a table
+  
+  
+  # or version more Sf (to test)
+  # pol <- st_as_sf(SelectedTrees, 
+  #                 as(geometry = st_as_sfc(
+  #                   lapply(split(SelectedTrees, SelectedTrees$idTree), st_tree(30))
+  #                 )
+  #                 , "sfc_MULTIPOLYGON")
+  # )
+  
+  
 
-
-# or version more Sf (to test)
-# pol <- st_as_sf(SelectedTrees, 
-#                 as(geometry = st_as_sfc(
-#                   lapply(split(SelectedTrees, SelectedTrees$idTree), st_tree(30))
-#                 )
-#                 , "sfc_MULTIPOLYGON")
-# )
-
-
-
+library(ggplot2)
 ggplot() +
-  # geom_sf(data = Foot) +
-  # geom_sf(data = TrailPt) +
-  geom_sf(data = FellingTrees)
+  geom_sf(data = st_union(Trunk, Crown), colour = "red") +
+  geom_sf(data = Foot) +
+  geom_sf(data = Trail) +
+  geom_sf(data = TrailPt) +
+  geom_sf(data = NearestPoints) +
+  geom_sf(data = A)+
+  geom_sf(data = B)
+
 ```
 
 ```{r}
-
-st_tree(SelectedTrees[1,],
-        ScndTrail = ScndTrail,
-        MainTrail = MainTrail,
-        fuel = "2", directionalfelling ="2",
-        advancedloggingparameters = loggingparameters())$A
-
-
-
-FellingTrees <- inventory %>%
-  group_by(idTree) %>% 
-  mutate(geometry =
-           ifelse(!is.na(TreeFellingOrientationSuccess),
-                  "A", "B"))
-
-FellingTrees <- inventory %>%
-  group_by(idTree) %>% 
-  do(geometry =
-       ifelse(!is.na(.$TreeFellingOrientationSuccess),
-              tolower("A"), "B"))
-
 
 FellingTrees <- inventory %>% 
   group_by(idTree) %>% # for each tree and each given angle 
@@ -341,30 +325,29 @@ left_join(inventory, poly) %>%
   ggplot() +
   geom_sf()
 
-?sf
 st_as_text(poly$geometry)
 
 
 felttrees <- inventory %>% 
   filter(!is.na(TreeFellingOrientationSuccess)) %>% 
-
-       st_tree(.,
-               ScndTrail = ScndTrail,
-               MainTrail = MainTrail,
-               fuel = "2", directionalfelling = "2",
-               advancedloggingparameters = loggingparameters())$A %>% 
-       st_as_text())  # as text to easy join with a non spacial table
-  # unnest(treepolygon) # display the small dataframe in the big dataframe in one
+  st_tree(.,
+          ScndTrail = ScndTrail,
+          MainTrail = MainTrail,
+          fuel = "2", directionalfelling = "2",
+          advancedloggingparameters = loggingparameters())$A %>% 
+  st_as_text()  # as text to easy join with a non spacial table
+# unnest(treepolygon) # display the small dataframe in the big dataframe in one
 
 inventory <- left_join(inventory, felttrees) # join spatial filtered inventory and non spatial complete inventory
 
-get_treepolygon <- function(inventory){ # function from text (wkt) to sf
-       st_as_text()) %>% 
-  unnest(treepolygon)
+get_geometry <- function(inventory){ # function from text (wkt) to sf
+  st_as_text() %>% 
+    unnest(treepolygon)
+}
 
 inventory2 <- left_join(inventory, felttrees)
 
-get_treepolygon <- function(inventory){
+get_geometry <- function(inventory){
   inventory %>% 
     filter(!is.na(treepolygon)) %>%
     st_as_sf(wkt = "treepolygon")
@@ -372,18 +355,39 @@ get_treepolygon <- function(inventory){
 
 ggplot() +
   geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) + # all the individuals of the plot
-  geom_sf(data = get_treepolygon(inventory), fill = "red") # trees polygons
+  geom_sf(data = get_geometry(inventory), fill = "red") # trees polygons
 
 st_intersection( # trees under the fallen trees
-  get_treepolygon(inventory),
+  get_geometry(inventory),
   geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
-  geom_sf(data = get_treepolygon(inventory2), fill = "red")
+    geom_sf(data = get_geometry(inventory2), fill = "red"))
 
 st_intersection(
-  get_treepolygon(inventory2),
+  get_geometry(inventory2),
   st_as_sf(inventory, coords = c("Xutm", "Yutm"))
 ) %>% 
   ggplot() +
   geom_sf()
+```
+```{r}
+inventory <- successfail(
+  inventory,
+  fuel = "2", directionalfelling = "2",
+  advancedloggingparameters = loggingparameters())
+
+# Treefelling
+felttrees <- inventory %>%
+  filter(!is.na(TreeFellingOrientationSuccess)) %>%
+  group_by(idTree) %>% # for each tree
+  do(TreePolygon = # inform geometry. # Filling a column from a function whose input is a table
+       st_tree(.,
+               fuel = "2", directionalfelling = "2",
+               MainTrail = MainTrail, ScndTrail = ScndTrail,
+               advancedloggingparameters = loggingparameters())$A %>%
+       st_as_text()) %>% # as text to easy join with a non spacial table
+  tidyr::unnest(TreePolygon) # here to pass from list to character
+
+inventory <- left_join(inventory, felttrees, by = "idTree") # join spatial filtered inventory and non spatial complete inventory
+
 ```
 

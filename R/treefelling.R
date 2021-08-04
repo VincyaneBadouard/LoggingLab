@@ -17,6 +17,11 @@
 #'   "DamageTreesPoints", "DeadTreesPoints" vectors
 #' @export
 #'
+#' @importFrom dplyr filter
+#' @importFrom dplyr group_by
+#' @importFrom dplyr do
+#' @importFrom dplyr left_join
+#' @importFrom sf st_as_text
 #' @importFrom tidyr unnest
 #'
 #' @examples
@@ -44,33 +49,26 @@
 #'                    ,ncol=2, byrow=TRUE))
 #'
 #' PolList = list(pol1,pol2) #list of lists of numeric matrices
-#' ScndTrail <- st_multipolygon(PolList)
+#' ScndTrail <- sf::st_multipolygon(PolList)
 #'
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
-#' inventory <- treeselection(inventory, objective = 30, scenario ="manual",
+#' inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
 #'  objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
 #'  speciescriteria = SpeciesCriteria,
-#'  advancedloggingparameters = loggingparameters())$inventory
+#'  advancedloggingparameters = loggingparameters())$inventory)
 #'
 #' inventory <- treefelling(inventory, scenario = "manual", fuel = "2",
 #' directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
 #' advancedloggingparameters = loggingparameters())
-
 #'
-#' get_treepolygon <- function(inventory){ # function from text (wkt) to sf
-#' inventory %>%
-#'   filter(!is.na(treepolygon)) %>%
-#'   st_as_sf(wkt = "treepolygon")
-#' }
-
 #' library(ggplot2)
 #' ggplot() +
 #'   geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
-#'   geom_sf(data = get_treepolygon(inventory), fill = "red") # trees polygons
+#'   geom_sf(data = get_geometry(inventory, TreePolygon), fill = "red") # trees polygons
 #'
 #' st_intersection( # trees under the fallen trees
-#'   get_treepolygon(inventory),
+#'   get_geometry(inventory, TreePolygon),
 #'   st_as_sf(inventory, coords = c("Xutm", "Yutm"))
 #' ) %>%
 #'   ggplot() +
@@ -194,6 +192,8 @@ treefelling <- function(
 #'   the outputs metadata in the \code{\link{vignette}}).
 #' @export
 #'
+#' @importFrom dplyr mutate
+#'
 #' @examples
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 #' inventory <- treeselection(inventory, objective = 20, scenario ="manual",
@@ -308,6 +308,8 @@ successfail <- function(
 #' @importFrom sf st_coordinates
 #' @importFrom sf st_sfc
 #' @importFrom sf st_polygon
+#' @importFrom sf st_difference
+#' @importFrom sf st_union
 #'
 #' @examples
 #' data(Paracou6_2016)
@@ -346,7 +348,7 @@ successfail <- function(
 #'                                       Xutm+(DBH/100)/2, Yutm,
 #'                                       Xutm-(DBH/100)/2, Yutm) # the return
 #'                                     ,ncol=2, byrow=TRUE))))
-#'  RandomAngle <- as.numeric(sample(c(0:180), size = 1))
+#'  RandomAngle <- as.numeric(sample(c(0:359.9), size = 1))
 #'
 #'  TreeP <- st_difference(st_union(
 #'  rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
@@ -422,9 +424,13 @@ rotatepolygon <- function(
 #'
 #' @export
 #'
+#' @importFrom dplyr mutate
 #' @importFrom sf st_point
 #' @importFrom sf st_multipolygon
 #' @importFrom sf st_as_sf
+#' @importFrom sf st_nearest_points
+#' @importFrom sf st_cast
+#' @importFrom nngeo st_ellipse
 #' @importFrom matlib angle
 #'
 #' @examples
@@ -554,14 +560,14 @@ st_tree <- function(
   TrailPt <- NearestPoint[[2]] # the point (TrailPt) on the Trail closest to the location of the tree (Foot)
 
   # Compute the angle between the tree default position and the shortest way from the foot to the trail
-  theta <- as.numeric(matlib::angle(c(Foot[1] - Foot[1], Foot[2] + dat$TreeHeight[1]),
-                                    c(Foot[1] - TrailPt[1], Foot[2] -TrailPt[2]), degree = TRUE))
+  theta <- as.numeric(matlib::angle(c(Foot[1] - Foot[1], dat$TreeHeight),
+                                    c(TrailPt[1] - Foot[1], TrailPt[2] - Foot[2]), degree = TRUE))
 
 
   # Scenarios
   # For a random direction felling
   if(directionalfelling == "0" && (fuel !="1" || fuel !="2")){
-    RandomAngle <- as.numeric(sample(c(0:180), size = 1))
+    RandomAngle <- as.numeric(sample(c(0:359.9), size = 1))
     A <- st_difference(st_union( # Crown and Trunk together
       rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
       rotatepolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
@@ -573,7 +579,7 @@ st_tree <- function(
   #   if(dat$TreeFellingOrientationSuccess == "1"){
 
   # }else{ # else random felling
-  # RandomAngle <- as.numeric(sample(c(0:180), size = 1))
+  # RandomAngle <- as.numeric(sample(c(0:359.9), size = 1))
   #   A <- st_difference(st_union(
   #   rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
   #   rotatepolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
@@ -594,7 +600,7 @@ st_tree <- function(
         rotatepolygon(Crown, angle = 120 + theta, fixed = Foot) # turned crown
       ))
     }else{ # else random felling
-      RandomAngle <- as.numeric(sample(c(0:180), size = 1))
+      RandomAngle <- as.numeric(sample(c(0:359.9), size = 1))
 
       A <- st_difference(st_union(
         rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
@@ -633,7 +639,7 @@ st_tree <- function(
         ))
       }
     }else{ # else random felling
-      RandomAngle <- as.numeric(sample(c(0:180), size = 1))
+      RandomAngle <- as.numeric(sample(c(0:359.9), size = 1))
       A <- st_difference(st_union(
         rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
         rotatepolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown

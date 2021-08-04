@@ -14,7 +14,7 @@ test_that("rotatepolygon", {
   Numeric <- 10
   Integer <- 10L
 
-  Point <- st_point(c(1,2))
+  Point <- st_point(c(286505,583134))
   NotAPoint <- c(1,2)
 
   Rslt <- rotatepolygon(p = Pol, angle = Numeric, fixed = Point)
@@ -36,9 +36,16 @@ test_that("rotatepolygon", {
   expect_s3_class(Rslt, "sfc_POLYGON")
 
 
-  # check the angle
+  # check the angle and the fixed point
+  # = Compute the angle between the starting position of the polygon and its final position
+  Top <- sf::st_centroid(Pol)
+  Arrival <- st_point(as.numeric(unlist( # sfc to sfg
+    sf::st_centroid(Rslt))))
 
-  # and the fixed point
+  expect_equal(as.numeric(matlib::angle(c(Top[1] - Point[1], Top[2] - Point[2]),
+                                    c(Arrival[1] - Point[1], Arrival[2] - Point[2]),
+                                    degree = TRUE)), Numeric)
+
 
 })
 

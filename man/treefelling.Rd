@@ -65,31 +65,26 @@ pol2 <- list(matrix(c(286650, 583134,
                    ,ncol=2, byrow=TRUE))
 
 PolList = list(pol1,pol2) #list of lists of numeric matrices
-ScndTrail <- st_multipolygon(PolList)
+ScndTrail <- sf::st_multipolygon(PolList)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
-inventory <- treeselection(inventory, objective = 30, scenario ="manual",
+inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
  fuel = "2", diversification = TRUE, specieslax = FALSE,
  objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
  speciescriteria = SpeciesCriteria,
- advancedloggingparameters = loggingparameters())$inventory
+ advancedloggingparameters = loggingparameters())$inventory)
 
 inventory <- treefelling(inventory, scenario = "manual", fuel = "2",
 directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
 advancedloggingparameters = loggingparameters())
 
-get_treepolygon <- function(inventory){ # function from text (wkt) to sf
-inventory \%>\%
-  filter(!is.na(treepolygon)) \%>\%
-  st_as_sf(wkt = "treepolygon")
-}
 library(ggplot2)
 ggplot() +
   geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
-  geom_sf(data = get_treepolygon(inventory), fill = "red") # trees polygons
+  geom_sf(data = get_geometry(inventory, TreePolygon), fill = "red") # trees polygons
 
 st_intersection( # trees under the fallen trees
-  get_treepolygon(inventory),
+  get_geometry(inventory, TreePolygon),
   st_as_sf(inventory, coords = c("Xutm", "Yutm"))
 ) \%>\%
   ggplot() +

@@ -57,6 +57,9 @@ test_that("successfail", {
 
   # NA not tested
 
+  expect_s3_class(Hollow$TreeFellingOrientationSuccess, "factor")
+
+
 
 })
 

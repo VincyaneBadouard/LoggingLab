@@ -42,8 +42,11 @@
 #'
 #' @export
 #'
-#' @importFrom sp coordinates proj4string
-#' @importFrom raster crs
+#'@importFrom dplyr arrange desc ungroup rowwise mutate group_by select filter
+#'@importFrom tibble add_column
+#'@importFrom sp coordinates proj4string
+#'@importFrom sf st_as_sf
+#'@importFrom raster crs
 #'
 #'
 #' @examples

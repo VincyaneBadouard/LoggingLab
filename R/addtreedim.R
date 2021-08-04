@@ -15,7 +15,8 @@
 #'   TreeHarvestableVolume, TrunkHeight, CrownHeight, CrownDiameter)
 #'
 #' @export
-#' @import dplyr
+#'
+#' @importFrom dplyr filter
 #' @importFrom dplyr select
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
