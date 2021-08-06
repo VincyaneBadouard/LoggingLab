@@ -318,11 +318,11 @@ directionalfellingsuccessdef <- function(
 #' data(SpeciesCriteria)
 #'
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
-#' inventory <- treeselection(inventory, objective = 20, scenario ="manual",
+#' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
 #'  objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
 #'  speciescriteria = SpeciesCriteria,
-#'  advancedloggingparameters = loggingparameters())$inventory
+#'  advancedloggingparameters = loggingparameters())$inventory)
 #'
 #' inventory <- inventory %>%
 #'      dplyr::filter(Selected == "1") %>%
