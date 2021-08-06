@@ -1,4 +1,4 @@
-test_that("get_geometry", {
+test_that("getgeometry ", {
 
   # Test data
   data(Paracou6_2016)
@@ -15,18 +15,18 @@ test_that("get_geometry", {
 
     inventory <- left_join(Paracou6_2016, txtinvent, by = "idTree")
 
-    Rslt <- get_geometry(inventory, Localisation)
+    Rslt <- getgeometry (inventory, Localisation)
 
   # Check the function arguments
-  expect_error(get_geometry(MatrixInventory, var),
-               regexp = "The 'inventory' argument of the 'get_geometry' function must be data.frame")
+  expect_error(getgeometry (MatrixInventory, var),
+               regexp = "The 'inventory' argument of the 'getgeometry ' function must be data.frame")
 
-  # expect_error(get_geometry(inventory, var = "Localisation"),
-  #              regexp = "The 'var' argument of the 'get_geometry' function must be a variable of your data.frame")
+  # expect_error(getgeometry (inventory, var = "Localisation"),
+  #              regexp = "The 'var' argument of the 'getgeometry ' function must be a variable of your data.frame")
 
 
-  # expect_error(get_geometry(inventory, Circ),
-  #              regexp = "The column filled in the 'var' argument of the 'get_geometry' function must be of type character")
+  # expect_error(getgeometry (inventory, Circ),
+  #              regexp = "The column filled in the 'var' argument of the 'getgeometry ' function must be of type character")
 
   # column is sfc
   expect_s3_class(Rslt$Localisation, "sfc")

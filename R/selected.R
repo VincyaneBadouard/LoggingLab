@@ -330,7 +330,7 @@ selected <- function(
     # No NA in Selected colomn
     mutate(Selected = ifelse(is.na(Selected) , "0", Selected))
 
-  if (any(inventory$Selected == "deselected") && !any(inventory$Selected == "1")) #if there are "deselected" trees and  not of selected = 1
+  if (any(inventory$Selected == "deselected") & !any(inventory$Selected == "1")) #if there are "deselected" trees and  not of selected = 1
     stop("No trees were selected because they were all probed hollow (",paste(round(sum(as.numeric(inventory$Selected == "deselected"), na.rm = TRUE),  digits = 1))," probed hollow trees). Your objective volume may be too low (the few trees selected were found to be hollow).")
 
   # Create a POINTS VECTOR with coordinates of the probed hollow trees:
@@ -362,7 +362,7 @@ selected <- function(
     VO - VolumewithHollowslost #34 m3 lost: the bonus is therefore generous here (37.5 m3 of bonus).
   }
 
-  if ((fuel =="2") && any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
+  if ((fuel =="2") & any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
     # Hollow trees = fuelwood:
     inventory <- inventory %>%
       mutate(DeathCause = ifelse(ProbedHollow == "1", "hollowfuel", NA)) # remplacer NA par DeathCause dans le simulateur ONF

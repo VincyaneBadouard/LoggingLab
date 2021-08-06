@@ -49,7 +49,6 @@
 #'@export
 #'
 #'@importFrom dplyr filter mutate select left_join
-#'@importFrom sp coordinates proj4string
 #'@importFrom sf st_as_sf st_point
 #'@importFrom raster crs extract
 #'@importFrom topoDistance topoDist
@@ -191,11 +190,10 @@ treeselection <- function(
 
   if (dim(HarvestableTreesPoints)[1] != 0) {
 
-    sp::coordinates(HarvestableTreesPoints) <- ~ Xutm + Yutm
+    HarvestableTreesPoints <- st_as_sf(HarvestableTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(HarvestableTreesPoints) <- ~ Xutm + Yutm
 
-    sp::proj4string(HarvestableTreesPoints) <- raster::crs(DEM)
+    # sp::proj4string(HarvestableTreesPoints) <- raster::crs(DEM)
 
-    HarvestableTreesPoints <- st_as_sf(as(HarvestableTreesPoints,"SpatialPoints"))
   } else {HarvestableTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   # Points vector with coordinates of the selected trees:
@@ -204,11 +202,10 @@ treeselection <- function(
 
   if (dim(SelectedTreesPoints)[1] != 0) {
 
-    sp::coordinates(SelectedTreesPoints) <- ~ Xutm + Yutm
+    st_as_sf(SelectedTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(SelectedTreesPoints) <- ~ Xutm + Yutm
 
-    sp::proj4string(SelectedTreesPoints) <- raster::crs(DEM)
+    # sp::proj4string(SelectedTreesPoints) <- raster::crs(DEM)
 
-    SelectedTreesPoints <- st_as_sf(as(SelectedTreesPoints,"SpatialPoints"))
   } else {SelectedTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   # Points vector with coordinates of the future trees:
@@ -217,11 +214,10 @@ treeselection <- function(
 
   if (dim(FutureTreesPoints)[1] != 0) {
 
-    sp::coordinates(FutureTreesPoints) <- ~ Xutm + Yutm
+    st_as_sf(FutureTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(FutureTreesPoints) <- ~ Xutm + Yutm
 
-    sp::proj4string(FutureTreesPoints) <- raster::crs(DEM)
+    # sp::proj4string(FutureTreesPoints) <- raster::crs(DEM)
 
-    FutureTreesPoints <- st_as_sf(as(FutureTreesPoints,"SpatialPoints"))
   } else {FutureTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   # Points vector with coordinates of the reserve trees:
@@ -230,11 +226,10 @@ treeselection <- function(
 
   if (dim(ReserveTreesPoints)[1] != 0) {
 
-    sp::coordinates(ReserveTreesPoints) <- ~ Xutm + Yutm
+    st_as_sf(ReserveTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(ReserveTreesPoints) <- ~ Xutm + Yutm
 
-    sp::proj4string(ReserveTreesPoints) <- raster::crs(DEM)
+    # sp::proj4string(ReserveTreesPoints) <- raster::crs(DEM)
 
-    ReserveTreesPoints <- st_as_sf(as(ReserveTreesPoints,"SpatialPoints"))
   } else {ReserveTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
   #where specieslax was not necessary, consider eco2s as non-exploitable:

@@ -74,10 +74,10 @@ inventorycheckformat <- function(
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop, "CodeAlive variable is not found.")
   }
-  if(!("CommercialSp" %in% names(inventory))) {
-    GoodData <- FALSE
-    GeneralStop <- paste (GeneralStop, "CommercialSp variable is not found.")
-  }
+  # if(!("CommercialSp" %in% names(inventory))) {
+  #   GoodData <- FALSE
+  #   GeneralStop <- paste (GeneralStop, "CommercialSp variable is not found.")
+  # }
   if(!("UTMZone" %in% names(inventory))) {
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop, "UTMZone variable is not found.")
@@ -176,10 +176,10 @@ inventorycheckformat <- function(
     GeneralStop <- paste (GeneralStop, "VernName variable should be a character.")
   }
 
-  if (!inherits(inventory$CommercialSp, "logical")) {
-    GoodData <- FALSE
-    GeneralStop <- paste (GeneralStop, "CommercialSp variable should be logical.")
-  }
+  # if (!inherits(inventory$CommercialSp, "logical")) {
+  #   GoodData <- FALSE
+  #   GeneralStop <- paste (GeneralStop, "CommercialSp variable should be logical.")
+  # }
 
   if (!inherits(inventory$CensusYear, "integer")) {
     GoodData <- FALSE

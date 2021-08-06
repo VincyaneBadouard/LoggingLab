@@ -1,7 +1,8 @@
 #' Paracou6_2016
 #'
 #' Species inventory
-#' 2016 inventory of Paracou plot 6.Public dataset extracted from the Guyafor database.
+#' 2016 inventory of Paracou plot 6.
+#' Public dataset extracted from the Guyafor database.
 #'
 #' @format A tibble with 3620 rows and 31 variables:
 #' \describe{
@@ -22,7 +23,8 @@
 #'   \item{Lon}{description, in units (numeric)}
 #'   \item{Family}{description, in units (character)}
 #'   \item{Genus}{Genus associated at the vernacular name (character)}
-#'   \item{Species}{Species (without genus part) associated at the vernacular name (character)}
+#'   \item{Species}{Species (without genus part) associated
+#'   at the vernacular name (character)}
 #'   \item{BotaSource}{description, in units (character)}
 #'   \item{BotaCertainty}{description, in units (numeric)}
 #'   \item{idVern}{description, in units (integer)}
@@ -40,6 +42,9 @@
 #' }
 #' @source \url{http://paracou.cirad.fr}
 #'
-#' EcoFoG::Guyafor2df(WHERE = "Forest='Paracou' AND Plot='6' AND CensusYear=2016",UID = NULL,PWD = NULL,Driver = "SQL Server Native Client 10.0")
+#' EcoFoG::Guyafor2df(
+#' WHERE = "Forest='Paracou' AND Plot='6' AND CensusYear=2016",
+#' UID = NULL,PWD = NULL,Driver = "SQL Server Native Client 10.0") %>%
+#' dplyr::select(-TreeFieldNum,-Project, -idVern, -CommercialSp, -CensusDate)
 
 "Paracou6_2016"

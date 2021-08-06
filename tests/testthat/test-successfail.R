@@ -1,4 +1,4 @@
-test_that("successfail", {
+test_that("directionalfellingsuccessdef", {
 
   # Test data
   data(Paracou6_2016)
@@ -6,24 +6,24 @@ test_that("successfail", {
   MatrixInventory <- as.matrix(Paracou6_2016)
 
   # Check the function arguments
-  expect_error(successfail(MatrixInventory,
+  expect_error(directionalfellingsuccessdef(MatrixInventory,
                            fuel = "0", directionalfelling = "2",
                            advancedloggingparameters = loggingparameters()),
-               regexp = "The 'inventory'argument of the 'successfail' function must be data.frame")
+               regexp = "The 'inventory'argument of the 'directionalfellingsuccessdef' function must be data.frame")
 
-  expect_error(successfail(Paracou6_2016, directionalfelling = "2",
+  expect_error(directionalfellingsuccessdef(Paracou6_2016, directionalfelling = "2",
                            advancedloggingparameters = loggingparameters(),
                            fuel = TRUE),
-               regexp = "The 'fuel' argument of the 'successfail' function must be '0', '1', '2' or NULL")
+               regexp = "The 'fuel' argument of the 'directionalfellingsuccessdef' function must be '0', '1', '2' or NULL")
 
-  expect_error(successfail(Paracou6_2016, fuel = "2",
+  expect_error(directionalfellingsuccessdef(Paracou6_2016, fuel = "2",
                            advancedloggingparameters = loggingparameters(),
                            directionalfelling = TRUE),
-               regexp = "The 'directionalfelling' argument of the 'successfail' function must be '0', '1', '2' or NULL")
+               regexp = "The 'directionalfelling' argument of the 'directionalfellingsuccessdef' function must be '0', '1', '2' or NULL")
 
-  expect_error(successfail(Paracou6_2016, fuel = "2", directionalfelling = "2",
+  expect_error(directionalfellingsuccessdef(Paracou6_2016, fuel = "2", directionalfelling = "2",
                            advancedloggingparameters = as.matrix(loggingparameters())),
-               regexp = "The 'advancedloggingparameters' argument of the 'successfail' function must be a list")
+               regexp = "The 'advancedloggingparameters' argument of the 'directionalfellingsuccessdef' function must be a list")
 
 
   # Check scenarios
@@ -34,14 +34,14 @@ test_that("successfail", {
 
 
 
-  Random <- successfail(inventory, fuel = "0",directionalfelling = "0", advancedloggingparameters = loggingparameters())
-  Accessible <- successfail(inventory, fuel = "0",directionalfelling = "2", advancedloggingparameters = loggingparameters()) %>%
+  Random <- directionalfellingsuccessdef(inventory, fuel = "0",directionalfelling = "0", advancedloggingparameters = loggingparameters())
+  Accessible <- directionalfellingsuccessdef(inventory, fuel = "0",directionalfelling = "2", advancedloggingparameters = loggingparameters()) %>%
     filter(Selected == "1") # Accessible == "1" !!
 
-  Damage <- successfail(inventory, fuel = "1",directionalfelling = "2", advancedloggingparameters = loggingparameters())%>%
+  Damage <- directionalfellingsuccessdef(inventory, fuel = "1",directionalfelling = "2", advancedloggingparameters = loggingparameters())%>%
     filter(Selected == "1")
 
-  Hollow <- successfail(inventory, fuel = "2",directionalfelling = "2", advancedloggingparameters = loggingparameters())%>%
+  Hollow <- directionalfellingsuccessdef(inventory, fuel = "2",directionalfelling = "2", advancedloggingparameters = loggingparameters())%>%
     filter(Selected == "1" | ProbedHollow == "1")
 
 
@@ -66,7 +66,7 @@ test_that("successfail", {
 
 # check args errors
 # if (fuel == "0" && directionalfelling == "0") TreeFellingOrientationSuccess = 0
-# if (fuel == "0" && directionalfelling != "0" && Accessible == "1") TreeFellingOrientationSuccess == "0" || TreeFellingOrientationSuccess == "1"
-# if (fuel =="1" && Selected == "1") TreeFellingOrientationSuccess == "0" || TreeFellingOrientationSuccess == "1"
-# if (fuel =="2" && (Selected == "1" || ProbedHollow == "1")) TreeFellingOrientationSuccess == "0" || TreeFellingOrientationSuccess == "1"
+# if (fuel == "0" && directionalfelling != "0" & Accessible == "1") TreeFellingOrientationSuccess == "0" || TreeFellingOrientationSuccess == "1"
+# if (fuel =="1" & Selected == "1") TreeFellingOrientationSuccess == "0" || TreeFellingOrientationSuccess == "1"
+# if (fuel =="2" & (Selected == "1" || ProbedHollow == "1")) TreeFellingOrientationSuccess == "0" || TreeFellingOrientationSuccess == "1"
 # else is.na(TreeFellingOrientationSuccess)

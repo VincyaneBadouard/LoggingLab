@@ -1,4 +1,4 @@
-#'get_geometry
+#'getgeometry
 #'
 #'@description Converts a dataframe with a column of characters, which contains
 #'  the WKT encoded geometries, into an sf object. The column is converted to sfc.
@@ -17,7 +17,7 @@
 #' data(Paracou6_2016)
 #'
 #' felttrees <- Paracou6_2016 %>%
-#' dplyr::filter(VernName == "angélique") %>%
+#' dplyr::filter(VernName == "wacapou") %>%
 #'   dplyr::group_by(idTree) %>%
 #'   dplyr::do(LocPts = # inform geometry.
 #'        sf::st_point(c(.$Xutm,.$Yutm)) %>%
@@ -26,13 +26,13 @@
 #'
 #' inventory <- dplyr::left_join(Paracou6_2016, felttrees, by = "idTree")
 #'
-#' Rslt <- get_geometry(inventory, LocPts)
+#' Rslt <- getgeometry (inventory, LocPts)
 #'
 #' library(ggplot2)
 #' ggplot() +
 #'   geom_sf(data = Rslt)
 #'
-get_geometry <- function(
+getgeometry  <- function(
   inventory,
   var
 ){
@@ -41,13 +41,13 @@ get_geometry <- function(
   col_name <- deparse(substitute(var)) # object name to this name in character
 
   if(!inherits(inventory, "data.frame"))
-    stop("The 'inventory' argument of the 'get_geometry' function must be data.frame")
+    stop("The 'inventory' argument of the 'getgeometry ' function must be data.frame")
 
   # if(class(var) == "character") # chais pas comment l'écrire
-  #   stop("The 'var' argument of the 'get_geometry' function must be a variable of your data.frame")
+  #   stop("The 'var' argument of the 'getgeometry ' function must be a variable of your data.frame")
 
   # if(!inherits(inventory[,col_name], "character")) # ne marche pas lors du check...weird
-  #   stop("The column filled in the 'var' argument of the 'get_geometry' function must be of type character")
+  #   stop("The column filled in the 'var' argument of the 'getgeometry ' function must be of type character")
 
   inventory %>%
     dplyr::filter(!is.na( {{ var }} )) %>%

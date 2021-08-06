@@ -81,10 +81,10 @@ advancedloggingparameters = loggingparameters())
 library(ggplot2)
 ggplot() +
   geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
-  geom_sf(data = get_geometry(inventory, TreePolygon), fill = "red") # trees polygons
+  geom_sf(data = getgeometry (inventory, TreePolygon), fill = "red") # trees polygons
 
 st_intersection( # trees under the fallen trees
-  get_geometry(inventory, TreePolygon),
+  getgeometry (inventory, TreePolygon),
   st_as_sf(inventory, coords = c("Xutm", "Yutm"))
 ) \%>\%
   ggplot() +

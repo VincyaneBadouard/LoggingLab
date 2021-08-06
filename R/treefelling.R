@@ -65,10 +65,10 @@
 #' library(ggplot2)
 #' ggplot() +
 #'   geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
-#'   geom_sf(data = get_geometry(inventory, TreePolygon), fill = "red") # trees polygons
+#'   geom_sf(data = getgeometry (inventory, TreePolygon), fill = "red") # trees polygons
 #'
 #' st_intersection( # trees under the fallen trees
-#'   get_geometry(inventory, TreePolygon),
+#'   getgeometry (inventory, TreePolygon),
 #'   st_as_sf(inventory, coords = c("Xutm", "Yutm"))
 #' ) %>%
 #'   ggplot() +
@@ -141,7 +141,7 @@ treefelling <- function(
   fuel <- scenariosparameters$fuel
 
   # Compute treefelling success and fails
-  inventory <- successfail(
+  inventory <- directionalfellingsuccessdef(
     inventory,
     fuel = fuel,
     directionalfelling = directionalfelling,
@@ -167,7 +167,7 @@ treefelling <- function(
 
 }
 
-#' successfail
+#' directionalfellingsuccessdef
 #'
 #' @description Defines whether the directed fall of the tree is successful or
 #'   not by drawing in a Bernoulli distribution where the probability of success
@@ -202,10 +202,10 @@ treefelling <- function(
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory
 #'
-#' successfail(inventory,fuel = "2",directionalfelling = "2",
+#' directionalfellingsuccessdef(inventory,fuel = "2",directionalfelling = "2",
 #' advancedloggingparameters = loggingparameters())
 #'
-successfail <- function(
+directionalfellingsuccessdef <- function(
   inventory,
   fuel,
   directionalfelling,
@@ -215,17 +215,17 @@ successfail <- function(
   # Arguments check
 
   if(!inherits(inventory, "data.frame"))
-    stop("The 'inventory'argument of the 'successfail' function must be data.frame")
+    stop("The 'inventory'argument of the 'directionalfellingsuccessdef' function must be data.frame")
 
   if (!any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
-    stop("The 'fuel' argument of the 'successfail' function must be '0', '1', '2' or NULL")
+    stop("The 'fuel' argument of the 'directionalfellingsuccessdef' function must be '0', '1', '2' or NULL")
 
   if (!any(directionalfelling == "0" || directionalfelling == "1"||
            directionalfelling == "2"|| is.null(directionalfelling)))
-    stop("The 'directionalfelling' argument of the 'successfail' function must be '0', '1', '2' or NULL")
+    stop("The 'directionalfelling' argument of the 'directionalfellingsuccessdef' function must be '0', '1', '2' or NULL")
 
   if(!inherits(advancedloggingparameters, "list"))
-    stop("The 'advancedloggingparameters' argument of the 'successfail' function must be a list")
+    stop("The 'advancedloggingparameters' argument of the 'directionalfellingsuccessdef' function must be a list")
 
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
@@ -464,7 +464,7 @@ rotatepolygon <- function(
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory
 #'
-#' inventory <- successfail(inventory,fuel = "2",directionalfelling = "2",
+#' inventory <- directionalfellingsuccessdef(inventory,fuel = "2",directionalfelling = "2",
 #' advancedloggingparameters = loggingparameters())
 #'
 #' inventory <- inventory %>%
