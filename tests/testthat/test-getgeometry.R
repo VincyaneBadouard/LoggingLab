@@ -6,7 +6,7 @@ test_that("getgeometry ", {
   MatrixInventory <- as.matrix(Paracou6_2016)
 
   txtinvent <- Paracou6_2016 %>%
-    filter(VernName == "angélique") %>%
+    filter(VernName == "wacapou") %>%
       group_by(idTree) %>%
       do(Localisation = # inform geometry.
            sf::st_point(c(.$Xutm,.$Yutm)) %>%
