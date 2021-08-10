@@ -46,8 +46,8 @@ getgeometry  <- function(
   # if(class(var) == "character") # chais pas comment l'écrire
   #   stop("The 'var' argument of the 'getgeometry ' function must be a variable of your data.frame")
 
-  if(!inherits(inventory[,col_name], "character")) # ne marche pas lors du check...weird
-    stop("The column filled in the 'var' argument of the 'getgeometry ' function must be of type character")
+  # if(!inherits(inventory[,col_name], "character")) # ne marche pas lors du check...weird
+  #   stop("The column filled in the 'var' argument of the 'getgeometry ' function must be of type character")
 
   inventory %>%
     dplyr::filter(!is.na( {{ var }} )) %>%

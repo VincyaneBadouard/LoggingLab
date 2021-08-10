@@ -119,7 +119,7 @@ selected <- function(
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- NULL
+  DeathCause <- DistCrit <- Family <- ONFName <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
@@ -142,7 +142,7 @@ selected <- function(
     mutate(Selected = ifelse(HVinit == VO & LoggingStatus == "harvestable",
                              "1", NA))# if we have our volume, harvestable sp = selected sp
 
-  inventory <- add_column(inventory, Up = 0) # Create a column to indicate Which sp is FD uped. "0" = no uped, "1"= uped dans inventory
+  inventory <- add_column(inventory, Up = "0") # Create a column to indicate Which sp is FD uped. "0" = no uped, "1"= uped
 
 
   if (HVinit < VO){ #diversification is necessary, designate the secondary-economic-rank species too
@@ -185,10 +185,7 @@ selected <- function(
     inventory <- inventory %>%
       mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" &
                                       Commercial == "1" & (DBH >= UpMinFD & DBH <= MaxFD), #designate preferred individuals of first economic rank species, when the plot is species-rich.
-                                    "harvestableUp", LoggingStatus)) %>%
-
-      mutate(Up = ifelse(Commercial == "1", "1", Up))# to inform that the "1" ranks have been FD upgraded. Pas mieux de le faire à l'sp?
-    # test "Commercial"= "1" pour les "harvestableUp"
+                                    "harvestableUp", LoggingStatus))
 
     if (!diversification) {
       HarvestableTable <- inventory %>%
@@ -278,9 +275,7 @@ selected <- function(
 
         inventory <- inventory %>%
           mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" & Commercial == "2" & DBH >= UpMinFD, #designate preferred individuals of 2nd economic rank species too, when the plot is species-rich.
-                                        "harvestableUp", LoggingStatus)) %>%
-
-          mutate(Up = ifelse(Commercial == "2", "1", Up))# to inform that the "2" ranks have been FD upgraded. Pas mieux de le faire à l'sp?
+                                        "harvestableUp", LoggingStatus))
 
         HarvestableTable <- inventory %>%
           filter(LoggingStatus == "harvestableUp")
@@ -325,9 +320,13 @@ selected <- function(
                                  sample(c(1,0), size = 1, replace = F, prob = c(ProbedHollowProba, 1-ProbedHollowProba)), NA)) %>%  # 1 = hollow tree, 0 = not hollow
     mutate(ProbedHollow = factor(as.numeric(ProbedHollow))) %>%
     mutate(Selected = ifelse(ProbedHollow == "1", "deselected", Selected)) %>%  #hollow probed trees are deselected
-    # non-upgraded MinFD species:
-    mutate(Up = ifelse(is.na(Up) , "0", Up)) %>%
-    # No NA in Selected colomn
+
+    # Upgraded MinFD species:
+    group_by(ONFName) %>%
+    mutate(Up = ifelse(any(LoggingStatus == "harvestableUp"), "1", Up)) %>% # to inform for each individual if its species have been FD upgraded
+    ungroup() %>%
+
+  # No NA in Selected colomn
     mutate(Selected = ifelse(is.na(Selected) , "0", Selected))
 
   if (any(inventory$Selected == "deselected") & !any(inventory$Selected == "1")) #if there are "deselected" trees and  not of selected = 1

@@ -20,20 +20,28 @@ test_that("futurereserve", {
 
   advancedloggingparameters = loggingparameters()
 
-  # Future = Commercial == "1" & (DBH >= advancedloggingparameters$FutureTreesMinDiameter & DBH < MinFD)
+  # Future = Commercial == "1" &
   FutureTrees <- testinventory %>%
     filter(LoggingStatus == "future")
 
-  expect_true(all(FutureTrees$Commercial == "1"))
-  expect_true(all(FutureTrees$DBH >= advancedloggingparameters$FutureTreesMinDiameter & FutureTrees$DBH < FutureTrees$MinFD))
+
+  expect_true(all(FutureTrees$Commercial == "1"
+                  & (
+                    (FutureTrees$Up == "0" &
+                       (FutureTrees$DBH >= advancedloggingparameters$FutureTreesMinDiameter & FutureTrees$DBH < FutureTrees$MinFD))
+                    | (FutureTrees$Up == "1" &
+                         (FutureTrees$DBH >= advancedloggingparameters$FutureTreesMinDiameter & FutureTrees$DBH < FutureTrees$UpMinFD)))))
 
   # Reserve
   ReserveTrees <- testinventory %>%
     filter(LoggingStatus =="reserve")
 
-  expect_true(all(ReserveTrees$Commercial == "1")) # = Commercial == "1"
-  expect_true(all(ReserveTrees$DBH >= advancedloggingparameters$FutureTreesMinDiameter
-                  & ReserveTrees$DBH < ReserveTrees$MinFD))# = Future trees
+  expect_true(all(ReserveTrees$Commercial == "1"
+                  & (
+                    (ReserveTrees$Up == "0" &
+                       (ReserveTrees$DBH >= advancedloggingparameters$FutureTreesMinDiameter & ReserveTrees$DBH < ReserveTrees$MinFD))
+                    | (ReserveTrees$Up == "1" &
+                         (ReserveTrees$DBH >= advancedloggingparameters$FutureTreesMinDiameter & ReserveTrees$DBH < ReserveTrees$UpMinFD)))))
 
 
   # as many as the number of trees exploited

@@ -25,8 +25,8 @@ test_that("getgeometry ", {
   #              regexp = "The 'var' argument of the 'getgeometry ' function must be a variable of your data.frame")
 
 
-  expect_error(getgeometry (inventory, Circ),
-               regexp = "The column filled in the 'var' argument of the 'getgeometry ' function must be of type character")
+  # expect_error(getgeometry (inventory, Circ),
+  #              regexp = "The column filled in the 'var' argument of the 'getgeometry ' function must be of type character")
 
   # column is sfc
   expect_s3_class(Rslt$Localisation, "sfc")

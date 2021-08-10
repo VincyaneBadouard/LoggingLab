@@ -75,7 +75,7 @@ inventory <- treeselection(inventory, objective = 20, scenario ="manual",
  speciescriteria = SpeciesCriteria,
  advancedloggingparameters = loggingparameters())$inventory
 
-inventory <- directionalfellingsuccessdef(inventory,fuel = "2",directionalfelling = "2",
+inventory <- directionalfellingsuccessdef(inventory,fuel = "0",directionalfelling = "2",
 advancedloggingparameters = loggingparameters())
 
 inventory <- inventory \%>\%
