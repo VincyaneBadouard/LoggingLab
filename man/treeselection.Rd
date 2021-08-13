@@ -77,7 +77,7 @@ inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 
 treeselectionoutputs <- treeselection(inventory, objective = 20,
 scenario ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
-objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+objectivelax = TRUE, DEM = DemParacou, plotslope = PlotSlope,
 speciescriteria = SpeciesCriteria,
 advancedloggingparameters = loggingparameters()) #  MainTrail
 

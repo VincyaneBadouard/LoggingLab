@@ -161,22 +161,22 @@ selected <- function(
       HVlax <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with specieslax permission
 
 
-      if (HVlax < VO && objectivelax) message("The exploitable volume (= ",paste(round(HVlax, digits = 1)),") is still lower (by ",paste(round(VO- HVlax, digits = 1)),") than your objective volume despite the diversification you have allowed (without the diversification HVinit= ",paste(round(HVinit, digits = 1)),"). In this case, you have chosen to continue harvesting with a volume lower than your objective.")
+      if (HVlax < VO && objectivelax) message("The exploitable volume (= ",paste(round(HVlax, digits = 1)),"m^3) is still lower (by ",paste(round(VO- HVlax, digits = 1)),"m^3) than your objective volume despite the diversification you have allowed (without the diversification HVinit= ",paste(round(HVinit, digits = 1)),"m^3). In this case, you have chosen to continue harvesting with a volume lower than your objective.")
 
-      if (HVlax < VO && !objectivelax) stop("The harvestable volume = ",paste(round(HVlax, digits = 1)),") is still lower (by ",paste(round(VO- HVlax, digits = 1)),") than your objective volume despite the diversification you have allowed (without the diversification HVinit= ",paste(round(HVinit, digits = 1)),"). By default or by your choice, the simulation stops. If you wish to continue the exploitation in spite of an exploitable volume lower than your objective volume, you have the argument 'objectivelax'.")
+      if (HVlax < VO && !objectivelax) stop("The harvestable volume = ",paste(round(HVlax, digits = 1)),"m^3) is still lower (by ",paste(round(VO- HVlax, digits = 1)),"m^3) than your objective volume despite the diversification you have allowed (without the diversification HVinit= ",paste(round(HVinit, digits = 1)),"m^3). By default or by your choice, the simulation stops. If you wish to continue the exploitation in spite of an exploitable volume lower than your objective volume, you have the argument 'objectivelax'.")
 
-      if (!HVlax == VO) message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),") was lower (by ",paste(round(VO- HVinit, digits = 1)),") than your objective volume. You have chosen to diversify your species selection in this case. The exploitation was therefore carried out on this diversified selection of species.")
+      if (!HVlax == VO) message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was lower (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume. You have chosen to diversify your species selection in this case. The exploitation was therefore carried out on this diversified selection of species.")
     }
 
     if (!diversification && !specieslax && objectivelax)
-      message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),") is less (by ",paste(round(VO- HVinit, digits = 1)),") than your objective volume. In this case you have chosen to continue logging without diversifying your species.")
+      message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) is less (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume. In this case you have chosen to continue logging without diversifying your species.")
     if (diversification && objectivelax)
 
-      message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),") is less (by ",paste(round(VO- HVinit, digits = 1)),") than your objective volume. In this case you have chosen to continue logging.")
+      message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) is less (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume. In this case you have chosen to continue logging.")
 
 
     if ((!specieslax & !objectivelax) | (diversification && !objectivelax))
-      stop("The harvestable volume (= ",paste(round(HVinit, digits = 1)),") is lower (by ",paste(round(VO- HVinit, digits = 1)),") than your objective volume. By default or by your choice, the simulation stops. If you wish to continue the exploitation in spite of a harvestable volume lower than your objective volume, you can use the argument 'objectivelax' or the diversification of species (if it is not already the case).")
+      stop("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) is lower (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume. By default or by your choice, the simulation stops. If you wish to continue the exploitation in spite of a harvestable volume lower than your objective volume, you can use the argument 'objectivelax' or the diversification of species (if it is not already the case).")
   }
 
 
@@ -199,7 +199,7 @@ selected <- function(
         inventory <- inventory %>%
           mutate(Selected = ifelse(HVupCommercial1 == VO & LoggingStatus == "harvestableUp", "1", NA))# if harvestableUp individuals are sufficient to have our volume, harvestableUp ind = selected ind
 
-        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),") was higher (by ",paste(round(HVinit-VO, digits = 1)),") than the objective volume, the Minimum Falling Diameter (MinFD) of 1st economic rank species were increased. The objective volume has now been reached.")
+        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume, the Minimum Falling Diameter (MinFD) of 1st economic rank species were increased. The objective volume has now been reached.")
       }
 
       if (HVupCommercial1 > VO){
@@ -217,7 +217,7 @@ selected <- function(
           filter(Selected == "1")
         HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals only
 
-        message("The harvestable volume (= ",paste(round(HVupCommercial1, digits = 1)),")is always higher (by ",paste(round(HVupCommercial1-VO, digits = 1)),") than your objective volume despite the increase in Minimum Falling Diameter (MinFD) (Initial harvestable volume = ",paste(round(HVinit, digits = 1)),"). In order to reach your objective volume, the trees were selected in decreasing order of volume until the objective volume was reached.")
+        message("The harvestable volume (= ",paste(round(HVupCommercial1, digits = 1)),"m^3)is always higher (by ",paste(round(HVupCommercial1-VO, digits = 1)),"m^3) than your objective volume despite the increase in Minimum Falling Diameter (MinFD) (Initial harvestable volume = ",paste(round(HVinit, digits = 1)),"m^3). In order to reach your objective volume, the trees were selected in decreasing order of volume until the objective volume was reached.")
       }
       if (HVupCommercial1 < VO){
 
@@ -234,7 +234,7 @@ selected <- function(
           filter(Selected == "1")
         HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals
 
-        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),") was higher (by ",paste(round(HVinit-VO, digits = 1)),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased with retention of some stems with DBH lower than the UpMinFD to ensure that the objective volume was attained.")
+        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased with retention of some stems with DBH lower than the UpMinFD to ensure that the objective volume was attained.")
       }
     }
 
@@ -250,7 +250,7 @@ selected <- function(
 
           mutate(Selected = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable",
                                    "1", NA))# if we have our volume, harvestable ind = selected ind
-        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),") was higher (by ",paste(round(HVinit-VO, digits = 1)),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased. The objective volume has now been reached. It was not necessary to increase the MinFD of the other economic species")
+        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased. The objective volume has now been reached. It was not necessary to increase the MinFD of the other economic species")
       }
 
       if (HVupCommercial1 < VO){
@@ -268,7 +268,7 @@ selected <- function(
           filter(Selected == "1")
         HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals, and 2nd rank no upgraded FD individuals
 
-        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),") was higher (by ",paste(round(HVinit-VO, digits = 1)),") than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased with retention of some stems with DBH lower than the UpMinFD to ensure that the objective volume was attained. It was not necessary to raise the MinFDs of other economic species.")
+        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased with retention of some stems with DBH lower than the UpMinFD to ensure that the objective volume was attained. It was not necessary to raise the MinFDs of other economic species.")
       }
 
       if (HVupCommercial1 > VO){
@@ -304,7 +304,7 @@ selected <- function(
           HVupCommercial12adjust <- sum(HarvestableTable$TreeHarvestableVolume) #45.44885 Harvestable volume, with upgraded FD individuals
         }
 
-        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),") was higher (by ",paste(round(HVinit-VO, digits = 1)),") than the objective volume, it was necessary to increase the Minimum Falling Diameter (MinFD) of all species. The objective volume has now been reached.")
+        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume, it was necessary to increase the Minimum Falling Diameter (MinFD) of all species. The objective volume has now been reached.")
 
       }
     }

@@ -79,7 +79,8 @@ ONFGuyafortaxojoin <- function(
     mutate(UpMinFD = ifelse(is.na(UpMinFD.species), UpMinFD.genus, UpMinFD.species)) %>%
     mutate(MaxFD = ifelse(is.na(MaxFD.species), MaxFD.genus, MaxFD.species)) %>%
     select(-Commercial.species, -Commercial.genus, -MinFD.species, -MinFD.genus,
-           -UpMinFD.species, -UpMinFD.genus, -MaxFD.species, -MaxFD.genus)
+           -UpMinFD.species, -UpMinFD.genus, -MaxFD.species, -MaxFD.genus) %>%
+    mutate(Commercial = as.character(Commercial))
 
   ConcernedRows <- which(inventory$ONFName == "maho rouge" & (inventory$ScientificName == "Lecythis_poiteaui"| inventory$ScientificName == "Lecythis_praeclara" | inventory$ScientificName == "Lecythis_holcogyne" | inventory$ScientificName == "Lecythis_pneumatophora"| inventory$ScientificName == "Lecythis chartacea"| inventory$ScientificName == "Lecythis zabucajo"))
   if(length(ConcernedRows) > 0){

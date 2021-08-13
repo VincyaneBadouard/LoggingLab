@@ -37,16 +37,31 @@
 #' @param MaxTrailDensity Maximum TrailDensity. Default = 200, in m/ha (double)
 #' @param MaxLandingArea Maximum landing area. Default = 1500) in square meters
 #'   (double)
-#' @param TreeHarvestableVolumeAllometry (function)
-#' @param TrunkHeightAllometry (function)
-#' @param TreeHeightAllometry log(H) = 0.07359191 + 1.34241216 log(DBH) +
-#'   -0.12282344 log(DBH)^2 (function)
+#' @param TreeHarvestableVolumeAllometry French Guiana ONF formula:
+#' aCoef + bCoef * (DBH/100)^2, a and b depend on the forest location,
+#' DBH in cm. (function)
+#'
+#' @param TrunkHeightAllometry From the cylinder volume formula:
+#' CylinderVolume = pi(((DBH/100)/2)^2 x H.
+#  DBH in cm, H in m. (function)
+#'
+#' @param TreeHeightAllometry From the BIOMASS package:
+#' log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344 log(DBH)^2.
+#' H in m, DBH in cm(function)
+#'
 #' @param CrownDiameterAllometry ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
-#'   and mean σ^2 = 0.0295966977 (ref)(function)
-#' @param RottenModel Estimates the probability of being probed hollow (default:
+#'   and mean σ^2 = 0.0295966977
+#'   with CD the crown diameter and H the tree height in m, and D the DBH in cm
+#'   (ref)(function)
+#'
+#' @param RottenModel Estimates the tree probability of being probed hollow (default:
 #'   1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)
 #'
-#' @return A named list of 30 objects.
+#' @param VisiblyDefectModel Estimates the tree probability
+#' to have visible defects (default:
+#' (function)
+#'
+#' @return A named list of 31 objects.
 #'
 #' @export
 #'
@@ -108,9 +123,9 @@ loggingparameters <- function(
     exp(((log(DBH)- alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight,
   # compute the crown diameter (CD) (ln(D) = alpha + beta ln(H*CD) + error, with error~N(0,sigma^2) and meansigma^2 = 0.0295966977. (Melaine's allometries))
 
-  RottenModel = function(DBH) 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) # Hollow trees identification
+  RottenModel = function(DBH) 1 / (1 + exp(-(-5.151 + 0.042 * DBH))), # Hollow trees identification
 
-  # VisiblyDefectModel = function() #  Visible hollow trees identification
+  VisiblyDefectModel = function(LogDBH) 1 / (1 + exp(-(-3.392 + 0.357 * LogDBH))) #  Visible defects trees identification
 ){
 
   # Arguments check
@@ -142,7 +157,7 @@ loggingparameters <- function(
     MaxLandingArea), function(element)
       if(!inherits(element, "numeric"))
         stop("You have assigned a non-numerical value to one of the arguments of the 'loggingparameters' function
-         waiting for a numerical value. Look at the help page for the 'loggingparameters' function (?loggingparameters)"))
+         expects a numerical value. Look at the help page for the 'loggingparameters' function (?loggingparameters)"))
 
   lapply(c(
     TreeHarvestableVolumeAllometry,
@@ -151,7 +166,7 @@ loggingparameters <- function(
     CrownDiameterAllometry,
     RottenModel), function(element)
       if(!inherits(element, "function"))
-        stop("One of the arguments of the 'loggingparameters' function you want to fill in waiting for an object of function class.
+        stop("One of the arguments of the 'loggingparameters' function you want to fill in expects an object of function class.
              Look at the help page for the 'loggingparameters' function (?loggingparameters)"))
 
 
@@ -189,7 +204,7 @@ loggingparameters <- function(
     TrunkHeightAllometry = TrunkHeightAllometry,
     TreeHeightAllometry = TreeHeightAllometry,
     CrownDiameterAllometry = CrownDiameterAllometry,
-    RottenModel = RottenModel
-    # VisiblyDefectModel = VisiblyDefectModel
+    RottenModel = RottenModel,
+    VisiblyDefectModel = VisiblyDefectModel
   )
 }

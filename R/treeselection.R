@@ -48,7 +48,7 @@
 #'
 #'@export
 #'
-#'@importFrom dplyr filter mutate select left_join
+#'@importFrom dplyr filter mutate select left_join bind_rows
 #'@importFrom sf st_as_sf st_point
 #'@importFrom raster crs extract
 #'@importFrom topoDistance topoDist
@@ -65,7 +65,7 @@
 #'
 #'treeselectionoutputs <- treeselection(inventory, objective = 20,
 #'scenario ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
-#'objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+#'objectivelax = TRUE, DEM = DemParacou, plotslope = PlotSlope,
 #'speciescriteria = SpeciesCriteria,
 #' advancedloggingparameters = loggingparameters()) #  MainTrail
 #'
@@ -118,8 +118,8 @@ treeselection <- function(
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- NULL
-  ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
+  DeathCause <- DistCrit <- Family <- VisibleDefect <- LogDBH <- NULL
+  ForestZoneVolumeParametersTable <- Genus <- Logged <- VisibleDefectProba <- NULL
   LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
@@ -145,12 +145,17 @@ treeselection <- function(
 
   if ("DeathCause" %in% names(inventory)) filter(inventory, is.null(DeathCause)) #select only still alived trees (after MainTrails) NULL ou NA
 
-  # inventory <- inventory %>%
-  # Visible defect trees detection:
-  # mutate(VisibleDefectProba = advancedloggingparameters$VisiblyRottenModel(DBH)) %>%
-  # mutate(VisibleDefect = sample(c(0,1), size = 1, replace = F, prob = VisibleDefectProba)) # 1 = default tree, 0 = no visible default (là ma fct ne sait pas qd elle doit mettre 0 ou 1)
+  inventory <- inventory %>%
+    # Visible defect trees detection:
+    mutate(LogDBH = log(DBH)) %>% # DBH is logged in the model
 
-  # filter(VisibleDefect == "0") %>%
+    mutate(VisibleDefectProba = advancedloggingparameters$VisiblyDefectModel(LogDBH)) %>%  # Proba to have defects for each tree
+
+    # generate either "1" or "0" randomly for each line, depending on the proba associated with the line:
+    rowwise() %>%
+    mutate(VisibleDefect = sample(c(1,0), size = 1, replace = F, prob = c(VisibleDefectProba, 1-VisibleDefectProba))) %>%    # 1 = visible defects tree, 0 = no visible defects
+    ungroup() %>%
+    mutate(VisibleDefect = as.factor(VisibleDefect))
 
   # Compute the objective volume with or without bonus:
   if (fuel =="2") {VO = objective
@@ -159,25 +164,29 @@ treeselection <- function(
 
   }
 
-  harvestableOutputs <- harvestable(                                                      # interne fucntion
-    ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),            # interne fucntion
+  inventory <- ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria) # Joins commercial criteria to the inventory
+
+  VisibleDefectTable <- filter(inventory, VisibleDefect == "1")
+  inventory <- filter(inventory, VisibleDefect == "0") # we continue with just visibly healthy trees
+
+  harvestableOutputs <- harvestable(inventory,                                               # harvestable function
     diversification = diversification, specieslax = specieslax,
     DEM = DEM, plotslope = plotslope, advancedloggingparameters = loggingparameters())
 
-  inventory <- harvestableOutputs$inventory        # one of the output
+  inventory <- harvestableOutputs$inventory                                        # one of the output
 
-  HVinit <- harvestableOutputs$HVinit           # the other output
+  HVinit <- harvestableOutputs$HVinit                                              # the other output: initial harvestable volume
 
-  selectedOutputs <- selected(                                                   # outputs of the selected function
+  selectedOutputs <- selected(                                                     # outputs of the selected function
     inventory,
     scenario = scenario, fuel = fuel, diversification = diversification,
     specieslax = specieslax, objectivelax = objectivelax, DEM = DEM,
     advancedloggingparameters = advancedloggingparameters, VO = VO, HVinit = HVinit)
 
-  inventory <- selectedOutputs$inventory                                         # extract inventory of the selected outputs
+  inventory <- selectedOutputs$inventory                                           # extract inventory of the selected outputs
 
-  HollowTreesPoints <- selectedOutputs$HollowTreesPoints                         # extract a pts vector of the selected outputs
-  EnergywoodTreesPoints <- selectedOutputs$EnergywoodTreesPoints                 # extract a pts vector of the selected outputs
+  HollowTreesPoints <- selectedOutputs$HollowTreesPoints                           # extract a pts vector of the selected outputs
+  EnergywoodTreesPoints <- selectedOutputs$EnergywoodTreesPoints                   # extract a pts vector of the selected outputs
 
 
   inventory <- futurereserve(inventory)
@@ -234,7 +243,10 @@ treeselection <- function(
 
   #where specieslax was not necessary, consider eco2s as non-exploitable:
   inventory <- inventory %>%
-    mutate(LoggingStatus = ifelse(HVinit > VO & LoggingStatus == "harvestable2nd", "non-harvestable", LoggingStatus))
+    mutate(LoggingStatus = ifelse(HVinit > VO & LoggingStatus == "harvestable2nd", "non-harvestable", LoggingStatus)) %>%
+
+    # add the visible defects trees removed until now
+    bind_rows(VisibleDefectTable)
 
   # OUTPUTS list
   treeselectionOutputs <- list(inventory = inventory,

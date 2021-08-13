@@ -38,7 +38,8 @@ loggingparameters(
     -0.12282344 * log(DBH)^2),
   CrownDiameterAllometry = function(DBH, TreeHeight, alpha, beta) exp(((log(DBH) -
     alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight,
-  RottenModel = function(DBH) 1/(1 + exp(-(-5.151 + 0.042 * DBH)))
+  RottenModel = function(DBH) 1/(1 + exp(-(-5.151 + 0.042 * DBH))),
+  VisiblyDefectModel = function(LogDBH) 1/(1 + exp(-(-3.392 + 0.357 * LogDBH)))
 )
 }
 \arguments{
@@ -104,21 +105,31 @@ exploitation. Default = 1/3 (double)}
 \item{MaxLandingArea}{Maximum landing area. Default = 1500) in square meters
 (double)}
 
-\item{TreeHarvestableVolumeAllometry}{(function)}
+\item{TreeHarvestableVolumeAllometry}{French Guiana ONF formula:
+aCoef + bCoef * (DBH/100)^2, a and b depend on the forest location,
+DBH in cm. (function)}
 
-\item{TrunkHeightAllometry}{(function)}
+\item{TrunkHeightAllometry}{From the cylinder volume formula:
+CylinderVolume = pi(((DBH/100)/2)^2 x H.}
 
-\item{TreeHeightAllometry}{log(H) = 0.07359191 + 1.34241216 log(DBH) +
--0.12282344 log(DBH)^2 (function)}
+\item{TreeHeightAllometry}{From the BIOMASS package:
+log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344 log(DBH)^2.
+H in m, DBH in cm(function)}
 
 \item{CrownDiameterAllometry}{ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
-and mean σ^2 = 0.0295966977 (ref)(function)}
+and mean σ^2 = 0.0295966977
+with CD the crown diameter and H the tree height in m, and D the DBH in cm
+(ref)(function)}
 
-\item{RottenModel}{Estimates the probability of being probed hollow (default:
+\item{RottenModel}{Estimates the tree probability of being probed hollow (default:
 1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)}
+
+\item{VisiblyDefectModel}{Estimates the tree probability
+to have visible defects (default:
+(function)}
 }
 \value{
-A named list of 30 objects.
+A named list of 31 objects.
 }
 \description{
 Advanced parameters of the logging simulator
