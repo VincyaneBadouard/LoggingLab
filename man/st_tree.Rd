@@ -14,7 +14,8 @@ st_tree(
 )
 }
 \arguments{
-\item{dat}{(dataframe)}
+\item{dat}{1 row data.frame with columns: Xutm, Yutm, CrownDiameter,
+CrownHeight, DBH, TrunkHeight, TreeHeight, TreeFellingOrientationSuccess}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", damage
 exploitation in fuelwood = "1", exploitation of hollow trees and damage in
@@ -41,8 +42,9 @@ crowns will be directed towards the trail if they can be accessed with a
 grapple (see the \code{GrappleLength} argument of the
 \code{\link{loggingparameters}} function). In other cases, the fall will be
 made from the base of the tree towards the trail. The orientation of the
-fall succeeds or fails according to a Bernoulli law where the probability of success
-is by default 60\%, and can be changed with the \code{advancedloggingparameters} argument.
+fall succeeds or fails according to a Bernoulli law where the probability
+of success is by default 60\%, and can be changed with the
+\code{advancedloggingparameters} argument.
 }
 \examples{
 MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
