@@ -17,10 +17,7 @@
 #'   "DamageTreesPoints", "DeadTreesPoints" vectors
 #' @export
 #'
-#' @importFrom dplyr filter
-#' @importFrom dplyr group_by
-#' @importFrom dplyr do
-#' @importFrom dplyr left_join
+#' @importFrom dplyr group_by do left_join
 #' @importFrom sf st_as_text
 #' @importFrom tidyr unnest
 #'
@@ -401,12 +398,16 @@ rotatepolygon <- function(
 #'   grapple (see the \code{GrappleLength} argument of the
 #'   \code{\link{loggingparameters}} function). In other cases, the fall will be
 #'   made from the base of the tree towards the trail. The orientation of the
-#'   fall succeeds or fails according to a Bernoulli law where the probability of success
-#'   is by default 60%, and can be changed with the \code{advancedloggingparameters} argument.
+#'   fall succeeds or fails according to a Bernoulli law where the probability
+#'   of success is by default 60%, and can be changed with the
+#'   \code{advancedloggingparameters} argument.
 #'
-#' @param dat (dataframe)
+#' @param dat 1 row data.frame with columns: Xutm, Yutm, CrownDiameter,
+#'   CrownHeight, DBH, TrunkHeight, TreeHeight, TreeFellingOrientationSuccess
+#'
 #' @param MainTrail (sfg)
 #' @param ScndTrail (sfg)
+#'
 #' @param fuel Fuel wood exploitation: no exploitation = "0", damage
 #'   exploitation in fuelwood = "1", exploitation of hollow trees and damage in
 #'   fuelwood = "2"
@@ -499,6 +500,10 @@ st_tree <- function(
   if(!inherits(dat, "data.frame"))
     stop("The 'dat' argument of the 'st_tree' function must be data.frame")
 
+  if(nrow(dat)!=1)
+    stop("the data.frame given in the 'dat' argument
+         of the 'st_tree' function must contain only 1 row")
+
   if (!any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
     stop("The 'fuel' argument of the 'st_tree' function must be '0', '1', '2' or NULL")
 
@@ -574,10 +579,11 @@ st_tree <- function(
     ))
   }
 
-  # To direct only to avoid damage to future and reserve trees. Winching: Foot before.
+
+  # # To direct only to avoid damage to future and reserve trees. Winching: Foot before.
   # if (directionalfelling == "1"&& (fuel !="1" || fuel !="2")) {
   #   if(dat$TreeFellingOrientationSuccess == "1"){
-
+  #
   # }else{ # else random felling
   # RandomAngle <- as.numeric(sample(c(0:359.9), size = 1))
   #   A <- st_difference(st_union(
@@ -588,16 +594,25 @@ st_tree <- function(
   #
   # }
 
+
+  # Scenarios with track orientation:
+  # Compute the last angle of the right-angled triangle (see vignette figure)
+  # TreefallOrientation is between the mimimun (30°) and the maximum (45°) angle
+  TreefallOrientation <- as.numeric(sample(c(advancedloggingparameters$MinTreefallOrientation:
+                                             advancedloggingparameters$MaxTreefallOrientation), size = 1))
+  OppAng <- 180-(90 + TreefallOrientation)
+
+
   # To direct !!to avoid damage to future and reserve trees!! + track orientation. Winching: Foot before.
   if(directionalfelling == "2"&& (fuel !="1" || fuel !="2")){
     if(dat$TreeFellingOrientationSuccess == "1"){
       A <- st_difference(st_union(
-        rotatepolygon(Trunk, angle = 240 + theta, fixed = Foot), # turned trunk
-        rotatepolygon(Crown, angle = 240 + theta, fixed = Foot) # turned crown
+        rotatepolygon(Trunk, angle = 180 + OppAng + theta, fixed = Foot), # turned trunk
+        rotatepolygon(Crown, angle = 180 + OppAng + theta, fixed = Foot) # turned crown
       ))
       B <- st_difference(st_union(
-        rotatepolygon(Trunk, angle = 120 + theta, fixed = Foot), # turned trunk
-        rotatepolygon(Crown, angle = 120 + theta, fixed = Foot) # turned crown
+        rotatepolygon(Trunk, angle = 180 - OppAng + theta, fixed = Foot), # turned trunk
+        rotatepolygon(Crown, angle = 180 - OppAng + theta, fixed = Foot) # turned crown
       ))
     }else{ # else random felling
       RandomAngle <- as.numeric(sample(c(0:359.9), size = 1))
@@ -621,21 +636,21 @@ st_tree <- function(
 
       if(TrailDist <= advancedloggingparameters$GrappleLength){ # <= 6m (= grapple length) -> winching by grapple -> crown to trail
         A <- st_difference(st_union(
-          rotatepolygon(Trunk, angle = theta + 60 , fixed = Foot), # turned trunk
-          rotatepolygon(Crown, angle = theta + 60 , fixed = Foot) # turned crown
+          rotatepolygon(Trunk, angle = theta + OppAng , fixed = Foot), # turned trunk
+          rotatepolygon(Crown, angle = theta + OppAng , fixed = Foot) # turned crown
         ))
         B <- st_difference(st_union(
-          rotatepolygon(Trunk, angle = 300 + theta, fixed = Foot), # turned trunk
-          rotatepolygon(Crown, angle = 300 + theta, fixed = Foot) # turned crown
+          rotatepolygon(Trunk, angle = 360 - OppAng + theta, fixed = Foot), # turned trunk
+          rotatepolygon(Crown, angle = 360 - OppAng + theta, fixed = Foot) # turned crown
         ))
       } else { # > 6m -> winching by cable -> foot to trail
         A <- st_difference(st_union(
-          rotatepolygon(Trunk, angle = 240 + theta, fixed = Foot), # turned trunk
-          rotatepolygon(Crown, angle = 240 + theta, fixed = Foot) # turned crown
+          rotatepolygon(Trunk, angle = 180 + OppAng + theta, fixed = Foot), # turned trunk
+          rotatepolygon(Crown, angle = 180 + OppAng + theta, fixed = Foot) # turned crown
         ))
         B <- st_difference(st_union(
-          rotatepolygon(Trunk, angle = 120 + theta, fixed = Foot), # turned trunk
-          rotatepolygon(Crown, angle = 120 + theta, fixed = Foot) # turned crown
+          rotatepolygon(Trunk, angle = 180 - OppAng + theta, fixed = Foot), # turned trunk
+          rotatepolygon(Crown, angle = 180 - OppAng + theta, fixed = Foot) # turned crown
         ))
       }
     }else{ # else random felling

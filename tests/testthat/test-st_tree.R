@@ -33,8 +33,8 @@ test_that("st_tree", {
     dplyr::filter(Selected == "1") %>%
     dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
                   CrownDiameter,Selected, Xutm, Yutm)
-  dat <- inventory[1,] %>%
-    add_column(TreeFellingOrientationSuccess = "1")
+  dat <- inventory[1,] %>% # just 1 row (1 tree)
+    add_column(TreeFellingOrientationSuccess = "1") # force the orientation success for the test
 
   Rslt <- st_tree(dat,
                   fuel = "0", directionalfelling = "2",
@@ -48,24 +48,28 @@ test_that("st_tree", {
                        advancedloggingparameters = loggingparameters()),
                regexp = "The 'dat' argument of the 'st_tree' function must be data.frame")
 
-  expect_error(st_tree(Paracou6_2016, directionalfelling = "2",
+  expect_error(st_tree(Paracou6_2016),
+               regexp = "the data.frame given in the 'dat' argument
+         of the 'st_tree' function must contain only 1 row")
+
+  expect_error(st_tree(dat, directionalfelling = "2",
                        advancedloggingparameters = loggingparameters(),
                        fuel = TRUE),
                regexp = "The 'fuel' argument of the 'st_tree' function must be '0', '1', '2' or NULL")
 
-  expect_error(st_tree(Paracou6_2016, fuel = "2",
+  expect_error(st_tree(dat, fuel = "2",
                        advancedloggingparameters = loggingparameters(),
                        directionalfelling = TRUE),
                regexp = "The 'directionalfelling' argument of the 'st_tree' function must be '0', '1', '2' or NULL")
 
-  expect_error(st_tree(Paracou6_2016,
+  expect_error(st_tree(dat,
                        fuel = "2", directionalfelling = "2",
                        advancedloggingparameters = loggingparameters(),
                        MainTrail = st_as_text(MainTrail), ScndTrail = st_as_text(ScndTrail)),
                regexp = "The 'MainTrail' and 'ScndTrail' arguments of the 'st_tree' function must be sfg")
 
 
-  expect_error(st_tree(Paracou6_2016, fuel = "2",
+  expect_error(st_tree(dat, fuel = "2",
                        directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
                        advancedloggingparameters = as.matrix(loggingparameters())),
                regexp = "The 'advancedloggingparameters' argument of the 'st_tree' function must be a list")
@@ -88,10 +92,12 @@ test_that("st_tree", {
   Arrival <- st_point(as.numeric(unlist( # sfc to sfg
     sf::st_centroid(Rslt$A))))
 
+  Orientation <- as.numeric(matlib::angle(c(Rslt$TrailPt[1] - Rslt$TrailPt[1], (Rslt$TrailPt[2]+10) - Rslt$TrailPt[2]),
+                           c(Arrival[1] - Rslt$Foot[1], Arrival[2] - Rslt$Foot[2]),
+                           degree = TRUE))
 
-  expect_equal(as.numeric(matlib::angle(c(Rslt$TrailPt[1] - Rslt$TrailPt[1], (Rslt$TrailPt[2]+10) - Rslt$TrailPt[2]),
-                                       c(Arrival[1] - Rslt$Foot[1], Arrival[2] - Rslt$Foot[2]),
-                                       degree = TRUE)), 30)
+
+  expect_true(Orientation >= 30 & Orientation <= 45)
 })
 
 
