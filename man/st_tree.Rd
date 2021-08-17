@@ -10,6 +10,7 @@ st_tree(
   directionalfelling,
   MainTrail = MainTrail,
   ScndTrail = ScndTrail,
+  FutureReserveCrowns = FutureReserveCrowns,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -28,6 +29,8 @@ reserve trees + track orientation)}
 \item{MainTrail}{(sfg)}
 
 \item{ScndTrail}{(sfg)}
+
+\item{FutureReserveCrowns}{Future/reserve trees crown (sf)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -71,24 +74,29 @@ PolList = list(pol1,pol2) #list of lists of numeric matrices
 ScndTrail <- sf::st_multipolygon(PolList)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
-inventory <- treeselection(inventory, objective = 20, scenario ="manual",
+inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
  fuel = "2", diversification = TRUE, specieslax = FALSE,
  objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
  speciescriteria = SpeciesCriteria,
- advancedloggingparameters = loggingparameters())$inventory
+ advancedloggingparameters = loggingparameters())$inventory)
 
-inventory <- directionalfellingsuccessdef(inventory,fuel = "0",directionalfelling = "2",
-advancedloggingparameters = loggingparameters())
+FutureReserveCrowns <- inventory \%>\% # create an object with future/reserve crowns only
+ dplyr::filter(LoggingStatus == "future" | LoggingStatus == "reserve") \%>\%
+ createcanopy() \%>\% # create all inventory crowns in the 'Crowns' column
+ getgeometry(Crowns)
 
 inventory <- inventory \%>\%
      dplyr::filter(Selected == "1") \%>\%
      dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
-     CrownDiameter,Selected, Xutm, Yutm, TreeFellingOrientationSuccess)
-dat <- inventory[1,]
+     CrownDiameter,Selected, Xutm, Yutm)
+
+dat <- inventory[1,] \%>\%
+tibble::add_column(TreeFellingOrientationSuccess = "1") # force the orientation success for the exemple
 
 rslt <- st_tree(dat,
  fuel = "0", directionalfelling = "2",
  MainTrail = MainTrail, ScndTrail = ScndTrail,
+ FutureReserveCrowns = FutureReserveCrowns,
  advancedloggingparameters = loggingparameters())
 
 library(ggplot2)
@@ -97,7 +105,8 @@ ggplot() +
   geom_sf(data = rslt$Trail) +
   geom_sf(data = rslt$NearestPoints) +
   geom_sf(data = rslt$TrailPt) +
-  geom_sf(data = rslt$A)
+  geom_sf(data = rslt$FallenTree) +
+  geom_sf(data = FutureReserveCrowns)
 }
 \seealso{
 \code{\link{loggingparameters}}

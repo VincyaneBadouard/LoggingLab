@@ -25,7 +25,7 @@ Crown <- treefromthesky(dat)
 
 library(ggplot2)
 ggplot() +
- geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
+ geom_sf(data = sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
  geom_sf(data = Crown, fill = "forestgreen") # trees polygons
 
 }

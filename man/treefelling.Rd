@@ -74,7 +74,7 @@ inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario 
  speciescriteria = SpeciesCriteria,
  advancedloggingparameters = loggingparameters())$inventory)
 
-inventory <- treefelling(inventory, scenario = "manual", fuel = "2",
+inventory <- treefelling(inventory, scenario = "manual", fuel = "0",
 directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
 advancedloggingparameters = loggingparameters())
 

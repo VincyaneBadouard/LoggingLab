@@ -51,6 +51,8 @@ createcanopy <- function(inventory){
 
   inventory <- left_join(inventory, Canopy, by = "idTree") # join the column 'Crowns' to the inventory
 
+  return(inventory)
+
 }
 
 #' treefromthesky
@@ -74,7 +76,7 @@ createcanopy <- function(inventory){
 #'
 #' library(ggplot2)
 #' ggplot() +
-#'  geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
+#'  geom_sf(data = sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
 #'  geom_sf(data = Crown, fill = "forestgreen") # trees polygons
 #'
 treefromthesky <- function(dat){
@@ -101,5 +103,7 @@ treefromthesky <- function(dat){
     st_as_sf(coords = c("xCrown", "yCrown")) # ellipse centroid coordinates
 
   Crown <- st_ellipse(Crown, Crown$exCrown, Crown$eyCrown) # create the ellipse
+
+  return(Crown)
 
 }

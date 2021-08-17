@@ -539,15 +539,7 @@ ggplot() + # plot 2 polygones
 ```{r}
 ## No directional felling
 if (directionalfelling == "0"){
-  Coord = matrix(c(0,0,10,0,10,10,0,10,0,0),ncol=2, byrow=TRUE)
-  pol1 = list() #1 list/polygon :  list with numeric matrices with points in rows
-  pol2 = list()
-  pol3 = list()
-  mp = list(pol1,pol2,pol3) #list of lists with numeric matrices
-  (mp1 = st_multipolygon(mp))
-  plot(mp1)
   
-  Shadows <- st_multipolygon()
 } 
 # créer un polygone par arbre ("Shadow"):
 # origine = coordonnées de l’arbre (vecteurs "AccessibleTreesPoints")
