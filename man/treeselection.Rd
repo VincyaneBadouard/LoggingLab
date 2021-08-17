@@ -10,10 +10,13 @@ treeselection(
   scenario = "manual",
   fuel,
   diversification,
+  winching,
   specieslax = FALSE,
   objectivelax = FALSE,
   DEM = DemParacou,
   plotslope = PlotSlope,
+  exploitpolygones = ExploitPolygones,
+  maintrails = MainTrails,
   speciescriteria = SpeciesCriteria,
   advancedloggingparameters = loggingparameters()
 )
@@ -44,6 +47,11 @@ objective volume (if stand too poor), = FALSE by default (logical)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
+
+\item{exploitpolygones}{Accessible area of the inventoried plot
+(default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
+
+\item{maintrails}{Main trails defined at the entire harvestable area (sf polylines)}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the
