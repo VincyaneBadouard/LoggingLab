@@ -70,7 +70,7 @@ ScndTrail <- sf::st_multipolygon(PolList)
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
  fuel = "2", diversification = TRUE, specieslax = FALSE,
- objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+ objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
  speciescriteria = SpeciesCriteria,
  advancedloggingparameters = loggingparameters())$inventory)
 

@@ -4,7 +4,7 @@ test_that("harvestable", {
   data("Paracou6_2016")
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
 
-  data(DemParacou)
+  data(DTMParacou)
   data(PlotSlope)
 
   MatrixInventory <- as.matrix(Paracou6_2016)
@@ -14,16 +14,16 @@ test_that("harvestable", {
                regexp = "The 'diversification' and 'specieslax' arguments of the 'harvestable' function must be logical")
 
   expect_error(harvestable(Paracou6_2016, diversification = TRUE, specieslax = FALSE,
-                           DEM = NULL, plotslope = NULL))
+                           topography = NULL, plotslope = NULL))
 
   # LoggingStatus column exist and have no NA
   ## Test data preparation
   testinventory1 <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
-                                diversification = T, specieslax = F, DEM = DemParacou, plotslope = PlotSlope)$inventory
+                                diversification = T, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)$inventory
   testinventory2 <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
-                                diversification = F, specieslax = T, DEM = DemParacou, plotslope = PlotSlope)$inventory
+                                diversification = F, specieslax = T, topography = DTMParacou, plotslope = PlotSlope)$inventory
   testinventory3 <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
-                                diversification = F, specieslax = F, DEM = DemParacou, plotslope = PlotSlope)$inventory
+                                diversification = F, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)$inventory
 
 
   expect_false(any(is.na(testinventory1$LoggingStatus)))
@@ -64,11 +64,11 @@ test_that("harvestable", {
   # HVinit = sum of "TreeHarvestableVolume" values of "harvestable" trees.
   ## Test data preparation
   HVinit1 <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
-                         diversification = T, specieslax = F, DEM = DemParacou, plotslope = PlotSlope)$HVinit
+                         diversification = T, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)$HVinit
   HVinit2 <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
-                         diversification = F, specieslax = T, DEM = DemParacou, plotslope = PlotSlope)$HVinit
+                         diversification = F, specieslax = T, topography = DTMParacou, plotslope = PlotSlope)$HVinit
   HVinit3 <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
-                         diversification = F, specieslax = F, DEM = DemParacou, plotslope = PlotSlope)$HVinit
+                         diversification = F, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)$HVinit
 
   HarvestableTable1 <- testinventory1 %>%
     filter(LoggingStatus == "harvestable")

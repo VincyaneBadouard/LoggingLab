@@ -12,8 +12,8 @@
 #'@param specieslax Allow diversification if stand is too poor, = FALSE by
 #'  default (logical)
 #'
-#'@param DEM Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
-#'  (default: \code{\link{DemParacou}}) (RasterLayer)
+#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
+#'  (default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
@@ -26,7 +26,7 @@
 #'  too, in the plot for these criteria.
 #'
 #'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
-#'  \code{\link{DemParacou}}, \code{\link{PlotSlope}},
+#'  \code{\link{DTMParacou}}, \code{\link{PlotSlope}},
 #'  \code{\link{loggingparameters}}
 #'
 #'@export
@@ -43,18 +43,18 @@
 #' @examples
 #'
 #' data(Paracou6_2016)
-#' data(DemParacou)
+#' data(DTMParacou)
 #' data(PlotSlope)
 #'
 #' inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016)))
 #' test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
-#' DEM = DemParacou, plotslope = PlotSlope,advancedloggingparameters = loggingparameters())
+#' topography = DTMParacou, plotslope = PlotSlope,advancedloggingparameters = loggingparameters())
 #'
 harvestable <- function(
   inventory,
   diversification,
   specieslax = FALSE,
-  DEM,
+  topography,
   plotslope,
   advancedloggingparameters = loggingparameters()
 ){
@@ -67,8 +67,8 @@ harvestable <- function(
   if(!any(unlist(lapply(list(diversification, specieslax), inherits, "logical"))))
     stop("The 'diversification' and 'specieslax' arguments of the 'harvestable' function must be logical") # any() don't take a list
 
-  if(!any(unlist(lapply(list(DEM, plotslope), inherits, "RasterLayer"))))
-    stop("The 'DEM' and 'plotslope' arguments of the 'harvestable' function must be RasterLayer")
+  if(!any(unlist(lapply(list(topography, plotslope), inherits, "RasterLayer"))))
+    stop("The 'topography' and 'plotslope' arguments of the 'harvestable' function must be RasterLayer")
 
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
@@ -96,7 +96,7 @@ harvestable <- function(
 
   sp::coordinates(SpatInventory) <- ~ Xutm + Yutm # transformer l'inventaire en objet spatialisé en en informant les coordonnées
 
-  sp::proj4string(SpatInventory) <- raster::crs(DEM) # attribuer le crs de Paracou à notre inventaire spatialisé
+  sp::proj4string(SpatInventory) <- raster::crs(topography) # attribuer le crs de Paracou à notre inventaire spatialisé
 
   SlopeTmp <- as_tibble(raster::extract(x = plotslope, y = SpatInventory)) # extrait les valeurs de pentes pour les points spatialisés de l'inventaire
 
@@ -114,7 +114,7 @@ harvestable <- function(
       filter(ScientificName == SpecieI)
 
     # SpatInventorytmp <- as_Spatial(SpatInventorytmp)
-    # distSp <- topoDist(DEM = PlotTopo, pts = SpatInventorytmp) # calcul des distances topo
+    # distSp <- topoDist(topography = PlotTopo, pts = SpatInventorytmp) # calcul des distances topo
     # distSp <- as_tibble(distSp)
 
     distSp <- st_distance(SpatInventorytmp)

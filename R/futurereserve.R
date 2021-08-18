@@ -21,7 +21,7 @@
 #' @examples
 #'
 #' data(Paracou6_2016)
-#' data(DemParacou)
+#' data(DTMParacou)
 #' data(PlotSlope)
 #'
 #' inventory <- ONFGuyafortaxojoin(addtreedim(
@@ -29,7 +29,7 @@
 #'
 #' harvestableOutputs <- harvestable(inventory, diversification = TRUE,
 #'  specieslax = FALSE,
-#' DEM = DemParacou, plotslope = PlotSlope,
+#' topography = DTMParacou, plotslope = PlotSlope,
 #' advancedloggingparameters = loggingparameters())
 #'
 #' inventory <- harvestableOutputs$inventory
@@ -37,7 +37,7 @@
 #'
 #' inventory <- selected(inventory, scenario = "manual", fuel = "0",
 #' diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-#' DEM = DemParacou,
+#' topography = DTMParacou,
 #' advancedloggingparameters = loggingparameters(), VO = 30,
 #'  HVinit = HVinit)$inventory
 #'

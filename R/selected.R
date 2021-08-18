@@ -21,8 +21,8 @@
 #' @param objectivelax Allow exploitation in case of non-achievement of the
 #'   objective volume (if stand too poor), = FALSE by default (logical)
 #'
-#' @param DEM Digital terrain model (DTM) of the inventoried plot (LiDAR or
-#'   SRTM) (default: \code{\link{DemParacou}}) (RasterLayer)
+#' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR or
+#'   SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list) MainTrail (multiline)
@@ -38,7 +38,7 @@
 #'   and EnergywoodTrees)
 #'
 #' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
-#'   \code{\link{DemParacou}}, \code{\link{loggingparameters}}
+#'   \code{\link{DTMParacou}}, \code{\link{loggingparameters}}
 #'
 #' @export
 #'
@@ -52,7 +52,7 @@
 #' @examples
 #'
 #' data(Paracou6_2016)
-#' data(DemParacou)
+#' data(DTMParacou)
 #' data(PlotSlope)
 #'
 #' inventory <- ONFGuyafortaxojoin(addtreedim(
@@ -60,7 +60,7 @@
 #'
 #' harvestableOutputs <- harvestable(inventory, diversification = TRUE,
 #'  specieslax = FALSE,
-#' DEM = DemParacou, plotslope = PlotSlope,
+#' topography = DTMParacou, plotslope = PlotSlope,
 #' advancedloggingparameters = loggingparameters())
 #'
 #' inventory <- harvestableOutputs$inventory
@@ -68,7 +68,7 @@
 #'
 #' selecInventory <- selected(inventory, scenario = "manual", fuel = "2",
 #' diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-#' DEM = DemParacou, advancedloggingparameters = loggingparameters(), VO = 30,
+#' topography = DTMParacou, advancedloggingparameters = loggingparameters(), VO = 30,
 #' HVinit = HVinit)$inventory
 #'
 selected <- function(
@@ -78,7 +78,7 @@ selected <- function(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
-  DEM,
+  topography,
   advancedloggingparameters = loggingparameters(),
   VO, # objective volume
   HVinit # initial Harvestable Volume
@@ -339,7 +339,7 @@ selected <- function(
 
     sp::coordinates(HollowTreesPoints) <- ~ Xutm + Yutm
 
-    sp::proj4string(HollowTreesPoints) <- raster::crs(DEM)
+    sp::proj4string(HollowTreesPoints) <- raster::crs(topography)
 
     HollowTreesPoints <- st_as_sf(as(HollowTreesPoints,"SpatialPoints"))
 

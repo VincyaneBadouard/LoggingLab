@@ -91,7 +91,7 @@ treefromthesky <- function(dat){
          of the 'treefromthesky' function must contain only 1 row")
 
   # Global variables
-  Xutm <- Yutm <- CrownDiameter <- CrownHeight <- NULL
+  Xutm <- Yutm <- CrownDiameter <- NULL
 
   # Function
 
@@ -99,7 +99,7 @@ treefromthesky <- function(dat){
     mutate(xCrown = Xutm, # X centroid
            yCrown = Yutm, # Y ventroid
            exCrown = CrownDiameter/2, # crown radius
-           eyCrown = CrownHeight/2) %>% # half crown height
+           eyCrown = CrownDiameter/2) %>% # crown radius
     st_as_sf(coords = c("xCrown", "yCrown")) # ellipse centroid coordinates
 
   Crown <- st_ellipse(Crown, Crown$exCrown, Crown$eyCrown) # create the ellipse

@@ -8,12 +8,12 @@ output: html_document
 # INPUTS
 ```{r Give values to the arguments to work}
 data(Paracou6_2016)
-data(DemParacou)
+data(DTMParacou)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016)))
 
 inventory <- treeselection(inventory, objective = 20, scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
-                           objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria,
+                           objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria,
                            advancedloggingparameters = loggingparameters())$inventory
 
 speciescriteria = SpeciesCriteria
@@ -24,7 +24,7 @@ diversification = TRUE
 directionalfelling = "2"
 specieslax = FALSE
 objectivelax = FALSE
-DEM = DemParacou
+topography = DTMParacou
 advancedloggingparameters = loggingparameters()
 # MainTrail
 
@@ -39,7 +39,7 @@ SelectedTrees <- inventory %>%
 
 # sp::coordinates(SelectedTrees) <- ~ Xutm + Yutm
 # 
-# sp::proj4string(SelectedTrees) <- raster::crs(DEM)
+# sp::proj4string(SelectedTrees) <- raster::crs(topography)
 # 
 # SelectedTrees <- st_as_sf(as(SelectedTrees,"SpatialPoints"))
 

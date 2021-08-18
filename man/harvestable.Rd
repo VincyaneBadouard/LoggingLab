@@ -8,7 +8,7 @@ harvestable(
   inventory,
   diversification,
   specieslax = FALSE,
-  DEM,
+  topography,
   plotslope,
   advancedloggingparameters = loggingparameters()
 )
@@ -24,8 +24,8 @@ commercial species (2 levels of commercial species in the
 \item{specieslax}{Allow diversification if stand is too poor, = FALSE by
 default (logical)}
 
-\item{DEM}{Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
-(default: \code{\link{DemParacou}}) (RasterLayer)}
+\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
+(default: \code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
@@ -45,16 +45,16 @@ which trees are harvestable according to your harvestability criteria
 \examples{
 
 data(Paracou6_2016)
-data(DemParacou)
+data(DTMParacou)
 data(PlotSlope)
 
 inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016)))
 test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
-DEM = DemParacou, plotslope = PlotSlope,advancedloggingparameters = loggingparameters())
+topography = DTMParacou, plotslope = PlotSlope,advancedloggingparameters = loggingparameters())
 
 }
 \seealso{
 \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
-\code{\link{DemParacou}}, \code{\link{PlotSlope}},
+\code{\link{DTMParacou}}, \code{\link{PlotSlope}},
 \code{\link{loggingparameters}}
 }

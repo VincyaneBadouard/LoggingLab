@@ -15,6 +15,29 @@ treeselection,  and .
 }
 \section{Maria functions}{
 
-The Maria functions…
+loggingsimulation
+
+loggingparameters
+scenariosparameters
+
+inventorycheckformat
+addtreedim
+
+treeselection
+ONFGuyafortaxojoin
+harvestable
+selected
+futurereserve
+
+treefelling
+createcanopy
+treefromthesk
+directionalfellingsuccessdef
+felling1tree
+rotatepolygon
+getgeometry
+
+timberharvestedvolume
+exploitablefuelwoodvolume
 }
 

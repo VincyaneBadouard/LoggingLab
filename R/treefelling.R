@@ -51,7 +51,7 @@
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 #' inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
-#'  objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+#'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory)
 #'
@@ -158,11 +158,11 @@ treefelling <- function(
     filter(!is.na(TreeFellingOrientationSuccess)) %>%
     group_by(idTree) %>% # for each tree
     do(TreePolygon = # inform geometry. # Filling a column from a function whose input is a table
-         st_tree(.,
-                 fuel = fuel, directionalfelling = directionalfelling,
-                 MainTrail = MainTrail, ScndTrail = ScndTrail,
-                 FutureReserveCrowns = FutureReserveCrowns,
-                 advancedloggingparameters = loggingparameters())$FallenTree %>%
+         felling1tree(.,
+                      fuel = fuel, directionalfelling = directionalfelling,
+                      MainTrail = MainTrail, ScndTrail = ScndTrail,
+                      FutureReserveCrowns = FutureReserveCrowns,
+                      advancedloggingparameters = loggingparameters())$FallenTree %>%
          st_as_text()) %>% # as text to easy join with a non spacial table
     tidyr::unnest(TreePolygon) # here to pass from list to character
 
@@ -205,7 +205,7 @@ treefelling <- function(
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 #' inventory <- treeselection(inventory, objective = 20, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
-#'  objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+#'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory
 #'
@@ -320,14 +320,14 @@ directionalfellingsuccessdef <- function(
 #'
 #' @examples
 #' data(Paracou6_2016)
-#' data(DemParacou)
+#' data(DTMParacou)
 #' data(PlotSlope)
 #' data(SpeciesCriteria)
 #'
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 #' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
-#'  objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+#'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory)
 #'
@@ -400,12 +400,12 @@ rotatepolygon <- function(
   return(Turned)
 }
 
-#' st_tree
+#' felling1tree
 #'
 #' @description Simulates the tree (multipolygon) falling towards the trail or
-#'   not, at a given angle. If it has been decided to exploit fuelwood, the tree
-#'   crowns will be directed towards the trail if they can be accessed with a
-#'   grapple (see the \code{GrappleLength} argument of the
+#'   not, at a given angle. If it has been decided to exploit fuel wood, the
+#'   tree crowns will be directed towards the trail if they can be accessed with
+#'   a grapple (see the \code{GrappleLength} argument of the
 #'   \code{\link{loggingparameters}} function). In other cases, the fall will be
 #'   made from the base of the tree towards the trail. The orientation of the
 #'   fall succeeds or fails according to a Bernoulli law where the probability
@@ -471,7 +471,7 @@ rotatepolygon <- function(
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 #' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
-#'  objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+#'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory)
 #'
@@ -485,11 +485,11 @@ rotatepolygon <- function(
 #'      dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
 #'      CrownDiameter,Selected, Xutm, Yutm)
 #'
-#' dat <- inventory[1,] %>%
+#' dat <- inventory[1,] %>% # just 1 row (1 tree)
 #' # force the orientation success for the exemple
 #' tibble::add_column(TreeFellingOrientationSuccess = "1")
 #'
-#' rslt <- st_tree(dat,
+#' rslt <- felling1tree(dat,
 #'  fuel = "0", directionalfelling = "2",
 #'  MainTrail = MainTrail, ScndTrail = ScndTrail,
 #'  FutureReserveCrowns = FutureReserveCrowns,
@@ -503,7 +503,7 @@ rotatepolygon <- function(
 #'   geom_sf(data = rslt$TrailPt) +
 #'   geom_sf(data = rslt$FallenTree) +
 #'   geom_sf(data = FutureReserveCrowns)
-st_tree <- function(
+felling1tree <- function(
   dat,
   fuel,
   directionalfelling,
@@ -516,24 +516,24 @@ st_tree <- function(
   # Arguments check
 
   if(!inherits(dat, "data.frame"))
-    stop("The 'dat' argument of the 'st_tree' function must be data.frame")
+    stop("The 'dat' argument of the 'felling1tree' function must be data.frame")
 
   if(nrow(dat)!=1)
     stop("the data.frame given in the 'dat' argument
-         of the 'st_tree' function must contain only 1 row")
+         of the 'felling1tree' function must contain only 1 row")
 
   if (!any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
-    stop("The 'fuel' argument of the 'st_tree' function must be '0', '1', '2' or NULL")
+    stop("The 'fuel' argument of the 'felling1tree' function must be '0', '1', '2' or NULL")
 
   if (!any(directionalfelling == "0" || directionalfelling == "1"
            || directionalfelling == "2" || is.null(directionalfelling)))
-    stop("The 'directionalfelling' argument of the 'st_tree' function must be '0', '1', '2' or NULL")
+    stop("The 'directionalfelling' argument of the 'felling1tree' function must be '0', '1', '2' or NULL")
 
   if(!any(unlist(lapply(list(MainTrail, ScndTrail), inherits, "sfg"))))
-    stop("The 'MainTrail' and 'ScndTrail' arguments of the 'st_tree' function must be sfg")
+    stop("The 'MainTrail' and 'ScndTrail' arguments of the 'felling1tree' function must be sfg")
 
   if(!inherits(advancedloggingparameters, "list"))
-    stop("The 'advancedloggingparameters' argument of the 'st_tree' function must be a list")
+    stop("The 'advancedloggingparameters' argument of the 'felling1tree' function must be a list")
 
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
@@ -644,6 +644,7 @@ st_tree <- function(
           rotatepolygon(Trunk, angle = 180 + OppAng + theta, fixed = Foot), # turned trunk
           ACrown # turned crown
         ))
+        BFallenTree <- NULL
 
       }else{
 
@@ -651,6 +652,7 @@ st_tree <- function(
           rotatepolygon(Trunk, angle = 180 - OppAng + theta, fixed = Foot), # turned trunk
           BCrown # turned crown
         ))
+        AFallenTree <- st_sfc(st_point(c(0,0))) # "null" sfc object to compare after
 
       }
 
@@ -722,6 +724,7 @@ st_tree <- function(
             rotatepolygon(Trunk, angle = theta + OppAng, fixed = Foot), # turned trunk
             ACrown # turned crown
           ))
+          BFallenTree <- st_sfc(st_point(c(0,0))) # "null" sfc object to compare after
 
         }else{
 
@@ -729,6 +732,7 @@ st_tree <- function(
             rotatepolygon(Trunk, angle = 360 - OppAng + theta, fixed = Foot), # turned trunk
             BCrown # turned crown
           ))
+          AFallenTree <- st_sfc(st_point(c(0,0))) # "null" sfc object to compare after
 
         }
 
@@ -781,6 +785,7 @@ st_tree <- function(
             rotatepolygon(Trunk, angle = 180 + OppAng + theta, fixed = Foot), # turned trunk
             ACrown # turned crown
           ))
+          BFallenTree <- st_sfc(st_point(c(0,0))) # "null" sfc object to compare after
 
         }else{
 
@@ -788,6 +793,7 @@ st_tree <- function(
             rotatepolygon(Trunk, angle = 180 - OppAng + theta, fixed = Foot), # turned trunk
             BCrown # turned crown
           ))
+          AFallenTree <- st_sfc(st_point(c(0,0))) # "null" sfc object to compare after
 
         }
 

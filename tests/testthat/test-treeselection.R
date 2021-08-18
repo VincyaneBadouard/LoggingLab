@@ -5,7 +5,7 @@ test_that("treeselection", {
   data(Paracou6_2016)
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
 
-  data(DemParacou)
+  data(DTMParacou)
 
   MatrixInventory <- as.matrix(Paracou6_2016)
   Matrixspeciescriteria <- as.matrix(SpeciesCriteria)
@@ -34,15 +34,15 @@ test_that("treeselection", {
 
   expect_error(treeselection(Paracou6_2016, objective = 20, scenario ="manual", fuel = "2",
                              diversification = FALSE, specieslax = FALSE, objectivelax = FALSE,
-                             DEM = NULL, plotslope = NULL))
+                             topography = NULL, plotslope = NULL))
 
 
   expect_error(treeselection(Paracou6_2016, objective = 20, scenario ="manual", fuel = "0", diversification = TRUE,
-                             DEM = DemParacou, plotslope = PlotSlope, advancedloggingparameters = as.matrix(loggingparameters())),
+                             topography = DTMParacou, plotslope = PlotSlope, advancedloggingparameters = as.matrix(loggingparameters())),
                regexp = "The 'advancedloggingparameters' argument of the 'treeselection' function must be a list")
 
   expect_error(treeselection(Paracou6_2016, scenario = "manual",
-                             objective = 20, fuel = NULL, diversification = T, DEM = DemParacou, plotslope = PlotSlope),
+                             objective = 20, fuel = NULL, diversification = T, topography = DTMParacou, plotslope = PlotSlope),
                regexp = "If you choose the 'manual' mode,
          you must fill in the arguments 'objective', 'fuel' and 'diversification'")
 
@@ -51,7 +51,7 @@ test_that("treeselection", {
 
   testinventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
                                                   fuel = "2", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-                                                  DEM = DemParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria, advancedloggingparameters = loggingparameters()))$inventory # , MainTrail
+                                                  topography = DTMParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria, advancedloggingparameters = loggingparameters()))$inventory # , MainTrail
 
 
   advancedloggingparameters = loggingparameters()
@@ -66,7 +66,7 @@ test_that("treeselection", {
   objective <- 40
   VO_1 <- suppressMessages(treeselection(inventory,
                                        scenario ="manual", fuel = "2", objective = 40, diversification = TRUE, specieslax = FALSE,
-                                       objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope))$VO
+                                       objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope))$VO
 
 
   expect_true(VO_1 == objective)
@@ -74,7 +74,7 @@ test_that("treeselection", {
   ## hollow trees non-harvested
   VO_2 <- suppressMessages(treeselection(inventory,
                                        scenario ="manual", fuel = "0", objective = 40, diversification = TRUE, specieslax = FALSE,
-                                       objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope))$VO
+                                       objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope))$VO
 
   expect_true(VO_2 == objective + advancedloggingparameters$ObjectiveBonus)
 

@@ -11,7 +11,7 @@ selected(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
-  DEM,
+  topography,
   advancedloggingparameters = loggingparameters(),
   VO,
   HVinit
@@ -39,8 +39,8 @@ default (logical)}
 \item{objectivelax}{Allow exploitation in case of non-achievement of the
 objective volume (if stand too poor), = FALSE by default (logical)}
 
-\item{DEM}{Digital terrain model (DTM) of the inventoried plot (LiDAR or
-SRTM) (default: \code{\link{DemParacou}}) (RasterLayer)}
+\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR or
+SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
@@ -62,7 +62,7 @@ selected
 \examples{
 
 data(Paracou6_2016)
-data(DemParacou)
+data(DTMParacou)
 data(PlotSlope)
 
 inventory <- ONFGuyafortaxojoin(addtreedim(
@@ -70,7 +70,7 @@ inventorycheckformat(Paracou6_2016)))
 
 harvestableOutputs <- harvestable(inventory, diversification = TRUE,
  specieslax = FALSE,
-DEM = DemParacou, plotslope = PlotSlope,
+topography = DTMParacou, plotslope = PlotSlope,
 advancedloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory
@@ -78,11 +78,11 @@ HVinit <- harvestableOutputs$HVinit
 
 selecInventory <- selected(inventory, scenario = "manual", fuel = "2",
 diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-DEM = DemParacou, advancedloggingparameters = loggingparameters(), VO = 30,
+topography = DTMParacou, advancedloggingparameters = loggingparameters(), VO = 30,
 HVinit = HVinit)$inventory
 
 }
 \seealso{
 \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
-\code{\link{DemParacou}}, \code{\link{loggingparameters}}
+\code{\link{DTMParacou}}, \code{\link{loggingparameters}}
 }

@@ -21,14 +21,14 @@ Orient your polygon to a given angle and fixed point.
 }
 \examples{
 data(Paracou6_2016)
-data(DemParacou)
+data(DTMParacou)
 data(PlotSlope)
 data(SpeciesCriteria)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
  fuel = "2", diversification = TRUE, specieslax = FALSE,
- objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope,
+ objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
  speciescriteria = SpeciesCriteria,
  advancedloggingparameters = loggingparameters())$inventory)
 

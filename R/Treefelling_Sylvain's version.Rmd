@@ -9,7 +9,7 @@ output: html_document
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 
 inventory <- treeselection(inventory, objective = 20, scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
-                           objectivelax = FALSE, DEM = DemParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria,
+                           objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria,
                            advancedloggingparameters = loggingparameters())$inventory
 ```
 
@@ -107,7 +107,7 @@ rotatepolygon <- function(p, angle, fixed) { # angle in the clockwise direction
 # Tree creation function  
 
 ```{r}
-st_tree <- function(dat,
+felling1tree <- function(dat,
                     ScndTrail = ScndTrail,
                     MainTrail = MainTrail,
                     fuel, 
@@ -257,7 +257,7 @@ SelectedTrees <- inventory %>%
 # To extract de the shortest ways
 NearestPoints <- SelectedTrees %>%
   group_by(idTree) %>% 
-  do(geometry = st_tree(., ScndTrail = ScndTrail, MainTrail = MainTrail, fuel = "2", directionalfelling ="2", advancedloggingparameters = loggingparameters())$NearestPoints) %>% 
+  do(geometry = felling1tree(., ScndTrail = ScndTrail, MainTrail = MainTrail, fuel = "2", directionalfelling ="2", advancedloggingparameters = loggingparameters())$NearestPoints) %>% 
   mutate(geometry = as(geometry, "sfc_LINESTRING")) %>% # list -> sfc_MULTIPOLYGON
   st_as_sf()
 
@@ -266,13 +266,13 @@ FellingTrees <- SelectedTrees %>%
   # mutate(angle = list(c(0, 30))) %>% # for each row, a list of 2 values -> a dataframe in a dataframe
   # unnest(angle) %>% # display the small dataframe in the big dataframe in one
   group_by(idTree) %>% # for each tree and each given angle 
-  do(geometry = st_tree(., ScndTrail = ScndTrail, MainTrail = MainTrail, fuel = "2", directionalfelling ="2", advancedloggingparameters = loggingparameters())$A) %>% # inform geometry. # Filling a column from a function whose input is a table
+  do(geometry = felling1tree(., ScndTrail = ScndTrail, MainTrail = MainTrail, fuel = "2", directionalfelling ="2", advancedloggingparameters = loggingparameters())$A) %>% # inform geometry. # Filling a column from a function whose input is a table
   
   
   # or version more Sf (to test)
   # pol <- st_as_sf(SelectedTrees, 
   #                 as(geometry = st_as_sfc(
-  #                   lapply(split(SelectedTrees, SelectedTrees$idTree), st_tree(30))
+  #                   lapply(split(SelectedTrees, SelectedTrees$idTree), felling1tree(30))
   #                 )
   #                 , "sfc_MULTIPOLYGON")
   # )
@@ -297,7 +297,7 @@ FellingTrees <- inventory %>%
   group_by(idTree) %>% # for each tree and each given angle 
   do(geometry =  # inform geometry. # Filling a column from a function whose input is a table
        ifelse(!is.na(.$TreeFellingOrientationSuccess),
-              st_tree(.,
+              felling1tree(.,
                       ScndTrail = ScndTrail,
                       MainTrail = MainTrail,
                       fuel = "2", directionalfelling ="2",
@@ -311,7 +311,7 @@ inventory %>%
   filter(!is.na(TreeFellingOrientationSuccess)) %>% 
   group_by(idTree) %>% # for each tree and each given angle 
   do(geometry =  # inform geometry. # Filling a column from a function whose input is a table
-       st_tree(.,
+       felling1tree(.,
                ScndTrail = ScndTrail,
                MainTrail = MainTrail,
                fuel = "2", directionalfelling = "2",
@@ -330,7 +330,7 @@ st_as_text(poly$geometry)
 
 felttrees <- inventory %>% 
   filter(!is.na(TreeFellingOrientationSuccess)) %>% 
-  st_tree(.,
+  felling1tree(.,
           ScndTrail = ScndTrail,
           MainTrail = MainTrail,
           fuel = "2", directionalfelling = "2",
@@ -380,7 +380,7 @@ felttrees <- inventory %>%
   filter(!is.na(TreeFellingOrientationSuccess)) %>%
   group_by(idTree) %>% # for each tree
   do(TreePolygon = # inform geometry. # Filling a column from a function whose input is a table
-       st_tree(.,
+       felling1tree(.,
                fuel = "2", directionalfelling = "2",
                MainTrail = MainTrail, ScndTrail = ScndTrail,
                advancedloggingparameters = loggingparameters())$A %>%

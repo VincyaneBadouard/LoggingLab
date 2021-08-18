@@ -5,13 +5,14 @@ date: "13/07/2021"
 output: html_document
 ---
 ```{r}
-inventory = ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))))
+inventory = ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016)))
 
 #Taf de l'utilisateur
 ## Import du MNT de Paracou (1m de résolution, campagne LiDAR de 2016) ----
-DemParacou <- raster::raster("D:/VSC Kourou/DATA/GIS/Topo_P6_PARACOU.tif") # MNT (altitude)
-plot(DemParacou)
-usethis::use_data(DemParacou)
+DTMParacou <- raster::raster("D:/VSC Kourou/DATA/GIS/Topo_P6_PARACOU.tif") # MNT (altitude)
+plot(DTMParacou)
+usethis::use_data(DTMParacou)
+overwrite = TRUE
 
 
 ## Import Parcelles de Paracou
@@ -24,7 +25,7 @@ usethis::use_data(Plots)
 ```
 ```{r}
 # Fourni par le module de def d'UP
-PlotTopo <- raster::mask(x = DemParacou, # DEM en shapefile
+PlotTopo <- raster::mask(x = DTMParacou, # topography en shapefile
                          mask = Plots) # découpage de la topo par l'emprise du plot
 plot(PlotTopo)
 usethis::use_data(PlotTopo)
@@ -48,7 +49,7 @@ SpatInventory <- inventory %>%
 
 coordinates(SpatInventory) <- ~ Xutm + Yutm # transformer l'inventaire en objet spatialisé en en informant les coordonnées
 
-proj4string(SpatInventory) <- raster::crs(DemParacou) # attribuer le crs de Paracou à notre inventaire spatialisé
+proj4string(SpatInventory) <- raster::crs(DTMParacou) # attribuer le crs de Paracou à notre inventaire spatialisé
 
 Slope_tmp <- as_tibble(raster::extract(x = PlotSlope, y = SpatInventory)) # extrait les valeurs de pentes pour les points spatialisés de l'inventaire
 
@@ -65,7 +66,7 @@ for (SpecieI in unique(SpatInventory$ScientificName)) {
       filter(ScientificName == SpecieI)
     SpatInventorytmp <- as_Spatial(SpatInventorytmp)
 
-    distSp <- topoDist(DEM = PlotTopo, pts = SpatInventorytmp) # calcul des distances
+    distSp <- topoDist(topography = PlotTopo, pts = SpatInventorytmp) # calcul des distances
     distSp <- as_tibble(distSp)
     distSp[distSp == 0] <- NA # ne pas prendre en compte les 0 dans la matrice, qui sont les dist de l'arbre à lui-même.
     distSp[distSp == Inf] <- NA # ne pas prendre en compte les Inf qui sont les arbres hors de parcelle.
@@ -104,7 +105,7 @@ inventory <- inventory %>%
 summary(SlopeCritInventory)
 test_inventory <- test$inventory
 coordinates(test_inventory) <- ~ Xutm + Yutm
-proj4string(test_inventory) <- raster::crs(DemParacou)
+proj4string(test_inventory) <- raster::crs(DTMParacou)
 test_inventory <- st_as_sf(test_inventory)
 
 ggplot(test_inventory %>% filter(Commercial != "0")) + geom_sf(aes(color = LoggingStatus == "harvestable"))

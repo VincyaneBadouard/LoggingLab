@@ -12,19 +12,21 @@ treeselection(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
-  DEM,
+  topography,
   plotslope,
   speciescriteria = SpeciesCriteria,
   advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
-\item{inventory}{your inventory (see the inputs formats and metadata in the \code{\link{vignette}}) (data.frame)}
+\item{inventory}{your inventory (see the inputs formats and metadata in the
+\code{\link{vignette}}) (data.frame)}
 
 \item{objective}{Objective volume per hectare (numeric)}
 
-\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
-"RIL3fuelhollow" or "manual"(character) (see the \code{\link{vignette}})}
+\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+\code{\link{vignette}})}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", damage exploitation
 in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"}
@@ -39,8 +41,8 @@ default (logical)}
 \item{objectivelax}{Allow exploitation in case of non-achievement of the
 objective volume (if stand too poor), = FALSE by default (logical)}
 
-\item{DEM}{Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
-(default: \code{\link{DemParacou}}) (RasterLayer)}
+\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
+(default: \code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
@@ -53,16 +55,12 @@ same format of \code{\link{SpeciesCriteria}} (data.frame)}
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
-A list with:
-\itemize{
-\item your inventory with: "DistCrit", "Slope", "SlopeCrit",
+A list with: - your inventory with: "DistCrit", "Slope", "SlopeCrit",
 "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
-"ProbedHollow" new columns (see the outputs metadata in the \code{\link{vignette}}).
-\item the objective volume with or without a bonus (if hollow trees
-exploitation)
-\item 6 sets of spatial points: harvestable, selected, future and
-reserve, hollow and energy wood trees
-}
+"ProbedHollow" new columns (see the outputs metadata in the
+\code{\link{vignette}}). - the objective volume with or without a bonus (if
+hollow trees exploitation) - 6 sets of spatial points: harvestable,
+selected, future and reserve, hollow and energy wood trees
 }
 \description{
 treeselection
@@ -70,20 +68,21 @@ treeselection
 \examples{
 
 data(Paracou6_2016)
-data(DemParacou)
+data(DTMParacou)
 data(PlotSlope)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 
 treeselectionoutputs <- treeselection(inventory, objective = 20,
 scenario ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
-objectivelax = TRUE, DEM = DemParacou, plotslope = PlotSlope,
+objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
 speciescriteria = SpeciesCriteria,
-advancedloggingparameters = loggingparameters()) #  MainTrail
+ advancedloggingparameters = loggingparameters()) #  MainTrail
 
 
 }
 \seealso{
-\code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}}, \code{\link{DemParacou}},
-\code{\link{PlotSlope}}, \code{\link{loggingparameters}}
+\code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
+\code{\link{DTMParacou}}, \code{\link{PlotSlope}},
+\code{\link{loggingparameters}}
 }

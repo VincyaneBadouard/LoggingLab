@@ -3,18 +3,18 @@ test_that("futurereserve", {
   data(Paracou6_2016)
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
 
-  data(DemParacou)
+  data(DTMParacou)
 
   inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016)))
 
   harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
-                                    DEM = DemParacou, plotslope = PlotSlope, advancedloggingparameters = loggingparameters())
+                                    topography = DTMParacou, plotslope = PlotSlope, advancedloggingparameters = loggingparameters())
 
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
   inventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-                                         DEM = DemParacou, advancedloggingparameters = loggingparameters(), VO = 20, HVinit = HVinit)$inventory)
+                                         topography = DTMParacou, advancedloggingparameters = loggingparameters(), VO = 20, HVinit = HVinit)$inventory)
 
   testinventory <- futurereserve(inventory)
 

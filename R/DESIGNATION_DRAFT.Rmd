@@ -418,7 +418,7 @@ if (scenario == "RIL3fuelhollow"| (scenario == "manual"& fuel =="2")) {
   
   sp::coordinates(HollowTreescoord) <- ~ Xutm + Yutm # transformer l'inventaire en objet spatialisé en en informant les coordonnées
   
-  sp::proj4string(HollowTreescoord) <- raster::crs(DEM) # attribuer le crs de Paracou à notre inventaire spatialisé
+  sp::proj4string(HollowTreescoord) <- raster::crs(topography) # attribuer le crs de Paracou à notre inventaire spatialisé
   
   HollowTreescoord <- st_as_sf(HollowTreescoord) %>% 
     select(geometry)
@@ -461,7 +461,7 @@ if (dim(HarvestableTreesPoints)[1] != 0) {
 
 sp::coordinates(HarvestableTreesPoints) <- ~ Xutm + Yutm
 
-sp::proj4string(HarvestableTreesPoints) <- raster::crs(DEM)
+sp::proj4string(HarvestableTreesPoints) <- raster::crs(topography)
 
 HarvestableTreesPoints <- st_as_sf(as(HarvestableTreesPoints,"SpatialPoints"))
 
