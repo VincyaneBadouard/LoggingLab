@@ -19,8 +19,10 @@
 #' @export
 #'
 #' @examples
-#'
 #' data(Paracou6_2016)
+#' data(ParamCrownDiameterAllometry)
+#' data(ForestZoneVolumeParametersTable) # The volume parameters data in the global environment
+#' data(SpeciesCriteria)
 #' data(DTMParacou)
 #' data(PlotSlope)
 #'

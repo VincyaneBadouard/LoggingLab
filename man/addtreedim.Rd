@@ -36,8 +36,8 @@ crown)
 }
 \examples{
 data(Paracou6_2016)
-data(ForestZoneVolumeParametersTable) # The volume parameters data in the global environment
 data(ParamCrownDiameterAllometry)
+data(ForestZoneVolumeParametersTable) # The volume parameters data in the global environment
 
 if (!("DBH" \%in\% names(Paracou6_2016))) {
 tibble::add_column(Paracou6_2016, DBH = NA) #if DBH doesn't exist create it

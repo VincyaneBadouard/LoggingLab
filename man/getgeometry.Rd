@@ -13,7 +13,7 @@ WKT encoded geometries.}
 \item{var}{Name of the character column that holds WKT encoded geometries, as a data/env-variable.}
 }
 \value{
-
+An sf object
 }
 \description{
 Converts a dataframe with a column of characters, which contains

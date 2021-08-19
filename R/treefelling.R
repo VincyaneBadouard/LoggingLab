@@ -13,7 +13,7 @@
 #' @param MainTrail (sfg)
 #' @param ScndTrail (sfg)
 #'
-#' @return "Shadow" polygons +  "TreefallSuccess", "TreefallFailure",
+#' @return "Shadow" polygons + "TreefallSuccess", "TreefallFailure",
 #'   "DamageTreesPoints", "DeadTreesPoints" vectors
 #' @export
 #'
@@ -162,15 +162,24 @@ treefelling <- function(
                       fuel = fuel, directionalfelling = directionalfelling,
                       MainTrail = MainTrail, ScndTrail = ScndTrail,
                       FutureReserveCrowns = FutureReserveCrowns,
-                      advancedloggingparameters = loggingparameters())$FallenTree %>%
-         st_as_text()) %>% # as text to easy join with a non spacial table
+                      advancedloggingparameters = loggingparameters())$FallenTree)
+
+
+  # Mortality A FAIRE
+  # Trees under the fallen trees
+  st_intersection(
+    felttrees,
+    st_as_sf(inventory, coords = c("Xutm", "Yutm"))
+  )
+
+  felttrees <- felttrees %>%
+    st_as_text(FallenTree) %>% # as text to easy join with a non spacial table
     tidyr::unnest(TreePolygon) # here to pass from list to character
 
   inventory <- left_join(inventory, felttrees, by = "idTree") # join spatial filtered inventory and non spatial complete inventory
 
+
   return(inventory)
-
-
 
 }
 
@@ -255,7 +264,7 @@ directionalfellingsuccessdef <- function(
 
   if (fuel == "0" && directionalfelling == "0"){
     inventory <- inventory %>%
-      mutate(TreeFellingOrientationSuccess = 0)
+      mutate(TreeFellingOrientationSuccess = ifelse(Selected == "1", 0, NA))
   }
 
   if (fuel == "0" && directionalfelling != "0"){
@@ -598,24 +607,39 @@ felling1tree <- function(
   }
 
 
-  # # To direct !only to avoid damage to future and reserve trees!. Winching: Foot before.
-  # if (directionalfelling == "1"&& (fuel !="1" || fuel !="2")) {
-  #   if(dat$TreeFellingOrientationSuccess == "1"){
-  #
-  #
-  #     FRintersect <- sf::st_intersects(A, FutureReserveCrowns)
-  #     if(lengths(FRintersect) > 0) {}
-  #
-  #
-  #   }else{ # else random felling
-  #     RandomAngle <- as.numeric(sample(c(0:359.9), size = 1))
-  #     FallenTree <- st_difference(st_union(
-  #       rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
-  #       rotatepolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
-  #     ))
-  #   }
-  #
-  # }
+  # To direct !only to avoid damage to future and reserve trees!. Winching: Foot before.
+  if (directionalfelling == "1"&& (fuel !="1" || fuel !="2")) {
+
+    RandomAngle <- as.numeric(sample(c(0:359.9), size = 4)) # I leave 4 chances to avoid fut/res trees
+
+    if(dat$TreeFellingOrientationSuccess == "1"){
+
+      for(i in 1:3){
+        FallenTree <- st_difference(st_union(
+          rotatepolygon(Trunk, angle = RandomAngle[i], fixed = Foot), # turned trunk
+          rotatepolygon(Crown, angle = RandomAngle[i], fixed = Foot) # turned crown
+        ))
+
+
+        FRintersect <- sf::st_intersects(FallenTree, FutureReserveCrowns)
+        if(lengths(FRintersect) > 0) { # if there is an intersection
+          # New chance
+          FallenTree <- st_difference(st_union(
+            rotatepolygon(Trunk, angle = RandomAngle[i+1], fixed = Foot), # turned trunk
+            rotatepolygon(Crown, angle = RandomAngle[i+1], fixed = Foot) # turned crown
+          ))
+
+        }
+      }
+
+    }else{ # else random felling
+      FallenTree <- st_difference(st_union(
+        rotatepolygon(Trunk, angle = RandomAngle[1], fixed = Foot), # turned trunk
+        rotatepolygon(Crown, angle = RandomAngle[1], fixed = Foot) # turned crown
+      ))
+    }
+
+  }
 
 
   # Scenarios with track orientation:
@@ -625,14 +649,36 @@ felling1tree <- function(
                                                advancedloggingparameters$MaxTreefallOrientation), size = 1))
   OppAng <- 180-(90 + TreefallOrientation)
 
+  # Angle depending on whether the trail is to the right/left of the default position of the tree
+  # Right-hand trail
+  if(TrailPt[1] >= Foot[1]){ # x trail > x foot
+    # Foot oriented
+    Aangle <- as.numeric(180 + OppAng + theta)
+    Bangle <- as.numeric(180 - OppAng + theta)
+    # Crown oriented
+    CrownAangle <- as.numeric(theta + OppAng)
+    CrownBangle <- as.numeric(360 - OppAng + theta)
+
+
+    # Left-hand trail
+  }else if(TrailPt[1] < Foot[1]){ # x trail < x foot
+    # Foot oriented
+    Aangle <- as.numeric(360 - OppAng + theta)
+    Bangle <- as.numeric(theta + OppAng)
+    # Crown oriented
+    CrownAangle <- as.numeric(180 - OppAng + theta)
+    CrownBangle <- as.numeric(180 + OppAng + theta)
+
+  }
+
 
   # To direct to avoid damage to future and reserve trees + track orientation. Winching: Foot before.
   if(directionalfelling == "2" && (fuel !="1" || fuel !="2")){
     if(dat$TreeFellingOrientationSuccess == "1"){
 
       # Calculate the two possible crown configurations
-      ACrown <- rotatepolygon(Crown, angle = 180 + OppAng + theta, fixed = Foot) # turned crown
-      BCrown <- rotatepolygon(Crown, angle = 180 - OppAng + theta, fixed = Foot) # turned crown
+      ACrown <- rotatepolygon(Crown, angle = Aangle, fixed = Foot) # turned crown
+      BCrown <- rotatepolygon(Crown, angle = Bangle, fixed = Foot) # turned crown
 
       # Test the best to pull the tree back to the main trail (farthest crown from the main trail)
       ADist <- st_distance(ACrown, MainTrail)[1,1] #matrix to value
@@ -641,7 +687,7 @@ felling1tree <- function(
       if(max(ADist, BDist) == ADist){
 
         FallenTree <- AFallenTree <- st_difference(st_union( # A configuration
-          rotatepolygon(Trunk, angle = 180 + OppAng + theta, fixed = Foot), # turned trunk
+          rotatepolygon(Trunk, angle = Aangle, fixed = Foot), # turned trunk
           ACrown # turned crown
         ))
         BFallenTree <- NULL
@@ -649,7 +695,7 @@ felling1tree <- function(
       }else{
 
         FallenTree <-  BFallenTree <- st_difference(st_union( # B configuration
-          rotatepolygon(Trunk, angle = 180 - OppAng + theta, fixed = Foot), # turned trunk
+          rotatepolygon(Trunk, angle = Bangle, fixed = Foot), # turned trunk
           BCrown # turned crown
         ))
         AFallenTree <- st_sfc(st_point(c(0,0))) # "null" sfc object to compare after
@@ -663,7 +709,7 @@ felling1tree <- function(
         if(FallenTree == AFallenTree){ # if it was A configuration
 
           FallenTree <- BFallenTree <- st_difference(st_union( # B configuration
-            rotatepolygon(Trunk, angle = 180 - OppAng + theta, fixed = Foot), # turned trunk
+            rotatepolygon(Trunk, angle = Bangle, fixed = Foot), # turned trunk
             BCrown # turned crown
           ))
 
@@ -676,7 +722,7 @@ felling1tree <- function(
         }else if(FallenTree == BFallenTree){ # if it was B configuration
 
           FallenTree <- AFallenTree <- st_difference(st_union( # A configuration
-            rotatepolygon(Trunk, angle = 180 + OppAng + theta, fixed = Foot), # turned trunk
+            rotatepolygon(Trunk, angle = Aangle, fixed = Foot), # turned trunk
             ACrown # turned crown
           ))
 
@@ -711,8 +757,8 @@ felling1tree <- function(
       if(TrailDist <= advancedloggingparameters$GrappleLength){ # <= 6m (= grapple length) -> winching by grapple -> crown to trail
 
         # Calculate the two possible crown configurations
-        ACrown <- rotatepolygon(Crown, angle = theta + OppAng, fixed = Foot) # turned crown
-        BCrown <- rotatepolygon(Crown, angle = 360 - OppAng + theta, fixed = Foot) # turned crown
+        ACrown <- rotatepolygon(Crown, angle = CrownAangle, fixed = Foot) # turned crown
+        BCrown <- rotatepolygon(Crown, angle = CrownBangle, fixed = Foot) # turned crown
 
         # Test the best to pull the tree back to the main trail (farthest crown from the main trail)
         ADist <- st_distance(ACrown, MainTrail)[1,1] #matrix to value
@@ -721,7 +767,7 @@ felling1tree <- function(
         if(min(ADist, BDist) == ADist){
 
           FallenTree <- AFallenTree <- st_difference(st_union( # A configuration
-            rotatepolygon(Trunk, angle = theta + OppAng, fixed = Foot), # turned trunk
+            rotatepolygon(Trunk, angle = CrownAangle, fixed = Foot), # turned trunk
             ACrown # turned crown
           ))
           BFallenTree <- st_sfc(st_point(c(0,0))) # "null" sfc object to compare after
@@ -729,7 +775,7 @@ felling1tree <- function(
         }else{
 
           FallenTree <-  BFallenTree <- st_difference(st_union( # B configuration
-            rotatepolygon(Trunk, angle = 360 - OppAng + theta, fixed = Foot), # turned trunk
+            rotatepolygon(Trunk, angle = CrownBangle, fixed = Foot), # turned trunk
             BCrown # turned crown
           ))
           AFallenTree <- st_sfc(st_point(c(0,0))) # "null" sfc object to compare after
@@ -743,7 +789,7 @@ felling1tree <- function(
           if(FallenTree == AFallenTree){ # if it was A configuration
 
             FallenTree <- BFallenTree <- st_difference(st_union( # B configuration
-              rotatepolygon(Trunk, angle = 360 - OppAng + theta, fixed = Foot), # turned trunk
+              rotatepolygon(Trunk, angle = CrownBangle, fixed = Foot), # turned trunk
               BCrown # turned crown
             ))
 
@@ -756,7 +802,7 @@ felling1tree <- function(
           }else if(FallenTree == BFallenTree){ # if it was B configuration
 
             FallenTree <- AFallenTree <- st_difference(st_union( # A configuration
-              rotatepolygon(Trunk, angle = theta + OppAng, fixed = Foot), # turned trunk
+              rotatepolygon(Trunk, angle = CrownAangle, fixed = Foot), # turned trunk
               ACrown # turned crown
             ))
 
@@ -772,8 +818,8 @@ felling1tree <- function(
       } else { # > 6m -> winching by cable -> foot to trail
 
         # Calculate the two possible crown configurations
-        ACrown <- rotatepolygon(Crown, angle = 180 + OppAng + theta, fixed = Foot) # turned crown
-        BCrown <- rotatepolygon(Crown, angle = 180 - OppAng + theta, fixed = Foot) # turned crown
+        ACrown <- rotatepolygon(Crown, angle = Aangle, fixed = Foot) # turned crown
+        BCrown <- rotatepolygon(Crown, angle = Bangle, fixed = Foot) # turned crown
 
         # Test the best to pull the tree back to the main trail (farthest crown from the main trail)
         ADist <- st_distance(ACrown, MainTrail)[1,1] #matrix to value
@@ -782,7 +828,7 @@ felling1tree <- function(
         if(max(ADist, BDist) == ADist){
 
           FallenTree <- AFallenTree <- st_difference(st_union( # A configuration
-            rotatepolygon(Trunk, angle = 180 + OppAng + theta, fixed = Foot), # turned trunk
+            rotatepolygon(Trunk, angle = Aangle, fixed = Foot), # turned trunk
             ACrown # turned crown
           ))
           BFallenTree <- st_sfc(st_point(c(0,0))) # "null" sfc object to compare after
@@ -790,7 +836,7 @@ felling1tree <- function(
         }else{
 
           FallenTree <-  BFallenTree <- st_difference(st_union( # B configuration
-            rotatepolygon(Trunk, angle = 180 - OppAng + theta, fixed = Foot), # turned trunk
+            rotatepolygon(Trunk, angle = Bangle, fixed = Foot), # turned trunk
             BCrown # turned crown
           ))
           AFallenTree <- st_sfc(st_point(c(0,0))) # "null" sfc object to compare after
@@ -804,7 +850,7 @@ felling1tree <- function(
           if(FallenTree == AFallenTree){ # if it was A configuration
 
             FallenTree <- BFallenTree <- st_difference(st_union( # B configuration
-              rotatepolygon(Trunk, angle = 180 - OppAng + theta, fixed = Foot), # turned trunk
+              rotatepolygon(Trunk, angle = Bangle, fixed = Foot), # turned trunk
               BCrown # turned crown
             ))
 
@@ -817,7 +863,7 @@ felling1tree <- function(
           }else if(FallenTree == BFallenTree){ # if it was B configuration
 
             FallenTree <- AFallenTree <- st_difference(st_union( # A configuration
-              rotatepolygon(Trunk, angle = 180 + OppAng + theta, fixed = Foot), # turned trunk
+              rotatepolygon(Trunk, angle = Aangle, fixed = Foot), # turned trunk
               ACrown # turned crown
             ))
 

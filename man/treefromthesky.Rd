@@ -18,6 +18,7 @@ filled in, representing the tree from the sky.
 treefromthesky
 }
 \examples{
+data(Paracou6_2016)
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 dat <- inventory[679,]
 

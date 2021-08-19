@@ -7,7 +7,7 @@
 #'  WKT encoded geometries.
 #'@param var Name of the character column that holds WKT encoded geometries, as a data/env-variable.
 #'
-#'@return
+#'@return An sf object
 #'@export
 #'
 #'@importFrom dplyr filter

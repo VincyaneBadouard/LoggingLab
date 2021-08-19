@@ -1,18 +1,19 @@
 loggingsimulation <- function(
   inventory,
 
+  topography, # = NULL perspective
+  relativeelevation, # = NULL perspective
+
   objective,
-  scenario = "manual",
+  scenario,
   fuel,
   diversification,
-  specieslax = FALSE,
-  objectivelax = FALSE,
 
   winching,
   directionalfelling,
 
-  topography,
-  relativeelevation,
+  specieslax = FALSE,
+  objectivelax = FALSE,
 
   speciescriteria = SpeciesCriteria,
   advancedloggingparameters = loggingparameters(),

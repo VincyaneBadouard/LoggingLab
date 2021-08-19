@@ -69,6 +69,7 @@ createcanopy <- function(inventory){
 #' @importFrom nngeo st_ellipse
 #'
 #' @examples
+#' data(Paracou6_2016)
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
 #' dat <- inventory[679,]
 #'

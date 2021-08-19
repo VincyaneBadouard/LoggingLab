@@ -30,8 +30,8 @@ test_that("treefelling", {
 
   inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
   inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
-                             fuel = "2", diversification = FALSE, specieslax = FALSE,
-                             objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
+                             fuel = "0", diversification = TRUE, specieslax = FALSE,
+                             objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
                              speciescriteria = SpeciesCriteria,
                              advancedloggingparameters = loggingparameters())$inventory)
 

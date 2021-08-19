@@ -34,7 +34,7 @@ reserve trees + track orientation)}
 \item{advancedloggingparameters}{(list)}
 }
 \value{
-"Shadow" polygons +  "TreefallSuccess", "TreefallFailure",
+"Shadow" polygons + "TreefallSuccess", "TreefallFailure",
 "DamageTreesPoints", "DeadTreesPoints" vectors
 }
 \description{
