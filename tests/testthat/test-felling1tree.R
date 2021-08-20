@@ -29,7 +29,7 @@ test_that("felling1tree", {
   ScndTrail <- st_multipolygon(PolList)
 
 
-  inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+  inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
   inventory <- suppressMessages(treeselection(inventory, objective = 40, scenario ="manual",
                                               fuel = "0", diversification = TRUE, specieslax = FALSE,
                                               objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,

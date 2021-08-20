@@ -10,16 +10,17 @@ test_that("addtreedim", {
   crowndiameterparameters <- as.matrix(ParamCrownDiameterAllometry)
   volumeparameters <- as.matrix(ForestZoneVolumeParametersTable)
 
-  expect_error(addtreedim(MatrixInventory, crowndiameterparameters, volumeparameters), regexp = "The function arguments must be data.frames")
+  expect_error(addtreedim(MatrixInventory, volumeparameters, crowndiameterparameters),
+               regexp = "The function arguments must be data.frames")
 
   ## check the class argument for "advancedloggingparameters"
   Matrixloggingparameters <- as.matrix(loggingparameters())
-  expect_error(addtreedim(Paracou6_2016, advancedloggingparameters = Matrixloggingparameters), regexp = "The 'advancedloggingparameters' argument of the 'addtreedim' function must be a list")
+  expect_error(addtreedim(Paracou6_2016, volumeparameters = ParamCrownDiameterAllometry,
+                          advancedloggingparameters = Matrixloggingparameters),
+               regexp = "The 'advancedloggingparameters' argument of the 'addtreedim' function must be a list")
 
   # Test data preparation
-  testinventory <- Paracou6_2016 %>% # compute the new inventory
-  inventorycheckformat() %>%
-    addtreedim()
+  testinventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
 
   TestList <- list( # list the variables to check
     testinventory$TreeHeight,

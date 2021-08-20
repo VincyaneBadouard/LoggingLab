@@ -18,11 +18,14 @@ test_that("harvestable", {
 
   # LoggingStatus column exist and have no NA
   ## Test data preparation
-  testinventory1 <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
+  inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
+  inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
+
+  testinventory1 <- harvestable(inventory,
                                 diversification = T, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)$inventory
-  testinventory2 <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
+  testinventory2 <- harvestable(inventory,
                                 diversification = F, specieslax = T, topography = DTMParacou, plotslope = PlotSlope)$inventory
-  testinventory3 <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
+  testinventory3 <- harvestable(inventory,
                                 diversification = F, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)$inventory
 
 
@@ -63,11 +66,11 @@ test_that("harvestable", {
 
   # HVinit = sum of "TreeHarvestableVolume" values of "harvestable" trees.
   ## Test data preparation
-  HVinit1 <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
+  HVinit1 <- harvestable(inventory,
                          diversification = T, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)$HVinit
-  HVinit2 <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
+  HVinit2 <- harvestable(inventory,
                          diversification = F, specieslax = T, topography = DTMParacou, plotslope = PlotSlope)$HVinit
-  HVinit3 <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
+  HVinit3 <- harvestable(inventory,
                          diversification = F, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)$HVinit
 
   HarvestableTable1 <- testinventory1 %>%

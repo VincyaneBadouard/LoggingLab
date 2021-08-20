@@ -4,7 +4,7 @@
 \alias{ONFGuyafortaxojoin}
 \title{ONFGuyafortaxojoin}
 \usage{
-ONFGuyafortaxojoin(inventory, speciescriteria = SpeciesCriteria)
+ONFGuyafortaxojoin(inventory, speciescriteria)
 }
 \arguments{
 \item{inventory}{your inventory (see the inputs formats and metadata in the

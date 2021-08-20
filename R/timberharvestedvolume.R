@@ -1,9 +1,14 @@
 #' timberharvestedvolume
 #'
-#' @param inventory (data.frame)
-#' @param fuel no  exploitation = "0", damage exploitation in fuelwood = "1",
-#' exploitation of hollow trees and damage in fuelwood = "2"
-#' @param advancedloggingparameters (list)
+#' @param inventory Your inventory (see the inputs formats and metadata in the
+#'   \code{\link{vignette}}) (data.frame)
+#'
+#' @param fuel Fuel wood exploitation: no exploitation = "0", damage
+#'   exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+#'   fuelwood = "2"
+#'
+#' @param advancedloggingparameters Other parameters of the logging simulator
+#'   \code{\link{loggingparameters}} (list)
 #'
 #' @return A list with the logged volume (LoggedVolume)
 #' and when fuel = "2", the logged volume without the hollow trees (NoHollowLoggedVolume),
@@ -16,7 +21,8 @@
 #' \dontrun{
 #' data(Paracou6_2016)
 #'
-#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' volumeparameters = ForestZoneVolumeParametersTable)
 #'
 #' inventory <- treeselection(inventory, SpeciesCriteria,
 #' scenario ="manual", fuel = "2", objective = 20, diversification = TRUE, specieslax = FALSE,

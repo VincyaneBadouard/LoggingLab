@@ -1,15 +1,22 @@
 #' Compute tree dimensions (Height, diameter, harvestable volume, including
 #' crown)
 #'
-#' @param inventory (data.frame)
-#' @param crowndiameterparameters Crown diameter allometry parameters table to
-#'   compute the crown diameter of each tree, depend to its DBH (Diameter at
-#'   Breast Height) and its species, genus or family (data.frame)
-#' @param volumeparameters Volume parameters table to compute the harvestable
+#' @param inventory Your inventory (see the inputs formats and metadata in the
+#'   \code{\link{vignette}}) (data.frame)
+#'
+#'
+#' @param volumeparameters Volume parameters table (in the same format of
+#'   \code{\link{ForestZoneVolumeParametersTable}}) to compute the harvestable
 #'   volume of each tree, depend to its geographic zone if several locations
 #'   (data.frame)
+#'
+#' @param crowndiameterparameters Crown diameter allometry parameters table (in
+#'   the same format of \code{\link{ParamCrownDiameterAllometry}}) to compute
+#'   the crown diameter of each tree, depend to its DBH (Diameter at Breast
+#'   Height) and its species, genus or family. (data.frame)
+#'
 #' @param advancedloggingparameters Other parameters of the logging simulator
-#'   (list)
+#'   \code{\link{loggingparameters}} (list)
 #'
 #' @return inventory (data.frame) with additional variables (TreeHeight,
 #'   TreeHarvestableVolume, TrunkHeight, CrownHeight, CrownDiameter)
@@ -28,8 +35,8 @@
 #'
 #' @examples
 #' data(Paracou6_2016)
-#' data(ParamCrownDiameterAllometry)
 #' data(ForestZoneVolumeParametersTable) # The volume parameters data in the global environment
+#' data(ParamCrownDiameterAllometry)
 #'
 #' if (!("DBH" %in% names(Paracou6_2016))) {
 #' tibble::add_column(Paracou6_2016, DBH = NA) #if DBH doesn't exist create it
@@ -37,12 +44,12 @@
 #' } # and compute it
 #' Paracou6_2016 <- dplyr::filter(Paracou6_2016, DBH >= 10)
 #'
-#' addtreedim(inventory = Paracou6_2016)
+#' addtreedim(Paracou6_2016, volumeparameters = ForestZoneVolumeParametersTable)
 #'
 addtreedim <- function(
   inventory,
+  volumeparameters,
   crowndiameterparameters = ParamCrownDiameterAllometry,
-  volumeparameters = ForestZoneVolumeParametersTable,
   advancedloggingparameters = loggingparameters()
 
 ){

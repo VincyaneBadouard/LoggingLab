@@ -2,11 +2,11 @@
 % Please edit documentation in R/treefelling.R
 \name{treefelling}
 \alias{treefelling}
-\title{treefelling}
+\title{Tree felling}
 \usage{
 treefelling(
   inventory,
-  scenario = "manual",
+  scenario,
   fuel,
   directionalfelling,
   MainTrail,
@@ -15,15 +15,18 @@ treefelling(
 )
 }
 \arguments{
-\item{inventory}{(data.frame)}
+\item{inventory}{Your inventory (see the inputs formats and metadata in the
+\code{\link{vignette}}) (data.frame)}
 
-\item{scenario}{"RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
-"RIL3fuelhollow" or "manual"(character)}
+\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+\code{\link{vignette}})}
 
-\item{fuel}{no  exploitation = "0", damage exploitation in fuelwood = "1",
-exploitation of hollow trees and damage in fuelwood = "2"}
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", damage
+exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+fuelwood = "2"}
 
-\item{directionalfelling}{directional felling = "0" (absent), "1" (only to
+\item{directionalfelling}{Directional felling = "0" (absent), "1" (only to
 avoid damage to future and reserve trees), "2" (avoid damage to future and
 reserve trees + track orientation)}
 
@@ -31,19 +34,17 @@ reserve trees + track orientation)}
 
 \item{ScndTrail}{(sfg)}
 
-\item{advancedloggingparameters}{(list)}
+\item{advancedloggingparameters}{Other parameters of the logging simulator
+\code{\link{loggingparameters}} (list)}
 }
 \value{
 "Shadow" polygons + "TreefallSuccess", "TreefallFailure",
 "DamageTreesPoints", "DeadTreesPoints" vectors
 }
 \description{
-treefelling
+Tree felling
 }
 \examples{
-
-\dontrun{
-
 MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
                                         286400, 583250,
                                         286655, 583250,
@@ -67,7 +68,9 @@ pol2 <- list(matrix(c(286650, 583134,
 PolList = list(pol1,pol2) #list of lists of numeric matrices
 ScndTrail <- sf::st_multipolygon(PolList)
 
-inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+volumeparameters = ForestZoneVolumeParametersTable)
+
 inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
  fuel = "2", diversification = TRUE, specieslax = FALSE,
  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
@@ -80,15 +83,14 @@ advancedloggingparameters = loggingparameters())
 
 library(ggplot2)
 ggplot() +
-  geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
+  geom_sf(data = sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
   geom_sf(data = getgeometry (inventory, TreePolygon), fill = "red") # trees polygons
 
-st_intersection( # trees under the fallen trees
+sf::st_intersection( # trees under the fallen trees
   getgeometry (inventory, TreePolygon),
-  st_as_sf(inventory, coords = c("Xutm", "Yutm"))
+  sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))
 ) \%>\%
   ggplot() +
   geom_sf()
- }
 
 }

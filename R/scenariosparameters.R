@@ -1,13 +1,19 @@
 #'scenariosparameters
 #'
-#'@param scenario "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow"
-#'  or "manual"(character)
+#'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+#'  \code{\link{vignette}})
+#'
 #'@param objective Objective volume per hectare (numeric)
-#'@param fuel No  exploitation = "0", damage exploitation in fuelwood = "1",
-#'  exploitation of hollow trees and damage in fuelwood = "2"
-#'@param diversification  Taking of other species in addition to the main
-#'  commercial species (logical)
-#'@param winching no cable or grapple = "0", only cable = "1", grapple + cable =
+#'
+#'@param fuel Fuel wood exploitation: no exploitation = "0", damage exploitation
+#'  in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"
+#'
+#'@param diversification Taking of other species in addition to the main
+#'  commercial species (2 levels of commercial species in the
+#'  \code{\link{SpeciesCriteria}} table) (logical)
+#'
+#'@param winching No cable or grapple = "0", only cable = "1", grapple + cable =
 #'  "2"
 #'@param directionalfelling Directional felling = "0" (absent), "1" (only to
 #'  avoid damage to future and reserve trees), "2" (avoid damage to future and
@@ -32,10 +38,13 @@ scenariosparameters <- function(
   if(!(scenario %in% c("RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow", "manual")))
     stop(paste('"scenario" argument should be in "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"; not',
                scenario))
+
   if(!(class(objective) %in% c("numeric", "NULL")))
     stop("'objective' argument should be numeric or null.")
+
   if(!all(unlist(lapply(list(fuel, directionalfelling, winching), class)) %in% c("character", "NULL")))
     stop("'fuel', 'winching', and 'directionalfelling' arguments should be character or null.")
+
   if(!(class(diversification) %in% c("logical", "NULL")))
     stop("'diversification' argument should be logical or null.")
 

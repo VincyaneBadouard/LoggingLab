@@ -1,7 +1,10 @@
 #' selected
 #'
-#' @param inventory your inventory (see the inputs formats and metadata in the
+#' @param inventory Your inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
+#'
+#' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR or
+#'   SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
 #' @param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -20,9 +23,6 @@
 #'
 #' @param objectivelax Allow exploitation in case of non-achievement of the
 #'   objective volume (if stand too poor), = FALSE by default (logical)
-#'
-#' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR or
-#'   SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list) MainTrail (multiline)
@@ -50,17 +50,17 @@
 #'
 #'
 #' @examples
-#'
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(PlotSlope)
 #'
-#' inventory <- ONFGuyafortaxojoin(addtreedim(
-#' inventorycheckformat(Paracou6_2016)))
+#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' volumeparameters = ForestZoneVolumeParametersTable)
 #'
-#' harvestableOutputs <- harvestable(inventory, diversification = TRUE,
-#'  specieslax = FALSE,
-#' topography = DTMParacou, plotslope = PlotSlope,
+#' inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
+#'
+#' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
+#' diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
 #' advancedloggingparameters = loggingparameters())
 #'
 #' inventory <- harvestableOutputs$inventory
@@ -73,12 +73,12 @@
 #'
 selected <- function(
   inventory,
-  scenario = "manual",
+  topography,
+  scenario,
   fuel,
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
-  topography,
   advancedloggingparameters = loggingparameters(),
   VO, # objective volume
   HVinit # initial Harvestable Volume

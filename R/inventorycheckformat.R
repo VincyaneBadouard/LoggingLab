@@ -1,6 +1,8 @@
 #' Check & format your inventory data for the package "Maria"
 #'
-#' @param inventory Your inventory data or the "Paracou6_2016" test data#' (dataframe)
+#' @param inventory Your inventory (see the inputs formats and metadata in the
+#'   \code{\link{vignette}}) (data.frame)
+#'
 #' @return Stop the function if the format is not the one required.
 #' @export
 #'

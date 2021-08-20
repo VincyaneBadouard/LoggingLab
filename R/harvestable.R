@@ -3,17 +3,18 @@
 #'@description The function tells you the harvestable volume in the plot, and
 #'  which trees are harvestable according to your harvestability criteria
 #'
-#'@param inventory your inventory (see the inputs formats and metadata in the
+#'@param inventory Your inventory (see the inputs formats and metadata in the
 #'  \code{\link{vignette}}) (data.frame)
+#'
+#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
+#'  or SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)
+#'
 #'@param diversification Taking of other species in addition to the main
 #'  commercial species (2 levels of commercial species in the
 #'  \code{\link{SpeciesCriteria}} table) (logical)
 #'
 #'@param specieslax Allow diversification if stand is too poor, = FALSE by
 #'  default (logical)
-#'
-#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
-#'  (default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
@@ -45,16 +46,22 @@
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(PlotSlope)
+#' data(SpeciesCriteria)
 #'
-#' inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016)))
-#' test <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
-#' topography = DTMParacou, plotslope = PlotSlope,advancedloggingparameters = loggingparameters())
+#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' volumeparameters = ForestZoneVolumeParametersTable)
+#'
+#' inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
+#'
+#' test <- harvestable(inventory, topography = DTMParacou,
+#' diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
+#' advancedloggingparameters = loggingparameters())
 #'
 harvestable <- function(
   inventory,
+  topography,
   diversification,
   specieslax = FALSE,
-  topography,
   plotslope,
   advancedloggingparameters = loggingparameters()
 ){

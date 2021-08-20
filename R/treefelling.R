@@ -1,20 +1,29 @@
-#' treefelling
+#' Tree felling
 #'
-#' @param inventory (data.frame)
-#' @param scenario "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
-#'   "RIL3fuelhollow" or "manual"(character)
-#' @param fuel no  exploitation = "0", damage exploitation in fuelwood = "1",
-#'   exploitation of hollow trees and damage in fuelwood = "2"
-#' @param directionalfelling directional felling = "0" (absent), "1" (only to
+#' @param inventory Your inventory (see the inputs formats and metadata in the
+#'   \code{\link{vignette}}) (data.frame)
+#'
+#' @param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+#'   \code{\link{vignette}})
+#'
+#' @param fuel Fuel wood exploitation: no exploitation = "0", damage
+#'   exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+#'   fuelwood = "2"
+#'
+#' @param directionalfelling Directional felling = "0" (absent), "1" (only to
 #'   avoid damage to future and reserve trees), "2" (avoid damage to future and
 #'   reserve trees + track orientation)
-#' @param advancedloggingparameters (list)
+#'
+#' @param advancedloggingparameters Other parameters of the logging simulator
+#'   \code{\link{loggingparameters}} (list)
 #'
 #' @param MainTrail (sfg)
 #' @param ScndTrail (sfg)
 #'
 #' @return "Shadow" polygons + "TreefallSuccess", "TreefallFailure",
 #'   "DamageTreesPoints", "DeadTreesPoints" vectors
+#'
 #' @export
 #'
 #' @importFrom dplyr group_by do left_join
@@ -22,9 +31,6 @@
 #' @importFrom tidyr unnest
 #'
 #' @examples
-#'
-#' \dontrun{
-#'
 #' MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
 #'                                         286400, 583250,
 #'                                         286655, 583250,
@@ -48,7 +54,9 @@
 #' PolList = list(pol1,pol2) #list of lists of numeric matrices
 #' ScndTrail <- sf::st_multipolygon(PolList)
 #'
-#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' volumeparameters = ForestZoneVolumeParametersTable)
+#'
 #' inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
 #'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
@@ -61,20 +69,19 @@
 #'
 #' library(ggplot2)
 #' ggplot() +
-#'   geom_sf(data = st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
+#'   geom_sf(data = sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
 #'   geom_sf(data = getgeometry (inventory, TreePolygon), fill = "red") # trees polygons
 #'
-#' st_intersection( # trees under the fallen trees
+#' sf::st_intersection( # trees under the fallen trees
 #'   getgeometry (inventory, TreePolygon),
-#'   st_as_sf(inventory, coords = c("Xutm", "Yutm"))
+#'   sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))
 #' ) %>%
 #'   ggplot() +
 #'   geom_sf()
-#'  }
 #'
 treefelling <- function(
   inventory,
-  scenario = "manual",
+  scenario,
   fuel,
   directionalfelling,
   MainTrail,
@@ -162,28 +169,32 @@ treefelling <- function(
                       fuel = fuel, directionalfelling = directionalfelling,
                       MainTrail = MainTrail, ScndTrail = ScndTrail,
                       FutureReserveCrowns = FutureReserveCrowns,
-                      advancedloggingparameters = loggingparameters())$FallenTree)
+                      advancedloggingparameters = loggingparameters())$FallenTree %>%
+         st_as_text()) %>% # as text to easy join with a non spacial table
+    tidyr::unnest(TreePolygon) # here to pass from list to character
+
+  inventory <- left_join(inventory, felttrees, by = "idTree") # join spatial filtered inventory and non spatial complete inventory
+
 
 
   # Mortality A FAIRE
   # Trees under the fallen trees
-  st_intersection(
-    felttrees,
-    st_as_sf(inventory, coords = c("Xutm", "Yutm"))
-  )
-
-  felttrees <- felttrees %>%
-    st_as_text(FallenTree) %>% # as text to easy join with a non spacial table
-    tidyr::unnest(TreePolygon) # here to pass from list to character
-
-  inventory <- left_join(inventory, felttrees, by = "idTree") # join spatial filtered inventory and non spatial complete inventory
+  # st_intersection(
+  #   felttrees,
+  #   st_as_sf(inventory, coords = c("Xutm", "Yutm"))
+  # )
+  #
+  # felttrees <- felttrees %>%
+  #   st_as_text(FallenTree) %>% # as text to easy join with a non spacial table
+  #   tidyr::unnest(TreePolygon) # here to pass from list to character
+  #
 
 
   return(inventory)
 
 }
 
-#' directionalfellingsuccessdef
+#' Directional felling success definition
 #'
 #' @description Defines whether the directed fall of the tree is successful or
 #'   not by drawing in a Bernoulli distribution where the probability of success
@@ -211,7 +222,9 @@ treefelling <- function(
 #' @importFrom dplyr mutate
 #'
 #' @examples
-#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' volumeparameters = ForestZoneVolumeParametersTable)
+#'
 #' inventory <- treeselection(inventory, objective = 20, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
 #'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
@@ -333,7 +346,9 @@ directionalfellingsuccessdef <- function(
 #' data(PlotSlope)
 #' data(SpeciesCriteria)
 #'
-#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' volumeparameters = ForestZoneVolumeParametersTable)
+#'
 #' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
 #'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
@@ -355,7 +370,7 @@ directionalfellingsuccessdef <- function(
 #'        yCrown = Yutm + TrunkHeight + CrownHeight/2,
 #'        exCrown = CrownDiameter/2,
 #'        eyCrown = CrownHeight/2) %>%
-#' st_as_sf(coords = c("xCrown", "yCrown")) # ellipse centroid coordinates
+#' sf::st_as_sf(coords = c("xCrown", "yCrown")) # ellipse centroid coordinates
 #' Crown <- st_ellipse(Crown, Crown$exCrown, Crown$eyCrown) # create the ellipse
 #' Trunk <- with(dat, # and the trunk
 #'               st_polygon(list(matrix(c(Xutm-(DBH/100)/2, Yutm,
@@ -477,7 +492,9 @@ rotatepolygon <- function(
 #' PolList = list(pol1,pol2) #list of lists of numeric matrices
 #' ScndTrail <- sf::st_multipolygon(PolList)
 #'
-#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' volumeparameters = ForestZoneVolumeParametersTable)
+#'
 #' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
 #'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,

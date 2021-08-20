@@ -5,7 +5,10 @@ date: "13/07/2021"
 output: html_document
 ---
 ```{r}
-inventory = ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016)))
+inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+                        volumeparameters = ForestZoneVolumeParametersTable)
+
+inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
 #Taf de l'utilisateur
 ## Import du MNT de Paracou (1m de résolution, campagne LiDAR de 2016) ----
@@ -44,7 +47,7 @@ usethis::use_data(PlotSlope)
 # Attribuer à chaque arbre sa pente
 SpatInventory <- inventory %>% 
   filter(Commercial!= "0") # %>% 
-  # filter(DBH >= MinFD & DBH <= MaxFD) # ne prendre que les individus d'sp commerciales, le temps de calcul est déjà bien assez long
+# filter(DBH >= MinFD & DBH <= MaxFD) # ne prendre que les individus d'sp commerciales, le temps de calcul est déjà bien assez long
 
 
 coordinates(SpatInventory) <- ~ Xutm + Yutm # transformer l'inventaire en objet spatialisé en en informant les coordonnées
@@ -61,32 +64,32 @@ ProgressBar <- txtProgressBar(min = 0, max = nrow(SpatInventory),style = 3) # ba
 # Calcul des distances entre les arbres de la même espèce
 
 for (SpecieI in unique(SpatInventory$ScientificName)) {
-
-    SpatInventorytmp <- SpatInventory %>% # SpatInventorytmp stocke 1 seul résulat, celui de chaque tour
-      filter(ScientificName == SpecieI)
-    SpatInventorytmp <- as_Spatial(SpatInventorytmp)
-
-    distSp <- topoDist(topography = PlotTopo, pts = SpatInventorytmp) # calcul des distances
-    distSp <- as_tibble(distSp)
-    distSp[distSp == 0] <- NA # ne pas prendre en compte les 0 dans la matrice, qui sont les dist de l'arbre à lui-même.
-    distSp[distSp == Inf] <- NA # ne pas prendre en compte les Inf qui sont les arbres hors de parcelle.
-
-    for (ind in 1:dim(distSp)[2]) { # 2 pour colonne
-      if (all(is.na(distSp[,ind]))) {FALSE # si toutes la colonne contient des NA c'est un Inf donc on ne le veut pas
-      }else{
-        SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < advancedloggingparameters$IsolateTreeMinDistance # si la distance minimale à ses congénaires est < 100, il est exploitable
-      }
-      SpatInventory$DistCrit[SpatInventory$idTree == SpatInventorytmp$idTree[ind]] <- SpatInventorytmp$DistCrit[ind]
-      i = i+1 # et en informer la progress bar
-      setTxtProgressBar(ProgressBar, i)
+  
+  SpatInventorytmp <- SpatInventory %>% # SpatInventorytmp stocke 1 seul résulat, celui de chaque tour
+    filter(ScientificName == SpecieI)
+  SpatInventorytmp <- as_Spatial(SpatInventorytmp)
+  
+  distSp <- topoDist(topography = PlotTopo, pts = SpatInventorytmp) # calcul des distances
+  distSp <- as_tibble(distSp)
+  distSp[distSp == 0] <- NA # ne pas prendre en compte les 0 dans la matrice, qui sont les dist de l'arbre à lui-même.
+  distSp[distSp == Inf] <- NA # ne pas prendre en compte les Inf qui sont les arbres hors de parcelle.
+  
+  for (ind in 1:dim(distSp)[2]) { # 2 pour colonne
+    if (all(is.na(distSp[,ind]))) {FALSE # si toutes la colonne contient des NA c'est un Inf donc on ne le veut pas
+    }else{
+      SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < advancedloggingparameters$IsolateTreeMinDistance # si la distance minimale à ses congénaires est < 100, il est exploitable
     }
-
-
-
-    # SpatInventory <- SpatInventory %>%
-    #    mutate(DistCrit = ifelse(idTree == SpatInventorytmp$idTree, SpatInventorytmp$DistCrit, DistCrit)) # donner l'info à l'inventaire sp par sp
-
+    SpatInventory$DistCrit[SpatInventory$idTree == SpatInventorytmp$idTree[ind]] <- SpatInventorytmp$DistCrit[ind]
+    i = i+1 # et en informer la progress bar
+    setTxtProgressBar(ProgressBar, i)
   }
+  
+  
+  
+  # SpatInventory <- SpatInventory %>%
+  #    mutate(DistCrit = ifelse(idTree == SpatInventorytmp$idTree, SpatInventorytmp$DistCrit, DistCrit)) # donner l'info à l'inventaire sp par sp
+  
+}
 
 SlopeCritInventory <- SpatInventory %>%   # SpatInventory <- SpatInventory before
   add_column(Slope = Slope_tmp$value) %>% # ajouter les valeurs de pentes par arbre

@@ -2,7 +2,7 @@ test_that("treefelling", {
 
   # Test data
   data(Paracou6_2016)
-  # Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
+  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
   MatrixInventory <- as.matrix(Paracou6_2016)
 
   MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
@@ -28,7 +28,7 @@ test_that("treefelling", {
   PolList = list(pol1,pol2)
   ScndTrail <- st_multipolygon(PolList)
 
-  inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+  inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
   inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
                              fuel = "0", diversification = TRUE, specieslax = FALSE,
                              objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,

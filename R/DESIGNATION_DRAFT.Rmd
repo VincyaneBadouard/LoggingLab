@@ -30,7 +30,7 @@ harvestable, selected, futurereserve
 
 ```{r Give values to the arguments to work}
 
-inventory = addtreedim(inventorycheckformat(Paracou6_2016))) #3539 rows (Paracou: 3620 rows)
+inventory = addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)) #3539 rows (Paracou: 3620 rows)
 speciescriteria = SpeciesCriteria
 scenario = "manual"
 fuel = "0"

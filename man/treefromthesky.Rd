@@ -11,7 +11,7 @@ treefromthesky(dat)
 Xutm, Yutm (Tree coordinates), CrownDiameter, CrownHeight}
 }
 \value{
-an ellipse (sfc_POLYGON) as a crown, with its diameter and height
+An ellipse (sfc_POLYGON) as a crown, with its diameter and height
 filled in, representing the tree from the sky.
 }
 \description{
@@ -19,7 +19,10 @@ treefromthesky
 }
 \examples{
 data(Paracou6_2016)
-inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+data(ForestZoneVolumeParametersTable)
+
+inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+volumeparameters = ForestZoneVolumeParametersTable)
 dat <- inventory[679,]
 
 Crown <- treefromthesky(dat)

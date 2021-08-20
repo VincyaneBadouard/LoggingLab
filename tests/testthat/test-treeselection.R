@@ -16,38 +16,50 @@ test_that("treeselection", {
                              speciescriteria = Matrixspeciescriteria),
                regexp = "The 'inventory' and 'speciescriteria' arguments of the 'treeselection' function must be data.frame")
 
-  expect_error(treeselection(Paracou6_2016, scenario ="manual", fuel = "0", diversification = TRUE,
+  expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
+                             scenario ="manual", fuel = "0", diversification = TRUE,
                              objective = "RIL"),
                regexp = "The 'objective' argument of the 'treeselection' function must be numeric")
 
-  expect_error(treeselection(Paracou6_2016, scenario ="manual", fuel = "0", objective = 20,
-                             diversification = "1", specieslax = 2, objectivelax = "a"),
-               regexp = "The 'diversification', 'specieslax' and 'objectivelax' arguments of the 'treeselection' function must be logical")
+  expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
+                             scenario ="manual", fuel = "0", objective = 20,
+                             diversification = "1"),
+               regexp = "The 'diversification' argument of the 'treeselection' function must be logical or NULL")
 
-  expect_error(treeselection(Paracou6_2016, fuel = "0", diversification = TRUE, objective = 20,
+  expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
+                             scenario ="manual", fuel = "0", objective = 20,
+                             diversification = FALSE, specieslax = 2, objectivelax = "a"),
+               regexp = "The 'specieslax' and 'objectivelax' arguments of the 'treeselection' function must be logicals")
+
+  expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
+                             fuel = "0", diversification = TRUE, objective = 20,
                              scenario = "CL"),
                regexp = "The 'scenario' argument of the 'treeselection' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
-  expect_error(treeselection(Paracou6_2016, scenario ="manual", objective = 20, diversification = TRUE,
+  expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
+                             scenario ="manual", objective = 20, diversification = TRUE,
                              fuel = TRUE),
                regexp = "The 'fuel' argument of the 'treeselection' function must be '0', '1', or '2'")
 
-  expect_error(treeselection(Paracou6_2016, objective = 20, scenario ="manual", fuel = "2",
+  expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
+                             objective = 20, scenario ="manual", fuel = "2",
                              diversification = FALSE, specieslax = FALSE, objectivelax = FALSE,
                              topography = NULL, plotslope = NULL))
 
 
-  expect_error(treeselection(Paracou6_2016, objective = 20, scenario ="manual", fuel = "0", diversification = TRUE,
+  expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
+                             objective = 20, scenario ="manual", fuel = "0", diversification = TRUE,
                              topography = DTMParacou, plotslope = PlotSlope, advancedloggingparameters = as.matrix(loggingparameters())),
                regexp = "The 'advancedloggingparameters' argument of the 'treeselection' function must be a list")
 
-  expect_error(treeselection(Paracou6_2016, scenario = "manual",
+  expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
+                             scenario = "manual",
                              objective = 20, fuel = NULL, diversification = T, topography = DTMParacou, plotslope = PlotSlope),
                regexp = "If you choose the 'manual' mode,
          you must fill in the arguments 'objective', 'fuel' and 'diversification'")
 
   # Test data preparation
-  inventory = addtreedim(inventorycheckformat(Paracou6_2016))
+  inventory = addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
 
   testinventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
                                                   fuel = "2", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
@@ -64,7 +76,7 @@ test_that("treeselection", {
   # Objective Volume:
   ## hollow trees harvested
   objective <- 40
-  VO_1 <- suppressMessages(treeselection(inventory,
+  VO_1 <- suppressMessages(treeselection(inventory, speciescriteria = SpeciesCriteria,
                                        scenario ="manual", fuel = "2", objective = 40, diversification = TRUE, specieslax = FALSE,
                                        objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope))$VO
 
@@ -72,7 +84,7 @@ test_that("treeselection", {
   expect_true(VO_1 == objective)
 
   ## hollow trees non-harvested
-  VO_2 <- suppressMessages(treeselection(inventory,
+  VO_2 <- suppressMessages(treeselection(inventory, speciescriteria = SpeciesCriteria,
                                        scenario ="manual", fuel = "0", objective = 40, diversification = TRUE, specieslax = FALSE,
                                        objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope))$VO
 

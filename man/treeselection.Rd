@@ -2,19 +2,19 @@
 % Please edit documentation in R/treeselection.R
 \name{treeselection}
 \alias{treeselection}
-\title{treeselection}
+\title{Tree selection}
 \usage{
 treeselection(
   inventory,
+  topography,
+  speciescriteria,
+  scenario,
   objective,
-  scenario = "manual",
   fuel,
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
-  topography,
   plotslope,
-  speciescriteria = SpeciesCriteria,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -22,11 +22,18 @@ treeselection(
 \item{inventory}{your inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
-\item{objective}{Objective volume per hectare (numeric)}
+\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
+(default: \code{\link{DTMParacou}}) (RasterLayer)}
+
+\item{speciescriteria}{Table of species exploitability criteria : species
+names, economic interest level, minimum and maximum felling diameter, in the
+same format of \code{\link{SpeciesCriteria}} (data.frame)}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 \code{\link{vignette}})}
+
+\item{objective}{Objective volume per hectare (numeric)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", damage exploitation
 in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"}
@@ -41,15 +48,8 @@ default (logical)}
 \item{objectivelax}{Allow exploitation in case of non-achievement of the
 objective volume (if stand too poor), = FALSE by default (logical)}
 
-\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
-(default: \code{\link{DTMParacou}}) (RasterLayer)}
-
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
-
-\item{speciescriteria}{Table of species exploitability criteria : species
-names, economic interest level, minimum and maximum felling diameter, in the
-same format of \code{\link{SpeciesCriteria}} (data.frame)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
@@ -63,21 +63,22 @@ hollow trees exploitation) - 6 sets of spatial points: harvestable,
 selected, future and reserve, hollow and energy wood trees
 }
 \description{
-treeselection
+Tree selection
 }
 \examples{
-
 data(Paracou6_2016)
 data(DTMParacou)
 data(PlotSlope)
 
-inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+volumeparameters = ForestZoneVolumeParametersTable)
 
-treeselectionoutputs <- treeselection(inventory, objective = 20,
+treeselectionoutputs <- treeselection(inventory,
+topography = DTMParacou, plotslope = PlotSlope,
+speciescriteria = SpeciesCriteria, objective = 20,
 scenario ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
-objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
-speciescriteria = SpeciesCriteria,
- advancedloggingparameters = loggingparameters()) #  MainTrail
+objectivelax = TRUE,
+advancedloggingparameters = loggingparameters()) #  MainTrail
 
 
 }

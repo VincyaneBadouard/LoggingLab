@@ -24,7 +24,7 @@
 #'
 ONFGuyafortaxojoin <- function(
   inventory,
-  speciescriteria = SpeciesCriteria
+  speciescriteria
 )
 {
 

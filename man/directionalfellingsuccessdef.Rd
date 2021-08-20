@@ -2,7 +2,7 @@
 % Please edit documentation in R/treefelling.R
 \name{directionalfellingsuccessdef}
 \alias{directionalfellingsuccessdef}
-\title{directionalfellingsuccessdef}
+\title{Directional felling success definition}
 \usage{
 directionalfellingsuccessdef(
   inventory,
@@ -37,7 +37,9 @@ is by default 60\%, and can be changed with the
 \code{advancedloggingparameters} argument.
 }
 \examples{
-inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+volumeparameters = ForestZoneVolumeParametersTable)
+
 inventory <- treeselection(inventory, objective = 20, scenario ="manual",
  fuel = "2", diversification = TRUE, specieslax = FALSE,
  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,

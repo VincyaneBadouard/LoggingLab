@@ -1,6 +1,6 @@
 #' futurereserve
 #'
-#' @param inventory your inventory (see the inputs formats and metadata in the
+#' @param inventory Your inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
 #'
 #' @param speciescriteria Table of species exploitability criteria : species
@@ -26,8 +26,10 @@
 #' data(DTMParacou)
 #' data(PlotSlope)
 #'
-#' inventory <- ONFGuyafortaxojoin(addtreedim(
-#' inventorycheckformat(Paracou6_2016)))
+#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' volumeparameters = ForestZoneVolumeParametersTable)
+#'
+#' inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 #'
 #' harvestableOutputs <- harvestable(inventory, diversification = TRUE,
 #'  specieslax = FALSE,

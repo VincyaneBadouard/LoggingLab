@@ -15,7 +15,8 @@
 #' data(Paracou6_2016)
 #' Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:10)
 #'
-#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' volumeparameters = ForestZoneVolumeParametersTable)
 #'
 #' inventory <- createcanopy(inventory)
 #'
@@ -60,7 +61,7 @@ createcanopy <- function(inventory){
 #' @param dat 1 row data.frame with columns:
 #' Xutm, Yutm (Tree coordinates), CrownDiameter, CrownHeight
 #'
-#' @return an ellipse (sfc_POLYGON) as a crown, with its diameter and height
+#' @return An ellipse (sfc_POLYGON) as a crown, with its diameter and height
 #'   filled in, representing the tree from the sky.
 #' @export
 #'
@@ -70,7 +71,10 @@ createcanopy <- function(inventory){
 #'
 #' @examples
 #' data(Paracou6_2016)
-#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+#' data(ForestZoneVolumeParametersTable)
+#'
+#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' volumeparameters = ForestZoneVolumeParametersTable)
 #' dat <- inventory[679,]
 #'
 #' Crown <- treefromthesky(dat)

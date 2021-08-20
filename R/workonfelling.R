@@ -26,7 +26,7 @@
 # PolList = list(pol1,pol2) #list of lists of numeric matrices
 # ScndTrail <- sf::st_multipolygon(PolList)
 #
-# inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+# inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
 # inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
 #                                             fuel = "2", diversification = TRUE, specieslax = FALSE,
 #                                             objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,

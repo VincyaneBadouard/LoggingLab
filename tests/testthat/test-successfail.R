@@ -34,7 +34,9 @@ test_that("directionalfellingsuccessdef", {
 
 
 
-  Random <- directionalfellingsuccessdef(inventory, fuel = "0",directionalfelling = "0", advancedloggingparameters = loggingparameters())
+  Random <- directionalfellingsuccessdef(inventory, fuel = "0",directionalfelling = "0", advancedloggingparameters = loggingparameters()) %>%
+    filter(Selected == "1")
+
   Accessible <- directionalfellingsuccessdef(inventory, fuel = "0",directionalfelling = "2", advancedloggingparameters = loggingparameters()) %>%
     filter(Selected == "1") # Accessible == "1" !!
 

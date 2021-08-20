@@ -25,7 +25,9 @@ data(DTMParacou)
 data(PlotSlope)
 data(SpeciesCriteria)
 
-inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+volumeparameters = ForestZoneVolumeParametersTable)
+
 inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
  fuel = "2", diversification = TRUE, specieslax = FALSE,
  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
@@ -47,7 +49,7 @@ dplyr::mutate(xCrown = Xutm,
        yCrown = Yutm + TrunkHeight + CrownHeight/2,
        exCrown = CrownDiameter/2,
        eyCrown = CrownHeight/2) \%>\%
-st_as_sf(coords = c("xCrown", "yCrown")) # ellipse centroid coordinates
+sf::st_as_sf(coords = c("xCrown", "yCrown")) # ellipse centroid coordinates
 Crown <- st_ellipse(Crown, Crown$exCrown, Crown$eyCrown) # create the ellipse
 Trunk <- with(dat, # and the trunk
               st_polygon(list(matrix(c(Xutm-(DBH/100)/2, Yutm,

@@ -14,18 +14,20 @@ scenariosparameters(
 )
 }
 \arguments{
-\item{scenario}{"RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow"
-or "manual"(character)}
+\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+\code{\link{vignette}})}
 
 \item{objective}{Objective volume per hectare (numeric)}
 
-\item{fuel}{No  exploitation = "0", damage exploitation in fuelwood = "1",
-exploitation of hollow trees and damage in fuelwood = "2"}
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", damage exploitation
+in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"}
 
 \item{diversification}{Taking of other species in addition to the main
-commercial species (logical)}
+commercial species (2 levels of commercial species in the
+\code{\link{SpeciesCriteria}} table) (logical)}
 
-\item{winching}{no cable or grapple = "0", only cable = "1", grapple + cable =
+\item{winching}{No cable or grapple = "0", only cable = "1", grapple + cable =
 "2"}
 
 \item{directionalfelling}{Directional felling = "0" (absent), "1" (only to

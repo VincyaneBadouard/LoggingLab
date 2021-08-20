@@ -3,15 +3,19 @@ test_that("selected", {
   # Check the function arguments
   # Test data preparation
   data(Paracou6_2016)
+  data(SpeciesCriteria)
+
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
 
   data(DTMParacou)
   data(PlotSlope)
 
-  inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016)))
+  inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
+  inventory0 <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
-  harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
-                                    topography = DTMParacou, plotslope = PlotSlope, advancedloggingparameters = loggingparameters())
+  harvestableOutputs <- harvestable(inventory0, diversification = TRUE, specieslax = FALSE,
+                                    topography = DTMParacou, plotslope = PlotSlope,
+                                    advancedloggingparameters = loggingparameters())
 
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
@@ -70,7 +74,7 @@ test_that("selected", {
   VO <- HVinit + 20
 
   ## if (!diversification && specieslax)
-  inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
+  inventory <- harvestable(inventory0,
                            diversification = FALSE, specieslax = TRUE, topography = DTMParacou, plotslope = PlotSlope)$inventory
 
   testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0",
@@ -88,7 +92,7 @@ test_that("selected", {
                "By default or by your choice, the simulation stops")
 
   # if (!diversification && !specieslax && objectivelax)
-  inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
+  inventory <- harvestable(inventory0,
                            diversification = FALSE,  specieslax = FALSE, topography = DTMParacou, plotslope = PlotSlope)$inventory
 
   expect_message(selected(inventory, scenario = "manual", fuel = "0", diversification = FALSE,  specieslax = FALSE, objectivelax = TRUE,
@@ -96,7 +100,7 @@ test_that("selected", {
                  "In this case you have chosen to continue logging without diversifying your species.")
 
   # if (diversification && objectivelax)
-  inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
+  inventory <- harvestable(inventory0,
                            diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope)$inventory
 
   expect_message(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, objectivelax = TRUE,
@@ -104,7 +108,7 @@ test_that("selected", {
                  "In this case you have chosen to continue logging.")
 
   ## if ((!specieslax & !objectivelax) | (diversification && !objectivelax))
-  inventory <- harvestable(ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016))),
+  inventory <- harvestable(inventory0,
                            diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope)$inventory
 
   expect_error(suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, objectivelax = FALSE,

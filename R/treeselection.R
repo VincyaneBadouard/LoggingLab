@@ -1,13 +1,20 @@
-#'treeselection
+#'Tree selection
 #'
 #'@param inventory your inventory (see the inputs formats and metadata in the
 #'  \code{\link{vignette}}) (data.frame)
 #'
-#'@param objective Objective volume per hectare (numeric)
+#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
+#'  (default: \code{\link{DTMParacou}}) (RasterLayer)
+#'
+#'@param speciescriteria Table of species exploitability criteria : species
+#'  names, economic interest level, minimum and maximum felling diameter, in the
+#'  same format of \code{\link{SpeciesCriteria}} (data.frame)
 #'
 #'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  \code{\link{vignette}})
+#'
+#'@param objective Objective volume per hectare (numeric)
 #'
 #'@param fuel Fuel wood exploitation: no exploitation = "0", damage exploitation
 #'  in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"
@@ -22,15 +29,9 @@
 #'@param objectivelax Allow exploitation in case of non-achievement of the
 #'  objective volume (if stand too poor), = FALSE by default (logical)
 #'
-#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
-#'  (default: \code{\link{DTMParacou}}) (RasterLayer)
-#'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
 #'
-#'@param speciescriteria Table of species exploitability criteria : species
-#'  names, economic interest level, minimum and maximum felling diameter, in the
-#'  same format of \code{\link{SpeciesCriteria}} (data.frame)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
@@ -57,31 +58,32 @@
 #'
 #'
 #' @examples
-#'
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(PlotSlope)
 #'
-#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016))
+#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' volumeparameters = ForestZoneVolumeParametersTable)
 #'
-#' treeselectionoutputs <- treeselection(inventory, objective = 20,
+#' treeselectionoutputs <- treeselection(inventory,
+#' topography = DTMParacou, plotslope = PlotSlope,
+#' speciescriteria = SpeciesCriteria, objective = 20,
 #' scenario ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
-#' objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
-#' speciescriteria = SpeciesCriteria,
-#'  advancedloggingparameters = loggingparameters()) #  MainTrail
+#' objectivelax = TRUE,
+#' advancedloggingparameters = loggingparameters()) #  MainTrail
 #'
 #'
 treeselection <- function(
   inventory,
+  topography,
+  speciescriteria,
+  scenario,
   objective,
-  scenario = "manual",
   fuel,
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
-  topography,
   plotslope,
-  speciescriteria = SpeciesCriteria,
   advancedloggingparameters = loggingparameters()
   # MainTrail
 
@@ -92,11 +94,14 @@ treeselection <- function(
   if(!any(unlist(lapply(list(inventory, speciescriteria), inherits, "data.frame"))))
     stop("The 'inventory' and 'speciescriteria' arguments of the 'treeselection' function must be data.frame")
 
-  if(!inherits(objective, "numeric") && !is.null(objective))
-    stop("The 'objective' argument of the 'treeselection' function must be numeric")
+  if(!any(inherits(objective, "numeric") || is.null(objective)))
+    stop("The 'objective' argument of the 'treeselection' function must be numeric or NULL")
 
-  if(!all(unlist(lapply(list(diversification, specieslax, objectivelax), inherits, "logical"))) && !is.null(diversification))
-    stop("The 'diversification', 'specieslax' and 'objectivelax' arguments of the 'treeselection' function must be logical") # any() don't take a list
+  if(!any(inherits(diversification, "logical") || is.null(diversification)))
+    stop("The 'diversification' argument of the 'treeselection' function must be logical or NULL")
+
+  if(!any(unlist(lapply(list(specieslax, objectivelax), inherits, "logical"))))
+    stop("The 'specieslax' and 'objectivelax' arguments of the 'treeselection' function must be logicals")
 
   if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"|| scenario == "RIL3"|| scenario == "RIL3fuel"||
            scenario == "RIL3fuelhollow"|| scenario =="manual"))
@@ -172,7 +177,7 @@ treeselection <- function(
 
   harvestableOutputs <- harvestable(inventory,                                               # harvestable function
     diversification = diversification, specieslax = specieslax,
-    topography = topography, plotslope = plotslope, advancedloggingparameters = loggingparameters())
+    topography = topography, plotslope = plotslope, advancedloggingparameters = advancedloggingparameters)
 
   inventory <- harvestableOutputs$inventory                                        # one of the output
 

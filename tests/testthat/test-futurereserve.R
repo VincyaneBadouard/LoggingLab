@@ -5,7 +5,8 @@ test_that("futurereserve", {
 
   data(DTMParacou)
 
-  inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016)))
+  inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
+  inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
   harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
                                     topography = DTMParacou, plotslope = PlotSlope, advancedloggingparameters = loggingparameters())
