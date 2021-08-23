@@ -8,8 +8,12 @@ harvestable(
   inventory,
   topography,
   diversification,
+  winching,
   specieslax = FALSE,
-  plotslope,
+  DTM = DTMParacou,
+  exploitpolygones = ExploitPolygones,
+  maintrails = MainTrails,
+  plotslope = PlotSlope,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -26,6 +30,11 @@ commercial species (2 levels of commercial species in the
 
 \item{specieslax}{Allow diversification if stand is too poor, = FALSE by
 default (logical)}
+
+\item{exploitpolygones}{Accessible area of the inventoried plot
+(default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
+
+\item{maintrails}{Main trails defined at the entire harvestable area (sf polylines)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
@@ -45,8 +54,10 @@ which trees are harvestable according to your harvestability criteria
 \examples{
 
 data(Paracou6_2016)
+
 data(DTMParacou)
 data(PlotSlope)
+data(ExploitPolygones)
 data(SpeciesCriteria)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
@@ -54,8 +65,8 @@ volumeparameters = ForestZoneVolumeParametersTable)
 
 inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
-test <- harvestable(inventory, topography = DTMParacou,
-diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
+test <- harvestable(inventory, topography = DTMParacou,exploitpolygones = ExploitPolygones,
+diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,maintrails = Maintrails,
 advancedloggingparameters = loggingparameters())
 
 }

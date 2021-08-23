@@ -1,0 +1,669 @@
+#' secondtrailsopening
+#'
+#' @param DEM Digital elevation model (raster)
+#' @param plotslope A categorical transition layer of longitudinal and transversal slope.
+#' @param plots
+#' @param exploitpolygones Accessible area of the inventoried plot
+#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
+#' @param maintrails Main trails defined at the entire harvestable area (sf polylines)
+#' @param treeselectionoutputsA list with:
+#'  - your inventory with: "DistCrit", "Slope", "SlopeCrit",
+#'  "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
+#'  "ProbedHollow" new columns (see the outputs metadata in the \code{\link{vignette}}).
+#'  - the objective volume with or without a bonus (if hollow trees
+#'  exploitation)
+#'  - 6 sets of spatial points: harvestable, selected, future and
+#'  reserve, hollow and energy wood trees
+#' @param CostSlopeMatrix List of list defining conditional weight over binned slopes values
+#' @param otherlogginparameters dvanced parameters of the logging simulator
+#'
+#' @return Secondary trails polygons according to scenario conditions.
+#'
+#' @import sf
+#' @importFrom smoothr smooth
+#'
+#' @export
+#'
+#' @examples
+secondtrailsopening <- function(DEM = DemParacou,
+                                plotslope =  PlotSlope,
+                                plots = Plots,
+                                exploitpolygones = ExploitPolygones,
+                                maintrails = MainTrails,
+                                treeselectionoutputs = treeselectionoutputs,
+                                CostSlopeMatrix = list(list(Slope = 3, Cost = 3),
+                                                       list(Slope = 5, Cost = 5),
+                                                       list(Slope = 12, Cost = 20),
+                                                       list(Slope = 22, Cost = 60),
+                                                       list(Slope = 27, Cost = 600),
+                                                       list(Slope = Inf, Cost = 1000)),
+                                scenarios = NULL
+                                otherlogginparameters = logginparameters()) {
+
+  # Arguments check
+
+  if(!inherits(treeselectionoutputs, "list"))
+    stop("The 'treeselectionoutputs' arguments of the 'secondtrailsopening' function must be list following treeselection output format")
+
+  if(!any(unlist(lapply(list(exploitpolygones, plots,maintrails ), inherits, "sf"))))
+    stop("The 'plots', 'maintrails'  and 'exploitpolygones' arguments of the 'secondtrailsopening' function must be sf polygon")
+
+  if(!any(unlist(lapply(list(DEM, plotslope), inherits, "RasterLayer"))))
+    stop("The 'DEM' and 'plotslope' arguments of the 'secondtrailsopening' function must be raster")
+
+  # Redefinition of the parameters according to the chosen scenario
+  scenarios <- scenariosparameters(objective = scenarios$objective, type = scenarios$type, fuel = scenarios$fuel,
+                                             diversification = scenarios$diversification)
+
+  objective <- scenarios$objective
+  fuel <- scenarios$fuel
+  diversification <- scenarios$diversification
+
+  ##################################
+
+  AccessPolygones <- FilterAccesExplArea(exploitpolygones = exploitpolygones,maintrails = MainTrails,winching = scenarios$winching,advancedloggingparameters = loggingparameters())
+
+
+  AccessMainTrails <- FilterAccesExplArea(exploitpolygones = exploitpolygones,maintrails = maintrails,winching = "0",advancedloggingparameters = loggingparameters()) %>%
+    sf::st_cast("POLYGON") %>% sf::st_as_sf() %>%
+    mutate(ID = paste0("ID_",row_number()))
+
+  PartMainTrails <- st_intersection(MainTrails  ,
+                                    AccessMainTrails %>%
+                                      sf::st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth)) %>%
+    sf::st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth) %>% sf::st_union() %>%
+    sf::st_intersection(sf::st_as_sf(plots) %>% sf::st_union()) %>%
+    sf::st_cast("POLYGON")  %>%
+    sf::st_as_sf() %>%
+    sf::st_join(AccessMainTrails)
+
+
+  AccessPoint <- PartMainTrails  %>%
+    sf::st_sample( rep(1,dim(PartMainTrails)[1]) ,type = "random",by_polygon = TRUE) %>% sf::st_as_sf() %>%
+    sf::st_join(PartMainTrails)
+
+
+  CostRaster <- raster(extent(DEM),resolution = res(DEM), crs = crs(DEM))
+  values(CostRaster) <- 1000
+  CostRaster <- mask(CostRaster, plots)
+  CostRaster <- crop(CostRaster, plots)
+
+  # RastersToPoints
+
+  plotSlopePoint <- dplyr::as_tibble(raster::rasterToPoints(PlotSlope))
+
+  CostRasterPoint <- dplyr::as_tibble(raster::rasterToPoints(CostRaster))
+
+  # left join par x et y
+  plotTib <-
+    dplyr::left_join(plotSlopePoint, CostRasterPoint, by = c('x', 'y'))
+
+  CostSlopeRaster <- plotTib %>%
+    mutate(Exploit = if_else(
+      slope <= atan(CostSlopeMatrix[[1]]$Slope/100), # on est en radians pour la pente, donc .264 radians = 27% de pente
+      true = CostSlopeMatrix[[1]]$Cost,
+      false = if_else(
+        slope <= atan(CostSlopeMatrix[[2]]$Slope/100),
+        true = CostSlopeMatrix[[2]]$Cost,
+        false = if_else(
+          slope <= atan(CostSlopeMatrix[[3]]$Slope/100),
+          true = CostSlopeMatrix[[3]]$Cost,
+          false = if_else(
+            slope <= atan(CostSlopeMatrix[[4]]$Slope/100),
+            true = CostSlopeMatrix[[4]]$Cost,
+            false = if_else(
+              slope <= atan(CostSlopeMatrix[[5]]$Slope/100),
+              true = CostSlopeMatrix[[5]]$Cost,
+              false = CostSlopeMatrix[[6]]$Cost)
+          )
+        )
+      )
+    )) %>% dplyr::select(x,y,Exploit)
+
+  CostRaster <- raster::rasterFromXYZ(CostSlopeRaster, crs = 32622)
+
+  AccessRaster <- raster(extent(DemParacou),resolution = res(DemParacou), crs = crs(DemParacou))
+  values(AccessRaster) <- 1000
+
+  AccessRaster <- rasterize(x = as_Spatial(AccessPolygones %>%
+                                             sf::st_buffer(dist =  -advancedloggingparameters$ScndTrailWidth/2)),
+                            y = AccessRaster ,
+                            field = 0,
+                            update = TRUE)
+  AccessRaster <- crop(AccessRaster,  CostRaster)
+  AccessRaster <- mask(AccessRaster, plots)
+
+
+  CostRaster<- CostRaster + AccessRaster
+
+  BigTreesRaster <- raster(extent(DemParacou),resolution = res(DemParacou), crs = crs(DemParacou))
+  values(BigTreesRaster) <- 0
+  BigTreesRaster <- rasterize(x = as_Spatial(treeselectionoutputs$BigTreesPoints %>%
+                                               sf::st_buffer(dist =  advancedloggingparameters$ScndTrailWidth/2 + 2) ),
+                              y = BigTreesRaster ,
+                              field = 500,
+                              update = TRUE)
+  BigTreesRaster <- crop(BigTreesRaster,  CostRaster)
+
+
+  ReserveRaster <- raster(extent(DemParacou),resolution = res(DemParacou), crs = crs(DemParacou))
+  values(ReserveRaster) <- 0
+  ReserveRaster <- rasterize(x = as_Spatial(treeselectionoutputs$HarvestableTreesPoints %>%
+                                              sf::st_buffer(dist =  advancedloggingparameters$ScndTrailWidth/2 + 2) ),
+                             y = ReserveRaster ,
+                             field = 500,
+                             update = TRUE)
+  ReserveRaster <- crop(ReserveRaster,  CostRaster)
+
+  FutureRaster <- raster(extent(DemParacou),resolution = res(DemParacou), crs = crs(DemParacou))
+  values(FutureRaster ) <- 0
+  FutureRaster  <- rasterize(x = as_Spatial(treeselectionoutputs$HarvestableTreesPoints %>%
+                                              sf::st_buffer(dist =  advancedloggingparameters$ScndTrailWidth/2 +2) ),
+                             y = FutureRaster  ,
+                             field = 50,
+                             update = TRUE)
+  FutureRaster  <- crop(FutureRaster ,  CostRaster)
+
+
+  CostRaster<- CostRaster + BigTreesRaster + ReserveRaster + FutureRaster
+
+
+  if (scenarios$winching == "2") {
+
+    plotSlopePointGrpl <- dplyr::as_tibble(raster::rasterToPoints(PlotSlope))
+
+    CostRasterPointGrpl <- dplyr::as_tibble(raster::rasterToPoints(CostRaster))
+
+    # left join par x et y
+    plotTibGrpl <-
+      dplyr::left_join(plotSlopePointGrpl, CostRasterPointGrpl, by = c('x', 'y'))
+
+    CostSlopeRasterGrpl <- plotTibGrpl %>%
+      mutate(Exploit = if_else(
+        slope <= atan(advancedloggingparameters$GrappleMaxslope/100), # on est en radians pour la pente, donc .264 radians = 27% de pente
+        true = 0,
+        false = Inf
+      )) %>% dplyr::select(x,y,Exploit)
+
+    CostRasterGrpl <- raster::rasterFromXYZ(CostSlopeRasterGrpl, crs = 32622)
+
+    CostRasterGrpl <- CostRaster + CostRasterGrpl
+
+    CostRasterGrpl <- rasterize(x = as_Spatial(PartMainTrails),
+                                y = CostRasterGrpl ,
+                                field = 1E-4,
+                                update = TRUE)
+
+    CostRasterMeanGrpl <- aggregate(CostRasterGrpl, fact=3, fun=mean)
+    CostRasterMeanGrpl <- crop(CostRasterMeanGrpl,  CostRaster)
+    CostRasterMeanGrpl <- mask(CostRasterMeanGrpl, plots)
+
+  }
+
+
+  CostRaster <- rasterize(x = as_Spatial(PartMainTrails),
+                          y = CostRaster ,
+                          field = 1E-4,
+                          update = TRUE)
+
+
+
+  CostRasterMean <- aggregate(CostRaster, fact=3, fun=mean)
+  CostRasterMean <- crop(CostRasterMean,  CostRaster)
+  CostRasterMean <- mask(CostRasterMean, plots)
+
+  DEM <- crop(DemParacou,  CostRasterMean)
+  DEM <- mask(DEM, plots)
+
+  DEMmean <- aggregate(DEM, fact=3, fun=mean)
+  DEMmean <- crop(DEMmean,  CostRasterMean)
+  DEMmean <- mask(DEMmean, plots)
+
+
+  CondSurf <- 1/CostRasterMean
+
+  SlopeCond <- SlopeRdCond(DEM = DEMmean,fact = 1,advancedloggingparameters = loggingparameters())
+
+  pathLines <- list()
+  k <- 1
+
+  pts <- treeselectionoutputs$SelectedTreesPoints %>%
+    sf::st_cast("POINT") %>%
+    mutate(ID = NA) %>%
+    mutate(type = "Tree")
+
+
+  ##################################
+
+
+  winching <- scenarios$winching
+
+  if (winching == "0") {
+
+
+
+    CostDistEst <- AdjTopoLCP(costSurface = CondSurf,
+                              DEM = DEMmean ,
+                              pts = pts %>%
+                                as_Spatial(),
+                              slopeRdCond = SlopeCond,
+                              paths = FALSE) [,1:dim(AccessPoint)[1]]
+    CostDistEst <- CostDistEst[(dim(PointAcc)[1]+1):dim(CostDistEst)[1],1:dim(PointAcc)[1]]
+
+    CostDistEst <- matrix(CostDistEst,ncol = dim(PointAcc)[1] )
+
+
+    PointTree <- pts %>% filter(type == "Tree") %>%
+      mutate(ptAcc = max.col(-CostDistEst))
+    PointTree$ID <- as.factor(PointTree$ptAcc)
+    levels(PointTree$ID) <- as.character(AccessPoint$ID)
+
+    pts <- rbind(AccessPoint %>%
+                   mutate(type = "Access") %>%
+                   mutate(ptAcc = row_number()) %>%
+                   mutate(IPpts = paste0("A.",row_number())),
+                 PointTree %>%
+                   mutate(IPpts = paste0("T.",row_number())))
+
+
+    PointAcc <- pts %>% filter(type == "Access") %>%
+      mutate(EstCost = NA)
+
+    CostDistEst <- AdjTopoLCP(costSurface = CondSurf,
+                              DEM = DEMmean ,
+                              pts = pts %>%
+                                as_Spatial(),
+                              slopeRdCond = SlopeCond,
+                              paths = FALSE) [,1:dim(PointAcc)[1]]
+    CostDistEst <- CostDistEst[(dim(PointAcc)[1]+1):dim(CostDistEst)[1],1:dim(PointAcc)[1]]
+
+    CostDistEst <- matrix(CostDistEst,ncol = dim(PointAcc)[1] )
+
+
+    PointTree <- pts %>% filter(type == "Tree") %>%
+      mutate(ptAcc = max.col(-CostDistEst))
+    if (dim(PointAcc)[1] == 1) {
+      PointTree <- PointTree %>% mutate(EstCost = CostDistEst)
+    }else{PointTree <- PointTree %>% mutate(EstCost = apply(CostDistEst,1, min))}
+    selectedPoints <- rbind(PointAcc,PointTree)
+
+    for (accessPtId in 1:dim(PointAcc)[1]) {
+      TmpSelectedPts <- selectedPoints %>%
+        filter(ptAcc == accessPtId)
+
+      TmpAccPts <- TmpSelectedPts %>%
+        filter(type == "Access")
+
+      TmpTreePts <- TmpSelectedPts %>%
+        filter(type == "Tree") %>%
+        arrange(desc(EstCost))
+
+      if (dim(TmpTreePts)[1] != 0) {
+        for (TreeId in 1:dim(TmpTreePts)[1]){
+
+          TmpPtsWIP <- rbind(TmpAccPts,TmpTreePts[TreeId,])
+          TmpPathWIP <-  AdjTopoLCP(costSurface = CondSurf,DEM = DEMmean , pts = TmpPtsWIP %>% as_Spatial(),
+                                    slopeRdCond = SlopeCond,paths = TRUE)
+
+          CostRasterMean  <- rasterize(x = TmpPathWIP[[2]] ,
+                                       y = CostRasterMean  ,
+                                       field = 0.1,update =  TRUE)
+          CondSurf <- 1/CostRasterMean
+
+          pathLines[[k]] <- TmpPathWIP[[2]]
+          pathLines[[k]]@lines[[1]]@ID <- paste("Path",accessPtId, "-", TreeId, sep = " ")
+
+          k <- k +1
+
+        }
+      }
+    }
+  }else{
+
+    # winching == 1/2
+
+    PointAcc <- AccessPoint %>% #def Access Point
+      mutate(type = "Access") %>%
+      mutate(IDpts = paste0("A.",row_number())) %>%
+      mutate(n.overlaps = NA, origins = NA) %>%
+      dplyr::select(-ID)
+
+    if (winching == "2") {
+      ptsGrpl <- pts %>% filter(type == "Tree") %>% #def Grpl point
+        st_buffer(dist = advancedloggingparameters$GrappleLength) %>%
+        st_set_precision(1) %>%
+        st_intersection() %>%
+        st_make_valid()
+
+      ptsGrpl <- ptsGrpl %>%  filter(st_intersects(ptsGrpl ,AccessMainTrails %>% st_union(),sparse = FALSE)) %>%
+        mutate(IDpts = paste0("I.",row_number()))
+
+      ptsWIP <- ptsGrpl %>% #def Grpl point as WIP point
+        st_centroid() %>%
+        dplyr::select(-ID)
+
+      ptsCbl <- pts %>% filter(type == "Tree") %>% #def cbl point
+        st_buffer(dist = advancedloggingparameters$CableLength) %>%
+        st_set_precision(1) %>%
+        st_intersection() %>%
+        st_make_valid()
+
+      ptsCbl <- ptsCbl %>%
+        filter(st_intersects(ptsCbl ,AccessMainTrails %>% st_union() ,sparse = FALSE)) %>%
+        mutate(IDpts = paste0("I.",row_number()))
+
+      ptsWIPCbl <-  ptsCbl %>%
+        st_centroid() %>%
+        dplyr::select(-ID)
+
+      ptsWIP <- ptsWIP %>%
+        arrange(desc(n.overlaps))
+
+      RemainTree <- dim(ptsWIP %>% filter(type == "Tree"))[1] + dim(ptsWIPCbl %>% filter(type == "Tree"))[1]
+
+    }else{
+      ptsCbl <- pts %>% filter(type == "Tree") %>% #def cbl point
+        st_buffer(dist = advancedloggingparameters$CableLength) %>%
+        st_set_precision(1) %>%
+        st_intersection() %>%
+        st_make_valid() %>%
+        mutate(IDpts = paste0("I.",row_number()))
+
+      ptsWIP <-  ptsCbl %>%#def cbl point as WIP point
+        st_centroid() %>%
+        dplyr::select(-ID)
+
+      ptsWIP <- ptsWIP %>%  #filter cbl intersection centroid point out plot
+        filter(st_intersects(ptsWIP ,plots %>% st_as_sf(),sparse = FALSE)) %>%
+        arrange(desc(n.overlaps))
+
+      RemainTree <- dim(ptsWIP %>% filter(type == "Tree"))[1]
+
+
+    }
+
+
+    WinchingSwitch <- FALSE
+
+
+
+    while (RemainTree !=0L & k <= limRec) {
+
+      Grpl2CblFlag <- FALSE
+
+
+      ptsWIPmax <- rbind(PointAcc,ptsWIP %>%
+                           filter(n.overlaps == max(ptsWIP$n.overlaps))) %>%
+        mutate(TypeAcc = NA) %>%
+        mutate(EstCost = NA)  %>%
+        mutate(ptsAcc = NA)
+
+      CostDistEstCbl <- AdjTopoLCP(costSurface = CondSurf,
+                                   DEM = DEMmean ,
+                                   pts = ptsWIPmax %>%
+                                     as_Spatial(),
+                                   slopeRdCond = SlopeCond,
+                                   paths = FALSE) [,1:dim(PointAcc)[1]]
+
+      CostDistEstCbl <- CostDistEstCbl[(dim(PointAcc)[1]+1):dim(CostDistEstCbl)[1],1:dim(PointAcc)[1]]
+
+      CostDistEstCbl <- matrix(CostDistEstCbl,ncol = dim(PointAcc)[1] )
+
+      PointTree <- ptsWIPmax %>% filter(type == "Tree") %>%
+        mutate(ptAccCbl = max.col(- CostDistEstCbl,ties.method = "first"))
+
+
+      if (dim(PointAcc)[1] == 1) {
+        PointTree <- PointTree %>% mutate(EstCostCbl = CostDistEstCbl)
+      }else{
+        PointTree <- PointTree %>% mutate(EstCostCbl = apply(CostDistEstCbl,1, min))
+      }
+
+
+      if (winching == "2") {
+
+        CondSurfGrpl <- 1/CostRasterMeanGrpl
+
+        CostDistEstGrpl <- AdjTopoLCP(costSurface = CondSurfGrpl,
+                                      DEM = DEMmean ,
+                                      pts = ptsWIPmax %>%
+                                        as_Spatial(),
+                                      slopeRdCond = SlopeCond,
+                                      paths = FALSE) [,1:dim(PointAcc)[1]]
+
+        CostDistEstGrpl <- CostDistEstGrpl[(dim(PointAcc)[1]+1):dim(CostDistEstGrpl)[1],1:dim(PointAcc)[1]]
+        CostDistEstGrpl <- matrix(CostDistEstGrpl,ncol = dim(PointAcc)[1] )
+
+
+        PointTree <- PointTree %>%
+          mutate(ptAccGpl = max.col(-matrix(CostDistEstGrpl,ncol = dim(PointAcc)[1] ),ties.method = "first"))
+
+        if (dim(PointAcc)[1] == 1) {
+          PointTree <- PointTree %>% mutate(EstCostGrpl = CostDistEstGrpl)
+        }else{
+          PointTree <- PointTree %>% mutate(EstCostGrpl = apply(matrix(CostDistEstGrpl,ncol = dim(PointAcc)[1] ),1, min))}
+
+        CostDistEstGrpl[CostDistEstGrpl != Inf] <- 0
+        CostDistEstGrpl[CostDistEstGrpl == Inf] <- 1
+
+        for (j in 1:dim(CostDistEstGrpl)[1]) {
+          PointTree[j,"TypeAcc"] <-  as.character(prod(CostDistEstGrpl[j,]))
+        }
+        PointTree$TypeAcc[PointTree$TypeAcc == "0"] <- "Grpl"
+        PointTree$TypeAcc[PointTree$TypeAcc == "1"] <- "Cbl"
+
+        PointTree$ptsAcc[PointTree$TypeAcc == "Grpl"] <- PointTree$ptAccGpl[PointTree$TypeAcc == "Grpl"]
+        PointTree$ptsAcc[PointTree$TypeAcc != "Grpl"] <- PointTree$ptAccCbl[PointTree$TypeAcc != "Grpl"]
+
+        PointTree$EstCost[PointTree$TypeAcc == "Grpl"] <- PointTree$EstCostGrpl[PointTree$TypeAcc == "Grpl"]
+        PointTree$EstCost[PointTree$TypeAcc != "Grpl"] <- PointTree$EstCostCbl[PointTree$TypeAcc != "Grpl"]
+
+
+        PointTree <- PointTree %>% arrange(desc(TypeAcc),EstCost)
+
+
+
+
+        if (PointTree$TypeAcc[1] == "Grpl") {
+
+          TmpPtsWIP <- ptsGrpl %>%
+            filter(IDpts == PointTree$IDpts[1])  %>%
+            st_union() %>%
+            st_cast("POINT") %>%
+            st_as_sf() %>%
+            mutate(type = "Overlay") %>%
+            mutate(ptsAcc = PointTree$ptsAcc[1]) %>%
+            mutate(IDpts = PointTree$IDpts[1]) %>%
+            mutate(origins = PointTree$origins[1])
+
+
+
+        }else{
+
+          Grpl2CblFlag <- TRUE
+
+          ptsWIP$Logged<- FALSE
+
+
+          for (j in 1:dim(ptsWIP)[1]) {
+            ptsWIP$Logged[j] <- prod(as.integer(PointTree$origins[1][[1]] %in% ptsWIP$origins[[j]])+1) != 1
+          }
+
+
+
+          ptsWIP[ptsWIP$Logged == TRUE,"Logged"] <- NA
+          ptsWIP <- na.exclude(ptsWIP)
+
+          ptsWIP <- ptsWIP %>%
+            dplyr::select(-Logged) %>%
+            arrange(desc(n.overlaps))
+
+
+          TmpPtsWIP <- ptsCbl %>%
+            filter(IDpts == PointTree$IDpts[1])  %>%
+            st_union() %>%
+            st_cast("POINT") %>%
+            st_as_sf() %>%
+            mutate(type = "Overlay") %>%
+            mutate(ptsAcc = PointTree$ptsAcc[1]) %>%
+            mutate(IDpts = PointTree$IDpts[1]) %>%
+            mutate(origins = PointTree$origins[1])
+        }
+
+      }else{
+
+        TmpPtsWIP <- ptsCbl %>%
+          filter(IDpts == PointTree$IDpts[1])  %>%
+          st_union() %>%
+          st_cast("POINT") %>%
+          st_as_sf() %>%
+          mutate(type = "Overlay") %>%
+          mutate(ptsAcc = PointTree$ptsAcc[1]) %>%
+          mutate(IDpts = PointTree$IDpts[1]) %>%
+          mutate(origins = PointTree$origins[1])
+
+      }
+
+      TmpPtsWIP <- TmpPtsWIP  %>%
+        filter(st_intersects(TmpPtsWIP,AccessMainTrails %>% st_union(),sparse = FALSE))
+
+
+      TmpPtsWIP <- rbind(PointAcc %>%
+                           st_union() %>%
+                           st_cast("POINT")%>%
+                           st_as_sf() %>%
+                           mutate(type = "Access") %>%
+                           mutate(ptsAcc = NA ) %>%
+                           mutate(IDpts = NA) %>%
+                           mutate(origins = NA),TmpPtsWIP)
+
+
+      CostDistEstWIP <-  AdjTopoLCP(costSurface = CondSurf,DEM = DEMmean , pts = TmpPtsWIP %>% as_Spatial(),
+                                    slopeRdCond = SlopeCond,paths = FALSE)[,1:dim(PointAcc)[1]]
+
+      CostDistEstWIP <- CostDistEstWIP[(dim(PointAcc)[1]+1):dim(CostDistEstWIP)[1],]
+
+      CostDistEstWIP <- matrix(CostDistEstWIP, ncol = dim(PointAcc)[1])
+
+      if (dim(PointAcc)[1] == 1) {
+        PointTreeWIP <- TmpPtsWIP %>%
+          filter(type == "Overlay") %>%
+          mutate(EstCost = CostDistEstWIP) %>%
+          arrange(EstCost)
+      }else{
+
+        PointTreeWIP <- TmpPtsWIP %>%
+          filter(type == "Overlay") %>%
+          mutate(EstCost = apply(CostDistEstWIP,1, min)) %>%
+          arrange(EstCost)
+
+      }
+
+      TmpPtsWIP <- rbind(TmpPtsWIP %>% filter(type == "Access") %>% mutate(EstCost = NA),PointTreeWIP[1,])
+
+      TmpPathWIP <- AdjTopoLCP(costSurface = CondSurf,DEM = DEMmean , pts = TmpPtsWIP %>% as_Spatial(),
+                               slopeRdCond = SlopeCond,paths = FALSE)
+
+      TmpPathWIPCost <- TmpPathWIP[1:dim(PointAcc)[1],dim(PointAcc)[1]+1]
+
+      LCPathWIP <- max.col(t(-TmpPathWIPCost))
+
+      TmpPtsWIP <- rbind(TmpPtsWIP[LCPathWIP,],PointTreeWIP[1,])
+
+      TmpPathWIP <- AdjTopoLCP(costSurface = CondSurf,DEM = DEMmean , pts = TmpPtsWIP %>% as_Spatial(),
+                               slopeRdCond = SlopeCond,paths = TRUE)
+
+      CostRasterMean  <- rasterize(x = TmpPathWIP[[2]] ,
+                                   y = CostRasterMean  ,
+                                   field = 0.3,update =  TRUE)
+
+      pathLines[[k]] <- TmpPathWIP[[2]]
+      pathLines[[k]]@lines[[1]]@ID <- paste("Path",
+                                            LCPathWIP,
+                                            "-",
+                                            paste(as.character(unlist(PointTreeWIP$origins[1][[1]])),
+                                                  collapse='.'),
+                                            sep = " ")
+
+      k <- k +1
+
+
+      if (Grpl2CblFlag) {
+
+        ptsWIPCbl$Logged<- FALSE
+        for (j in 1:dim(ptsWIPCbl)[1]) {
+          ptsWIPCbl$Logged[j] <- prod(as.integer(PointTreeWIP$origins[1][[1]] %in% ptsWIPCbl$origins[[j]])+1) != 1
+        }
+        ptsWIPCbl[ptsWIPCbl$Logged == TRUE,"Logged"] <- NA
+        ptsWIPCbl <- na.exclude(ptsWIPCbl)
+        ptsWIPCbl <- ptsWIPCbl %>%
+          dplyr::select(-Logged) %>%
+          arrange(desc(n.overlaps))
+      }else{
+
+
+        ptsWIP$Logged<- FALSE
+
+
+
+        for (j in 1:dim(ptsWIP)[1]) {
+          ptsWIP$Logged[j] <- prod(as.integer(PointTreeWIP$origins[1][[1]] %in% ptsWIP$origins[[j]])+1) != 1
+        }
+
+        ptsWIP[ptsWIP$Logged == TRUE,"Logged"] <- NA
+        ptsWIP <- na.exclude(ptsWIP)
+
+        ptsWIP <- ptsWIP %>%
+          dplyr::select(-Logged) %>%
+          arrange(desc(n.overlaps))
+
+        if (winching == "2") {
+
+
+          ptsWIPCbl$Logged<- FALSE
+          for (j in 1:dim(ptsWIPCbl)[1]) {
+            ptsWIPCbl$Logged[j] <- prod(as.integer(PointTreeWIP$origins[1][[1]] %in% ptsWIPCbl$origins[[j]])+1) != 1
+          }
+          ptsWIPCbl[ptsWIPCbl$Logged == TRUE,"Logged"] <- NA
+          ptsWIPCbl <- na.exclude(ptsWIPCbl)
+          ptsWIPCbl <- ptsWIPCbl %>%
+            dplyr::select(-Logged) %>%
+            arrange(desc(n.overlaps))
+        }
+
+      }
+
+
+
+
+      if (dim(ptsWIP %>% filter(type == "Tree"))[1] == 0 & WinchingSwitch == FALSE) {
+        winching <- "1"
+        ptsWIP <- ptsWIPCbl
+        WinchingSwitch <- TRUE
+      }
+
+
+      if (winching == "2") {
+        RemainTree <- dim(ptsWIP %>% filter(type == "Tree"))[1] + dim(ptsWIPCbl %>% filter(type == "Tree"))[1]
+      }else{
+        RemainTree <- dim(ptsWIP %>% filter(type == "Tree"))[1]
+      }
+
+
+
+    }
+    paths <- do.call(rbind, pathLines)
+
+    secondtrails <- paths %>%
+      st_as_sf()  %>%
+      smoothr::smooth(method = "ksmooth",smoothness = 5) %>%
+      st_buffer(dist = advancedloggingparameters$ScndTrailWidth) %>%
+      st_union()
+
+    return(secondtrails)
+
+  }
+
+
+
+}

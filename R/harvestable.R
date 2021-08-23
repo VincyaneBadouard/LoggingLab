@@ -16,11 +16,17 @@
 #'@param specieslax Allow diversification if stand is too poor, = FALSE by
 #'  default (logical)
 #'
+#'@param exploitpolygones Accessible area of the inventoried plot
+#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
+#'
+#'@param maintrails Main trails defined at the entire harvestable area (sf polylines)
+#'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
+#'
 #'
 #'@return Your inventory with the exploitability criteria, and if they are
 #'  validated for each of the trees. The function returns the harvestable volume
@@ -44,8 +50,10 @@
 #' @examples
 #'
 #' data(Paracou6_2016)
+
 #' data(DTMParacou)
 #' data(PlotSlope)
+#' data(ExploitPolygones)
 #' data(SpeciesCriteria)
 #'
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
@@ -53,16 +61,20 @@
 #'
 #' inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 #'
-#' test <- harvestable(inventory, topography = DTMParacou,
-#' diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
+#' test <- harvestable(inventory, topography = DTMParacou,exploitpolygones = ExploitPolygones,
+#' diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,maintrails = Maintrails,
 #' advancedloggingparameters = loggingparameters())
 #'
 harvestable <- function(
   inventory,
   topography,
   diversification,
+  winching,
   specieslax = FALSE,
-  plotslope,
+  DTM = DTMParacou,
+  exploitpolygones = ExploitPolygones,
+  maintrails = MainTrails,
+  plotslope = PlotSlope,
   advancedloggingparameters = loggingparameters()
 ){
 
@@ -71,11 +83,15 @@ harvestable <- function(
   if(!inherits(inventory, "data.frame"))
     stop("The 'inventory' argument of the 'harvestable' function must be a data.frame")
 
+  if(!inherits(exploitpolygones, "sf"))
+    stop("The 'exploitpolygones' argument of the 'harvestable' function must be a sfc object")
+
   if(!any(unlist(lapply(list(diversification, specieslax), inherits, "logical"))))
     stop("The 'diversification' and 'specieslax' arguments of the 'harvestable' function must be logical") # any() don't take a list
 
   if(!any(unlist(lapply(list(topography, plotslope), inherits, "RasterLayer"))))
     stop("The 'topography' and 'plotslope' arguments of the 'harvestable' function must be RasterLayer")
+
 
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
@@ -110,6 +126,13 @@ harvestable <- function(
   SpatInventory <- st_as_sf(SpatInventory) %>%  # transformer l'inventaire spatialisé en objet sf
     add_column(DistCrit = FALSE) # Créer une colonne DistCrit FALSE par défaut
 
+  accesspolygones <- FilterAccesExplArea(exploitpolygones = exploitpolygones,
+                                         maintrails = maintrails,
+                                         winching = winching,
+                                         advancedloggingparameters =  advancedloggingparameters)
+
+  UpCrit <- sf::st_intersects(SpatInventory,sf::st_union(accesspolygones),sparse = FALSE)
+  SpatInventory <-  SpatInventory %>%  mutate(UpCrit = UpCrit)
   # i = 1
   # ProgressBar <- txtProgressBar(min = 0, max = nrow(SpatInventory),style = 3) # barre de progression du calcul
 
@@ -151,7 +174,7 @@ harvestable <- function(
       condition = Slope <= atan(advancedloggingparameters$TreeMaxSlope/100), # si pente <= 22% l'arbre est exploitable (on est en radian)
       TRUE,
       FALSE)) %>%
-    dplyr::select(idTree, DistCrit, Slope, SlopeCrit)
+    dplyr::select(idTree, DistCrit, Slope, SlopeCrit,UpCrit)
 
   inventory <- inventory %>%
     left_join(SlopeCritInventory, by = "idTree") %>%
@@ -170,7 +193,7 @@ harvestable <- function(
   HarverstableConditions <- HarverstableConditions & (inventory$DBH >= inventory$MinFD & inventory$DBH <= inventory$MaxFD) # harvestable individuals, accord by their DBH
 
   #select spatially
-  HarverstableConditions <- HarverstableConditions & (inventory$DistCrit == TRUE & inventory$SlopeCrit == TRUE) # !is.null(ProspectionUnitCode) &
+  HarverstableConditions <- HarverstableConditions & (inventory$DistCrit == TRUE & inventory$SlopeCrit == TRUE) & (inventory$UpCrit == TRUE)
   ## in a PU
   ## slope
   ## isolement
