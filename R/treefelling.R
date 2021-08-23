@@ -26,8 +26,9 @@
 #'
 #' @export
 #'
-#' @importFrom dplyr group_by do left_join
-#' @importFrom sf st_as_text
+#' @importFrom dplyr group_by do left_join mutate select
+#' @importFrom tibble add_column
+#' @importFrom sf st_as_sf st_as_text st_geometry
 #' @importFrom tidyr unnest
 #'
 #' @examples
@@ -67,10 +68,22 @@
 #' directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
 #' advancedloggingparameters = loggingparameters())
 #'
+#' Treefall <- inventory %>%
+#'    dplyr::filter(DeathCause == "treefall2nd")
+#'
+#' Reserve <- inventory %>%
+#'    dplyr::filter(LoggingStatus == "reserve")
+#'
+#' Future <- inventory %>%
+#'    dplyr::filter(LoggingStatus == "future")
+#'
 #' library(ggplot2)
 #' ggplot() +
 #'   geom_sf(data = sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
-#'   geom_sf(data = getgeometry (inventory, TreePolygon), fill = "red") # trees polygons
+#'   geom_sf(data = getgeometry (inventory, TreePolygon), fill = "red") + # cuted trees
+#'   geom_sf(data = sf::st_as_sf(Treefall, coords = c("Xutm", "Yutm")), colour = "yellow") +
+#'   geom_sf(data = sf::st_as_sf(Reserve, coords = c("Xutm", "Yutm")), colour = "green") +
+#'   geom_sf(data = sf::st_as_sf(Future, coords = c("Xutm", "Yutm")), colour = "pink")
 #'
 #' sf::st_intersection( # trees under the fallen trees
 #'   getgeometry (inventory, TreePolygon),
@@ -178,16 +191,36 @@ treefelling <- function(
 
 
   # Mortality A FAIRE
+
+  # Records the felled trees
+  if (!("DeathCause" %in% names(inventory))){
+    inventory <- inventory %>%
+      add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
+  }
+
+  inventory <- inventory %>%
+    mutate(DeathCause = ifelse(is.na(DeathCause) & !is.na(TreePolygon) & ProbedHollow == "0",
+                               "cutted", DeathCause)) %>% # timber exploitation
+    mutate(DeathCause = ifelse(is.na(DeathCause) & !is.na(TreePolygon) & ProbedHollow == "1",
+                               "fuelwood", DeathCause)) # fuel wood exploitation
+
   # Trees under the fallen trees
-  # st_intersection(
-  #   felttrees,
-  #   st_as_sf(inventory, coords = c("Xutm", "Yutm"))
-  # )
-  #
-  # felttrees <- felttrees %>%
-  #   st_as_text(FallenTree) %>% # as text to easy join with a non spacial table
-  #   tidyr::unnest(TreePolygon) # here to pass from list to character
-  #
+  felttrees <- select(felttrees, -idTree) # remove pol infos to keep the information of the points
+
+  DeadTrees <- suppressWarnings(sf::st_intersection(
+    st_as_sf(inventory, coords = c("Xutm", "Yutm")),
+    getgeometry(felttrees, TreePolygon)
+  )) %>%
+    add_column(DeadTrees = "1") %>%
+    select(idTree, DeadTrees)
+  sf::st_geometry(DeadTrees) <- NULL # remove TreePolygon column (sf to data.frame)
+  DeadTrees <- unique(DeadTrees)
+
+  inventory <- inventory %>%
+    left_join(DeadTrees, by = "idTree") %>%
+    mutate(DeathCause = ifelse(is.na(DeathCause) & is.na(TreePolygon) & DeadTrees == "1",
+                               "treefall2nd", DeathCause)) %>%  # Damage trees
+    select(-DeadTrees)
 
 
   return(inventory)

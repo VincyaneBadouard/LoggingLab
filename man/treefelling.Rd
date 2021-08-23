@@ -81,10 +81,22 @@ inventory <- treefelling(inventory, scenario = "manual", fuel = "0",
 directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
 advancedloggingparameters = loggingparameters())
 
+Treefall <- inventory \%>\%
+   dplyr::filter(DeathCause == "treefall2nd")
+
+Reserve <- inventory \%>\%
+   dplyr::filter(LoggingStatus == "reserve")
+
+Future <- inventory \%>\%
+   dplyr::filter(LoggingStatus == "future")
+
 library(ggplot2)
 ggplot() +
   geom_sf(data = sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
-  geom_sf(data = getgeometry (inventory, TreePolygon), fill = "red") # trees polygons
+  geom_sf(data = getgeometry (inventory, TreePolygon), fill = "red") + # cuted trees
+  geom_sf(data = sf::st_as_sf(Treefall, coords = c("Xutm", "Yutm")), colour = "yellow") +
+  geom_sf(data = sf::st_as_sf(Reserve, coords = c("Xutm", "Yutm")), colour = "green") +
+  geom_sf(data = sf::st_as_sf(Future, coords = c("Xutm", "Yutm")), colour = "pink")
 
 sf::st_intersection( # trees under the fallen trees
   getgeometry (inventory, TreePolygon),

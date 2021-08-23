@@ -64,46 +64,51 @@
 #   tidyr::unnest(TreePolygon) # here to pass from list to character
 #
 #
-# inventory1 <- left_join(inventory, felttrees, by = "idTree")
+# inventory <- left_join(inventory, felttrees, by = "idTree")
 #
 #
 # # Mortality A FAIRE
 #
 # # Records the felled trees
-# if (!("DeathCause" %in% names(inventory1))){
-#   inventory2 <- inventory1 %>%
+# if (!("DeathCause" %in% names(inventory))){
+#   inventory2 <- inventory %>%
 #     add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
 # }
 #
-# inventory3 <- inventory1 %>%
+# inventory2 <- inventory2 %>%
 #   mutate(DeathCause = ifelse(is.na(DeathCause) & !is.na(TreePolygon) & ProbedHollow == "0",
 #                              "cutted", DeathCause)) %>% # timber exploitation
 #   mutate(DeathCause = ifelse(is.na(DeathCause) & !is.na(TreePolygon) & ProbedHollow == "1",
 #                              "fuelwood", DeathCause)) # fuel wood exploitation
-# felttrees <- select(felttrees, -idTree)
 #
 # # Trees under the fallen trees
+# felttrees <- select(felttrees, -idTree) # to keep the information of the points
+#
+# neigbour <- inventory2 %>%
+#   filter(Selected != "1"| is.na(Selected)) %>%
+#   filter(Selected != "deselected" | is.na(Selected))
+#
 # DeadTrees <- sf::st_intersection(
-#   st_as_sf(inventory3, coords = c("Xutm", "Yutm")),
+#   st_as_sf(inventory, coords = c("Xutm", "Yutm")), # getgeometry(neigbour, Crowns)
 #   getgeometry(felttrees, TreePolygon)
 # ) %>%
-#   # filter(Selected != "1" | is.na(Selected)) %>% # not the cutted trees
 #   add_column(DeadTrees = "1") %>%
 #   select(idTree, DeadTrees)
 # sf::st_geometry(DeadTrees) <- NULL # remove TreePolygon column (sf to data.frame)
-# # DeadTrees <- unique(DeadTrees)
+# DeadTrees <- unique(DeadTrees)
 #
-# inventory4 <- inventory3 %>%
+# inventory3 <- inventory2 %>%
 #   left_join(DeadTrees, by = "idTree") %>%
 #   mutate(DeathCause = ifelse(is.na(DeathCause) & is.na(TreePolygon) & DeadTrees == "1",
-#                              "treefall2nd", DeathCause)) # Damage trees
+#                              "treefall2nd", DeathCause)) %>%  # Damage trees
+#   select(-DeadTrees)
 #
-# treefall2nd <- inventory4 %>%
+# treefall2nd <- inventory3 %>%
 #   filter(DeadTrees == "1")
 #
 # sf::st_intersection( # trees under the fallen trees
-#   getgeometry (inventory1, TreePolygon),
-#   sf::st_as_sf(inventory1, coords = c("Xutm", "Yutm"))
+#   getgeometry (inventory, TreePolygon),
+#   sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))
 # ) %>%
 #   ggplot() +
 #   geom_sf() +
@@ -111,6 +116,6 @@
 #
 #
 # ggplot() +
-#   geom_sf(data = sf::st_as_sf(inventory1, coords = c("Xutm", "Yutm"))) +
-#   geom_sf(data = getgeometry (inventory1, TreePolygon), fill = "red") # trees polygons
-
+#   geom_sf(data = sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
+#   geom_sf(data = getgeometry (inventory, TreePolygon), fill = "red") # trees polygons
+#
