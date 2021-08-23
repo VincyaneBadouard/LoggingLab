@@ -32,6 +32,14 @@
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
 #'
+#'@param exploitpolygones Accessible area of the inventoried plot
+#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
+#'
+#'@param maintrails Main trails defined at the entire harvestable area (sf polylines)
+#'
+#'@param speciescriteria Table of species exploitability criteria : species
+#'  names, economic interest level, minimum and maximum felling diameter, in the
+#'  same format of \code{\link{SpeciesCriteria}} (data.frame)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
@@ -81,9 +89,15 @@ treeselection <- function(
   objective,
   fuel,
   diversification,
+  winching,
   specieslax = FALSE,
   objectivelax = FALSE,
-  plotslope,
+  DTM = DTMParacou,
+  plotslope = PlotSlope,
+  exploitpolygones = ExploitPolygones,
+  maintrails = MainTrails,
+  speciescriteria = SpeciesCriteria,
+
   advancedloggingparameters = loggingparameters()
   # MainTrail
 
@@ -141,11 +155,12 @@ treeselection <- function(
 
   # Redefinition of the parameters according to the chosen scenario
   scenariosparameters <- scenariosparameters(scenario = scenario, objective = objective, fuel = fuel,
-                                             diversification = diversification)
+                                             diversification = diversification, winching = winching)
 
   objective <- scenariosparameters$objective
   fuel <- scenariosparameters$fuel
   diversification <- scenariosparameters$diversification
+  winching <- winching
 
   # Function
 
@@ -170,14 +185,18 @@ treeselection <- function(
 
   }
 
+
   inventory <- ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria) # Joins commercial criteria to the inventory
 
   VisibleDefectTable <- filter(inventory, VisibleDefect == "1")
   inventory <- filter(inventory, VisibleDefect == "0") # we continue with just visibly healthy trees
 
-  harvestableOutputs <- harvestable(inventory,                                               # harvestable function
-    diversification = diversification, specieslax = specieslax,
-    topography = topography, plotslope = plotslope, advancedloggingparameters = advancedloggingparameters)
+  harvestableOutputs <- harvestable(                                                      # harvestable function
+    ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria),           
+    diversification = diversification, winching = winching ,specieslax = specieslax,
+    DTM = DTM, plotslope = plotslope,exploitpolygones = exploitpolygones, maintrails = maintrails,
+    advancedloggingparameters = loggingparameters())
+
 
   inventory <- harvestableOutputs$inventory                                        # one of the output
 
@@ -247,6 +266,20 @@ treeselection <- function(
 
   } else {ReserveTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
+  # Points vector with coordinates of the big trees (DBH >= 50 cm):
+
+  BigTreesPoints <- inventory %>%
+    filter(DBH >= advancedloggingparameters$BigTrees & ( Selected != "1"& LoggingStatus != "harvestable" & LoggingStatus != "harvestableUp" & LoggingStatus != "harvestable2nd" ))
+
+  if (dim(BigTreesPoints)[1] != 0) {
+
+    sp::coordinates(BigTreesPoints) <- ~ Xutm + Yutm
+
+    sp::proj4string(BigTreesPoints) <- raster::crs(DEM)
+
+    BigTreesPoints <- st_as_sf(as(BigTreesPoints,"SpatialPoints"))
+  } else {BigTreesPoints = st_point(x = c(NA_real_, NA_real_))}
+
   #where specieslax was not necessary, consider eco2s as non-exploitable:
   inventory <- inventory %>%
     mutate(LoggingStatus = ifelse(HVinit > VO & LoggingStatus == "harvestable2nd", "non-harvestable", LoggingStatus)) %>%
@@ -262,11 +295,12 @@ treeselection <- function(
                                FutureTreesPoints = FutureTreesPoints,
                                ReserveTreesPoints = ReserveTreesPoints,
                                HollowTreesPoints = HollowTreesPoints,
-                               EnergywoodTreesPoints = EnergywoodTreesPoints)
+                               EnergywoodTreesPoints = EnergywoodTreesPoints,
+                               BigTreesPoints = BigTreesPoints)
 
 
 
   return(treeselectionOutputs) # return the new inventory, the objective volume,
-  # and the 4 points vectors (Harvestable, Selected, Future and Reserve,
-  # Hollow and Energywood Trees)
+  # and the 5 points vectors (Harvestable, Selected, Future, Reserve,
+  # Hollow, Energywood and Big trees)
 }
