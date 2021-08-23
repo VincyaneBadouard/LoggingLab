@@ -46,10 +46,12 @@ HarvestableAreaDefinition <- function(plot = Plots,
   plotTib <-
     dplyr::left_join(plotSlopePoint, HCriqueplotPoint, by = c('x', 'y'))
 
+    SlpCrit <- atan(advancedloggingparameters$MaxAreaSlope/100)
+
   plotTib %>% dplyr::rename("HauteurCrique" = names(plotTib[4]))  %>%
     mutate(Exploit = if_else(
       condition = HauteurCrique > 2 &
-        slope <= atan(advancedloggingparameters$MaxAreaSlope/100), # on est en radians pour la pente, donc .264 radians = 27% de pente
+        slope <= SlpCrit , # on est en radians pour la pente, donc .264 radians = 27% de pente
       true = 1,
       false = 0
     )) -> plotSlopeHCrique

@@ -300,11 +300,8 @@ ggplot() + geom_raster(data = DfDEM, aes(x =x , y = y, fill = z)) +
                                   as_Spatial(),
                                 slopeRdCond = SlopeCond,
                                 paths = FALSE) [,1:dim(AccessPoint)[1]]
-  CostDistEst <- CostDistEst[(dim(PointAcc)[1]+1):dim(CostDistEst)[1],1:dim(PointAcc)[1]]
-    
-  CostDistEst <- matrix(CostDistEst,ncol = dim(PointAcc)[1] )
-  
-  
+  CostDistEst[CostDistEst == 0] <- NA
+  CostDistEst <- na.exclude(CostDistEst)
   PointTree <- pts %>% filter(type == "Tree") %>% 
       mutate(ptAcc = max.col(-CostDistEst))
   PointTree$ID <- as.factor(PointTree$ptAcc)
@@ -327,11 +324,8 @@ ggplot() + geom_raster(data = DfDEM, aes(x =x , y = y, fill = z)) +
                                   as_Spatial(),
                                 slopeRdCond = SlopeCond,
                                 paths = FALSE) [,1:dim(PointAcc)[1]]
-  CostDistEst <- CostDistEst[(dim(PointAcc)[1]+1):dim(CostDistEst)[1],1:dim(PointAcc)[1]]
-    
-  CostDistEst <- matrix(CostDistEst,ncol = dim(PointAcc)[1] )
-  
-  
+  CostDistEst[CostDistEst == 0] <- NA
+  CostDistEst <- na.exclude(CostDistEst)
   PointTree <- pts %>% filter(type == "Tree") %>% 
         mutate(ptAcc = max.col(-CostDistEst))
   if (dim(PointAcc)[1] == 1) {
@@ -462,14 +456,11 @@ ggplot() + geom_raster(data = DfDEM, aes(x =x , y = y, fill = z)) +
     
     CostDistEstCbl <- CostDistEstCbl[(dim(PointAcc)[1]+1):dim(CostDistEstCbl)[1],1:dim(PointAcc)[1]]
     
-    CostDistEstCbl <- matrix(CostDistEstCbl,ncol = dim(PointAcc)[1] )
-    
     PointTree <- ptsWIPmax %>% filter(type == "Tree") %>% 
-        mutate(ptAccCbl = max.col(- CostDistEstCbl,ties.method = "first"))
+        mutate(ptAccCbl = max.col(-matrix(CostDistEstCbl,ncol = dim(PointAcc)[1] ),ties.method = "first"))
       
-    
     if (dim(PointAcc)[1] == 1) {
-      PointTree <- PointTree %>% mutate(EstCostCbl = CostDistEstCbl)
+      PointTree <- PointTree %>% mutate(EstCostCbl = matrix(CostDistEstCbl,ncol = dim(PointAcc)[1] ))
     }else{
       PointTree <- PointTree %>% mutate(EstCostCbl = apply(CostDistEstCbl,1, min))
       }
@@ -487,16 +478,15 @@ ggplot() + geom_raster(data = DfDEM, aes(x =x , y = y, fill = z)) +
                                 paths = FALSE) [,1:dim(PointAcc)[1]]
 
         CostDistEstGrpl <- CostDistEstGrpl[(dim(PointAcc)[1]+1):dim(CostDistEstGrpl)[1],1:dim(PointAcc)[1]]
-        CostDistEstGrpl <- matrix(CostDistEstGrpl,ncol = dim(PointAcc)[1] )
         
         
         PointTree <- PointTree %>% 
-          mutate(ptAccGpl = max.col(-matrix(CostDistEstGrpl,ncol = dim(PointAcc)[1] ),ties.method = "first")) 
+          mutate(ptAccGpl = max.col(-t(CostDistEstGrpl),ties.method = "first")) 
         
           if (dim(PointAcc)[1] == 1) {
             PointTree <- PointTree %>% mutate(EstCostGrpl = CostDistEstGrpl)
           }else{
-              PointTree <- PointTree %>% mutate(EstCostGrpl = apply(matrix(CostDistEstGrpl,ncol = dim(PointAcc)[1] ),1, min))}
+              PointTree <- PointTree %>% mutate(EstCostGrpl = apply(CostDistEstGrpl,1, min))}
         
         CostDistEstGrpl[CostDistEstGrpl != Inf] <- 0
         CostDistEstGrpl[CostDistEstGrpl == Inf] <- 1
@@ -597,8 +587,6 @@ ggplot() + geom_raster(data = DfDEM, aes(x =x , y = y, fill = z)) +
                               slopeRdCond = SlopeCond,paths = FALSE)[,1:dim(PointAcc)[1]]
             
             CostDistEstWIP <- CostDistEstWIP[(dim(PointAcc)[1]+1):dim(CostDistEstWIP)[1],]
-            
-            CostDistEstWIP <- matrix(CostDistEstWIP, ncol = dim(PointAcc)[1])
             
           if (dim(PointAcc)[1] == 1) {
             PointTreeWIP <- TmpPtsWIP %>% 
@@ -719,11 +707,11 @@ ggplot() + geom_raster(data = DfDEM, aes(x =x , y = y, fill = z)) +
 ```{r}
   paths <- do.call(rbind, pathLines)
   
-    df <-  as_tibble(rasterToPoints(CostRasterMean)) %>% mutate( Cost = layer) %>% dplyr::select(-layer)
+    df <-  as_tibble(rasterToPoints(CostRasterMeanGrpl)) %>% mutate( Cost = layer) %>% dplyr::select(-layer)
   df2 <- as_tibble(rasterToPoints(DEM)) %>% mutate( z = Topo_P6_PARACOU) %>% dplyr::select(-Topo_P6_PARACOU)
   df3 <- as_tibble(rasterToPoints(raster(SlopeCond))) %>% mutate( AccSlp = layer) %>% dplyr::select(-layer)
   ggplot() +
-    geom_raster(data = df, aes(x =x , y = y, fill = Cost)) +  geom_sf(data = pts) + scale_fill_gradientn(colours = rev(terrain.colors(225)))  + geom_sf( data = sf::st_as_sf(paths))    + geom_sf(data =  paths %>% st_as_sf()  %>% smoothr::smooth(method = "ksmooth",smoothness = 5) %>% st_buffer(dist = advancedloggingparameters$ScndTrailWidth) %>% st_union(), color = 'red', alpha = 0.1 )  + theme_bw()
+    geom_raster(data = df, aes(x =x , y = y, fill = Cost)) +  geom_sf(data = pts) + scale_fill_gradientn(colours = rev(terrain.colors(225)))  + geom_sf( data = sf::st_as_sf(paths))    + geom_sf(data =  paths %>% st_as_sf()  %>% smoothr::smooth(method = "ksmooth",smoothness = 5) %>% st_buffer(dist = 4) %>% st_union(), color = 'red', alpha = 0.1 )  + theme_bw()
 ```
 
 

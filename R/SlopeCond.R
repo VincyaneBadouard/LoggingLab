@@ -3,6 +3,7 @@
 #' @param DEM A RasterLayer for digital elevation model (DEM) data.
 #' @param fact numeric (default = 3). The reduction factor of aggregated DEM.
 #' @param advancedloggingparameters Other parameters of the logging simulator.
+#' @param grapple boolean (default = FALSE).Use grapple in harvest.
 #'
 #' @return
 #' @export
@@ -18,7 +19,8 @@
 #'
 SlopeRdCond <- function(DEM,
              fact=1,
-             advancedloggingparameters = loggingparameters()){
+             advancedloggingparameters = loggingparameters(),
+             grapple = FALSE){
 
 DEMmean <- aggregate(DEM, fact=fact, fun=mean) # aggregate DEM by the reduction factor
 
@@ -180,7 +182,13 @@ s.distTr[adjCorr[,c(1,2)]] <- as.numeric(atan(s.dist[adjCorr[,c(1,3)]]) <  SlpTr
 # Transversal weight : longitudinal link = binary(atan(Tr slope) < atan(slope Tr limit)) * (atan(slope Tr limit) - atan(Tr slope))/atan(slope Tr limit) +
 # (1 - binary(atan(Tr slope) < atan(slope Tr limit)) * 1E-6 (inversibility condition : != 0 )
 
-SlpLg <- atan(advancedloggingparameters$MaxTrailCenterlineSlope/100) # longitudinal condition
+if (grapple == TRUE) {
+  SlpLg <- atan(advancedloggingparameters$GrappleMaxslope/100) # longitudinal condition
+}else{
+  SlpLg <- atan(advancedloggingparameters$MaxTrailCenterlineSlope/100) # longitudinal condition
+}
+
+
 
 s.distLg <- s.dist
 s.distLg[adjCorr[,c(1,2)]] <- as.numeric(atan(s.dist[adjCorr[,c(1,2)]]) <  SlpLg & s.dist[adjCorr[,c(1,2)]] != 0) * (SlpLg - atan(s.dist[adjCorr[,c(1,2)]]))/(SlpLg) +  (1- as.numeric(atan(s.dist[adjCorr[,c(1,2)]]) <=  SlpLg &
