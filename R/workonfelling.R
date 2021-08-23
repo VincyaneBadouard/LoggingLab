@@ -113,3 +113,4 @@
 # ggplot() +
 #   geom_sf(data = sf::st_as_sf(inventory1, coords = c("Xutm", "Yutm"))) +
 #   geom_sf(data = getgeometry (inventory1, TreePolygon), fill = "red") # trees polygons
+
