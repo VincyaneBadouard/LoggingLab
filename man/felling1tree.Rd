@@ -36,7 +36,12 @@ reserve trees + track orientation)}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-
+A list with: FallenTree: a MULTIPOLYGON of the tree oriented
+according to the chosen scenario. Foot: a point for the base of the tree
+(the rotation fixed point). NearestPoints: a linestring for the shortest
+path from the base of the tree to the nearest trail, Trail: the union of
+the main and the secondary trails. TrailPt: the point on the Trail closest
+to the location of the tree.
 }
 \description{
 Simulates the tree (multipolygon) falling towards the trail or

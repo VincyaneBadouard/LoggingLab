@@ -244,14 +244,17 @@ loggingsimulation <- function(
   # # Landings implementation: (only for ONF plots)
   #
   # # Timber harvested volume quantification
-  # Timberoutputs <- timberharvestedvolume(inventory, fuel = fuel, advancedloggingparameters = advancedloggingparameters)
+  # Timberoutputs <- timberharvestedvolume(inventory,
+  # scenario = scenario, fuel = fuel, advancedloggingparameters = advancedloggingparameters)
   #
   # LoggedVolume <- Timberoutputs$LoggedVolume
   # NoHollowLoggedVolume <- Timberoutputs$NoHollowLoggedVolume
   #
   #
   # # Exploitable fuel wood volume quantification
-  # Fueloutputs <- exploitablefuelwoodvolume(inventory, fuel = fuel, advancedloggingparameters = advancedloggingparameters)
+  # Fueloutputs <- exploitablefuelwoodvolume(inventory,
+  # scenario = scenario, fuel = fuel, advancedloggingparameters = advancedloggingparameters,
+  #'LoggedVolume = LoggedVolume, NoHollowLoggedVolume = NoHollowLoggedVolume)
   #
   # DamageVolume <- Fueloutputs$DamageVolume # only damage (without purge and hollow trees)
   # FuelVolume <- Fueloutputs$FuelVolume

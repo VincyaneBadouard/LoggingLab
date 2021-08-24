@@ -3,6 +3,10 @@
 #' @param inventory Your inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
 #'
+#' @param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+#'   \code{\link{vignette}})
+#'
 #' @param fuel Fuel wood exploitation: no exploitation = "0", damage
 #'   exploitation in fuelwood = "1", exploitation of hollow trees and damage in
 #'   fuelwood = "2"
@@ -16,29 +20,26 @@
 #'
 #' @export
 #'
-#' @examples
+#' @importFrom dplyr filter
 #'
-#' \dontrun{
+#' @examples
 #' data(Paracou6_2016)
 #'
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
-#' inventory <- treeselection(inventory, SpeciesCriteria,
-#' scenario ="manual", fuel = "2", objective = 20, diversification = TRUE, specieslax = FALSE,
-#' objectivelax = FALSE, advancedloggingparameters = loggingparameters())$inventory
+#' inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
+#'  fuel = "2", diversification = TRUE, specieslax = FALSE,
+#'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
+#'  speciescriteria = SpeciesCriteria,
+#'  advancedloggingparameters = loggingparameters())$inventory)
 #'
-#' inventory <- secondtrailsopening()$inventory
-#'
-#' inventory <- treefelling()$inventory
-#'
-#' inventory <- adjustedsecondtrails()$inventory
-#'
-#' timberharvestedvolume(inventory, fuel = "2", advancedloggingparameters = loggingparameters())
-#' }
+#' timberharvestedvolume(inventory, scenario = "manual", fuel = "2",
+#' advancedloggingparameters = loggingparameters())
 #'
 timberharvestedvolume <- function(
   inventory,
+  scenario,
   fuel,
   advancedloggingparameters = loggingparameters()
 ){
@@ -53,27 +54,44 @@ timberharvestedvolume <- function(
   NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
   PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
-  SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
+  SpeciesCriteria  <- geometry <- idTree <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
-  TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
-  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
+  TreeHeight <- TrunkHeight <- Up <- UpMinFD  <- NULL
   VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
-  alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
-  beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
 
   # Arguments check
+  if(!inherits(inventory, "data.frame"))
+    stop("The 'inventory' argument of the 'timberharvestedvolume' function must be a data.frame")
 
+  if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"||
+           scenario == "RIL3"|| scenario == "RIL3fuel"||
+           scenario == "RIL3fuelhollow"|| scenario =="manual"))
+    stop("The 'scenario' argument of the 'timberharvestedvolume' function must be
+         'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
+
+  if (!any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
+    stop("The 'fuel' argument of the 'timberharvestedvolume' function must be '0', '1', '2' or NULL")
+
+  if(!inherits(advancedloggingparameters, "list"))
+    stop("The 'advancedloggingparameters' argument of the 'timberharvestedvolume' function must be a list")
+
+
+  # Redefinition of the parameters according to the chosen scenario
+  scenariosparameters <- scenariosparameters(scenario = scenario, fuel = fuel)
+
+  fuel <- scenariosparameters$fuel
+
+
+  # Function
   LoggedTable <- inventory %>%
-    filter(Logged == "1")
+    filter(Selected == "1") # Logged trees
+
+  Healthy <- sum(LoggedTable$TreeHarvestableVolume)
 
   if (fuel !="2") {                    # no hollow trees exploitation
 
-    LoggedVolume <- sum(LoggedTable$TreeHarvestableVolume)
-
-    outputs <- list(LoggedVolume = LoggedVolume,
-                    NoHollowLoggedVolume = NULL
-    )
+    NoHollowLoggedVolume <- LoggedVolume <- Healthy
 
   }
 
@@ -82,14 +100,23 @@ timberharvestedvolume <- function(
     HollowTable <- inventory %>%
       filter(ProbedHollow == "1")
 
-    NoHollowLoggedVolume <- sum(LoggedTable$TreeHarvestableVolume)
-    LoggedVolume <- sum(NoHollowLoggedVolume +
-                          1-(advancedloggingparameters$TreeHollowPartForFuel)*(HollowTable$TreeHarvestableVolume))
+    NoHollowLoggedVolume <- Healthy
 
-    outputs <- list(LoggedVolume = LoggedVolume,
-                    NoHollowLoggedVolume = NoHollowLoggedVolume
-    )
+    if(nrow(HollowTable) > 0){
+      # heathy + (1 -part for fuel) * hollow's volume)
+      LoggedVolume <- sum(NoHollowLoggedVolume +
+                            (1-advancedloggingparameters$TreeHollowPartForFuel) *
+                               HollowTable$TreeHarvestableVolume)
+    }else if(nrow(HollowTable) == 0){
+
+      LoggedVolume <- NoHollowLoggedVolume # no probed hollow trees
+    }
+
   }
+
+  outputs <- list(LoggedVolume = LoggedVolume,
+                  NoHollowLoggedVolume = NoHollowLoggedVolume
+  )
 
 
   return(outputs)
