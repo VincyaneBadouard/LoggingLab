@@ -119,7 +119,7 @@ treefelling <- function(
   if (!any(directionalfelling == "0" || directionalfelling == "1" || directionalfelling == "2" || is.null(directionalfelling)))
     stop("The 'directionalfelling' argument of the 'treefelling' function must be '0', '1', '2' or NULL")
 
-  if(!any(unlist(lapply(list(MainTrail, ScndTrail), inherits, "sfg"))))
+  if(!all(unlist(lapply(list(MainTrail, ScndTrail), inherits, "sfg"))))
     stop("The 'MainTrail' and 'ScndTrail' arguments of the 'treefelling' function must be sfg")
 
 
@@ -190,7 +190,7 @@ treefelling <- function(
 
 
 
-  # Mortality A FAIRE
+  # Mortality
 
   # Records the felled trees
   if (!("DeathCause" %in% names(inventory))){
@@ -489,7 +489,12 @@ rotatepolygon <- function(
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
 #'
-#' @return
+#' @return A list with: FallenTree: a MULTIPOLYGON of the tree oriented
+#'   according to the chosen scenario. Foot: a point for the base of the tree
+#'   (the rotation fixed point). NearestPoints: a linestring for the shortest
+#'   path from the base of the tree to the nearest trail, Trail: the union of
+#'   the main and the secondary trails. TrailPt: the point on the Trail closest
+#'   to the location of the tree.
 #'
 #' @seealso \code{\link{loggingparameters}}
 #'
@@ -588,7 +593,7 @@ felling1tree <- function(
            || directionalfelling == "2" || is.null(directionalfelling)))
     stop("The 'directionalfelling' argument of the 'felling1tree' function must be '0', '1', '2' or NULL")
 
-  if(!any(unlist(lapply(list(MainTrail, ScndTrail), inherits, "sfg"))))
+  if(!all(unlist(lapply(list(MainTrail, ScndTrail), inherits, "sfg"))))
     stop("The 'MainTrail' and 'ScndTrail' arguments of the 'felling1tree' function must be sfg")
 
   if(!inherits(advancedloggingparameters, "list"))

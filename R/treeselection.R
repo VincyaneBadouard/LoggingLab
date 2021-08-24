@@ -91,7 +91,7 @@ treeselection <- function(
 
   # Arguments check
 
-  if(!any(unlist(lapply(list(inventory, speciescriteria), inherits, "data.frame"))))
+  if(!all(unlist(lapply(list(inventory, speciescriteria), inherits, "data.frame"))))
     stop("The 'inventory' and 'speciescriteria' arguments of the 'treeselection' function must be data.frame")
 
   if(!any(inherits(objective, "numeric") || is.null(objective)))
@@ -100,7 +100,7 @@ treeselection <- function(
   if(!any(inherits(diversification, "logical") || is.null(diversification)))
     stop("The 'diversification' argument of the 'treeselection' function must be logical or NULL")
 
-  if(!any(unlist(lapply(list(specieslax, objectivelax), inherits, "logical"))))
+  if(!all(unlist(lapply(list(specieslax, objectivelax), inherits, "logical"))))
     stop("The 'specieslax' and 'objectivelax' arguments of the 'treeselection' function must be logicals")
 
   if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"|| scenario == "RIL3"|| scenario == "RIL3fuel"||
@@ -110,7 +110,7 @@ treeselection <- function(
   if (!any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
     stop("The 'fuel' argument of the 'treeselection' function must be '0', '1', or '2'")
 
-  if(!any(unlist(lapply(list(topography, plotslope), inherits, "RasterLayer"))))
+  if(!all(unlist(lapply(list(topography, plotslope), inherits, "RasterLayer"))))
     stop("The 'topography' and 'plotslope' arguments of the 'treeselection' function must be RasterLayer")
 
   if(!inherits(advancedloggingparameters, "list"))

@@ -23,15 +23,10 @@
 #'
 #' @export
 #'
-#' @importFrom dplyr filter
-#' @importFrom dplyr select
-#' @importFrom dplyr left_join
-#' @importFrom dplyr mutate
-#' @importFrom dplyr rename
+#' @importFrom dplyr filter select left_join mutate rename
 #' @importFrom tidyr unite
 #' @importFrom rlang .data
-#' @importFrom BIOMASS getWoodDensity
-#' @importFrom BIOMASS computeAGB
+#' @importFrom BIOMASS getWoodDensity computeAGB
 #'
 #' @examples
 #' data(Paracou6_2016)
@@ -55,7 +50,7 @@ addtreedim <- function(
 ){
 
   # Arguments check
-  if(!any(unlist(lapply(list(inventory, crowndiameterparameters, volumeparameters), inherits, "data.frame"))))
+  if(!all(unlist(lapply(list(inventory, crowndiameterparameters, volumeparameters), inherits, "data.frame"))))
     stop("The function arguments must be data.frames") # any() don't take a list
 
   if(!inherits(advancedloggingparameters, "list"))

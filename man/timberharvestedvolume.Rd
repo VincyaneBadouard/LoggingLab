@@ -6,6 +6,7 @@
 \usage{
 timberharvestedvolume(
   inventory,
+  scenario,
   fuel,
   advancedloggingparameters = loggingparameters()
 )
@@ -13,6 +14,10 @@ timberharvestedvolume(
 \arguments{
 \item{inventory}{Your inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
+
+\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+\code{\link{vignette}})}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", damage
 exploitation in fuelwood = "1", exploitation of hollow trees and damage in
@@ -30,24 +35,18 @@ NoHollowLoggedVolume = NULL when fuel = "0" or "1
 timberharvestedvolume
 }
 \examples{
-
-\dontrun{
 data(Paracou6_2016)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
 
-inventory <- treeselection(inventory, SpeciesCriteria,
-scenario ="manual", fuel = "2", objective = 20, diversification = TRUE, specieslax = FALSE,
-objectivelax = FALSE, advancedloggingparameters = loggingparameters())$inventory
+inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
+ fuel = "2", diversification = TRUE, specieslax = FALSE,
+ objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
+ speciescriteria = SpeciesCriteria,
+ advancedloggingparameters = loggingparameters())$inventory)
 
-inventory <- secondtrailsopening()$inventory
-
-inventory <- treefelling()$inventory
-
-inventory <- adjustedsecondtrails()$inventory
-
-timberharvestedvolume(inventory, fuel = "2", advancedloggingparameters = loggingparameters())
-}
+timberharvestedvolume(inventory, scenario = "manual", fuel = "2",
+advancedloggingparameters = loggingparameters())
 
 }

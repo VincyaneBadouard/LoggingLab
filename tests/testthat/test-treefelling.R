@@ -2,6 +2,9 @@ test_that("treefelling", {
 
   # Test data
   data(Paracou6_2016)
+  data(DTMParacou)
+  data(PlotSlope)
+
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
   MatrixInventory <- as.matrix(Paracou6_2016)
 
@@ -26,14 +29,14 @@ test_that("treefelling", {
                       ,ncol=2, byrow=TRUE))
 
   PolList = list(pol1,pol2)
-  ScndTrail <- st_multipolygon(PolList)
+  ScndTrail <- sf::st_multipolygon(PolList)
 
   inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
   inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
-                             fuel = "0", diversification = TRUE, specieslax = FALSE,
-                             objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
-                             speciescriteria = SpeciesCriteria,
-                             advancedloggingparameters = loggingparameters())$inventory)
+                                              fuel = "2", diversification = TRUE, specieslax = FALSE,
+                                              objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
+                                              speciescriteria = SpeciesCriteria,
+                                              advancedloggingparameters = loggingparameters())$inventory)
 
   testinventory <- treefelling(inventory, scenario = "manual", fuel = "2",
                                directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
@@ -87,6 +90,44 @@ test_that("treefelling", {
 
 
   expect_true(nrow(inventory) == nrow(testinventory)) # check that the rows number don't change
+
+
+  # Mortality
+  # timber exploitation
+  Cutted <- testinventory %>%
+    dplyr::filter(!is.na(TreePolygon) & ProbedHollow == "0")
+
+  expect_true(all(Cutted$DeathCause == "cutted"))
+
+  # fuel wood exploitation
+  Fuel <- testinventory %>%
+    dplyr::filter(!is.na(TreePolygon) & ProbedHollow == "1")
+
+  expect_true(all(Fuel$DeathCause == "fuelwood"))
+
+  # Damage trees
+  felttrees <- testinventory %>% # Cutted trees (timber and fuel)
+    filter(!is.na(TreePolygon)) %>%
+    select(TreePolygon)
+
+    DeadTrees <- suppressWarnings(sf::st_intersection(
+    st_as_sf(testinventory, coords = c("Xutm", "Yutm")),
+    getgeometry(felttrees, TreePolygon)
+  )) %>%
+      filter(Selected != "1"| is.na(Selected)) %>% # not already cutted trees
+      filter(Selected != "deselected"| is.na(Selected)) %>%
+      arrange(idTree)
+
+  Damage <- testinventory %>%
+    dplyr::filter(is.na(TreePolygon) & !is.na(DeathCause)) %>%  # & DeadTrees == "1"
+    arrange(idTree)
+
+  expect_true(nrow(Damage) == nrow(DeadTrees)) # damages = intersections
+
+  expect_true(all(Damage$idTree == DeadTrees$idTree)) # damages = intersections
+
+  expect_true(all(Damage$DeathCause == "treefall2nd")) # damages -> treefall2nd
+
 
 
 })

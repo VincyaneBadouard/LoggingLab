@@ -33,7 +33,8 @@ test_that("selected", {
                regexp = "The 'inventory' argument of the 'selected' function must be a data.frame")
 
   expect_error(suppressMessages(selected(inventory, diversification = "1", specieslax = 2, objectivelax = "a")),
-               regexp = "The 'diversification', 'specieslax' and 'objectivelax' arguments of the 'selected' function must be logical")
+               regexp = "The 'diversification', 'specieslax' and 'objectivelax' arguments
+         of the 'selected' function must be logical")
 
   #   expect_error(suppressMessages(selected(inventory, diversification = TRUE, scenario = "CL")),
   #                regexp = "The 'scenario' argument of the 'selected' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")

@@ -89,8 +89,10 @@ selected <- function(
   if(!inherits(inventory, "data.frame"))
     stop("The 'inventory' argument of the 'selected' function must be a data.frame")
 
-  if(!all(unlist(lapply(list(diversification, specieslax, objectivelax), inherits, "logical"))) && !is.null(diversification))
-    stop("The 'diversification', 'specieslax' and 'objectivelax' arguments of the 'selected' function must be logical") # any() don't take a list
+  if(!all(unlist(lapply(list(diversification, specieslax, objectivelax), inherits, "logical")))
+     && !is.null(diversification))
+    stop("The 'diversification', 'specieslax' and 'objectivelax' arguments
+         of the 'selected' function must be logical")
 
   # if (!any(scenario == "RIL1" | scenario == "RIL2broken"| scenario == "RIL2"| scenario == "RIL3"| scenario == "RIL3fuel"|
   #          scenario == "RIL3fuelhollow"| scenario == "manual"))

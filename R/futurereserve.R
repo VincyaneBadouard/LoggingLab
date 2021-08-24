@@ -18,6 +18,8 @@
 #'
 #' @export
 #'
+#' @importFrom dplyr mutate
+#'
 #' @examples
 #' data(Paracou6_2016)
 #' data(ParamCrownDiameterAllometry)
@@ -56,7 +58,7 @@ futurereserve <- function(
 
   # Arguments check
 
-  # if(!any(unlist(lapply(list(inventory, speciescriteria), inherits, "data.frame"))))
+  # if(!all(unlist(lapply(list(inventory, speciescriteria), inherits, "data.frame"))))
   #   stop("The 'inventory' and 'speciescriteria' arguments of the 'futurereserve' function must be data.frame")
   #
   # if(!inherits(advancedloggingparameters, "list"))

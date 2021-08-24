@@ -96,7 +96,7 @@ fuel wood volume and damages quantification.
 \dontrun{
 data(Paracou6_2016) # inventory
 data(DTMParacou) # topography
-# relative elevation
+# data() relative elevation
 data(SpeciesCriteria) # species exploitability criteria
 data(ForestZoneVolumeParametersTable) # volume parameters
 data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry

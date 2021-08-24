@@ -71,10 +71,10 @@ harvestable <- function(
   if(!inherits(inventory, "data.frame"))
     stop("The 'inventory' argument of the 'harvestable' function must be a data.frame")
 
-  if(!any(unlist(lapply(list(diversification, specieslax), inherits, "logical"))))
+  if(!all(unlist(lapply(list(diversification, specieslax), inherits, "logical"))))
     stop("The 'diversification' and 'specieslax' arguments of the 'harvestable' function must be logical") # any() don't take a list
 
-  if(!any(unlist(lapply(list(topography, plotslope), inherits, "RasterLayer"))))
+  if(!all(unlist(lapply(list(topography, plotslope), inherits, "RasterLayer"))))
     stop("The 'topography' and 'plotslope' arguments of the 'harvestable' function must be RasterLayer")
 
   # Global variables

@@ -6,6 +6,8 @@
 #' @return Stop the function if the format is not the one required.
 #' @export
 #'
+#' @importFrom dplyr filter mutate
+#'
 #' @examples
 #'
 #' data(Paracou6_2016)

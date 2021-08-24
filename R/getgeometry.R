@@ -43,10 +43,10 @@ getgeometry  <- function(
   if(!inherits(inventory, "data.frame"))
     stop("The 'inventory' argument of the 'getgeometry ' function must be data.frame")
 
-  # if(class(var) == "character") # chais pas comment l'écrire
+  # if(class(var) == "character") # doest work
   #   stop("The 'var' argument of the 'getgeometry ' function must be a variable of your data.frame")
 
-  # if(!inherits(inventory[,col_name], "character")) # ne marche pas lors du check...weird
+  # if(!inherits(inventory[,col_name], "character")) # doest work during the check...weird
   #   stop("The column filled in the 'var' argument of the 'getgeometry ' function must be of type character")
 
   inventory %>%

@@ -17,6 +17,8 @@
 #'
 #' @export
 #'
+#' @importFrom dplyr filter select left_join mutate rename
+#'
 #' @examples
 #' data(Paracou6_2016)
 #' data(SpeciesCriteria)
@@ -30,7 +32,7 @@ ONFGuyafortaxojoin <- function(
 
   # Arguments check
 
-    if(!any(unlist(lapply(list(inventory, speciescriteria), inherits, "data.frame"))))
+    if(!all(unlist(lapply(list(inventory, speciescriteria), inherits, "data.frame"))))
     stop("The function arguments must be data.frames") # any() don't take a list
 
   # speciescriteria columns check
