@@ -103,7 +103,7 @@ test_that("treefelling", {
   Fuel <- testinventory %>%
     dplyr::filter(!is.na(TreePolygon) & ProbedHollow == "1")
 
-  expect_true(all(Fuel$DeathCause == "fuelwood"))
+  expect_true(all(Fuel$DeathCause == "hollowfuel"))
 
   # Damage trees
   felttrees <- testinventory %>% # Cutted trees (timber and fuel)

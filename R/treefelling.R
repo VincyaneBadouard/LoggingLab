@@ -202,7 +202,7 @@ treefelling <- function(
     mutate(DeathCause = ifelse(is.na(DeathCause) & !is.na(TreePolygon) & ProbedHollow == "0",
                                "cutted", DeathCause)) %>% # timber exploitation
     mutate(DeathCause = ifelse(is.na(DeathCause) & !is.na(TreePolygon) & ProbedHollow == "1",
-                               "fuelwood", DeathCause)) # fuel wood exploitation
+                               "hollowfuel", DeathCause)) # fuel wood exploitation
 
   # Trees under the fallen trees
   felttrees <- select(felttrees, -idTree) # remove pol infos to keep the information of the points
