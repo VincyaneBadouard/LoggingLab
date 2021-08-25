@@ -7,8 +7,8 @@
 #'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'   \code{\link{vignette}})
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damage
-#'   exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
+#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
 #'   fuelwood = "2"
 #'
 #' @param directionalfelling Directional felling = "0" (absent), "1" (only to
@@ -135,13 +135,12 @@ treefelling <- function(
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
   DeathCause <- DistCrit <- Family <- CrownHeight <- CrownDiameter <- NULL
-  ForestZoneVolumeParametersTable <- Genus <- Logged <- TreePolygon <- NULL
-  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- Crowns <- NULL
+  Genus <- Logged <- TreePolygon <- NULL
+  LoggingStatus <- MaxFD <- MaxFD.genus <- Crowns <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
-  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
-  PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
-  SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
+  ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
+  Selected <- SlopeCrit <- Species <- Species.genus <- NULL
+  Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
   UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
@@ -162,7 +161,7 @@ treefelling <- function(
     inventory,
     fuel = fuel,
     directionalfelling = directionalfelling,
-    advancedloggingparameters = loggingparameters())
+    advancedloggingparameters = advancedloggingparameters)
 
 
   # Future/reserve trees to avoid
@@ -182,7 +181,7 @@ treefelling <- function(
                       fuel = fuel, directionalfelling = directionalfelling,
                       MainTrail = MainTrail, ScndTrail = ScndTrail,
                       FutureReserveCrowns = FutureReserveCrowns,
-                      advancedloggingparameters = loggingparameters())$FallenTree %>%
+                      advancedloggingparameters = advancedloggingparameters)$FallenTree %>%
          st_as_text()) %>% # as text to easy join with a non spacial table
     tidyr::unnest(TreePolygon) # here to pass from list to character
 
@@ -237,8 +236,8 @@ treefelling <- function(
 #' @param inventory your inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damage
-#'   exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
+#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
 #'   fuelwood = "2"
 #'
 #' @param directionalfelling Directional felling = "0" (absent), "1" (only to
@@ -294,12 +293,12 @@ directionalfellingsuccessdef <- function(
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
   DeathCause <- DistCrit <- Family <- CrownHeight <- CrownDiameter <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- TreePolygon <- NULL
-  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
+  LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
-  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
-  PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
-  SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
+  ParamCrownDiameterAllometry <- NULL
+  ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
+  Selected <- SlopeCrit <- Species <- Species.genus <- NULL
+  Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
   UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
@@ -472,9 +471,8 @@ rotatepolygon <- function(
 #' @param dat 1 row data.frame with columns: Xutm, Yutm, CrownDiameter,
 #'   CrownHeight, DBH, TrunkHeight, TreeHeight, TreeFellingOrientationSuccess
 #'
-#'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damage
-#'   exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
+#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
 #'   fuelwood = "2"
 #'
 #' @param directionalfelling Directional felling = "0" (absent), "1" (only to
@@ -603,13 +601,12 @@ felling1tree <- function(
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
   DeathCause <- DistCrit <- Family <- CrownHeight <- CrownDiameter <- NULL
-  ForestZoneVolumeParametersTable <- Genus <- Logged <- TreePolygon <- NULL
-  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
+  Genus <- Logged <- TreePolygon <- NULL
+  LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
-  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
-  PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
-  SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
+  ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
+  Selected <- SlopeCrit <- Species <- Species.genus <- NULL
+  Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
   UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL

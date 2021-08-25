@@ -3,8 +3,8 @@
 #'@param inventory your inventory (see the inputs formats and metadata in the
 #'  \code{\link{vignette}}) (data.frame)
 #'
-#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
-#'  (default: \code{\link{DTMParacou}}) (RasterLayer)
+#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
+#'  or SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the
@@ -16,8 +16,9 @@
 #'
 #'@param objective Objective volume per hectare (numeric)
 #'
-#'@param fuel Fuel wood exploitation: no exploitation = "0", damage exploitation
-#'  in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"
+#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
+#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
+#'   fuelwood = "2"
 #'
 #'@param diversification Taking of other species in addition to the main
 #'  commercial species (2 levels of commercial species in the
@@ -39,9 +40,10 @@
 #'@return A list with: - your inventory with: "DistCrit", "Slope", "SlopeCrit",
 #'  "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
 #'  "ProbedHollow" new columns (see the outputs metadata in the
-#'  \code{\link{vignette}}). - the objective volume with or without a bonus (if
-#'  hollow trees exploitation) - 6 sets of spatial points: harvestable,
-#'  selected, future and reserve, hollow and energy wood trees
+#'  \code{\link{vignette}}). - your objective volume with or without a bonus (if
+#'  hollow trees exploitation) - the harvestable volume with your initial
+#'  criteria - 6 sets of spatial points: harvestable, selected, future and
+#'  reserve, hollow and energy wood trees
 #'
 #'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{DTMParacou}}, \code{\link{PlotSlope}},
@@ -126,9 +128,9 @@ treeselection <- function(
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
   DeathCause <- DistCrit <- Family <- VisibleDefect <- LogDBH <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- VisibleDefectProba <- NULL
-  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
+  TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
-  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
+  NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
   PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
@@ -179,11 +181,11 @@ treeselection <- function(
     diversification = diversification, specieslax = specieslax,
     topography = topography, plotslope = plotslope, advancedloggingparameters = advancedloggingparameters)
 
-  inventory <- harvestableOutputs$inventory                                        # one of the output
+  inventory <- harvestableOutputs$inventory       # one of the output
 
-  HVinit <- harvestableOutputs$HVinit                                              # the other output: initial harvestable volume
+  HVinit <- harvestableOutputs$HVinit             # the other output: initial harvestable volume
 
-  selectedOutputs <- selected(                                                     # outputs of the selected function
+  selectedOutputs <- selected(                    # outputs of the selected function
     inventory,
     scenario = scenario, fuel = fuel, diversification = diversification,
     specieslax = specieslax, objectivelax = objectivelax, topography = topography,
@@ -257,6 +259,7 @@ treeselection <- function(
   # OUTPUTS list
   treeselectionOutputs <- list(inventory = inventory,
                                VO = VO,
+                               HVinit = HVinit,
                                HarvestableTreesPoints = HarvestableTreesPoints,
                                SelectedTreesPoints = SelectedTreesPoints,
                                FutureTreesPoints = FutureTreesPoints,

@@ -7,16 +7,16 @@
 #'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'   \code{\link{vignette}})
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damage
-#'   exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
+#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
 #'   fuelwood = "2"
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
 #'
-#' @return A list with the logged volume (LoggedVolume)
-#' and when fuel = "2", the logged volume without the hollow trees (NoHollowLoggedVolume),
-#' NoHollowLoggedVolume = NULL when fuel = "0" or "1
+#' @return A list with the logged volume (TimberLoggedVolume)
+#' and when fuel = "2", the logged volume without the hollow trees (NoHollowTimberLoggedVolume).
+#' NoHollowTimberLoggedVolume = the logged volume (TimberLoggedVolume) when fuel = "0" or "1".
 #'
 #' @export
 #'
@@ -49,9 +49,9 @@ timberharvestedvolume <- function(
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
   DeathCause <- DistCrit <- Family <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
-  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
+  TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
-  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
+  NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
   PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
   SpeciesCriteria  <- geometry <- idTree <- NULL
@@ -91,7 +91,7 @@ timberharvestedvolume <- function(
 
   if (fuel !="2") {                    # no hollow trees exploitation
 
-    NoHollowLoggedVolume <- LoggedVolume <- Healthy
+    NoHollowTimberLoggedVolume <- TimberLoggedVolume <- Healthy
 
   }
 
@@ -100,22 +100,22 @@ timberharvestedvolume <- function(
     HollowTable <- inventory %>%
       filter(ProbedHollow == "1")
 
-    NoHollowLoggedVolume <- Healthy
+    NoHollowTimberLoggedVolume <- Healthy
 
     if(nrow(HollowTable) > 0){
       # heathy + (1 -part for fuel) * hollow's volume)
-      LoggedVolume <- sum(NoHollowLoggedVolume +
+      TimberLoggedVolume <- sum(NoHollowTimberLoggedVolume +
                             (1-advancedloggingparameters$TreeHollowPartForFuel) *
                                HollowTable$TreeHarvestableVolume)
     }else if(nrow(HollowTable) == 0){
 
-      LoggedVolume <- NoHollowLoggedVolume # no probed hollow trees
+      TimberLoggedVolume <- NoHollowTimberLoggedVolume # no probed hollow trees
     }
 
   }
 
-  outputs <- list(LoggedVolume = LoggedVolume,
-                  NoHollowLoggedVolume = NoHollowLoggedVolume
+  outputs <- list(TimberLoggedVolume = TimberLoggedVolume,
+                  NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume
   )
 
 

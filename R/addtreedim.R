@@ -1,5 +1,5 @@
-#' Compute tree dimensions (Height, diameter, harvestable volume, including
-#' crown)
+#' Compute tree dimensions (tree and crown height and diameter, harvestable
+#' volume, wood density, and AGB)
 #'
 #' @param inventory Your inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
@@ -18,8 +18,10 @@
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
 #'
-#' @return inventory (data.frame) with additional variables (TreeHeight,
-#'   TreeHarvestableVolume, TrunkHeight, CrownHeight, CrownDiameter)
+#' @return inventory (data.frame) with additional variables: TreeHeight (m),
+#'   TreeHarvestableVolume (m^3), TrunkHeight (m), CrownHeight (m),
+#'   CrownDiameter (m), estimated 'WoodDensity' (g/cm^3) and tree above-ground
+#'   biomass ('AGB') (in Mg)
 #'
 #' @export
 #'
@@ -61,9 +63,9 @@ addtreedim <- function(
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
   DeathCause <- DistCrit <- Family  <- Zone <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
-  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
+  TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
-  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
+  NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
   PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
@@ -144,7 +146,7 @@ addtreedim <- function(
     mutate(CrownDiameter = advancedloggingparameters$CrownDiameterAllometry(DBH, TreeHeight, alpha, beta)) %>%
     dplyr::select(-aCoef, -bCoef, -alpha, -beta, -Zone)
 
-  # Estimating wood density (g/cm^3)
+  # Estimated wood density (g/cm^3)
   WDDetails <- getWoodDensity(inventory$Genus, inventory$Species, inventory$Family, region = "World", verbose = FALSE)
 
   #RESULTS :
@@ -166,7 +168,7 @@ addtreedim <- function(
   inventory <- inventory %>%
     left_join(WDDetails, by = c("Genus","Species")) %>%
 
-    # Tree Above-Ground Biomass (AGB) (in Mg (or ton))
+    # Tree Above-Ground Biomass (AGB) (in Mg)
     mutate(AGB = computeAGB(DBH, WoodDensity, TreeHeight))
 
 

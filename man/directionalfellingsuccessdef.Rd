@@ -15,8 +15,8 @@ directionalfellingsuccessdef(
 \item{inventory}{your inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
-\item{fuel}{Fuel wood exploitation: no exploitation = "0", damage
-exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", damages and purge
+exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
 fuelwood = "2"}
 
 \item{directionalfelling}{Directional felling = "0" (absent), "1" (only to

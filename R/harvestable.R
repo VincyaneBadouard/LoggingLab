@@ -82,9 +82,9 @@ harvestable <- function(
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
   DeathCause <- DistCrit <- Family <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
-  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
+  TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
-  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
+  NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
   PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
@@ -194,5 +194,6 @@ harvestable <- function(
   HVinit <- sum(HarvestableTable$TreeHarvestableVolume) #compute the harvestable volume in the plot for these criteria
 
   harvestableOutputs <- list(inventory = inventory, HVinit = HVinit)
+
   return(harvestableOutputs) # return the new inventory and the HVinit
 }

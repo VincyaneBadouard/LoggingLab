@@ -49,8 +49,8 @@ volume of each tree, depend to its geographic zone if several locations
 
 \item{objective}{Objective volume per hectare (numeric)}
 
-\item{fuel}{Fuel wood exploitation: no exploitation = "0", damage
-exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", damages and purge
+exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
 fuelwood = "2"}
 
 \item{diversification}{Taking of other species in addition to the main
@@ -101,11 +101,11 @@ data(SpeciesCriteria) # species exploitability criteria
 data(ForestZoneVolumeParametersTable) # volume parameters
 data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 
-loggingsimulation(inventory = Paracou6_2016, topography = DTMParacou,
- relativeelevation, speciescriteria = SpeciesCriteria,
+Rslt <- loggingsimulation(Paracou6_2016, topography = DTMParacou,
+ relativeelevation  = DTMParacou, speciescriteria = SpeciesCriteria,
  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
- objective = 20, fuel = "2", diversification = TRUE, winching,
- directionalfelling = "2", specieslax = FALSE, objectivelax = FALSE,
+ objective = 20, fuel = "2", diversification = TRUE, winching = "2",
+ directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
  crowndiameterparameters = ParamCrownDiameterAllometry,
  advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
  }

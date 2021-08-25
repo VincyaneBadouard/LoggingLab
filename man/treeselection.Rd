@@ -22,8 +22,8 @@ treeselection(
 \item{inventory}{your inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
-\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM)
-(default: \code{\link{DTMParacou}}) (RasterLayer)}
+\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
+or SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the
@@ -35,8 +35,9 @@ same format of \code{\link{SpeciesCriteria}} (data.frame)}
 
 \item{objective}{Objective volume per hectare (numeric)}
 
-\item{fuel}{Fuel wood exploitation: no exploitation = "0", damage exploitation
-in fuelwood = "1", exploitation of hollow trees and damage in fuelwood = "2"}
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", damages and purge
+exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
+fuelwood = "2"}
 
 \item{diversification}{Taking of other species in addition to the main
 commercial species (2 levels of commercial species in the
@@ -58,9 +59,10 @@ neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 A list with: - your inventory with: "DistCrit", "Slope", "SlopeCrit",
 "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
 "ProbedHollow" new columns (see the outputs metadata in the
-\code{\link{vignette}}). - the objective volume with or without a bonus (if
-hollow trees exploitation) - 6 sets of spatial points: harvestable,
-selected, future and reserve, hollow and energy wood trees
+\code{\link{vignette}}). - your objective volume with or without a bonus (if
+hollow trees exploitation) - the harvestable volume with your initial
+criteria - 6 sets of spatial points: harvestable, selected, future and
+reserve, hollow and energy wood trees
 }
 \description{
 Tree selection

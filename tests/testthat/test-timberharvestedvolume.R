@@ -53,33 +53,33 @@ test_that("timberharvestedvolume", {
                regexp = "The 'advancedloggingparameters' argument of the 'timberharvestedvolume' function must be a list")
 
   # fuel !="2"
-  expect_true(Rslt$NoHollowLoggedVolume == Rslt$LoggedVolume) # no hollow trees exploitation
-  expect_true(Rslt$LoggedVolume == Healthy) # the selected trees volume
+  expect_true(Rslt$NoHollowTimberLoggedVolume == Rslt$TimberLoggedVolume) # no hollow trees exploitation
+  expect_true(Rslt$TimberLoggedVolume == Healthy) # the selected trees volume
 
   # fuel =="2"
-  expect_true(RsltHollow$NoHollowLoggedVolume == Healthy) # the selected healthy trees volume
+  expect_true(RsltHollow$NoHollowTimberLoggedVolume == Healthy) # the selected healthy trees volume
 
   if(nrow(HollowTable) > 0)
-    expect_true(RsltHollow$LoggedVolume == sum(RsltHollow$NoHollowLoggedVolume +
+    expect_true(RsltHollow$TimberLoggedVolume == sum(RsltHollow$NoHollowTimberLoggedVolume +
                                                  (1-advancedloggingparameters$TreeHollowPartForFuel) *
                                                  HollowTable$TreeHarvestableVolume))
 
   if(nrow(HollowTable) == 0)
-    expect_true(RsltHollow$LoggedVolume == RsltHollow$NoHollowLoggedVolume) # no probed hollow trees
+    expect_true(RsltHollow$TimberLoggedVolume == RsltHollow$NoHollowTimberLoggedVolume) # no probed hollow trees
 
 })
 
 # fuel !="2"
-## NoHollowLoggedVolume = LoggedVolume = sum(LoggedTable$TreeHarvestableVolume)
+## NoHollowTimberLoggedVolume = TimberLoggedVolume = sum(LoggedTable$TreeHarvestableVolume)
 
 # fuel =="2"
-## LoggedVolume =
-### - if(nrow(HollowTable) > 0): sum(NoHollowLoggedVolume +
+## TimberLoggedVolume =
+### - if(nrow(HollowTable) > 0): sum(NoHollowTimberLoggedVolume +
 # (1-advancedloggingparameters$TreeHollowPartForFuel)*
 #    HollowTable$TreeHarvestableVolume)
-### - if(nrow(HollowTable) == 0): NoHollowLoggedVolume
+### - if(nrow(HollowTable) == 0): NoHollowTimberLoggedVolume
 
-## NoHollowLoggedVolume = sum(LoggedTable$TreeHarvestableVolume)
+## NoHollowTimberLoggedVolume = sum(LoggedTable$TreeHarvestableVolume)
 
 
 

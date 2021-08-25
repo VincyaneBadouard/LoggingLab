@@ -10,8 +10,8 @@
 #'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'   \code{\link{vignette}})
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damage
-#'   exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
+#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
 #'   fuelwood = "2"
 #'
 #' @param diversification Taking of other species in addition to the main
@@ -123,9 +123,9 @@ selected <- function(
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
   DeathCause <- DistCrit <- Family <- ONFName <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
-  LoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
+  TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
-  NoHollowLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
+  NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
   PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL

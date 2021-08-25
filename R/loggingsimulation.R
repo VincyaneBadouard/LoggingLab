@@ -30,8 +30,8 @@
 #'
 #' @param objective Objective volume per hectare (numeric)
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damage
-#'   exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
+#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
 #'   fuelwood = "2"
 #'
 #' @param diversification Taking of other species in addition to the main
@@ -78,6 +78,12 @@
 #'
 #' @export
 #'
+#'@importFrom dplyr filter mutate select left_join bind_rows
+#'@importFrom sf st_as_sf st_point
+#'@importFrom raster crs extract
+#'@importFrom topoDistance topoDist
+#'@importFrom methods as
+#'
 #' @examples
 #' \dontrun{
 #' data(Paracou6_2016) # inventory
@@ -87,11 +93,11 @@
 #' data(ForestZoneVolumeParametersTable) # volume parameters
 #' data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 #'
-#' loggingsimulation(inventory = Paracou6_2016, topography = DTMParacou,
-#'  relativeelevation, speciescriteria = SpeciesCriteria,
+#' Rslt <- loggingsimulation(Paracou6_2016, topography = DTMParacou,
+#'  relativeelevation  = DTMParacou, speciescriteria = SpeciesCriteria,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
-#'  objective = 20, fuel = "2", diversification = TRUE, winching,
-#'  directionalfelling = "2", specieslax = FALSE, objectivelax = FALSE,
+#'  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
+#'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
 #'  crowndiameterparameters = ParamCrownDiameterAllometry,
 #'  advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
 #'  }
@@ -196,89 +202,132 @@ loggingsimulation <- function(
   winching <- scenariosparameters$winching
   directionalfelling <- scenariosparameters$directionalfelling
 
+  INPUTinventory <- inventory
+
+  # Function
 
 
-  # # Function
-  #
-  # # inventorycheckformat, addtreedim, treeselection, treefelling, timberharvestedvolume, exploitablefuelwoodvolume
-  #
-  # # Check & format the inventory + add the tree dimensions:
-  # inventory <- addtreedim(inventorycheckformat(inventory),
-  #                         volumeparameters = volumeparameters,
-  #                         crowndiameterparameters = crowndiameterparameters,
-  #                         advancedloggingparameters = advancedloggingparameters)
-  #
+  # Check & format the inventory + add the tree dimensions:
+  inventory <- addtreedim(inventorycheckformat(inventory),
+                          volumeparameters = volumeparameters,
+                          crowndiameterparameters = crowndiameterparameters,
+                          advancedloggingparameters = advancedloggingparameters)
+
   # # Harvestable area definition: A FAIRE
   #
   #
   # # Main trails layout: (only for ONF plots)
   #
   #
-  # # Tree selection (harvestable, future and reserve trees + defects trees):
-  # treeselectionoutputs <- treeselection(inventory, topography = topography,
-  #                                       scenario = scenario, objective = objective,
-  #                                       fuel = fuel, diversification = diversification, specieslax = specieslax,
-  #                                       objectivelax = objectivelax, plotslope = plotslope,
-  #                                       speciescriteria = speciescriteria,
-  #                                       advancedloggingparameters = advancedloggingparameters)
-  #
-  # VO <- treeselectionoutputs$VO
-  # HarvestableTreesPoints <- treeselectionoutputs$HarvestableTreesPoints
-  # SelectedTreesPoints <- treeselectionoutputs$SelectedTreesPoints
-  # FutureTreesPoints <- treeselectionoutputs$FutureTreesPoints
-  # ReserveTreesPoints <- treeselectionoutputs$ReserveTreesPoints
-  # HollowTreesPoints <- treeselectionoutputs$HollowTreesPoints
-  # EnergywoodTreesPoints <- treeselectionoutputs$EnergywoodTreesPoints
-  #
+  # Tree selection (harvestable, future and reserve trees + defects trees):
+  plotslope <- PlotSlope # A SUPPRIMER
+  treeselectionoutputs <- treeselection(inventory, topography = topography,
+                                        scenario = scenario, objective = objective,
+                                        fuel = fuel, diversification = diversification, specieslax = specieslax,
+                                        objectivelax = objectivelax, plotslope = plotslope,
+                                        speciescriteria = speciescriteria,
+                                        advancedloggingparameters = advancedloggingparameters)
+
+  inventory <- treeselectionoutputs$inventory
+  VO <- treeselectionoutputs$VO
+  HVinit <- treeselectionoutputs$HVinit
+  HarvestableTreesPoints <- treeselectionoutputs$HarvestableTreesPoints
+  SelectedTreesPoints <- treeselectionoutputs$SelectedTreesPoints
+  FutureTreesPoints <- treeselectionoutputs$FutureTreesPoints
+  ReserveTreesPoints <- treeselectionoutputs$ReserveTreesPoints
+  HollowTreesPoints <- treeselectionoutputs$HollowTreesPoints
+  EnergywoodTreesPoints <- treeselectionoutputs$EnergywoodTreesPoints
+
   # # Secondary trails layout (preliminaries for fuel wood harvesting): A FAIRE
   #
-  #
-  # # Tree felling:
-  # inventory <- treefelling(inventory, scenario = scenario, fuel = fuel,
-  #                          directionalfelling = directionalfelling, MainTrail = MainTrail, ScndTrail = ScndTrail,
-  #                          advancedloggingparameters = advancedloggingparameters)
-  #
-  #
-  # # Adjusted secondary trails layout (for fuel wood harvesting only) A FAIRE
-  #
-  # # Landings implementation: (only for ONF plots)
-  #
-  # # Timber harvested volume quantification
-  # Timberoutputs <- timberharvestedvolume(inventory,
-  # scenario = scenario, fuel = fuel, advancedloggingparameters = advancedloggingparameters)
-  #
-  # LoggedVolume <- Timberoutputs$LoggedVolume
-  # NoHollowLoggedVolume <- Timberoutputs$NoHollowLoggedVolume
-  #
-  #
-  # # Exploitable fuel wood volume quantification
-  # Fueloutputs <- exploitablefuelwoodvolume(inventory,
-  # scenario = scenario, fuel = fuel, advancedloggingparameters = advancedloggingparameters,
-  # LoggedVolume = LoggedVolume, NoHollowLoggedVolume = NoHollowLoggedVolume)
-  #
-  # DamageVolume <- Fueloutputs$DamageVolume # only damage (without purge and hollow trees)
-  # FuelVolume <- Fueloutputs$FuelVolume
-  #
-  #
-  #
-  #
-  # Outputs <- list(inventory = inventory,
-  #
-  #                 VO = VO,
-  #                 LoggedVolume = LoggedVolume,
-  #                 NoHollowLoggedVolume = NoHollowLoggedVolume,
-  #                 DamageVolume = DamageVolume, # only damage (without purge and hollow trees)
-  #                 FuelVolume = FuelVolume,
-  #
-  #                 HarvestableTreesPoints = HarvestableTreesPoints,
-  #                 SelectedTreesPoints = SelectedTreesPoints,
-  #                 FutureTreesPoints = FutureTreesPoints,
-  #                 ReserveTreesPoints = ReserveTreesPoints,
-  #                 HollowTreesPoints = HollowTreesPoints,
-  #                 EnergywoodTreesPoints
-  # )
-  # #
-  # return(Outputs)
+#
+  MainTrail <- sf::st_linestring(matrix(c(286400, 583130, # A SUPPRIMER
+                                          286400, 583250,
+                                          286655, 583250,
+                                          286655, 583130,
+                                          286400, 583130) # the return
+                                        ,ncol=2, byrow=TRUE))
+
+  pol1 <- list(matrix(c(286503, 583134,
+                        286503, 583240,
+                        286507, 583240,
+                        286507, 583134,
+                        286503, 583134) # the return
+                      ,ncol=2, byrow=TRUE))
+  pol2 <- list(matrix(c(286650, 583134,
+                        286650, 583240,
+                        286654, 583240,
+                        286654, 583134,
+                        286650, 583134) # the return
+                      ,ncol=2, byrow=TRUE))
+
+  PolList = list(pol1,pol2) #list of lists of numeric matrices
+  ScndTrail <- sf::st_multipolygon(PolList) # A SUPPRIMER
+
+  # Tree felling:
+  inventory <- treefelling(inventory, scenario = scenario, fuel = fuel,
+                           directionalfelling = directionalfelling,
+                           MainTrail = MainTrail, ScndTrail = ScndTrail,
+                           advancedloggingparameters = advancedloggingparameters)
+
+
+  # Adjusted secondary trails layout (for fuel wood harvesting only) A FAIRE
+
+  # Landings implementation: (only for ONF plots)
+
+  # Timber harvested volume quantification
+  Timberoutputs <- timberharvestedvolume(inventory,
+                                         scenario = scenario, fuel = fuel, advancedloggingparameters = advancedloggingparameters)
+
+  TimberLoggedVolume <- Timberoutputs$TimberLoggedVolume
+  NoHollowTimberLoggedVolume <- Timberoutputs$NoHollowTimberLoggedVolume
+
+
+  # Exploitable fuel wood volume quantification
+  Fueloutputs <- exploitablefuelwoodvolume(inventory,
+                                           scenario = scenario, fuel = fuel, advancedloggingparameters = advancedloggingparameters,
+                                           TimberLoggedVolume = TimberLoggedVolume, NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume)
+
+  DamageVolume <- Fueloutputs$DamageVolume # only damage (without purge and hollow trees)
+  FuelVolume <- Fueloutputs$FuelVolume
+
+
+
+
+  Outputs <- list(inventory = inventory,
+
+                  # Numeric values
+                  # HarvestableArea = HarvestableArea,
+                  VO = VO,
+                  HVinit = HVinit,
+                  TimberLoggedVolume = TimberLoggedVolume,
+                  NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
+                  FuelVolume = FuelVolume,
+                  DamageVolume = DamageVolume, # only damage (without purge and hollow trees)
+                  # LostBiomass = LostBiomass,
+                  # TrailsDensity = TrailsDensity,
+
+                  # POINTS
+                  HarvestableTreesPoints = HarvestableTreesPoints,
+                  SelectedTreesPoints = SelectedTreesPoints,
+                  FutureTreesPoints = FutureTreesPoints,
+                  ReserveTreesPoints = ReserveTreesPoints,
+                  HollowTreesPoints = HollowTreesPoints,
+                  EnergywoodTreesPoints = EnergywoodTreesPoints,
+
+                  # INPUTS reminder
+                  INPUTinventory = INPUTinventory,
+                  scenario = scenario,
+                  objective = objective,
+                  fuel = fuel,
+                  diversification = diversification,
+                  winching = winching,
+                  directionalfelling = directionalfelling,
+                  specieslax = specieslax,
+                  objectivelax = objectivelax
+  )
+
+  return(Outputs)
 
 
 }

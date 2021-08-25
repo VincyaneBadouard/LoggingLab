@@ -2,8 +2,8 @@
 % Please edit documentation in R/addtreedim.R
 \name{addtreedim}
 \alias{addtreedim}
-\title{Compute tree dimensions (Height, diameter, harvestable volume, including
-crown)}
+\title{Compute tree dimensions (tree and crown height and diameter, harvestable
+volume, wood density, and AGB)}
 \usage{
 addtreedim(
   inventory,
@@ -30,12 +30,14 @@ Height) and its species, genus or family. (data.frame)}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-inventory (data.frame) with additional variables (TreeHeight,
-TreeHarvestableVolume, TrunkHeight, CrownHeight, CrownDiameter)
+inventory (data.frame) with additional variables: TreeHeight (m),
+TreeHarvestableVolume (m^3), TrunkHeight (m), CrownHeight (m),
+CrownDiameter (m), estimated 'WoodDensity' (g/cm^3) and tree above-ground
+biomass ('AGB') (in Mg)
 }
 \description{
-Compute tree dimensions (Height, diameter, harvestable volume, including
-crown)
+Compute tree dimensions (tree and crown height and diameter, harvestable
+volume, wood density, and AGB)
 }
 \examples{
 data(Paracou6_2016)

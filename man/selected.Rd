@@ -28,8 +28,8 @@ SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)}
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 \code{\link{vignette}})}
 
-\item{fuel}{Fuel wood exploitation: no exploitation = "0", damage
-exploitation in fuelwood = "1", exploitation of hollow trees and damage in
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", damages and purge
+exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
 fuelwood = "2"}
 
 \item{diversification}{Taking of other species in addition to the main
