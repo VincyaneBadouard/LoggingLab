@@ -110,6 +110,7 @@ loggingsimulation(inventory = Paracou6_2016, topography = DTMParacou,
  advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
  }
 
+LoggedVolume = LoggedVolume, NoHollowLoggedVolume = NoHollowLoggedVolume)
 }
 \seealso{
 \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
