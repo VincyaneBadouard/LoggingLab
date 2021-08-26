@@ -8,9 +8,9 @@ felling1tree(
   dat,
   fuel,
   directionalfelling,
-  MainTrail = MainTrail,
-  ScndTrail = ScndTrail,
-  FutureReserveCrowns = FutureReserveCrowns,
+  MainTrail,
+  ScndTrail,
+  FutureReserveCrowns,
   advancedloggingparameters = loggingparameters()
 )
 }

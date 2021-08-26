@@ -15,11 +15,12 @@
 #'   avoid damage to future and reserve trees), "2" (avoid damage to future and
 #'   reserve trees + track orientation)
 #'
+#' @param MainTrail Main trail (sfg)
+#' @param ScndTrail Secondary trails (sfg)
+#'
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
 #'
-#' @param MainTrail (sfg)
-#' @param ScndTrail (sfg)
 #'
 #' @return "Shadow" polygons + "TreefallSuccess", "TreefallFailure",
 #'   "DamageTreesPoints", "DeadTreesPoints" vectors
@@ -133,20 +134,16 @@ treefelling <- function(
 
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
-  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
+  Condition <- DBH <- MinFD <- Taxo <- alpha <- bCoef <- NULL
   DeathCause <- DistCrit <- Family <- CrownHeight <- CrownDiameter <- NULL
   Genus <- Logged <- TreePolygon <- NULL
-  LoggingStatus <- MaxFD <- MaxFD.genus <- Crowns <- NULL
-  MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
+  LoggingStatus <- MaxFD <- Crowns <- NULL
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- SlopeCrit <- Species <- Species.genus <- NULL
-  Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
+  Selected <- SlopeCrit <- Species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
-  TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
-  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
-  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
-  alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
-  beta.family <- beta.genus <- beta.species <- geometry <- idTree <- . <- NULL
+  TreeHeight <- TrunkHeight <- Up <- UpMinFD <- NULL
+  VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  geometry <- idTree <- . <- NULL
 
 
   # Redefinition of the parameters according to the chosen scenario
@@ -569,9 +566,9 @@ felling1tree <- function(
   dat,
   fuel,
   directionalfelling,
-  MainTrail = MainTrail,
-  ScndTrail = ScndTrail,
-  FutureReserveCrowns = FutureReserveCrowns,
+  MainTrail,
+  ScndTrail,
+  FutureReserveCrowns,
   advancedloggingparameters = loggingparameters()
 ){
 

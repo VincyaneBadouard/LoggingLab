@@ -1,7 +1,6 @@
 test_that("ONFGuyafortaxojoin", {
 
-  # Check the function arguments
-
+  # Data loading
   data(Paracou6_2016)
   data(SpeciesCriteria)
 
@@ -12,19 +11,20 @@ test_that("ONFGuyafortaxojoin", {
 
   Matrixspeciescriteria <- as.matrix(SpeciesCriteria)
 
+  # Check the function arguments
   expect_error(ONFGuyafortaxojoin(MatrixInventory, Matrixspeciescriteria),
                regexp = "The function arguments must be data.frames")
 
 
   # speciescriteria columns check
-
   Badspeciescriteria <- SpeciesCriteria %>%
     dplyr::rename(Vernacular = VernName)
 
   testinventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
 
   expect_error(ONFGuyafortaxojoin(testinventory, Badspeciescriteria),
-               regexp = "The columns requested in the data frame given in the speciescriteria argument are not found")
+               regexp = "The columns requested in the data frame given in the speciescriteria argument
+                  are not found")
 
   # Check variables class
 
@@ -40,7 +40,7 @@ test_that("ONFGuyafortaxojoin", {
          function(element) expect_type(element, "double"))
 
   expect_type(testinventory$ONFName, "character")
-  expect_s3_class(testinventory$Commercial, "factor") #pq S3? je ne sais pas
+  expect_s3_class(testinventory$Commercial, "factor")
 
   # Check that commercial sp have logging info, and non-commercial have not:
   TestCommercial <- testinventory %>%

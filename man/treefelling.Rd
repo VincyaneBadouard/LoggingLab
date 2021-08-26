@@ -30,9 +30,9 @@ fuelwood = "2"}
 avoid damage to future and reserve trees), "2" (avoid damage to future and
 reserve trees + track orientation)}
 
-\item{MainTrail}{(sfg)}
+\item{MainTrail}{Main trail (sfg)}
 
-\item{ScndTrail}{(sfg)}
+\item{ScndTrail}{Secondary trails (sfg)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}

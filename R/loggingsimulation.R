@@ -277,7 +277,8 @@ loggingsimulation <- function(
 
   # Timber harvested volume quantification
   Timberoutputs <- timberharvestedvolume(inventory,
-                                         scenario = scenario, fuel = fuel, advancedloggingparameters = advancedloggingparameters)
+                                         scenario = scenario, fuel = fuel,
+                                         advancedloggingparameters = advancedloggingparameters)
 
   TimberLoggedVolume <- Timberoutputs$TimberLoggedVolume
   NoHollowTimberLoggedVolume <- Timberoutputs$NoHollowTimberLoggedVolume
@@ -285,8 +286,10 @@ loggingsimulation <- function(
 
   # Exploitable fuel wood volume quantification
   Fueloutputs <- exploitablefuelwoodvolume(inventory,
-                                           scenario = scenario, fuel = fuel, advancedloggingparameters = advancedloggingparameters,
-                                           TimberLoggedVolume = TimberLoggedVolume, NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume)
+                                           scenario = scenario, fuel = fuel,
+                                           TimberLoggedVolume = TimberLoggedVolume,
+                                           NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
+                                           advancedloggingparameters = advancedloggingparameters)
 
   DamageVolume <- Fueloutputs$DamageVolume # only damage (without purge and hollow trees)
   FuelVolume <- Fueloutputs$FuelVolume

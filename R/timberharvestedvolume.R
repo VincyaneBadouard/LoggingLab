@@ -1,4 +1,4 @@
-#' timberharvestedvolume
+#' Compute the timber harvested volume
 #'
 #' @param inventory Your inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
@@ -16,7 +16,7 @@
 #'
 #' @return A list with the logged volume (TimberLoggedVolume)
 #' and when fuel = "2", the logged volume without the hollow trees (NoHollowTimberLoggedVolume).
-#' NoHollowTimberLoggedVolume = the logged volume (TimberLoggedVolume) when fuel = "0" or "1".
+#' NoHollowTimberLoggedVolume is the logged volume (TimberLoggedVolume) when fuel = "0" or "1".
 #'
 #' @export
 #'

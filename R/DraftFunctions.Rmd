@@ -49,13 +49,13 @@ usethis::use_data(ParamCrownDiameterAllometry)
 ```
 
 ```{r SpeciesCriteria table code}
-SpeciesCriteria <- read_delim("D:/VSC Kourou/DATA/SpeciesCriteria.csv", 
-                              ";", escape_double = FALSE, col_types = cols(Commercial = col_factor(levels = c("1", 
-                                                                                                              "2")), MinFD = col_number(), UpMinFD = col_number(), 
-                                                                           MaxFD = col_number()), locale = locale(encoding = "Latin1"), 
-                              trim_ws = TRUE) %>% 
-  separate(ScientificName, sep = " ", into = c("Genus", "Species"), remove = T) 
-# unite(Genus, Species, col = "ScientificName", sep = "_", remove = F) 
+SpeciesCriteria <- read_csv("D:/VSC Kourou/DATA/SpeciesCriteria.csv",
+                            col_types = cols(Commercial = col_factor(levels = c("0",
+                                                                                "1", "2")), MinFD = col_number(),
+                                             UpMinFD = col_number(), MaxFD = col_number()),
+                            locale = locale(encoding = "Latin1")) %>%
+  separate(ScientificName, sep = " ", into = c("Genus", "Species"), remove = T)
+# unite(Genus, Species, col = "ScientificName", sep = "_", remove = F)
 
 SpeciesCriteria$VernName <- tolower(SpeciesCriteria$VernName)
 

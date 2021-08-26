@@ -1,6 +1,7 @@
 #' createcanopy
 #'
-#' @param inventory (data.frame)
+#' @param inventory Your inventory (see the inputs formats and metadata in the
+#'   \code{\link{vignette}}) (data.frame)
 #'
 #' @return a dataframe with a column 'Crowns' containing the ellipses
 #'   (sfc_POLYGON) as trees crown, with their diameter and height filled in,

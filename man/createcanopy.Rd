@@ -7,7 +7,8 @@
 createcanopy(inventory)
 }
 \arguments{
-\item{inventory}{(data.frame)}
+\item{inventory}{Your inventory (see the inputs formats and metadata in the
+\code{\link{vignette}}) (data.frame)}
 }
 \value{
 a dataframe with a column 'Crowns' containing the ellipses

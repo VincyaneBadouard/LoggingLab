@@ -5,40 +5,43 @@
 \alias{Paracou6_2016}
 \title{Paracou6_2016}
 \format{
-A tibble with 3620 rows and 31 variables:
+A tibble with 3620 rows and 26 variables:
 \describe{
-\item{Forest}{description, in units (character)}
-\item{Plot}{description, in units (character)}
-\item{PlotArea}{description, in units (numeric)}
-\item{SubPlot}{description, in units (integer)}
-\item{TreeFieldNum}{description, in units (numeric)}
-\item{idTree}{description, in units (integer)}
-\item{Project}{description, in units (character)}
-\item{Protocole}{description, in units (character)}
-\item{Xfield}{description, in units (numeric)}
-\item{Yfield}{description, in units (numeric)}
-\item{Xutm}{description, in units (numeric)}
-\item{Yutm}{description, in units (numeric)}
-\item{UTMZone}{description, in units (integer)}
-\item{Lat}{description, in units (numeric)}
-\item{Lon}{description, in units (numeric)}
-\item{Family}{description, in units (character)}
-\item{Genus}{Genus associated at the vernacular name (character)}
-\item{Species}{Species (without genus part) associated
-at the vernacular name (character)}
-\item{BotaSource}{description, in units (character)}
-\item{BotaCertainty}{description, in units (numeric)}
-\item{idVern}{description, in units (integer)}
-\item{VernName}{Species vernacular/economic name (character)}
-\item{CommercialSp}{description, in units (logical)}
-\item{CensusYear}{description, in units (integer)}
-\item{CensusDate}{description, in units (character)}
-\item{CensusDateCertainty}{description, in units (logical)}
-\item{CodeAlive}{description, in units (logical)}
-\item{MeasCode}{description, in units (integer)}
-\item{Circ}{description, in units (numeric)}
-\item{CircCorr}{description, in units (numeric)}
-\item{CorrCode}{description, in units (character)}
+\item{Forest}{Forest name (character)}
+\item{Plot}{Plot number (character)}
+\item{PlotArea}{Plot area, in hectare (numeric)}
+\item{SubPlot}{Subplot number (integer)}
+\item{idTree}{Unique tree identifier from the database (integer)}
+\item{Protocole}{Protocole name (character)}
+\item{Xfield}{Euclidean position of the tree relative to
+the Southwestern corner of the subplot, in m (numeric)}
+\item{Yfield}{Euclidean position of the tree relative to
+the Southwestern corner of the subplo, in m (numeric)}
+\item{Xutm}{Coordinate X for the tree in UTM 22 N (EPSG: 32 622) (numeric)}
+\item{Yutm}{Coordinate Y for the tree in UTM 22 N (EPSG: 32 622) (numeric)}
+\item{UTMZone}{UTM Zone (integer)}
+\item{Lat}{Tree latitude (WGS 84, EPSG : 4326) (numeric)}
+\item{Lon}{Tree longitude (WGS 84, EPSG : 4326) (numeric)}
+\item{Family}{Botanical family (character)}
+\item{Genus}{Botanical genus (character)}
+\item{Species}{Botanical species (character)}
+\item{BotaSource}{Source of botanical name (character)}
+\item{BotaCertainty}{Level of certainty
+for the botanical identification (numeric)}
+\item{VernName}{Vernacular name (character)}
+\item{CensusYear}{Census year (integer)}
+\item{CensusDate}{Census Day (when available) (character)}
+\item{CensusDateCertainty}{Is the CensusDate precise (TRUE) or not (FALSE)?
+If FALSE, this information must not be considered for calculation (logical)}
+\item{CodeAlive}{Is the tree alive (TRUE) or dead (FALSE)? (logical)}
+\item{MeasCode}{Information on the method for measuring the circumference
+or on the state of the tree (integer)}
+\item{Circ}{Circumference of the tree at 1.30m above ground (DBH level),
+in cm (numeric)}
+\item{CircCorr}{Corrected circumference
+(mathematical correction of abnormal circumferences), in cm (numeric)}
+\item{CorrCode}{Information on the reason why and how the circumference has
+been corrected, multiple values are possible(character)}
 ...
 }
 }

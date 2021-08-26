@@ -2,7 +2,7 @@
 % Please edit documentation in R/timberharvestedvolume.R
 \name{timberharvestedvolume}
 \alias{timberharvestedvolume}
-\title{timberharvestedvolume}
+\title{Compute the timber harvested volume}
 \usage{
 timberharvestedvolume(
   inventory,
@@ -29,10 +29,10 @@ fuelwood = "2"}
 \value{
 A list with the logged volume (TimberLoggedVolume)
 and when fuel = "2", the logged volume without the hollow trees (NoHollowTimberLoggedVolume).
-NoHollowTimberLoggedVolume = the logged volume (TimberLoggedVolume) when fuel = "0" or "1".
+NoHollowTimberLoggedVolume is the logged volume (TimberLoggedVolume) when fuel = "0" or "1".
 }
 \description{
-timberharvestedvolume
+Compute the timber harvested volume
 }
 \examples{
 data(Paracou6_2016)
