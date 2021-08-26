@@ -9,15 +9,15 @@
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
+#'@param plotslope Slopes (in radians) of the inventoried plot (with a
+#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
+#'
 #'@param diversification Taking of other species in addition to the main
 #'  commercial species (2 levels of commercial species in the
 #'  \code{\link{SpeciesCriteria}} table) (logical)
 #'
 #'@param specieslax Allow diversification if stand is too poor, = FALSE by
 #'  default (logical)
-#'
-#'@param plotslope Slopes (in radians) of the inventoried plot (with a
-#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
@@ -54,15 +54,15 @@
 #' inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 #'
 #' test <- harvestable(inventory, topography = DTMParacou,
-#' diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
+#' diversification = TRUE, plotslope = PlotSlope, specieslax = FALSE,
 #' advancedloggingparameters = loggingparameters())
 #'
 harvestable <- function(
   inventory,
   topography,
+  plotslope,
   diversification,
   specieslax = FALSE,
-  plotslope,
   advancedloggingparameters = loggingparameters()
 ){
 

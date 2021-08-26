@@ -51,7 +51,7 @@
 #'
 futurereserve <- function(
   inventory,
-  speciescriteria = SpeciesCriteria,
+  speciescriteria,
   advancedloggingparameters = loggingparameters()
 
 ){

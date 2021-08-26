@@ -48,7 +48,7 @@ ONFGuyafortaxojoin <- function(
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- NULL
+  DeathCause <- DistCrit <- Family <- ONFName <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL

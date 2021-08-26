@@ -6,6 +6,9 @@
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
+#'@param plotslope Slopes (in radians) of the inventoried plot (with a
+#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
+#'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the
 #'  same format of \code{\link{SpeciesCriteria}} (data.frame)
@@ -29,10 +32,6 @@
 #'
 #'@param objectivelax Allow exploitation in case of non-achievement of the
 #'  objective volume (if stand too poor), = FALSE by default (logical)
-#'
-#'@param plotslope Slopes (in radians) of the inventoried plot (with a
-#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
-#'
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
@@ -78,6 +77,7 @@
 treeselection <- function(
   inventory,
   topography,
+  plotslope,
   speciescriteria,
   scenario,
   objective,
@@ -85,7 +85,6 @@ treeselection <- function(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
-  plotslope,
   advancedloggingparameters = loggingparameters()
   # MainTrail
 
@@ -177,19 +176,21 @@ treeselection <- function(
   VisibleDefectTable <- filter(inventory, VisibleDefect == "1")
   inventory <- filter(inventory, VisibleDefect == "0") # we continue with just visibly healthy trees
 
-  harvestableOutputs <- harvestable(inventory,                                               # harvestable function
-    diversification = diversification, specieslax = specieslax,
-    topography = topography, plotslope = plotslope, advancedloggingparameters = advancedloggingparameters)
+  harvestableOutputs <- harvestable(inventory,    # harvestable function
+                                    topography = topography, plotslope = plotslope,
+                                    diversification = diversification, specieslax = specieslax,
+                                    advancedloggingparameters = advancedloggingparameters)
 
   inventory <- harvestableOutputs$inventory       # one of the output
 
   HVinit <- harvestableOutputs$HVinit             # the other output: initial harvestable volume
 
-  selectedOutputs <- selected(                    # outputs of the selected function
-    inventory,
+  selectedOutputs <- selected(inventory,          # outputs of the selected function
+    topography = topography,
     scenario = scenario, fuel = fuel, diversification = diversification,
-    specieslax = specieslax, objectivelax = objectivelax, topography = topography,
-    advancedloggingparameters = advancedloggingparameters, VO = VO, HVinit = HVinit)
+    VO = VO, HVinit = HVinit,
+    specieslax = specieslax, objectivelax = objectivelax,
+    advancedloggingparameters = advancedloggingparameters)
 
   inventory <- selectedOutputs$inventory                                           # extract inventory of the selected outputs
 
@@ -197,7 +198,9 @@ treeselection <- function(
   EnergywoodTreesPoints <- selectedOutputs$EnergywoodTreesPoints                   # extract a pts vector of the selected outputs
 
 
-  inventory <- futurereserve(inventory)
+  inventory <- futurereserve(inventory,
+                             speciescriteria = speciescriteria,
+                             advancedloggingparameters = advancedloggingparameters)
 
 
   # créer les conditions et vecteurs vides dans les listes à retourner

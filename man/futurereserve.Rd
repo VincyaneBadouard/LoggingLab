@@ -6,7 +6,7 @@
 \usage{
 futurereserve(
   inventory,
-  speciescriteria = SpeciesCriteria,
+  speciescriteria,
   advancedloggingparameters = loggingparameters()
 )
 }

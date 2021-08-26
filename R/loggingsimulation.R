@@ -221,11 +221,10 @@ loggingsimulation <- function(
   #
   # Tree selection (harvestable, future and reserve trees + defects trees):
   plotslope <- PlotSlope # A SUPPRIMER
-  treeselectionoutputs <- treeselection(inventory, topography = topography,
-                                        scenario = scenario, objective = objective,
-                                        fuel = fuel, diversification = diversification, specieslax = specieslax,
-                                        objectivelax = objectivelax, plotslope = plotslope,
-                                        speciescriteria = speciescriteria,
+  treeselectionoutputs <- treeselection(inventory, topography = topography, plotslope = plotslope,
+                                        scenario = scenario, objective = objective, fuel = fuel,
+                                        diversification = diversification, specieslax = specieslax,
+                                        objectivelax = objectivelax, speciescriteria = speciescriteria,
                                         advancedloggingparameters = advancedloggingparameters)
 
   inventory <- treeselectionoutputs$inventory

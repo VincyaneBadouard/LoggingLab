@@ -10,11 +10,11 @@ selected(
   scenario,
   fuel,
   diversification,
+  VO,
+  HVinit,
   specieslax = FALSE,
   objectivelax = FALSE,
-  advancedloggingparameters = loggingparameters(),
-  VO,
-  HVinit
+  advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
@@ -36,6 +36,12 @@ fuelwood = "2"}
 commercial species (2 levels of commercial species in the
 \code{\link{SpeciesCriteria}} table) (logical)}
 
+\item{VO}{The objective volume with or without a bonus (if hollow trees
+exploitation)(numeric value) (see the \code{\link{loggingparameters}})}
+
+\item{HVinit}{the harvestable volume in the plot for your criteria
+(\code{\link{SpeciesCriteria}}) (numeric value)}
+
 \item{specieslax}{Allow diversification if stand is too poor, = FALSE by
 default (logical)}
 
@@ -44,12 +50,6 @@ objective volume (if stand too poor), = FALSE by default (logical)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
-
-\item{VO}{The objective volume with or without a bonus (if hollow trees
-exploitation)(numeric value) (see the \code{\link{loggingparameters}})}
-
-\item{HVinit}{the harvestable volume in the plot for your criteria
-(\code{\link{SpeciesCriteria}}) (numeric value)}
 }
 \value{
 Your inventory with the trees selected for harvesting (depending on
@@ -77,9 +77,9 @@ inventory <- harvestableOutputs$inventory
 HVinit <- harvestableOutputs$HVinit
 
 selecInventory <- selected(inventory, scenario = "manual", fuel = "2",
-diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-topography = DTMParacou, advancedloggingparameters = loggingparameters(), VO = 30,
-HVinit = HVinit)$inventory
+diversification = TRUE, VO = 30, HVinit = HVinit, specieslax = FALSE,
+objectivelax = FALSE, topography = DTMParacou,
+advancedloggingparameters = loggingparameters())$inventory
 
 }
 \seealso{

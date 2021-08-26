@@ -21,17 +21,17 @@
 #' @param specieslax Allow diversification if stand is too poor, = FALSE by
 #'   default (logical)
 #'
-#' @param objectivelax Allow exploitation in case of non-achievement of the
-#'   objective volume (if stand too poor), = FALSE by default (logical)
-#'
-#' @param advancedloggingparameters Other parameters of the logging simulator
-#'   \code{\link{loggingparameters}} (list) MainTrail (multiline)
-#'
 #' @param VO The objective volume with or without a bonus (if hollow trees
 #'   exploitation)(numeric value) (see the \code{\link{loggingparameters}})
 #'
 #' @param HVinit the harvestable volume in the plot for your criteria
 #'   (\code{\link{SpeciesCriteria}}) (numeric value)
+#'
+#' @param objectivelax Allow exploitation in case of non-achievement of the
+#'   objective volume (if stand too poor), = FALSE by default (logical)
+#'
+#' @param advancedloggingparameters Other parameters of the logging simulator
+#'   \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
 #' @return Your inventory with the trees selected for harvesting (depending on
 #'   the logging scenario chosen), and 2 sets of spatial points: (HollowTrees
@@ -67,9 +67,9 @@
 #' HVinit <- harvestableOutputs$HVinit
 #'
 #' selecInventory <- selected(inventory, scenario = "manual", fuel = "2",
-#' diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-#' topography = DTMParacou, advancedloggingparameters = loggingparameters(), VO = 30,
-#' HVinit = HVinit)$inventory
+#' diversification = TRUE, VO = 30, HVinit = HVinit, specieslax = FALSE,
+#' objectivelax = FALSE, topography = DTMParacou,
+#' advancedloggingparameters = loggingparameters())$inventory
 #'
 selected <- function(
   inventory,
@@ -77,11 +77,11 @@ selected <- function(
   scenario,
   fuel,
   diversification,
+  VO, # objective volume
+  HVinit, # initial Harvestable Volume
   specieslax = FALSE,
   objectivelax = FALSE,
-  advancedloggingparameters = loggingparameters(),
-  VO, # objective volume
-  HVinit # initial Harvestable Volume
+  advancedloggingparameters = loggingparameters()
 ){
 
   # Arguments check

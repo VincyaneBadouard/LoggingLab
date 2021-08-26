@@ -7,6 +7,7 @@
 treeselection(
   inventory,
   topography,
+  plotslope,
   speciescriteria,
   scenario,
   objective,
@@ -14,7 +15,6 @@ treeselection(
   diversification,
   specieslax = FALSE,
   objectivelax = FALSE,
-  plotslope,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -24,6 +24,9 @@ treeselection(
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)}
+
+\item{plotslope}{Slopes (in radians) of the inventoried plot (with a
+neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the
@@ -48,9 +51,6 @@ default (logical)}
 
 \item{objectivelax}{Allow exploitation in case of non-achievement of the
 objective volume (if stand too poor), = FALSE by default (logical)}
-
-\item{plotslope}{Slopes (in radians) of the inventoried plot (with a
-neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
