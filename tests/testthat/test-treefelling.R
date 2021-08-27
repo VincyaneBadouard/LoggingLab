@@ -107,20 +107,20 @@ test_that("treefelling", {
 
   # Damage trees
   felttrees <- testinventory %>% # Cutted trees (timber and fuel)
-    filter(!is.na(TreePolygon)) %>%
-    select(TreePolygon)
+    dplyr::filter(!is.na(TreePolygon)) %>%
+    dplyr::select(TreePolygon)
 
     DeadTrees <- suppressWarnings(sf::st_intersection(
-    st_as_sf(testinventory, coords = c("Xutm", "Yutm")),
+      sf::st_as_sf(testinventory, coords = c("Xutm", "Yutm")),
     getgeometry(felttrees, TreePolygon)
   )) %>%
-      filter(Selected != "1"| is.na(Selected)) %>% # not already cutted trees
-      filter(Selected != "deselected"| is.na(Selected)) %>%
-      arrange(idTree)
+      dplyr::filter(Selected != "1"| is.na(Selected)) %>% # not already cutted trees
+      dplyr::filter(Selected != "deselected"| is.na(Selected)) %>%
+      dplyr::arrange(idTree)
 
   Damage <- testinventory %>%
     dplyr::filter(is.na(TreePolygon) & !is.na(DeathCause)) %>%  # & DeadTrees == "1"
-    arrange(idTree)
+    dplyr::arrange(idTree)
 
   expect_true(nrow(Damage) == nrow(DeadTrees)) # damages = intersections
 
