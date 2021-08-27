@@ -2,12 +2,12 @@
 #'
 #' @param MinDBHValue Minimum DBH value. Default = 10, in cm (double)
 #' @param MaxAreaSlope Maximum area slope. Default = 27, in % (double)
-#' @param MaxTrailCenterlineSlope Maximum main&2nd trail centerline slope.
+#' @param MaxTrailCenterlineSlope Maximum main & 2nd trail centerline slope.
 #'   Default = 22, in % (double)
-#' @param MaxTrailCrossSlope Maximum main&2nd trail cross slope. Default = 4, in
-#'   % (double)
+#' @param MaxTrailCrossSlope Maximum main & 2nd trail cross slope. Default = 4,
+#' in % (double)
 #' @param GrappleMaxslope Grapple maximum slope. Default = 20, in % (double)
-#' @param TreeMaxSlope Trees slope. Default = 22, in % (double)
+#' @param TreeMaxSlope Maximum tree slope. Default = 22, in % (double)
 #' @param PlateauMaxSlope Plateau maximum slope. Default = 5, in % (double)
 #' @param SlopeDistance Distance to compute slope. Default = 6, in m (3m for
 #'   each side) (double)
@@ -16,50 +16,56 @@
 #' @param MinMainTrailWidth Minimum main trail width. Default = 5, in m (double)
 #' @param MaxMainTrailWidth Maximum main trail width. Default = 6, in m (double)
 #' @param ScndTrailWidth 2nd trail width. Default = 4, in m (double)
-#' @param BigTrees Big trees. Default = 50, in cm (double)
+#' @param BigTrees DBH of trees to be avoided at trail construction.
+#' Default = 50, in cm (double)
 #' @param ObjectiveBonus Objective bonus. Default = 30, in % (20;30%) (double)
 #' @param CableLength Cable. Default = 40, in m (double)
 #' @param GrappleLength Grapple. Default = 6, in m (double)
-#' @param IsolateTreeMinDistance Isolate tree minimum distance. Default = 100,
+#' @param IsolateTreeMinDistance Minimum distance to consider a tree "isolated"
+#' from other trees of its species. Default = 100,
 #'   in m (double)
 #' @param FutureTreesMinDiameter Future trees minimum diameter. Default = 35, in
 #'   cm (double)
-#' @param TreefallSuccessProportion TreefallSuccess proportion. Default = 0.6,
-#'   (double)
-#' @param MinTreefallOrientation Minimum treefall orientation. Default = 30, in
-#'   degree (double)
-#' @param MaxTreefallOrientation Maximum treefall orientation. Default = 45, in
-#'   degree (double)
+#' @param TreefallSuccessProportion Proportion of successful felling cases.
+#' Default = 0.6 (double)
+#' @param MinTreefallOrientation Minimum orientation of the tree fall
+#' to the trail. Default = 30, in degree (double)
+#' @param MaxTreefallOrientation Maximum orientation of the tree fall
+#' to the trail. Default = 45, in degree (double)
 #' @param TreeHollowPartForFuel Part taken from hollow trees for fuel
 #'   exploitation. Default = 1/3 (double)
 #' @param Purge Purge. Default = 0.14, in m^3 of fuelwood/m^3 of logged trees
 #'   (double)
-#' @param MaxTrailDensity Maximum TrailDensity. Default = 200, in m/ha (double)
+#' @param MaxTrailDensity Maximum trail density. Default = 200, in m/ha (double)
+#' (has no impact on the simulation.
+#' A message will only be sent to inform you of its validation or not)
 #' @param MaxLandingArea Maximum landing area. Default = 1500) in square meters
-#'   (double)
+#'   (double) (has no impact on the simulation.
+#' A message will only be sent to inform you of its validation or not)
+#'
 #' @param TreeHarvestableVolumeAllometry French Guiana ONF formula:
-#' aCoef + bCoef * (DBH/100)^2, a and b depend on the forest location,
+#' aCoef + bCoef * (DBH/100)^2, aCoef and bCoef depend on the forest location,
 #' DBH in cm. (function)
 #'
 #' @param TrunkHeightAllometry From the cylinder volume formula:
-#' CylinderVolume = pi(((DBH/100)/2)^2 x H.
-#  DBH in cm, H in m. (function)
+#' CylinderVolume = pi(((DBH/100)/2)^2 x H,
+#' with the height (H) in m and the DBH in cm (function)
 #'
 #' @param TreeHeightAllometry From the BIOMASS package:
-#' log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344 log(DBH)^2.
-#' H in m, DBH in cm(function)
+#' log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344 log(DBH)^2,
+#' with the height (H) in m and the DBH in cm (function)
 #'
 #' @param CrownDiameterAllometry ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
 #'   and mean σ^2 = 0.0295966977
-#'   with CD the crown diameter and H the tree height in m, and D the DBH in cm
-#'   (ref)(function)
+#'   with the crown diameter (CD) and the tree height (H) in m,
+#'    and the DBH (D) in cm.(ref)(function)
 #'
 #' @param RottenModel Estimates the tree probability of being probed hollow (default:
 #'   1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)
 #'
 #' @param VisiblyDefectModel Estimates the tree probability
-#' to have visible defects (default:
-#' (function)
+#' to have visible defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * Log(DBH))))
+#' with DBH in cm (function)
 #'
 #' @return A named list of 31 objects.
 #'

@@ -10,7 +10,7 @@
 #'   \code{\link{vignette}}) (data.frame)
 #'
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'   or SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)
+#'   or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
 #' @param relativeelevation (RasterLayer)
 #'

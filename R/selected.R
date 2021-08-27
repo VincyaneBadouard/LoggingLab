@@ -1,10 +1,10 @@
-#' selected
+#' Trees to be exploited selection
 #'
 #' @param inventory Your inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
 #'
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR or
-#'   SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)
+#'   SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
 #' @param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the

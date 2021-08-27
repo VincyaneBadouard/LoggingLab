@@ -2,7 +2,7 @@
 % Please edit documentation in R/ONFGuyafortaxojoin.R
 \name{ONFGuyafortaxojoin}
 \alias{ONFGuyafortaxojoin}
-\title{ONFGuyafortaxojoin}
+\title{Joins commercial criteria table to the forest inventory}
 \usage{
 ONFGuyafortaxojoin(inventory, speciescriteria)
 }

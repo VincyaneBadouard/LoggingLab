@@ -58,7 +58,7 @@ Paracou6_2016
 }
 \description{
 Species inventory
-2016 inventory of Paracou plot 6.
+2016 inventory of Paracou (French Guiana) plot 6.
 Public dataset extracted from the Guyafor database.
 }
 \keyword{datasets}

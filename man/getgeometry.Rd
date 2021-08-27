@@ -2,7 +2,7 @@
 % Please edit documentation in R/getgeometry.R
 \name{getgeometry}
 \alias{getgeometry}
-\title{getgeometry}
+\title{Get geometry}
 \usage{
 getgeometry(inventory, var)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/futurereserve.R
 \name{futurereserve}
 \alias{futurereserve}
-\title{futurereserve}
+\title{Future & reserve trees designation}
 \usage{
 futurereserve(
   inventory,
@@ -26,7 +26,7 @@ your inventory with selected future and reserve trees, for your
 logging criteria (\code{\link{SpeciesCriteria}})
 }
 \description{
-futurereserve
+Future & reserve trees designation
 }
 \examples{
 data(Paracou6_2016)
@@ -55,7 +55,7 @@ topography = DTMParacou,
 advancedloggingparameters = loggingparameters(), VO = 30,
  HVinit = HVinit)$inventory
 
-futurereserve(inventory)
+futurereserve(inventory, SpeciesCriteria)
 
 }
 \seealso{

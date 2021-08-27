@@ -2,6 +2,7 @@
 title: "Maria"
 subtitle: "Logging simulator"
 output: rmarkdown::html_vignette
+df_print: kable
 vignette: >
   %\VignetteIndexEntry{Maria}
   %\VignetteEngine{knitr::rmarkdown}
@@ -11,12 +12,418 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>", echo = T, message = T, warning = F, cache = T
 )
 ```
 
+# Load Maria and datasets
+**Install Maria**
+```{r, eval=F}
+install.packages("Maria")
+```
+**Load the package**
 ```{r setup}
 library(Maria)
+library(knitr)
+library(kableExtra)
+library(ggplot2)
 ```
-Détailler chaqu'une des fonctions
+**Load the two datasets stored in the package**
+```{r}
+# 2016 inventory of Paracou (French Guiana) plot 6
+data(Paracou6_2016)
+# Table of species exploitability criteria
+data(SpeciesCriteria)
+# Volume parameters table
+data(ForestZoneVolumeParametersTable)
+# Crown diameter allometry parameters table
+data(ParamCrownDiameterAllometry)
+# Digital terrain model (DTM) of the plot 6 of Paracou (1m resolution, LiDAR campaign of 2016)
+data(DTMParacou)
+# Slopes (in radians) of the plot 6 of Paracou (with a neighbourhood of 8 cells)
+data(PlotSlope)
+```
+
+# Required format of the inventory
+\code{\link{Paracou6_2016}}
+```{r}
+# inventory class
+class(Paracou6_2016)
+#The name and class of all the data variables
+lapply(Paracou6_2016, class)
+
+Paracou6_2016 %>%
+  dplyr::slice(1:10) %>% 
+  kable() %>%
+  kable_styling(font_size = 10, latex_options = "scale_down")
+```
+# Required format of the species exploitability criteria
+\code{\link{SpeciesCriteria}}
+```{r}
+# speciescriteria class
+class(SpeciesCriteria)
+#The name and class of all the data variables
+lapply(SpeciesCriteria, class)
+kable(SpeciesCriteria)
+```
+# Required format of the volume parameters
+\code{\link{ForestZoneVolumeParametersTable}}
+```{r}
+# volumeparameters class
+class(ForestZoneVolumeParametersTable)
+#The name and class of all the data variables
+lapply(ForestZoneVolumeParametersTable, class)
+kable(ForestZoneVolumeParametersTable)
+```
+# Required format of the crown diameter allometry parameters
+\code{\link{ParamCrownDiameterAllometry}}
+```{r}
+# crowndiameterparameters class
+class(ParamCrownDiameterAllometry)
+#The name and class of all the data variables
+lapply(ParamCrownDiameterAllometry, class)
+kable(dplyr::slice_sample(ParamCrownDiameterAllometry, n=15))
+```
+
+# All the functions of the package
+loggingsimulation
+loggingparameters
+scenariosparameters
+inventorycheckformat
+addtreedim
+treeselection
+ONFGuyafortaxojoin
+harvestable
+selected
+futurereserve
+treefelling
+createcanopy
+treefromthesky
+directionalfellingsuccessdef
+felling1tree
+rotatepolygon
+getgeometry
+timberharvestedvolume
+exploitablefuelwoodvolume
+
+
+# Arguments presentation
+
++ **inventory** : Your inventory (see the inputs formats and metadata in the
+\code{\link{vignette}}) (data.frame)
+
++ **topography** : Digital terrain model (DTM) of the inventoried plot (LiDAR
+or SRTM) (RasterLayer)
+
++ **relativeelevation** : (RasterLayer)
+
++ **speciescriteria** : Table of species exploitability criteria : species
+names, economic interest level, minimum and maximum felling diameter, in
+the same format of \code{\link{SpeciesCriteria}} (2 levels of commercial
+species) (data.frame)
+
++ **volumeparameters** : Volume parameters table (in the same format of
+\code{\link{ForestZoneVolumeParametersTable}}) to compute the harvestable
+volume of each tree, depend to its geographic zone if several locations
+(data.frame)
+
++ **scenario** : Logging scenario: "**RIL1**", "**RIL2broken**", "**RIL2**", "**RIL3**",
+"**RIL3fuel**", "**RIL3fuelhollow**" or "**manual**"(character)
+
++ **objective** : Objective volume per hectare (numeric)
+
++ **fuel** : Fuel wood exploitation: **no exploitation** = "**0**", **damages and purge**
+exploitation in fuelwood = "**1**", exploitation of **hollow trees, damages and purge** in
+fuelwood = "**2**"
+
++ **diversification** : Taking of other species in addition to the main
+commercial species (2 levels of commercial species in the
+\code{\link{SpeciesCriteria}} table) (logical)
+
++ **winching** : No cable or grapple = "**0**", only **cable** = "**1**", **grapple + cable**
+= "**2**"
+
++ **directionalfelling** : Directional felling = "**0**" (absent), "**1**" (only to
+avoid damage to future and reserve trees), "**2**" (avoid damage to future and
+reserve trees + track orientation)
+
++ **specieslax** : Allow diversification if stand is too poor, = FALSE by
+default (logical)
+
++ **objectivelax** : Allow exploitation in case of non-achievement of the
+objective volume (if stand too poor), = FALSE by default (logical)
+
++ **crowndiameterparameters** : Crown diameter allometry parameters table (in
+the same format of \code{\link{ParamCrownDiameterAllometry}}) to compute
+the crown diameter of each tree, depend to its DBH (Diameter at Breast
+Height) and its species, genus or family. (data.frame)
+
++ **advancedloggingparameters** : Other parameters of the logging simulator
+\code{\link{loggingparameters}} (list)
+
++ **iter** : Number of iterations (numeric). Default = 1.
++ **cores** : Number of cores for parallelization (numeric). Default = 1.
+
+# The scenarios
+\code{\link{ScenariosTable}}
+```{r}
+data(ScenariosTable)
+kable(ScenariosTable)
+```
+
+
+# Advanced logging parameters
+\code{\link{loggingparameters}}
+
+**Default values**
+
+*Numeric values*
+
++ **Minimum DBH value** = 10 cm 
++ **Maximum area slope** = 27 % 
++ **Maximum main & 2nd trail centerline slope** = 22 % 
++ **Maximum main & 2nd trail cross slope** = 4 % 
++ **Grapple maximum slope** = 20 % 
++ **Maximum tree slope** = 22 % 
++ **Plateau maximum slope** = 5 % 
++ **Distance to compute slope** = 6 m (3m for each side) 
++ **Water sources buffer zone** = 30 m
++ **Minimum main trail width** = 5 m 
++ **Maximum main trail width** = 6 m 
++ **2nd trail width** = 4 m 
++ **DBH of trees to be avoided at trail construction** = 50 cm 
++ **Objective bonus** = 30 % (20;30%) 
++ **Cable length** = 40 m 
++ **Grapple length** = 6 m 
++ **Minimum distance to consider a tree "isolated"** from other trees of its species = 100 m 
++ **Future trees minimum diameter** = 35 cm 
++ **Proportion of successful felling cases** = 0.6 %
++ **Minimum orientation of the tree fall to the trail** = 30 degree 
++ **Maximum orientation of the tree fall to the trail** = 45 degree 
++ **Part taken from hollow trees for fuel exploitation** = 1/3 
++ **Purge** = 0.14 m^3 of fuelwood/m^3 of logged trees
++ **Maximum trail density** = 200 m/ha (has no impact on the simulation.
+A message will only be sent to inform you of its validation or not)
++ **Maximum landing area** = 1500 square meters (has no impact on the simulation.
+A message will only be sent to inform you of its validation or not)
+
+*Models*   
+
++ **Tree harvestable volume** allometry (French Guiana ONF formula):
+aCoef + bCoef * (DBH/100)^2,
+aCoef and bCoef depend on the forest location, DBH in cm.
+
++ **Trunk height** allometry (from the cylinder volume formula):
+CylinderVolume = pi(((DBH/100)/2)^2 x H,
+DBH in cm, height (H) in m. 
+
++ **Tree height** allometry (from the *BIOMASS* package):
+log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344 log(DBH)^2,
+height (H) in m, DBH in cm
+
++ **Crown diameter allometry** (*ref*): ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺,
+with 𝜺~N(0,σ^2) and mean σ^2 = 0.0295966977
+with the crown diameter (CD) and the tree height (H) in m, and the DBH (D) in cm.
+
++ **Rotten model**, estimates the tree probability of being probed hollow:
+1 / (1 + exp(-(-5.151 + 0.042 DBH))), with DBH in cm 
+
++ **Visibly defect model**, estimates the tree probability
+to have visible defects: 1 / (1 + exp(-(-3.392 + 0.357 * Log(DBH))))
+with DBH in cm
+
+
+# Harvest in 1 function
+```{r}
+Rslt <- loggingsimulation(Paracou6_2016,
+                          topography = DTMParacou, relativeelevation  = DTMParacou,
+                          speciescriteria = SpeciesCriteria,
+                          volumeparameters = ForestZoneVolumeParametersTable,
+                          scenario = "manual", objective = 20,
+                          fuel = "2", diversification = TRUE, winching = "2",
+                          directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
+                          crowndiameterparameters = ParamCrownDiameterAllometry,
+                          advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+```
+
+## Results summary
+```{r}
+loggingsummary(Rslt)
+```
+
+# Decomposed harvesting
+
+## Check & format your inventory data for the "Maria" package
+```{r}
+inventory <- inventorycheckformat(Paracou6_2016)
+```
+
+## Compute tree dimensions
+**Tree and crown height and diameter, harvestable volume, wood density, and AGB**
+```{r}
+inventory <- addtreedim(inventory, volumeparameters = ForestZoneVolumeParametersTable)
+```
+
+## Harvestable area definition
+
+## Tree selection
+### In 1 function
+**Trees to be exploited, future and reserve trees**
+```{r}
+treeselectionoutputs <- treeselection(inventory,
+                                      topography = DTMParacou, plotslope = PlotSlope,
+                                      speciescriteria = SpeciesCriteria,
+                                      objective = 20, scenario ="manual", fuel = "2",
+                                      diversification = FALSE, specieslax = FALSE,
+                                      objectivelax = TRUE,
+                                      advancedloggingparameters = loggingparameters())
+```
+
+### Decomposed tree selection
+#### Joins commercial criteria table
+```{r}
+inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
+```
+
+#### Harvestable trees identification
+```{r}
+harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
+                                  diversification = TRUE, plotslope = PlotSlope, specieslax = FALSE,
+                                  advancedloggingparameters = loggingparameters())
+inventory <- harvestableOutputs$inventory
+HVinit <- harvestableOutputs$HVinit
+```
+
+#### Trees to be exploited selection
+```{r}
+inventory <- selected(inventory, scenario = "manual", fuel = "2",
+                      diversification = TRUE, VO = 20, HVinit = HVinit, specieslax = FALSE,
+                      objectivelax = FALSE, topography = DTMParacou,
+                      advancedloggingparameters = loggingparameters())$inventory
+```
+
+#### Future & reserve trees designation
+```{r}
+inventory <- futurereserve(inventory, SpeciesCriteria)
+```
+
+## Secondary trails layout
+```{r}
+MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
+                                        286400, 583250,
+                                        286655, 583250,
+                                        286655, 583130,
+                                        286400, 583130) # the return
+                                      ,ncol=2, byrow=TRUE))
+
+pol1 <- list(matrix(c(286503, 583134,
+                      286503, 583240,
+                      286507, 583240,
+                      286507, 583134,
+                      286503, 583134) # the return
+                    ,ncol=2, byrow=TRUE))
+pol2 <- list(matrix(c(286650, 583134,
+                      286650, 583240,
+                      286654, 583240,
+                      286654, 583134,
+                      286650, 583134) # the return
+                    ,ncol=2, byrow=TRUE))
+
+PolList = list(pol1,pol2) #list of lists of numeric matrices
+ScndTrail <- sf::st_multipolygon(PolList)
+```
+
+
+## Tree felling
+### In 1 function
+```{r}
+inventory <- treefelling(inventory, scenario = "manual", fuel = "0",
+                         directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
+                         advancedloggingparameters = loggingparameters())
+
+Treefall <- inventory %>%
+  dplyr::filter(DeathCause == "treefall2nd")
+
+Reserve <- inventory %>%
+  dplyr::filter(LoggingStatus == "reserve")
+
+Future <- inventory %>%
+  dplyr::filter(LoggingStatus == "future")
+
+ggplot() +
+  geom_sf(data = sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
+  geom_sf(data = getgeometry (inventory, TreePolygon), fill = "red") + # cuted trees
+  geom_sf(data = sf::st_as_sf(Treefall, coords = c("Xutm", "Yutm")), colour = "yellow") +
+  geom_sf(data = sf::st_as_sf(Reserve, coords = c("Xutm", "Yutm")), colour = "green") +
+  geom_sf(data = sf::st_as_sf(Future, coords = c("Xutm", "Yutm")), colour = "pink")
+
+sf::st_intersection( # trees under the fallen trees
+  getgeometry (inventory, TreePolygon),
+  sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))
+) %>%
+  ggplot() +
+  geom_sf()
+```
+
+## Quantify the volumes achieved
+### Compute the timber harvested volume
+```{r}
+TimberV <- timberharvestedvolume(inventory, scenario = "manual", fuel = "2",
+                                 advancedloggingparameters = loggingparameters())
+
+TimberLoggedVolume <- TimberV$TimberLoggedVolume
+NoHollowTimberLoggedVolume <- TimberV$NoHollowTimberLoggedVolume
+```
+
+### Compute the exploitable fuel wood volume
+```{r}
+FuelV <- exploitablefuelwoodvolume(inventory, scenario = "manual", fuel = "2",
+                                   TimberLoggedVolume = TimberLoggedVolume,
+                                   NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
+                                   advancedloggingparameters = loggingparameters())
+
+DamageVolume <- FuelV$DamageVolume # only damage (without purge and hollow trees)
+FuelVolume <- FuelV$FuelVolume
+```
+
+# Tool functions
+```{r include=FALSE}
+inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+                        volumeparameters = ForestZoneVolumeParametersTable)
+```
+
+
+## Get geometry
+Converts a dataframe with a column of characters, which contains the WKT encoded geometries, into an sf object. The column is converted to sfc.
+
+## Create the canopy
+```{r}
+canopy <- createcanopy(inventory)
+
+# The small ones first so that they are behind the big ones on the plot
+canopy <- dplyr::arrange(canopy, TreeHeight)
+ggplot() +
+  geom_sf(data = getgeometry(canopy, Crowns),
+          aes(alpha = TreeHeight),
+          fill = "forestgreen")
+```
+
+## 1 tree from the sky
+```{r}
+dat <- inventory[679,]
+
+Crown <- treefromthesky(dat)
+
+ggplot() +
+  geom_sf(data = sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
+  geom_sf(data = Crown, fill = "forestgreen") # trees polygons
+```
+
+directionalfellingsuccessdef
+felling1tree
+rotatepolygon
+
+
+
+
 

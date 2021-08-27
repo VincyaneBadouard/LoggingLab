@@ -2,7 +2,7 @@
 % Please edit documentation in R/inventorycheckformat.R
 \name{inventorycheckformat}
 \alias{inventorycheckformat}
-\title{Check & format your inventory data for the package "Maria"}
+\title{Check & format your inventory data for the "Maria" package}
 \usage{
 inventorycheckformat(inventory)
 }
@@ -14,7 +14,7 @@ inventorycheckformat(inventory)
 Stop the function if the format is not the one required.
 }
 \description{
-Check & format your inventory data for the package "Maria"
+Check & format your inventory data for the "Maria" package
 }
 \examples{
 

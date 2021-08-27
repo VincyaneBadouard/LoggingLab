@@ -1,10 +1,10 @@
-#'Tree selection
+#'Tree selection (trees to be exploited, future and reserve trees)
 #'
 #'@param inventory your inventory (see the inputs formats and metadata in the
 #'  \code{\link{vignette}}) (data.frame)
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)

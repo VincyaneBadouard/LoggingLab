@@ -1,4 +1,4 @@
-#' ONFGuyafortaxojoin
+#' Joins commercial criteria table to the forest inventory
 #'
 #' @description Joins a commercial criteria table to a forest inventory
 #'

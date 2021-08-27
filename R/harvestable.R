@@ -1,4 +1,4 @@
-#'harvestable
+#' Harvestable trees identification
 #'
 #'@description The function tells you the harvestable volume in the plot, and
 #'  which trees are harvestable according to your harvestability criteria
@@ -7,7 +7,7 @@
 #'  \code{\link{vignette}}) (data.frame)
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
@@ -53,7 +53,7 @@
 #'
 #' inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 #'
-#' test <- harvestable(inventory, topography = DTMParacou,
+#' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 #' diversification = TRUE, plotslope = PlotSlope, specieslax = FALSE,
 #' advancedloggingparameters = loggingparameters())
 #'

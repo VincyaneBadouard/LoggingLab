@@ -61,6 +61,14 @@ SpeciesCriteria$VernName <- tolower(SpeciesCriteria$VernName)
 
 usethis::use_data(SpeciesCriteria)
 ```
+```{r}
+ScenariosTable <- read_csv("D:/VSC Kourou/DATA/ScenariosTable.csv", 
+    col_types = cols(Winching = col_factor(levels = c("0", 
+        "1", "2")), DirectionalFelling = col_factor(levels = c("0", 
+        "1", "2"))), trim_ws = TRUE)
+
+usethis::use_data(ScenariosTable)
+```
 
 # Data loading
 ```{r}

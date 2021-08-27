@@ -2,7 +2,7 @@
 % Please edit documentation in R/harvestable.R
 \name{harvestable}
 \alias{harvestable}
-\title{harvestable}
+\title{Harvestable trees identification}
 \usage{
 harvestable(
   inventory,
@@ -18,7 +18,7 @@ harvestable(
 \code{\link{vignette}}) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)}
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
@@ -54,7 +54,7 @@ volumeparameters = ForestZoneVolumeParametersTable)
 
 inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
-test <- harvestable(inventory, topography = DTMParacou,
+harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 diversification = TRUE, plotslope = PlotSlope, specieslax = FALSE,
 advancedloggingparameters = loggingparameters())
 

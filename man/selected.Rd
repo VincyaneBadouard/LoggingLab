@@ -2,7 +2,7 @@
 % Please edit documentation in R/selected.R
 \name{selected}
 \alias{selected}
-\title{selected}
+\title{Trees to be exploited selection}
 \usage{
 selected(
   inventory,
@@ -22,7 +22,7 @@ selected(
 \code{\link{vignette}}) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR or
-SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)}
+SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -57,7 +57,7 @@ the logging scenario chosen), and 2 sets of spatial points: (HollowTrees
 and EnergywoodTrees)
 }
 \description{
-selected
+Trees to be exploited selection
 }
 \examples{
 data(Paracou6_2016)

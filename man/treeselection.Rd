@@ -2,7 +2,7 @@
 % Please edit documentation in R/treeselection.R
 \name{treeselection}
 \alias{treeselection}
-\title{Tree selection}
+\title{Tree selection (trees to be exploited, future and reserve trees)}
 \usage{
 treeselection(
   inventory,
@@ -23,7 +23,7 @@ treeselection(
 \code{\link{vignette}}) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (default: \code{\link{DTMParacou}}) (RasterLayer)}
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
@@ -65,7 +65,7 @@ criteria - 6 sets of spatial points: harvestable, selected, future and
 reserve, hollow and energy wood trees
 }
 \description{
-Tree selection
+Tree selection (trees to be exploited, future and reserve trees)
 }
 \examples{
 data(Paracou6_2016)

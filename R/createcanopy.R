@@ -1,4 +1,4 @@
-#' createcanopy
+#' Create the canopy
 #'
 #' @param inventory Your inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)

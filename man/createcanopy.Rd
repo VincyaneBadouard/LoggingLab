@@ -2,7 +2,7 @@
 % Please edit documentation in R/createcanopy.R
 \name{createcanopy}
 \alias{createcanopy}
-\title{createcanopy}
+\title{Create the canopy}
 \usage{
 createcanopy(inventory)
 }
@@ -16,7 +16,7 @@ a dataframe with a column 'Crowns' containing the ellipses
 representing trees from the sky.
 }
 \description{
-createcanopy
+Create the canopy
 }
 \examples{
 data(Paracou6_2016)

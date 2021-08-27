@@ -1,4 +1,4 @@
-#' futurereserve
+#' Future & reserve trees designation
 #'
 #' @param inventory Your inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
@@ -47,7 +47,7 @@
 #' advancedloggingparameters = loggingparameters(), VO = 30,
 #'  HVinit = HVinit)$inventory
 #'
-#' futurereserve(inventory)
+#' futurereserve(inventory, SpeciesCriteria)
 #'
 futurereserve <- function(
   inventory,
