@@ -72,7 +72,7 @@ harvestable <- function(
     stop("The 'inventory' argument of the 'harvestable' function must be a data.frame")
 
   if(!all(unlist(lapply(list(diversification, specieslax), inherits, "logical"))))
-    stop("The 'diversification' and 'specieslax' arguments of the 'harvestable' function must be logical") # any() don't take a list
+    stop("The 'diversification' and 'specieslax' arguments of the 'harvestable' function must be logical")
 
   if(!all(unlist(lapply(list(topography, plotslope), inherits, "RasterLayer"))))
     stop("The 'topography' and 'plotslope' arguments of the 'harvestable' function must be RasterLayer")
@@ -98,57 +98,58 @@ harvestable <- function(
 
   # Calculation of spatial information (distance and slope)
   SpatInventory <- inventory %>%
-    filter(Commercial!= "0") %>%  # ne prendre que les individus d'sp commerciales, le temps de calcul est déjà bien assez long
-    filter(DBH >= MinFD & DBH <= MaxFD) # ne prendre que les individus d'sp commerciales, le temps de calcul est déjà bien assez long
+    filter(Commercial!= "0") %>%  # only take commercial sp, the calculation time is long enough
+    filter(DBH >= MinFD & DBH <= MaxFD) # already selected commercial DBHs
 
-  sp::coordinates(SpatInventory) <- ~ Xutm + Yutm # transformer l'inventaire en objet spatialisé en en informant les coordonnées
+  sp::coordinates(SpatInventory) <- ~ Xutm + Yutm # transform the inventory into a spatial object by informing the coordinates
 
-  sp::proj4string(SpatInventory) <- raster::crs(topography) # attribuer le crs de Paracou à notre inventaire spatialisé
+  sp::proj4string(SpatInventory) <- raster::crs(topography) # allocate the Paracou crs to our spatial inventory
 
-  SlopeTmp <- as_tibble(raster::extract(x = plotslope, y = SpatInventory)) # extrait les valeurs de pentes pour les points spatialisés de l'inventaire
+  SlopeTmp <- as_tibble(raster::extract(x = plotslope, y = SpatInventory)) # extracts the slope values for the inventory spatialized points
 
-  SpatInventory <- st_as_sf(SpatInventory) %>%  # transformer l'inventaire spatialisé en objet sf
-    add_column(DistCrit = FALSE) # Créer une colonne DistCrit FALSE par défaut
+  SpatInventory <- st_as_sf(SpatInventory) %>%  # transforming the spatialized inventory into an sf object
+    add_column(DistCrit = FALSE) # Create a default 'DistCrit' = FALSE column
 
   # i = 1
-  # ProgressBar <- txtProgressBar(min = 0, max = nrow(SpatInventory),style = 3) # barre de progression du calcul
+  # ProgressBar <- txtProgressBar(min = 0, max = nrow(SpatInventory),style = 3) # Progression bar
 
-  # Calcul des distances entre les arbres de la même espèce
+  # Calculating distances between trees of the same species
 
   for (SpecieI in unique(SpatInventory$ScientificName)) {
 
-    SpatInventorytmp <- SpatInventory %>% # SpatInventorytmp stocke 1 seul résulat, celui de chaque tour
+    SpatInventorytmp <- SpatInventory %>% # SpatInventorytmp stores only result, that of each turn
       filter(ScientificName == SpecieI)
 
     # SpatInventorytmp <- as_Spatial(SpatInventorytmp)
-    # distSp <- topoDist(topography = PlotTopo, pts = SpatInventorytmp) # calcul des distances topo
+    # distSp <- topoDist(topography = PlotTopo, pts = SpatInventorytmp) # calculates topo distances
     # distSp <- as_tibble(distSp)
 
     distSp <- st_distance(SpatInventorytmp)
     units(distSp) <- NULL
     distSp <- suppressMessages(as_tibble(distSp, .name_repair = "universal"))
 
-    distSp[distSp == 0] <- NA # ne pas prendre en compte les 0 dans la matrice, qui sont les dist de l'arbre à lui-même.
-    distSp[distSp == Inf] <- NA # ne pas prendre en compte les Inf qui sont les arbres hors de parcelle.
+    distSp[distSp == 0] <- NA # don't take into account the 0's in the matrix, which are the dist from the tree to itself
+    distSp[distSp == Inf] <- NA # don't take into account the Inf which are the trees outside the plot.
 
-    for (ind in 1:dim(distSp)[2]) { # 2 pour colonne
-      if (all(is.na(distSp[,ind]))) {FALSE # si toutes la colonne contient des NA c'est un Inf donc on ne le veut pas
+    for (ind in 1:dim(distSp)[2]) { # '2' for column
+      if (all(is.na(distSp[,ind]))) {FALSE # if all the column contains NA it is an Inf so we don't want it
       }else{
-        SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < advancedloggingparameters$IsolateTreeMinDistance # si la distance minimale à ses congénaires est < 100, il est exploitable
+        # if the minimum distance to its congeners is < 100, it is exploitable:
+        SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < advancedloggingparameters$IsolateTreeMinDistance
       }
       SpatInventory$DistCrit[SpatInventory$idTree == SpatInventorytmp$idTree[ind]] <- SpatInventorytmp$DistCrit[ind]
-      # i = i+1 # et en informer la progress bar
+      # i = i+1 # and inform the progress bar
       # setTxtProgressBar(ProgressBar, i)
     }
   }
 
 
   SlopeCritInventory <- SpatInventory %>%   # SpatInventory <- SpatInventory before
-    add_column(Slope = SlopeTmp$value) %>% # ajouter les valeurs de pentes par arbre
-    # les NaN ce sont les valeurs infinies, qui témoignent d'un plateau donc pente = 0
+    add_column(Slope = SlopeTmp$value) %>% # add slope values per tree
+    # the NaN are the infinite values, which indicate a plateau so slope = 0:
     mutate(Slope = ifelse(is.nan(Slope), 0, Slope)) %>%
     mutate(SlopeCrit = if_else(
-      condition = Slope <= atan(advancedloggingparameters$TreeMaxSlope/100), # si pente <= 22% l'arbre est exploitable (on est en radian)
+      condition = Slope <= atan(advancedloggingparameters$TreeMaxSlope/100), # if slope <= 22% the tree is exploitable (we are in radian)
       TRUE,
       FALSE)) %>%
     dplyr::select(idTree, DistCrit, Slope, SlopeCrit)
@@ -157,7 +158,7 @@ harvestable <- function(
     left_join(SlopeCritInventory, by = "idTree") %>%
     dplyr::select(-geometry)
 
-  #select essences
+  # Essences selection
   HarverstableConditions <- # = 1 boolean vector
     if (diversification || (!diversification && specieslax)) {
       inventory$Commercial =="1"| inventory$Commercial == "2" # now or maybe after we will diversify
@@ -166,10 +167,10 @@ harvestable <- function(
     }
 
 
-  #select diameters
+  # Diameters selection
   HarverstableConditions <- HarverstableConditions & (inventory$DBH >= inventory$MinFD & inventory$DBH <= inventory$MaxFD) # harvestable individuals, accord by their DBH
 
-  #select spatially
+  # Select spatially
   HarverstableConditions <- HarverstableConditions & (inventory$DistCrit == TRUE & inventory$SlopeCrit == TRUE) # !is.null(ProspectionUnitCode) &
   ## in a PU
   ## slope

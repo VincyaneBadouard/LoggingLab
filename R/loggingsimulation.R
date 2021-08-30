@@ -202,7 +202,7 @@ loggingsimulation <- function(
   winching <- scenariosparameters$winching
   directionalfelling <- scenariosparameters$directionalfelling
 
-  INPUTinventory <- inventory
+  INPUTinventory <- deparse(substitute(inventory)) # object name to this name in character
 
   # Function
 

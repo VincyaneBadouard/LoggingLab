@@ -10,14 +10,22 @@
 #' @export
 #'
 #' @examples
+#' data(Paracou6_2016) # inventory
+#' data(DTMParacou) # topography
+#' # data() relative elevation
+#' data(SpeciesCriteria) # species exploitability criteria
+#' data(ForestZoneVolumeParametersTable) # volume parameters
+#' data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 #'
-#' Rslt <- loggingsimulation(Paracou6_2016, topography = DTMParacou,
-#'  relativeelevation  = DTMParacou, speciescriteria = SpeciesCriteria,
-#'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
-#'  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
-#'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
-#'  crowndiameterparameters = ParamCrownDiameterAllometry,
-#'  advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+#' Rslt <- suppressMessages(
+#'   loggingsimulation(Paracou6_2016, topography = DTMParacou,
+#'                     relativeelevation  = DTMParacou, speciescriteria = SpeciesCriteria,
+#'                     volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
+#'                     objective = 20, fuel = "2", diversification = TRUE, winching = "2",
+#'                     directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
+#'                     crowndiameterparameters = ParamCrownDiameterAllometry,
+#'                     advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+#' )
 #'
 #' loggingsummary(Rslt)
 #'
@@ -29,7 +37,7 @@ loggingsummary <- function(x
     stop("The argument of the 'loggingsummary' function must be a list")
 
   # Reminder of INPUTS:
-  # cat('inventory :', x$INPUTinventory, '\n') # input inventory il faut du character
+  cat('inventory :', x$INPUTinventory, '\n') # input inventory name
   cat('scenario :', x$scenario, '\n') # scenario,
   cat('objective :', x$objective, '\n') # objective volume
   cat('fuel :', x$fuel, '\n') # fuel

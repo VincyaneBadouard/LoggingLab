@@ -39,8 +39,8 @@ same format of \code{\link{SpeciesCriteria}} (data.frame)}
 \item{objective}{Objective volume per hectare (numeric)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", damages and purge
-exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
-fuelwood = "2"}
+exploitation in fuelwood = "1", exploitation of hollow trees, damages and
+purge in fuelwood = "2"}
 
 \item{diversification}{Taking of other species in addition to the main
 commercial species (2 levels of commercial species in the

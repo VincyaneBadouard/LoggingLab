@@ -21,16 +21,16 @@ selected(
 \item{inventory}{Your inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
-\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR or
-SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
+\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 \code{\link{vignette}})}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", damages and purge
-exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
-fuelwood = "2"}
+exploitation in fuelwood = "1", exploitation of hollow trees, damages and
+purge in fuelwood = "2"}
 
 \item{diversification}{Taking of other species in addition to the main
 commercial species (2 levels of commercial species in the
@@ -53,8 +53,8 @@ objective volume (if stand too poor), = FALSE by default (logical)}
 }
 \value{
 Your inventory with the trees selected for harvesting (depending on
-the logging scenario chosen), and 2 sets of spatial points: (HollowTrees
-and EnergywoodTrees)
+the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
+EnergywoodTrees)
 }
 \description{
 Trees to be exploited selection

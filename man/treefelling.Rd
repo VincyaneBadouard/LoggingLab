@@ -45,6 +45,7 @@ reserve trees + track orientation)}
 Tree felling
 }
 \examples{
+\dontrun{
 MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
                                         286400, 583250,
                                         286655, 583250,
@@ -104,5 +105,6 @@ sf::st_intersection( # trees under the fallen trees
 ) \%>\%
   ggplot() +
   geom_sf()
+}
 
 }

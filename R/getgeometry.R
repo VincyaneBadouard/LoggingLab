@@ -37,8 +37,9 @@ getgeometry  <- function(
   var
 ){
 
-  # Arguments check
   col_name <- deparse(substitute(var)) # object name to this name in character
+
+  # Arguments check
 
   if(!inherits(inventory, "data.frame"))
     stop("The 'inventory' argument of the 'getgeometry ' function must be data.frame")

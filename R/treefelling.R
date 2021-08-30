@@ -33,6 +33,7 @@
 #' @importFrom tidyr unnest
 #'
 #' @examples
+#' \dontrun{
 #' MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
 #'                                         286400, 583250,
 #'                                         286655, 583250,
@@ -92,6 +93,7 @@
 #' ) %>%
 #'   ggplot() +
 #'   geom_sf()
+#'}
 #'
 treefelling <- function(
   inventory,

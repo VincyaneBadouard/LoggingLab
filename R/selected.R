@@ -1,46 +1,46 @@
-#' Trees to be exploited selection
+#'Trees to be exploited selection
 #'
-#' @param inventory Your inventory (see the inputs formats and metadata in the
-#'   \code{\link{vignette}}) (data.frame)
+#'@param inventory Your inventory (see the inputs formats and metadata in the
+#'  \code{\link{vignette}}) (data.frame)
 #'
-#' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR or
-#'   SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
+#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
-#' @param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
-#'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-#'   \code{\link{vignette}})
+#'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+#'  \code{\link{vignette}})
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
-#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
-#'   fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
+#'  exploitation in fuelwood = "1", exploitation of hollow trees, damages and
+#'  purge in fuelwood = "2"
 #'
-#' @param diversification Taking of other species in addition to the main
-#'   commercial species (2 levels of commercial species in the
-#'   \code{\link{SpeciesCriteria}} table) (logical)
+#'@param diversification Taking of other species in addition to the main
+#'  commercial species (2 levels of commercial species in the
+#'  \code{\link{SpeciesCriteria}} table) (logical)
 #'
-#' @param specieslax Allow diversification if stand is too poor, = FALSE by
-#'   default (logical)
+#'@param specieslax Allow diversification if stand is too poor, = FALSE by
+#'  default (logical)
 #'
-#' @param VO The objective volume with or without a bonus (if hollow trees
-#'   exploitation)(numeric value) (see the \code{\link{loggingparameters}})
+#'@param VO The objective volume with or without a bonus (if hollow trees
+#'  exploitation)(numeric value) (see the \code{\link{loggingparameters}})
 #'
-#' @param HVinit the harvestable volume in the plot for your criteria
-#'   (\code{\link{SpeciesCriteria}}) (numeric value)
+#'@param HVinit the harvestable volume in the plot for your criteria
+#'  (\code{\link{SpeciesCriteria}}) (numeric value)
 #'
-#' @param objectivelax Allow exploitation in case of non-achievement of the
-#'   objective volume (if stand too poor), = FALSE by default (logical)
+#'@param objectivelax Allow exploitation in case of non-achievement of the
+#'  objective volume (if stand too poor), = FALSE by default (logical)
 #'
-#' @param advancedloggingparameters Other parameters of the logging simulator
-#'   \code{\link{loggingparameters}} (list) MainTrail (multiline)
+#'@param advancedloggingparameters Other parameters of the logging simulator
+#'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
-#' @return Your inventory with the trees selected for harvesting (depending on
-#'   the logging scenario chosen), and 2 sets of spatial points: (HollowTrees
-#'   and EnergywoodTrees)
+#'@return Your inventory with the trees selected for harvesting (depending on
+#'  the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
+#'  EnergywoodTrees)
 #'
-#' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
-#'   \code{\link{DTMParacou}}, \code{\link{loggingparameters}}
+#'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
+#'  \code{\link{DTMParacou}}, \code{\link{loggingparameters}}
 #'
-#' @export
+#'@export
 #'
 #'@importFrom dplyr arrange desc ungroup rowwise mutate group_by select filter
 #'@importFrom tibble add_column
@@ -113,7 +113,8 @@ selected <- function(
     stop("The 'VO' and 'HVinit' arguments of the 'selected' function must be numeric")
 
   # Redefinition of the parameters according to the chosen scenario
-  scenariosparameters <- scenariosparameters(scenario = scenario, fuel = fuel, diversification = diversification)
+  scenariosparameters <- scenariosparameters(scenario = scenario,
+                                             fuel = fuel, diversification = diversification)
 
   fuel <- scenariosparameters$fuel
   diversification <- scenariosparameters$diversification
@@ -144,13 +145,14 @@ selected <- function(
     mutate(Selected = ifelse(HVinit == VO & LoggingStatus == "harvestable",
                              "1", NA))# if we have our volume, harvestable sp = selected sp
 
-  inventory <- add_column(inventory, Up = "0") # Create a column to indicate Which sp is FD uped. "0" = no uped, "1"= uped
+  # Create a column to indicate Which sp is FD uped. "0" = no uped, "1"= uped
+  inventory <- add_column(inventory, Up = "0")
 
 
   if (HVinit < VO){ #diversification is necessary, designate the secondary-economic-rank species too
     if (!diversification && specieslax){
       inventory <- inventory %>%
-        mutate(Condition = ifelse(LoggingStatus == "harvestable2nd" | LoggingStatus == "harvestable", TRUE, FALSE)) %>%
+        mutate(Condition = ifelse(LoggingStatus == "harvestable2nd"|LoggingStatus == "harvestable",TRUE, FALSE)) %>%
         group_by(Condition) %>%
         arrange(desc(TreeHarvestableVolume)) %>%
         mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
@@ -160,25 +162,50 @@ selected <- function(
 
       HarvestableTable <- inventory %>%
         filter(Selected == "1")
-      HVlax <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with specieslax permission
+      HVlax <- sum(HarvestableTable$TreeHarvestableVolume) # Harvestable volume, with specieslax permission
 
 
-      if (HVlax < VO && objectivelax) message("The exploitable volume (= ",paste(round(HVlax, digits = 1)),"m^3) is still lower (by ",paste(round(VO- HVlax, digits = 1)),"m^3) than your objective volume despite the diversification you have allowed (without the diversification HVinit= ",paste(round(HVinit, digits = 1)),"m^3). In this case, you have chosen to continue harvesting with a volume lower than your objective.")
+      if (HVlax < VO && objectivelax)
+        message("The exploitable volume (= ",paste(round(HVlax, digits = 1)),"m^3) is still lower
+                (by ",paste(round(VO- HVlax, digits = 1)),"m^3) than your objective volume
+                despite the diversification you have allowed
+                (without the diversification HVinit= ",paste(round(HVinit, digits = 1)),"m^3).
+                In this case, you have chosen to continue harvesting with a volume lower than your objective.")
 
-      if (HVlax < VO && !objectivelax) stop("The harvestable volume = ",paste(round(HVlax, digits = 1)),"m^3) is still lower (by ",paste(round(VO- HVlax, digits = 1)),"m^3) than your objective volume despite the diversification you have allowed (without the diversification HVinit= ",paste(round(HVinit, digits = 1)),"m^3). By default or by your choice, the simulation stops. If you wish to continue the exploitation in spite of an exploitable volume lower than your objective volume, you have the argument 'objectivelax'.")
+      if (HVlax < VO && !objectivelax)
+        stop("The harvestable volume = ",paste(round(HVlax, digits = 1)),"m^3)
+             is still lower (by ",paste(round(VO- HVlax, digits = 1)),"m^3)
+             than your objective volume despite the diversification you have allowed
+             (without the diversification HVinit= ",paste(round(HVinit, digits = 1)),"m^3).
+             By default or by your choice, the simulation stops.
+             If you wish to continue the exploitation in spite of an exploitable volume lower
+             than your objective volume, you have the argument 'objectivelax'.")
 
-      if (!HVlax == VO) message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was lower (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume. You have chosen to diversify your species selection in this case. The exploitation was therefore carried out on this diversified selection of species.")
+      if (!HVlax == VO)
+        message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was lower
+                (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume.
+                You have chosen to diversify your species selection in this case.
+                The exploitation was therefore carried out on this diversified selection of species.")
     }
 
     if (!diversification && !specieslax && objectivelax)
-      message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) is less (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume. In this case you have chosen to continue logging without diversifying your species.")
+      message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) is less
+              (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume.
+              In this case you have chosen to continue logging without diversifying your species.")
     if (diversification && objectivelax)
 
-      message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) is less (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume. In this case you have chosen to continue logging.")
+      message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) is less
+              (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume.
+              In this case you have chosen to continue logging.")
 
 
     if ((!specieslax & !objectivelax) | (diversification && !objectivelax))
-      stop("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) is lower (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume. By default or by your choice, the simulation stops. If you wish to continue the exploitation in spite of a harvestable volume lower than your objective volume, you can use the argument 'objectivelax' or the diversification of species (if it is not already the case).")
+      stop("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) is lower
+           (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume.
+           By default or by your choice, the simulation stops.
+           If you wish to continue the exploitation in spite of a harvestable volume lower
+           than your objective volume, you can use the argument 'objectivelax'
+           or the diversification of species (if it is not already the case).")
   }
 
 
@@ -193,7 +220,7 @@ selected <- function(
       HarvestableTable <- inventory %>%
         filter(LoggingStatus == "harvestableUp")
 
-      HVupCommercial1 <- sum(HarvestableTable$TreeHarvestableVolume) #82.42823. compute the harvestable volume with upgraded FD individuals
+      HVupCommercial1 <- sum(HarvestableTable$TreeHarvestableVolume) #Compute the harvestable volume with upgraded FD individuals
 
 
       if (HVupCommercial1 == VO){
@@ -201,12 +228,15 @@ selected <- function(
         inventory <- inventory %>%
           mutate(Selected = ifelse(HVupCommercial1 == VO & LoggingStatus == "harvestableUp", "1", NA))# if harvestableUp individuals are sufficient to have our volume, harvestableUp ind = selected ind
 
-        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume, the Minimum Falling Diameter (MinFD) of 1st economic rank species were increased. The objective volume has now been reached.")
+        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was higher
+                (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume,
+                the Minimum Falling Diameter (MinFD) of 1st economic rank species were increased.
+                The objective volume has now been reached.")
       }
 
       if (HVupCommercial1 > VO){
         # only individuals with DBH > FD are taken, but not all because their volumes > VO
-        inventory<- inventory %>%
+        inventory <- inventory %>%
           mutate(Condition = ifelse(LoggingStatus == "harvestableUp", TRUE, FALSE)) %>%
           group_by(Condition) %>%
           arrange(desc(TreeHarvestableVolume)) %>%
@@ -217,14 +247,19 @@ selected <- function(
 
         HarvestableTable <- inventory %>%
           filter(Selected == "1")
-        HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals only
+        HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #Harvestable volume, with "1" rank species and upgraded FD individuals only
 
-        message("The harvestable volume (= ",paste(round(HVupCommercial1, digits = 1)),"m^3)is always higher (by ",paste(round(HVupCommercial1-VO, digits = 1)),"m^3) than your objective volume despite the increase in Minimum Falling Diameter (MinFD) (Initial harvestable volume = ",paste(round(HVinit, digits = 1)),"m^3). In order to reach your objective volume, the trees were selected in decreasing order of volume until the objective volume was reached.")
+        message("The harvestable volume (= ",paste(round(HVupCommercial1, digits = 1)),"m^3) is always higher
+                (by ",paste(round(HVupCommercial1-VO, digits = 1)),"m^3) than your objective volume
+                despite the increase in Minimum Falling Diameter (MinFD)
+                (Initial harvestable volume = ",paste(round(HVinit, digits = 1)),"m^3).
+                In order to reach your objective volume, the trees were selected in decreasing order of volume
+                until the objective volume was reached.")
       }
       if (HVupCommercial1 < VO){
 
         inventory <- inventory %>%
-          mutate(Condition = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable", TRUE, FALSE)) %>%
+          mutate(Condition = ifelse(LoggingStatus == "harvestableUp"|LoggingStatus == "harvestable",TRUE,FALSE)) %>%
           group_by(Condition) %>%
           arrange(desc(TreeHarvestableVolume)) %>%
           mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
@@ -234,9 +269,13 @@ selected <- function(
 
         HarvestableTable <- inventory %>%
           filter(Selected == "1")
-        HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals
+        HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #Harvestable volume, with "1" rank species and upgraded FD individuals
 
-        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased with retention of some stems with DBH lower than the UpMinFD to ensure that the objective volume was attained.")
+        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3)
+                was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume,
+                the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased
+                with retention of some stems with DBH lower than the UpMinFD
+                to ensure that the objective volume was attained.")
       }
     }
 
@@ -258,7 +297,7 @@ selected <- function(
       if (HVupCommercial1 < VO){
 
         inventory <- inventory %>%
-          mutate(Condition = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable", TRUE, FALSE)) %>%
+          mutate(Condition = ifelse(LoggingStatus == "harvestableUp"|LoggingStatus == "harvestable",TRUE,FALSE)) %>%
           group_by(Condition) %>%
           arrange(desc(TreeHarvestableVolume)) %>%
           mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
@@ -270,7 +309,11 @@ selected <- function(
           filter(Selected == "1")
         HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals, and 2nd rank no upgraded FD individuals
 
-        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased with retention of some stems with DBH lower than the UpMinFD to ensure that the objective volume was attained. It was not necessary to raise the MinFDs of other economic species.")
+        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3)
+                was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume,
+                the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased
+                with retention of some stems with DBH lower than the UpMinFD to ensure that the objective
+                volume was attained. It was not necessary to raise the MinFDs of other economic species.")
       }
 
       if (HVupCommercial1 > VO){
@@ -293,7 +336,7 @@ selected <- function(
         if (HVupCommercial12 != VO){
 
           inventory <- inventory %>%
-            mutate(Condition = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable", TRUE, FALSE)) %>%
+            mutate(Condition = ifelse(LoggingStatus == "harvestableUp"|LoggingStatus == "harvestable",TRUE,FALSE)) %>%
             group_by(Condition) %>%
             arrange(desc(TreeHarvestableVolume)) %>%
             mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
@@ -306,7 +349,10 @@ selected <- function(
           HVupCommercial12adjust <- sum(HarvestableTable$TreeHarvestableVolume) #45.44885 Harvestable volume, with upgraded FD individuals
         }
 
-        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume, it was necessary to increase the Minimum Falling Diameter (MinFD) of all species. The objective volume has now been reached.")
+        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3)
+                was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3)
+                than the objective volume, it was necessary to increase the Minimum Falling Diameter (MinFD)
+                of all species. The objective volume has now been reached.")
 
       }
     }
@@ -314,25 +360,35 @@ selected <- function(
 
   # Apply S. Schmitt's "Rotten" predictive model to identify "truly" hollow designated trees.
   inventory <- inventory %>%
-    mutate(ProbedHollowProba = ifelse(Selected == "1", advancedloggingparameters$RottenModel(DBH), NA)) %>%  #Estimates the probability of being probed hollow
+    # Estimates the probability of being probed hollow
+    mutate(ProbedHollowProba = ifelse(Selected == "1", advancedloggingparameters$RottenModel(DBH), NA)) %>%
 
     # generate either "1" or "0" randomly for each line, depending on the proba associated with the line:
     rowwise() %>%
     mutate(ProbedHollow = ifelse(!is.na(ProbedHollowProba),
-                                 sample(c(1,0), size = 1, replace = F, prob = c(ProbedHollowProba, 1-ProbedHollowProba)), NA)) %>%  # 1 = hollow tree, 0 = not hollow
+                                 sample(c(1,0), size = 1, replace = F, # 1 = hollow tree, 0 = not hollow
+                                        prob = c(ProbedHollowProba, 1-ProbedHollowProba)), NA)) %>%
     mutate(ProbedHollow = factor(as.numeric(ProbedHollow))) %>%
-    mutate(Selected = ifelse(ProbedHollow == "1", "deselected", Selected)) %>%  #hollow probed trees are deselected
+    # Hollow probed trees are deselected
+    mutate(Selected = ifelse(ProbedHollow == "1", "deselected", Selected)) %>%
+
+    # remplacer les arbres deselected (atteindre le vol objectif)
 
     # Upgraded MinFD species:
+    # to inform for each individual if its species have been FD upgraded
     group_by(ONFName) %>%
-    mutate(Up = ifelse(any(LoggingStatus == "harvestableUp"), "1", Up)) %>% # to inform for each individual if its species have been FD upgraded
+    mutate(Up = ifelse(any(LoggingStatus == "harvestableUp"), "1", Up)) %>%
     ungroup() %>%
 
   # No NA in Selected colomn
     mutate(Selected = ifelse(is.na(Selected) , "0", Selected))
 
-  if (any(inventory$Selected == "deselected") & !any(inventory$Selected == "1")) #if there are "deselected" trees and  not of selected = 1
-    stop("No trees were selected because they were all probed hollow (",paste(round(sum(as.numeric(inventory$Selected == "deselected"), na.rm = TRUE),  digits = 1))," probed hollow trees). Your objective volume may be too low (the few trees selected were found to be hollow).")
+  # if there are "deselected" trees and not of 'selected = 1'
+  if (any(inventory$Selected == "deselected") & !any(inventory$Selected == "1"))
+    stop("No trees were selected because they were all probed hollow
+         (",paste(round(sum(as.numeric(inventory$Selected == "deselected"), na.rm = TRUE),  digits = 1)),
+         " probed hollow trees). Your objective volume may be too low (the few trees selected were found to be
+         hollow).")
 
   # Create a POINTS VECTOR with coordinates of the probed hollow trees:
   if (any(inventory$ProbedHollow == "1", na.rm = TRUE)) {

@@ -19,9 +19,9 @@
 #'
 #'@param objective Objective volume per hectare (numeric)
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
-#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
-#'   fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
+#'  exploitation in fuelwood = "1", exploitation of hollow trees, damages and
+#'  purge in fuelwood = "2"
 #'
 #'@param diversification Taking of other species in addition to the main
 #'  commercial species (2 levels of commercial species in the
@@ -104,9 +104,10 @@ treeselection <- function(
   if(!all(unlist(lapply(list(specieslax, objectivelax), inherits, "logical"))))
     stop("The 'specieslax' and 'objectivelax' arguments of the 'treeselection' function must be logicals")
 
-  if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"|| scenario == "RIL3"|| scenario == "RIL3fuel"||
-           scenario == "RIL3fuelhollow"|| scenario =="manual"))
-    stop("The 'scenario' argument of the 'treeselection' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
+  if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"||
+           scenario == "RIL3"|| scenario == "RIL3fuel"|| scenario == "RIL3fuelhollow"|| scenario =="manual"))
+    stop("The 'scenario' argument of the 'treeselection' function must be
+         'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
   if (!any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
     stop("The 'fuel' argument of the 'treeselection' function must be '0', '1', or '2'")
@@ -160,53 +161,59 @@ treeselection <- function(
 
     # generate either "1" or "0" randomly for each line, depending on the proba associated with the line:
     rowwise() %>%
-    mutate(VisibleDefect = sample(c(1,0), size = 1, replace = F, prob = c(VisibleDefectProba, 1-VisibleDefectProba))) %>%    # 1 = visible defects tree, 0 = no visible defects
+    mutate(VisibleDefect = sample(c(1,0), size = 1, replace = F,
+                                  prob = c(VisibleDefectProba, 1-VisibleDefectProba))) %>% # 1 = visible defects tree, 0 = no visible defects
     ungroup() %>%
     mutate(VisibleDefect = as.factor(VisibleDefect))
 
-  # Compute the objective volume with or without bonus:
-  if (fuel =="2") {VO = objective
+  # Compute the objective volume with or without bonus: (to remove ?)
+  if (fuel =="2") {
+    VO = objective * unique(inventory$PlotArea)
   }else{
-    VO = objective + advancedloggingparameters$ObjectiveBonus # to compensate for the designated hollow wood.
-
+    # to compensate for the designated hollow wood
+    VO = (objective +
+            (objective *((advancedloggingparameters$ObjectiveBonus)/100))
+    ) * unique(inventory$PlotArea)
   }
 
-  inventory <- ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria) # Joins commercial criteria to the inventory
+  # Joins commercial criteria to the inventory
+  inventory <- ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria)
 
   VisibleDefectTable <- filter(inventory, VisibleDefect == "1")
   inventory <- filter(inventory, VisibleDefect == "0") # we continue with just visibly healthy trees
 
-  harvestableOutputs <- harvestable(inventory,    # harvestable function
+  # Harvestable trees identification
+  harvestableOutputs <- harvestable(inventory,
                                     topography = topography, plotslope = plotslope,
                                     diversification = diversification, specieslax = specieslax,
                                     advancedloggingparameters = advancedloggingparameters)
 
-  inventory <- harvestableOutputs$inventory       # one of the output
+  inventory <- harvestableOutputs$inventory       # new inventory
 
-  HVinit <- harvestableOutputs$HVinit             # the other output: initial harvestable volume
+  HVinit <- harvestableOutputs$HVinit             # initial harvestable volume
 
-  selectedOutputs <- selected(inventory,          # outputs of the selected function
-    topography = topography,
-    scenario = scenario, fuel = fuel, diversification = diversification,
-    VO = VO, HVinit = HVinit,
-    specieslax = specieslax, objectivelax = objectivelax,
-    advancedloggingparameters = advancedloggingparameters)
+  # Trees to be exploited selection
+  selectedOutputs <- selected(inventory,
+                              topography = topography,
+                              scenario = scenario, fuel = fuel, diversification = diversification,
+                              VO = VO, HVinit = HVinit,
+                              specieslax = specieslax, objectivelax = objectivelax,
+                              advancedloggingparameters = advancedloggingparameters)
 
-  inventory <- selectedOutputs$inventory                                           # extract inventory of the selected outputs
+  inventory <- selectedOutputs$inventory                          # extract inventory of the selected outputs
 
-  HollowTreesPoints <- selectedOutputs$HollowTreesPoints                           # extract a pts vector of the selected outputs
-  EnergywoodTreesPoints <- selectedOutputs$EnergywoodTreesPoints                   # extract a pts vector of the selected outputs
+  HollowTreesPoints <- selectedOutputs$HollowTreesPoints          # extract a pts vector of the selected outputs
+  EnergywoodTreesPoints <- selectedOutputs$EnergywoodTreesPoints  # extract a pts vector of the selected outputs
 
-
+  # Future & reserve trees designation
   inventory <- futurereserve(inventory,
                              speciescriteria = speciescriteria,
                              advancedloggingparameters = advancedloggingparameters)
 
 
-  # créer les conditions et vecteurs vides dans les listes à retourner
   # Points vector with coordinates of the harvestable trees:
   HarvestableTreesPoints <- inventory %>%
-    filter(LoggingStatus == "harvestable" |LoggingStatus == "harvestableUp" |LoggingStatus == "harvestable2nd") # harvestableUp = DBH > MinFD individuals, harvestable2nd = eco2 individuals is specieslax
+    filter(LoggingStatus == "harvestable"|LoggingStatus == "harvestableUp"|LoggingStatus == "harvestable2nd") # harvestableUp = DBH > MinFD individuals, harvestable2nd = eco2 individuals is specieslax
 
   if (dim(HarvestableTreesPoints)[1] != 0) {
 
@@ -214,7 +221,7 @@ treeselection <- function(
 
     # sp::proj4string(HarvestableTreesPoints) <- raster::crs(topography)
 
-  } else {HarvestableTreesPoints = st_point(x = c(NA_real_, NA_real_))}
+  } else {HarvestableTreesPoints = st_point(x = c(NA_real_, NA_real_))} # empty
 
   # Points vector with coordinates of the selected trees:
   SelectedTreesPoints <- inventory %>%
@@ -226,7 +233,7 @@ treeselection <- function(
 
     # sp::proj4string(SelectedTreesPoints) <- raster::crs(topography)
 
-  } else {SelectedTreesPoints = st_point(x = c(NA_real_, NA_real_))}
+  } else {SelectedTreesPoints = st_point(x = c(NA_real_, NA_real_))} # empty
 
   # Points vector with coordinates of the future trees:
   FutureTreesPoints <- inventory %>%
@@ -238,7 +245,7 @@ treeselection <- function(
 
     # sp::proj4string(FutureTreesPoints) <- raster::crs(topography)
 
-  } else {FutureTreesPoints = st_point(x = c(NA_real_, NA_real_))}
+  } else {FutureTreesPoints = st_point(x = c(NA_real_, NA_real_))} # empty
 
   # Points vector with coordinates of the reserve trees:
   ReserveTreesPoints <- inventory %>%
@@ -250,13 +257,14 @@ treeselection <- function(
 
     # sp::proj4string(ReserveTreesPoints) <- raster::crs(topography)
 
-  } else {ReserveTreesPoints = st_point(x = c(NA_real_, NA_real_))}
+  } else {ReserveTreesPoints = st_point(x = c(NA_real_, NA_real_))} # empty
 
-  #where specieslax was not necessary, consider eco2s as non-exploitable:
+  # where specieslax was not necessary, consider eco2s as non-exploitable:
   inventory <- inventory %>%
-    mutate(LoggingStatus = ifelse(HVinit > VO & LoggingStatus == "harvestable2nd", "non-harvestable", LoggingStatus)) %>%
+    mutate(LoggingStatus = ifelse(HVinit > VO & LoggingStatus == "harvestable2nd", "non-harvestable",
+                                  LoggingStatus)) %>%
 
-    # add the visible defects trees removed until now
+    # Add the visible defects trees removed until now
     bind_rows(VisibleDefectTable)
 
   # OUTPUTS list

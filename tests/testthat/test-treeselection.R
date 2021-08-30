@@ -34,7 +34,8 @@ test_that("treeselection", {
   expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
                              fuel = "0", diversification = TRUE, objective = 20,
                              scenario = "CL"),
-               regexp = "The 'scenario' argument of the 'treeselection' function must be 'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
+               regexp = "The 'scenario' argument of the 'treeselection' function must be
+         'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
   expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
                              scenario ="manual", objective = 20, diversification = TRUE,
