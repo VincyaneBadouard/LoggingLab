@@ -67,7 +67,8 @@ test_that("selected", {
     TestRareWorld <- testinventory %>%
       dplyr::filter(LoggingStatus == "harvestable")
 
-    expect_true(all(TestRareWorld$Selected == "1" |TestRareWorld$Selected == "deselected")) #deselected = probbedhollow trees
+    expect_true(all(TestRareWorld$Selected == "1" |
+                      (TestRareWorld$Selected == "0" & TestRareWorld$ProbedHollow == "1")))
   }
 
 
@@ -149,13 +150,14 @@ test_that("selected", {
 
   # Hollow (Rotten model)
   testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE,
-                                             topography = DTMParacou, advancedloggingparameters = loggingparameters(),
+                                             topography = DTMParacou,
+                                             advancedloggingparameters = loggingparameters(),
                                              VO = VO, HVinit = HVinit))$inventory
 
   TestHollow <- testinventory %>%
-    dplyr::filter(Selected == "1"| Selected == "deselected")
+    dplyr::filter(LoggingStatus == "harvestable" | LoggingStatus == "harvestable2nd")
 
-  expect_true(all(!is.na(TestHollow$ProbedHollowProba))) # ProbedHollowProba for the Selected == "1" or == "deselected"
+  expect_true(all(!is.na(TestHollow$ProbedHollowProba))) # ProbedHollowProba for harvestable trees
   expect_true(all(TestHollow$ProbedHollow %in% c("0","1"))) # ProbedHollow = "0" ou "1" if !is.na(ProbedHollowProba)
 
   expect_true(all(TestHollow$ProbedHollow == "0" | TestHollow$ProbedHollow == "1")) # doest works with the check..

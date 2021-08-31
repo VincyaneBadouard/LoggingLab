@@ -36,8 +36,8 @@ purge in fuelwood = "2"}
 commercial species (2 levels of commercial species in the
 \code{\link{SpeciesCriteria}} table) (logical)}
 
-\item{VO}{The objective volume with or without a bonus (if hollow trees
-exploitation)(numeric value) (see the \code{\link{loggingparameters}})}
+\item{VO}{The objective volume for the entire surface of the plot (numeric
+value)}
 
 \item{HVinit}{the harvestable volume in the plot for your criteria
 (\code{\link{SpeciesCriteria}}) (numeric value)}
@@ -77,8 +77,8 @@ inventory <- harvestableOutputs$inventory
 HVinit <- harvestableOutputs$HVinit
 
 selecInventory <- selected(inventory, scenario = "manual", fuel = "2",
-diversification = TRUE, VO = 30, HVinit = HVinit, specieslax = FALSE,
-objectivelax = FALSE, topography = DTMParacou,
+diversification = TRUE, VO = 125, HVinit = HVinit, specieslax = FALSE,
+objectivelax = TRUE, topography = DTMParacou,
 advancedloggingparameters = loggingparameters())$inventory
 
 }

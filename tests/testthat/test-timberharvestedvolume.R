@@ -2,15 +2,13 @@ test_that("timberharvestedvolume", {
 
   # Data loading
   data(Paracou6_2016)
-  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000) # data reduction
-
 
   inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
                           volumeparameters = ForestZoneVolumeParametersTable)
 
-  inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
+  inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
                                               fuel = "2", diversification = TRUE, specieslax = FALSE,
-                                              objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
+                                              objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
                                               speciescriteria = SpeciesCriteria,
                                               advancedloggingparameters = loggingparameters())$inventory)
 
@@ -26,13 +24,13 @@ test_that("timberharvestedvolume", {
                                       advancedloggingparameters = loggingparameters())
 
   LoggedTable <- inventory %>%
-    filter(Selected == "1") # Logged trees
+    filter(Selected == "1" & ProbedHollow == "0") # Healthy logged trees
 
   Healthy <- sum(LoggedTable$TreeHarvestableVolume)
 
 
   HollowTable <- inventory %>%
-    filter(ProbedHollow == "1") # probed hollow trees
+    filter(Selected == "1" & ProbedHollow == "1") # probed hollow trees
 
   advancedloggingparameters = loggingparameters()
 
@@ -62,7 +60,7 @@ test_that("timberharvestedvolume", {
   if(nrow(HollowTable) > 0)
     expect_true(RsltHollow$TimberLoggedVolume == sum(RsltHollow$NoHollowTimberLoggedVolume +
                                                  (1-advancedloggingparameters$TreeHollowPartForFuel) *
-                                                 HollowTable$TreeHarvestableVolume))
+                                                 sum(HollowTable$TreeHarvestableVolume)))
 
   if(nrow(HollowTable) == 0)
     expect_true(RsltHollow$TimberLoggedVolume == RsltHollow$NoHollowTimberLoggedVolume) # no probed hollow trees

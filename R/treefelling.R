@@ -60,9 +60,9 @@
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
-#' inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
+#' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
-#'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
+#'  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory)
 #'
@@ -258,7 +258,7 @@ treefelling <- function(
 #'
 #' inventory <- treeselection(inventory, objective = 20, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
-#'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
+#'  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory
 #'
@@ -338,7 +338,7 @@ directionalfellingsuccessdef <- function(
 
     inventory <- inventory %>%
       mutate(TreeFellingOrientationSuccess =
-               ifelse(Selected == "1"| ProbedHollow == "1", # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
+               ifelse(Selected == "1"| (Selected == "1" & ProbedHollow == "1"), # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
                       sample(c(1,0), size = 1, replace = F,
                              prob = c(advancedloggingparameters$TreefallSuccessProportion,
                                       1-advancedloggingparameters$TreefallSuccessProportion)), NA))
@@ -382,7 +382,7 @@ directionalfellingsuccessdef <- function(
 #'
 #' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
-#'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
+#'  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory)
 #'
@@ -532,7 +532,7 @@ rotatepolygon <- function(
 #'
 #' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
-#'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
+#'  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory)
 #'

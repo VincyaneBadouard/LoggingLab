@@ -69,7 +69,7 @@
 #' treeselectionoutputs <- treeselection(inventory,
 #' topography = DTMParacou, plotslope = PlotSlope,
 #' speciescriteria = SpeciesCriteria, objective = 20,
-#' scenario ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
+#' scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
 #' objectivelax = TRUE,
 #' advancedloggingparameters = loggingparameters()) #  MainTrail
 #'
@@ -166,15 +166,8 @@ treeselection <- function(
     ungroup() %>%
     mutate(VisibleDefect = as.factor(VisibleDefect))
 
-  # Compute the objective volume with or without bonus: (to remove ?)
-  if (fuel =="2") {
-    VO = objective * unique(inventory$PlotArea)
-  }else{
-    # to compensate for the designated hollow wood
-    VO = (objective +
-            (objective *((advancedloggingparameters$ObjectiveBonus)/100))
-    ) * unique(inventory$PlotArea)
-  }
+  # Compute the objective volume for the entire surface of the plot
+  VO <- objective * unique(inventory$PlotArea)
 
   # Joins commercial criteria to the inventory
   inventory <- ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria)

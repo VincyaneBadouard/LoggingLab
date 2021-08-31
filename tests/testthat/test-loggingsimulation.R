@@ -20,7 +20,7 @@ test_that("loggingsimulation", {
   #                           relativeelevation  = DTMParacou, speciescriteria = SpeciesCriteria,
   #                           volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
   #                           objective = 20, fuel = "2", diversification = TRUE, winching = "2",
-  #                           directionalfelling = "2", specieslax = FALSE, objectivelax = FALSE,
+  #                           directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
   #                           crowndiameterparameters = ParamCrownDiameterAllometry,
   #                           advancedloggingparameters = loggingparameters(), iter = 1, cores = 1, plotslope = PlotSlope)
 

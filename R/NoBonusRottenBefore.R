@@ -17,8 +17,8 @@
 # scenario = "manual"
 # fuel = "2"
 # diversification = TRUE
-# objective = 125
-# VO = 125
+# objective = 127
+# VO = 127
 # HVinit = HVinit
 # specieslax = FALSE
 # objectivelax = FALSE
@@ -40,7 +40,7 @@
 #   mutate(ProbedHollow = factor(as.numeric(ProbedHollow)))
 #
 # if(fuel != "2"){
-#   HollowTable <- filter(inventory, ProbedHollow == "1")
+#   HollowTable <- filter(inventory, ProbedHollow == "1"| is.na(ProbedHollow))
 #   inventory <- filter(inventory, ProbedHollow == "0") # we continue with just healthy trees in fuel != "2" case
 # }
 #
@@ -263,19 +263,23 @@
 #   }
 # }
 #
+# # No NA in Selected colomn
+# inventory <-mutate(inventory, Selected = ifelse(is.na(Selected) , "0", Selected))
+#
 # # Complete to reach the objective volume 'with crumbs'
 # MissingVolume <- VO - sum(HarvestableTable$TreeHarvestableVolume)
 # min <- MissingVolume - 1
 #
 # inventory <- inventory %>%
 #   mutate(Crumbs = ifelse((LoggingStatus == "harvestableUp"|LoggingStatus == "harvestable") & Selected != "1" &
-#                              (TreeHarvestableVolume > min & TreeHarvestableVolume < MissingVolume),
+#                              (TreeHarvestableVolume > min & TreeHarvestableVolume <= MissingVolume),
 #                            TRUE, FALSE)) %>%
 #   group_by(Crumbs) %>%
 #   arrange(desc(TreeHarvestableVolume))
 #
-# # ça ça marche pas
-# inventory$Selected[1] <- "1" # the most important remaining volume able to reach the objective
+# if(any(inventory$Crumbs)){
+#   inventory$Selected[1] <- "1" # the most important remaining volume able to reach the objective
+# }
 #
 # inventory <-ungroup(inventory)
 #
@@ -289,10 +293,7 @@
 # inventory <- inventory %>%
 #   group_by(ONFName) %>%
 #   mutate(Up = ifelse(any(LoggingStatus == "harvestableUp"), "1", Up)) %>%
-#   ungroup() %>%
-#
-#   # No NA in Selected colomn
-#   mutate(Selected = ifelse(is.na(Selected) , "0", Selected))
+#   ungroup()
 #
 # # if there are "deselected" trees and not of 'selected = 1'
 # if (any(inventory$Selected == "deselected") & !any(inventory$Selected == "1"))

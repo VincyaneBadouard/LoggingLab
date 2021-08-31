@@ -246,6 +246,76 @@ Rslt <- loggingsimulation(Paracou6_2016,
                           advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
 ```
 
+```{r}
+# RIL1_Rslt <- loggingsimulation(Paracou6_2016,
+#                           topography = DTMParacou, relativeelevation  = DTMParacou,
+#                           speciescriteria = SpeciesCriteria,
+#                           volumeparameters = ForestZoneVolumeParametersTable,
+#                           scenario = "RIL1", specieslax = FALSE, objectivelax = TRUE,
+#                           crowndiameterparameters = ParamCrownDiameterAllometry,
+#                           advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+# loggingsummary(RIL1_Rslt)
+```
+
+```{r}
+# RIL2broken_Rslt <- loggingsimulation(Paracou6_2016,
+#                           topography = DTMParacou, relativeelevation  = DTMParacou,
+#                           speciescriteria = SpeciesCriteria,
+#                           volumeparameters = ForestZoneVolumeParametersTable,
+#                           scenario = "RIL2broken", specieslax = FALSE, objectivelax = TRUE,
+#                           crowndiameterparameters = ParamCrownDiameterAllometry,
+#                           advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+# loggingsummary(RIL2broken_Rslt)
+```
+
+```{r}
+# RIL2_Rslt <- loggingsimulation(Paracou6_2016,
+#                           topography = DTMParacou, relativeelevation  = DTMParacou,
+#                           speciescriteria = SpeciesCriteria,
+#                           volumeparameters = ForestZoneVolumeParametersTable,
+#                           scenario = "RIL2", specieslax = FALSE, objectivelax = TRUE,
+#                           crowndiameterparameters = ParamCrownDiameterAllometry,
+#                           advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+# loggingsummary(RIL2_Rslt)
+```
+
+```{r}
+# RIL3_Rslt <- loggingsimulation(Paracou6_2016,
+#                           topography = DTMParacou, relativeelevation  = DTMParacou,
+#                           speciescriteria = SpeciesCriteria,
+#                           volumeparameters = ForestZoneVolumeParametersTable,
+#                           scenario = "RIL3", specieslax = FALSE, objectivelax = TRUE,
+#                           crowndiameterparameters = ParamCrownDiameterAllometry,
+#                           advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+# 
+# new <- RIL3_Rslt$inventory
+# loggingsummary(RIL3_Rslt)
+# not all of the harvestable volume is taken as there are hollow probed trees
+```
+
+```{r}
+# RIL3fuel_Rslt <- loggingsimulation(Paracou6_2016,
+#                           topography = DTMParacou, relativeelevation  = DTMParacou,
+#                           speciescriteria = SpeciesCriteria,
+#                           volumeparameters = ForestZoneVolumeParametersTable,
+#                           scenario = "RIL3fuel", specieslax = FALSE, objectivelax = TRUE,
+#                           crowndiameterparameters = ParamCrownDiameterAllometry,
+#                           advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+# loggingsummary(RIL3fuel_Rslt)
+#Doest work, find why
+```
+
+```{r}
+# RIL3fuelhollow_Rslt <- loggingsimulation(Paracou6_2016,
+#                           topography = DTMParacou, relativeelevation  = DTMParacou,
+#                           speciescriteria = SpeciesCriteria,
+#                           volumeparameters = ForestZoneVolumeParametersTable,
+#                           scenario = "RIL3fuelhollow", specieslax = FALSE, objectivelax = TRUE,
+#                           crowndiameterparameters = ParamCrownDiameterAllometry,
+#                           advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+# loggingsummary(RIL3fuelhollow_Rslt)
+# not all of the harvestable volume is taken as there are hollow probed trees 
+```
 ## Results summary
 ```{r}
 loggingsummary(Rslt)
@@ -270,13 +340,13 @@ inventory <- addtreedim(inventory, volumeparameters = ForestZoneVolumeParameters
 ### In 1 function
 **Trees to be exploited, future and reserve trees**
 ```{r}
-treeselectionoutputs <- treeselection(inventory,
-                                      topography = DTMParacou, plotslope = PlotSlope,
-                                      speciescriteria = SpeciesCriteria,
-                                      objective = 20, scenario ="manual", fuel = "2",
-                                      diversification = FALSE, specieslax = FALSE,
-                                      objectivelax = TRUE,
-                                      advancedloggingparameters = loggingparameters())
+# treeselectionoutputs <- treeselection(inventory,
+#                                       topography = DTMParacou, plotslope = PlotSlope,
+#                                       speciescriteria = SpeciesCriteria,
+#                                       objective = 20, scenario ="manual", fuel = "2",
+#                                       diversification = FALSE, specieslax = FALSE,
+#                                       objectivelax = TRUE,
+#                                       advancedloggingparameters = loggingparameters())
 ```
 
 ### Decomposed tree selection
@@ -297,8 +367,8 @@ HVinit <- harvestableOutputs$HVinit
 #### Trees to be exploited selection
 ```{r}
 inventory <- selected(inventory, scenario = "manual", fuel = "2",
-                      diversification = TRUE, VO = 20, HVinit = HVinit, specieslax = FALSE,
-                      objectivelax = FALSE, topography = DTMParacou,
+                      diversification = TRUE, VO = 125, HVinit = HVinit, specieslax = FALSE,
+                      objectivelax = TRUE, topography = DTMParacou,
                       advancedloggingparameters = loggingparameters())$inventory
 ```
 

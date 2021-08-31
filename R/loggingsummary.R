@@ -54,9 +54,9 @@ loggingsummary <- function(x
 
   cat('Initial harvestable volume :', x$HVinit, '\n') # the harvestable volume (m^3) with your initial criteria
 
-  cat('Logged volume :', x$TimberLoggedVolume, '\n') # Logged volume (m^3) (only healthy trees if fuel != "2", healthy + hollow trees if fuel = "2")
+  cat('Timber logged volume :', x$TimberLoggedVolume, '\n') # Logged volume (m^3) (only healthy trees if fuel != "2", healthy + hollow trees if fuel = "2")
 
-  cat('NoHollowTimberLoggedVolume :', x$NoHollowTimberLoggedVolume, '\n') # Logged volume (m^3) (only healthy trees)
+  cat('No hollow timber logged volume :', x$NoHollowTimberLoggedVolume, '\n') # Logged volume (m^3) (only healthy trees)
 
   cat('Fuel wood volume :', x$FuelVolume, '\n') # Damages + purge (+ hollow trees if fuel = "2") (m^3)
 

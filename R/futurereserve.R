@@ -42,7 +42,7 @@
 #' HVinit <- harvestableOutputs$HVinit
 #'
 #' inventory <- selected(inventory, scenario = "manual", fuel = "0",
-#' diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+#' diversification = TRUE, specieslax = FALSE, objectivelax = TRUE,
 #' topography = DTMParacou,
 #' advancedloggingparameters = loggingparameters(), VO = 30,
 #'  HVinit = HVinit)$inventory
@@ -96,10 +96,21 @@ futurereserve <- function(
   #Reserve
   # Randomly select the reserved trees (among the futures, as many as the number of trees exploited):
 
-  StemNbr <- sum(as.numeric(inventory$Selected == "1"), na.rm = TRUE)#29 selected ind
+  StemNbr <- sum(as.numeric(inventory$Selected == "1"), na.rm = TRUE)
+  FutureNbr <- sum(as.numeric(inventory$LoggingStatus == "future"), na.rm = TRUE)
+
+
+  if(StemNbr < FutureNbr){
   ReserveRows <- sample(which(inventory$LoggingStatus == "future"), size = StemNbr, replace = F)
 
   inventory$LoggingStatus[ReserveRows] <-"reserve"
+  }
+
+  if(StemNbr >= FutureNbr){
+    inventory <- inventory %>%
+      mutate(LoggingStatus = ifelse(LoggingStatus == "future", "reserve", LoggingStatus))
+  }
+
 
   return(inventory)
 

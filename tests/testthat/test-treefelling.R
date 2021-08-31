@@ -5,7 +5,6 @@ test_that("treefelling", {
   data(DTMParacou)
   data(PlotSlope)
 
-  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
   MatrixInventory <- as.matrix(Paracou6_2016)
 
   MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
@@ -31,10 +30,12 @@ test_that("treefelling", {
   PolList = list(pol1,pol2)
   ScndTrail <- sf::st_multipolygon(PolList)
 
-  inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
+  inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+                          volumeparameters = ForestZoneVolumeParametersTable)
   inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
                                               fuel = "2", diversification = TRUE, specieslax = FALSE,
-                                              objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
+                                              objectivelax = TRUE, topography = DTMParacou,
+                                              plotslope = PlotSlope,
                                               speciescriteria = SpeciesCriteria,
                                               advancedloggingparameters = loggingparameters())$inventory)
 
@@ -111,12 +112,20 @@ test_that("treefelling", {
     dplyr::select(TreePolygon)
 
     DeadTrees <- suppressWarnings(sf::st_intersection(
-      sf::st_as_sf(testinventory, coords = c("Xutm", "Yutm")),
-    getgeometry(felttrees, TreePolygon)
+      sf::st_as_sf(testinventory, coords = c("Xutm", "Yutm")), # all the inventory trees
+    getgeometry(felttrees, TreePolygon) # felt trees
   )) %>%
-      dplyr::filter(Selected != "1"| is.na(Selected)) %>% # not already cutted trees
-      dplyr::filter(Selected != "deselected"| is.na(Selected)) %>%
+      dplyr::filter(is.na(TreePolygon)) %>%
+      # dplyr::filter(Selected != "1"| is.na(Selected)) %>% # not already cutted trees
+      # dplyr::filter((Selected != "1" & ProbedHollow != "1")| is.na(Selected)) %>%
+      select(idTree)
+    sf::st_geometry(DeadTrees) <- NULL # remove TreePolygon column (sf to data.frame)
+    DeadTrees <- DeadTrees %>%
+      unique() %>% # you only die once
       dplyr::arrange(idTree)
+
+    treefall <- testinventory %>%
+      dplyr::filter(DeathCause == "treefall2nd")
 
   Damage <- testinventory %>%
     dplyr::filter(is.na(TreePolygon) & !is.na(DeathCause)) %>%  # & DeadTrees == "1"

@@ -44,7 +44,7 @@ test_that("directionalfellingsuccessdef", {
     filter(Selected == "1")
 
   Hollow <- directionalfellingsuccessdef(inventory, fuel = "2",directionalfelling = "2", advancedloggingparameters = loggingparameters())%>%
-    filter(Selected == "1" | ProbedHollow == "1")
+    filter(Selected == "1" | (Selected == "1" & ProbedHollow == "1"))
 
 
   expect_true(all(Random$TreeFellingOrientationSuccess == "0"))

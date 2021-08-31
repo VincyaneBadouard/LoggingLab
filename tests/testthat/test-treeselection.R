@@ -12,7 +12,8 @@ test_that("treeselection", {
 
 
   expect_error(treeselection(MatrixInventory,
-                             scenario ="manual", fuel = "0", objective = 20, diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+                             scenario ="manual", fuel = "0", objective = 20,
+                             diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
                              speciescriteria = Matrixspeciescriteria),
                regexp = "The 'inventory' and 'speciescriteria' arguments of the 'treeselection' function must be data.frame")
 
@@ -63,8 +64,11 @@ test_that("treeselection", {
   inventory = addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
 
   testinventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
-                                                  fuel = "2", diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
-                                                  topography = DTMParacou, plotslope = PlotSlope, speciescriteria = SpeciesCriteria, advancedloggingparameters = loggingparameters()))$inventory # , MainTrail
+                                                  fuel = "2", diversification = TRUE,
+                                                  specieslax = FALSE, objectivelax = TRUE,
+                                                  topography = DTMParacou, plotslope = PlotSlope,
+                                                  speciescriteria = SpeciesCriteria,
+                                                  advancedloggingparameters = loggingparameters())$inventory) # , MainTrail
 
 
   advancedloggingparameters = loggingparameters()
@@ -75,22 +79,15 @@ test_that("treeselection", {
   # All healthy: expect_true(all(VisibleDefect == "0")) A FAIRE
 
   # Objective Volume:
-  ## hollow trees harvested
-  objective <- 40
-  VO_1 <- suppressMessages(treeselection(inventory, speciescriteria = SpeciesCriteria,
-                                       scenario ="manual", fuel = "2", objective = 40, diversification = TRUE, specieslax = FALSE,
-                                       objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope))$VO
+  objective <- 20
+  expected <- objective * unique(inventory$PlotArea)
+  VO <- suppressMessages(treeselection(inventory, speciescriteria = SpeciesCriteria,
+                                       scenario ="manual", fuel = "2", objective = objective,
+                                       diversification = TRUE, specieslax = FALSE,
+                                       objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope))$VO
 
 
-  expect_true(VO_1 == objective)
-
-  ## hollow trees non-harvested
-  VO_2 <- suppressMessages(treeselection(inventory, speciescriteria = SpeciesCriteria,
-                                       scenario ="manual", fuel = "0", objective = 40, diversification = TRUE, specieslax = FALSE,
-                                       objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope))$VO
-
-  expect_true(VO_2 == objective + advancedloggingparameters$ObjectiveBonus)
-
+  expect_true(VO == expected)
 
   expect_true(nrow(inventory) == nrow(testinventory)) # check that the rows number don't change
 
@@ -99,7 +96,7 @@ test_that("treeselection", {
 # check args
 # treeselection(inventory,
 #               scenario ="manual", fuel = "0",objective = 20, diversification = TRUE, specieslax = FALSE,
-#               objectivelax = FALSE, SpeciesCriteria, advancedloggingparameters = loggingparameters())
+#               objectivelax = TRUE, SpeciesCriteria, advancedloggingparameters = loggingparameters())
 # inventory, speciescriteria (data.frame)
 # objective (numeric)
 # scenario, fuel  (character)

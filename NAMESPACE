@@ -2,6 +2,7 @@
 
 export("%>%")
 export(ONFGuyafortaxojoin)
+export(OldVersionselected)
 export(addtreedim)
 export(createcanopy)
 export(directionalfellingsuccessdef)

@@ -21,8 +21,8 @@
 #'@param specieslax Allow diversification if stand is too poor, = FALSE by
 #'  default (logical)
 #'
-#'@param VO The objective volume with or without a bonus (if hollow trees
-#'  exploitation)(numeric value) (see the \code{\link{loggingparameters}})
+#'@param VO The objective volume for the entire surface of the plot (numeric
+#'  value)
 #'
 #'@param HVinit the harvestable volume in the plot for your criteria
 #'  (\code{\link{SpeciesCriteria}}) (numeric value)
@@ -67,8 +67,8 @@
 #' HVinit <- harvestableOutputs$HVinit
 #'
 #' selecInventory <- selected(inventory, scenario = "manual", fuel = "2",
-#' diversification = TRUE, VO = 30, HVinit = HVinit, specieslax = FALSE,
-#' objectivelax = FALSE, topography = DTMParacou,
+#' diversification = TRUE, VO = 125, HVinit = HVinit, specieslax = FALSE,
+#' objectivelax = TRUE, topography = DTMParacou,
 #' advancedloggingparameters = loggingparameters())$inventory
 #'
 selected <- function(
@@ -77,7 +77,7 @@ selected <- function(
   scenario,
   fuel,
   diversification,
-  VO, # objective volume
+  VO, # objective volume for the entire surface of the plot
   HVinit, # initial Harvestable Volume
   specieslax = FALSE,
   objectivelax = FALSE,
@@ -122,7 +122,7 @@ selected <- function(
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- ONFName <- NULL
+  DeathCause <- DistCrit <- Family <- ONFName <- Crumbs <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
@@ -138,6 +138,23 @@ selected <- function(
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
 
+  # Apply S. Schmitt's "Rotten" predictive model to identify probed hollow trees.
+  inventory <- inventory %>%
+    # Estimates the probability of being probed hollow
+    mutate(ProbedHollowProba = ifelse(LoggingStatus == "harvestable" | LoggingStatus == "harvestable2nd",
+                                      advancedloggingparameters$RottenModel(DBH), NA)) %>%
+
+    # generate either "1" or "0" randomly for each line, depending on the proba associated with the line:
+    rowwise() %>%
+    mutate(ProbedHollow = ifelse(!is.na(ProbedHollowProba),
+                                 sample(c(1,0), size = 1, replace = F, # 1 = hollow tree, 0 = not hollow
+                                        prob = c(ProbedHollowProba, 1-ProbedHollowProba)), NA)) %>%
+    mutate(ProbedHollow = factor(as.numeric(ProbedHollow)))
+
+  if(fuel != "2"){
+    HollowTable <- filter(inventory, ProbedHollow == "1"| is.na(ProbedHollow))
+    inventory <- filter(inventory, ProbedHollow == "0") # we continue with just healthy trees in fuel != "2" case
+  }
 
 
   # if objective achieved at the first attempt
@@ -158,7 +175,7 @@ selected <- function(
         mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
         ungroup() %>%
         mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>%
-        select(-Condition)
+        select(-Condition, -VolumeCumSum)
 
       HarvestableTable <- inventory %>%
         filter(Selected == "1")
@@ -186,6 +203,16 @@ selected <- function(
                 (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume.
                 You have chosen to diversify your species selection in this case.
                 The exploitation was therefore carried out on this diversified selection of species.")
+    } else {
+
+      inventory <- inventory %>%
+        mutate(Condition = ifelse(LoggingStatus == "harvestable",TRUE, FALSE)) %>%
+        group_by(Condition) %>%
+        arrange(desc(TreeHarvestableVolume)) %>%
+        mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
+        ungroup() %>%
+        mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>%
+        select(-Condition, -VolumeCumSum)
     }
 
     if (!diversification && !specieslax && objectivelax)
@@ -243,7 +270,7 @@ selected <- function(
           mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
           ungroup() %>%
           mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>%
-          select(-Condition)
+          select(-Condition, -VolumeCumSum)
 
         HarvestableTable <- inventory %>%
           filter(Selected == "1")
@@ -265,7 +292,7 @@ selected <- function(
           mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
           ungroup() %>%
           mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>%
-          select(-Condition)
+          select(-Condition, -VolumeCumSum)
 
         HarvestableTable <- inventory %>%
           filter(Selected == "1")
@@ -303,7 +330,7 @@ selected <- function(
           mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
           ungroup() %>%
           mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>%
-          select(-Condition)
+          select(-Condition, -VolumeCumSum)
 
         HarvestableTable <- inventory %>%
           filter(Selected == "1")
@@ -342,11 +369,11 @@ selected <- function(
             mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
             ungroup() %>%
             mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>%
-            select(-Condition)
+            select(-Condition, -VolumeCumSum)
 
           HarvestableTable <- inventory %>%
             filter(Selected == "1")
-          HVupCommercial12adjust <- sum(HarvestableTable$TreeHarvestableVolume) #45.44885 Harvestable volume, with upgraded FD individuals
+          HVupCommercial12adjust <- sum(HarvestableTable$TreeHarvestableVolume) #Harvestable volume, with upgraded FD individuals
         }
 
         message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3)
@@ -358,35 +385,62 @@ selected <- function(
     }
   }
 
-  # Apply S. Schmitt's "Rotten" predictive model to identify "truly" hollow designated trees.
-  inventory <- inventory %>%
-    # Estimates the probability of being probed hollow
-    mutate(ProbedHollowProba = ifelse(Selected == "1", advancedloggingparameters$RottenModel(DBH), NA)) %>%
-
-    # generate either "1" or "0" randomly for each line, depending on the proba associated with the line:
-    rowwise() %>%
-    mutate(ProbedHollow = ifelse(!is.na(ProbedHollowProba),
-                                 sample(c(1,0), size = 1, replace = F, # 1 = hollow tree, 0 = not hollow
-                                        prob = c(ProbedHollowProba, 1-ProbedHollowProba)), NA)) %>%
-    mutate(ProbedHollow = factor(as.numeric(ProbedHollow))) %>%
-    # Hollow probed trees are deselected
-    mutate(Selected = ifelse(ProbedHollow == "1", "deselected", Selected)) %>%
-
-    # remplacer les arbres deselected (atteindre le vol objectif)
-
-    # Upgraded MinFD species:
-    # to inform for each individual if its species have been FD upgraded
-    group_by(ONFName) %>%
-    mutate(Up = ifelse(any(LoggingStatus == "harvestableUp"), "1", Up)) %>%
-    ungroup() %>%
+  # if at this step there are no selected trees
+  if(!any(inventory$Selected == "1") & any(inventory$ProbedHollow == "0")){
+    inventory <- inventory %>%
+      mutate(Condition = ifelse(LoggingStatus == "harvestable", TRUE, FALSE)) %>%
+      group_by(Condition) %>%
+      arrange(desc(TreeHarvestableVolume)) %>%
+      mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
+      ungroup() %>%
+      mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>%
+      select(-Condition, -VolumeCumSum)
+  }
 
   # No NA in Selected colomn
-    mutate(Selected = ifelse(is.na(Selected) , "0", Selected))
+  inventory <-mutate(inventory, Selected = ifelse(is.na(Selected) , "0", Selected))
+
+  # Complete to reach the objective volume 'with crumbs'
+  HarvestableTable <- inventory %>%
+    filter(Selected == "1")
+
+  MissingVolume <- VO - sum(HarvestableTable$TreeHarvestableVolume)
+  min <- MissingVolume - 1
+
+  inventory <- inventory %>%
+    mutate(Crumbs = ifelse((LoggingStatus == "harvestableUp"|LoggingStatus == "harvestable") & Selected != "1" &
+                             (TreeHarvestableVolume > min & TreeHarvestableVolume <= MissingVolume),
+                           TRUE, FALSE)) %>%
+    group_by(Crumbs) %>%
+    arrange(desc(TreeHarvestableVolume))
+
+  if(any(inventory$Crumbs)){
+    inventory$Selected[1] <- "1" # the most important remaining volume able to reach the objective
+  }
+
+  inventory <- inventory %>%
+    ungroup() %>%
+    select(-Crumbs)
+
+  # Add the probed hollow trees removed until now in fuel != 2 case
+  if(fuel != "2"){
+    inventory <- bind_rows(inventory, HollowTable)
+  }
+
+  # No NA in Selected colomn
+  inventory <-mutate(inventory, Selected = ifelse(is.na(Selected) , "0", Selected))
+
+  # Upgraded MinFD species:
+  # to inform for each individual if its species have been FD upgraded
+  inventory <- inventory %>%
+    group_by(ONFName) %>%
+    mutate(Up = ifelse(any(LoggingStatus == "harvestableUp"), "1", Up)) %>%
+    ungroup()
 
   # if there are "deselected" trees and not of 'selected = 1'
-  if (any(inventory$Selected == "deselected") & !any(inventory$Selected == "1"))
+  if (any(inventory$ProbedHollow == "1") & !any(inventory$Selected == "1")) # probed hollow trees and no selected trees
     stop("No trees were selected because they were all probed hollow
-         (",paste(round(sum(as.numeric(inventory$Selected == "deselected"), na.rm = TRUE),  digits = 1)),
+         (",paste(round(sum(as.numeric(inventory$ProbedHollow == "1"), na.rm = TRUE),  digits = 1)),
          " probed hollow trees). Your objective volume may be too low (the few trees selected were found to be
          hollow).")
 
@@ -412,17 +466,10 @@ selected <- function(
                             EnergywoodTreesPoints = st_point(x = c(NA_real_, NA_real_)))
   }
 
-  if (fuel !="2") {
-    HarvestableTable <- inventory %>%
-      filter(Selected == "1")
-    VolumewithHollowslost <- sum(HarvestableTable$TreeHarvestableVolume) #128.5047. Harvestable volume, with Hollows lost
-    VO - VolumewithHollowslost #34 m3 lost: the bonus is therefore generous here (37.5 m3 of bonus).
-  }
-
-  if ((fuel =="2") & any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
+  if ((fuel == "2") & any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
     # Hollow trees = fuelwood:
     inventory <- inventory %>%
-      mutate(DeathCause = ifelse(ProbedHollow == "1", "hollowfuel", NA)) # remplacer NA par DeathCause dans le simulateur ONF
+      mutate(DeathCause = ifelse(Selected == "1" & ProbedHollow == "1", "hollowfuel", NA))# replace "NA" par "DeathCause" in this code line in the ONF simulator
 
     # Create a POINTS VECTOR with coordinates of the energywood trees:
 
@@ -439,3 +486,4 @@ selected <- function(
   return(selectedOutputs) # return the new inventory and the 2 points vectors (HollowTrees and EnergywoodTrees)
 
 }
+

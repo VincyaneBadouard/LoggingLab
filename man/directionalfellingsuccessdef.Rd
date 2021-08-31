@@ -42,7 +42,7 @@ volumeparameters = ForestZoneVolumeParametersTable)
 
 inventory <- treeselection(inventory, objective = 20, scenario ="manual",
  fuel = "2", diversification = TRUE, specieslax = FALSE,
- objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
+ objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
  speciescriteria = SpeciesCriteria,
  advancedloggingparameters = loggingparameters())$inventory
 

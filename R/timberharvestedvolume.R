@@ -28,9 +28,9 @@
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
-#' inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
+#' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
 #'  fuel = "2", diversification = TRUE, specieslax = FALSE,
-#'  objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
+#'  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory)
 #'
@@ -85,7 +85,7 @@ timberharvestedvolume <- function(
 
   # Function
   LoggedTable <- inventory %>%
-    filter(Selected == "1") # Logged trees
+    filter(Selected == "1" & ProbedHollow == "0") # Logged trees
 
   Healthy <- sum(LoggedTable$TreeHarvestableVolume)
 
@@ -98,7 +98,7 @@ timberharvestedvolume <- function(
   if (fuel =="2") {                   # with hollow trees exploitation
 
     HollowTable <- inventory %>%
-      filter(ProbedHollow == "1")
+      filter(Selected == "1" & ProbedHollow == "1")
 
     NoHollowTimberLoggedVolume <- Healthy
 
@@ -106,7 +106,7 @@ timberharvestedvolume <- function(
       # heathy + (1 -part for fuel) * hollow's volume)
       TimberLoggedVolume <- sum(NoHollowTimberLoggedVolume +
                             (1-advancedloggingparameters$TreeHollowPartForFuel) *
-                               HollowTable$TreeHarvestableVolume)
+                              sum(HollowTable$TreeHarvestableVolume))
     }else if(nrow(HollowTable) == 0){
 
       TimberLoggedVolume <- NoHollowTimberLoggedVolume # no probed hollow trees

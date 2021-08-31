@@ -50,7 +50,7 @@ inventory <- harvestableOutputs$inventory
 HVinit <- harvestableOutputs$HVinit
 
 inventory <- selected(inventory, scenario = "manual", fuel = "0",
-diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
+diversification = TRUE, specieslax = FALSE, objectivelax = TRUE,
 topography = DTMParacou,
 advancedloggingparameters = loggingparameters(), VO = 30,
  HVinit = HVinit)$inventory

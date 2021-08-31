@@ -78,7 +78,7 @@ volumeparameters = ForestZoneVolumeParametersTable)
 treeselectionoutputs <- treeselection(inventory,
 topography = DTMParacou, plotslope = PlotSlope,
 speciescriteria = SpeciesCriteria, objective = 20,
-scenario ="manual", fuel = "2", diversification = FALSE, specieslax = FALSE,
+scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
 objectivelax = TRUE,
 advancedloggingparameters = loggingparameters()) #  MainTrail
 

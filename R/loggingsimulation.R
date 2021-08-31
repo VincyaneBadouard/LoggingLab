@@ -142,8 +142,8 @@ loggingsimulation <- function(
     stop("The 'topography' and 'relativeelevation' arguments of the 'loggingsimulation' function must be RasterLayers")
 
   # scenario
-  if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"|| scenario == "RIL3"|| scenario == "RIL3fuel"||
-           scenario == "RIL3fuelhollow"|| scenario =="manual"))
+  if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"|| scenario == "RIL3"||
+           scenario == "RIL3fuel"|| scenario == "RIL3fuelhollow"|| scenario =="manual"))
     stop("The 'scenario' argument of the 'loggingsimulation' function must be
          'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
