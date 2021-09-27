@@ -66,9 +66,9 @@
 #' inventory <- harvestableOutputs$inventory
 #' HVinit <- harvestableOutputs$HVinit
 #'
-#' selecInventory <- selected(inventory, scenario = "manual", fuel = "2",
-#' diversification = TRUE, VO = 125, HVinit = HVinit, specieslax = FALSE,
-#' objectivelax = TRUE, topography = DTMParacou,
+#' selecInventory <- selected(inventory, topography = DTMParacou,
+#' scenario = "manual", fuel = "2", diversification = TRUE,
+#' VO = 125, HVinit = HVinit, specieslax = FALSE, objectivelax = TRUE,
 #' advancedloggingparameters = loggingparameters())$inventory
 #'
 selected <- function(

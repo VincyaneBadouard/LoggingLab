@@ -55,7 +55,7 @@ volumeparameters = ForestZoneVolumeParametersTable)
 inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
-diversification = TRUE, plotslope = PlotSlope, specieslax = FALSE,
+plotslope = PlotSlope, diversification = TRUE, specieslax = FALSE,
 advancedloggingparameters = loggingparameters())
 
 }

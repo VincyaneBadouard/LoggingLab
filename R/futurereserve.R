@@ -44,7 +44,7 @@
 #' inventory <- selected(inventory, scenario = "manual", fuel = "0",
 #' diversification = TRUE, specieslax = FALSE, objectivelax = TRUE,
 #' topography = DTMParacou,
-#' advancedloggingparameters = loggingparameters(), VO = 30,
+#' advancedloggingparameters = loggingparameters(), VO = 125,
 #'  HVinit = HVinit)$inventory
 #'
 #' futurereserve(inventory, SpeciesCriteria)

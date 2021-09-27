@@ -24,8 +24,7 @@
 #'@export
 #'
 #' @examples
-#'scenariosparameters(scenario = "RIL1", objective = NULL,
-#'fuel = NULL, diversification = NULL, winching = NULL, directionalfelling = NULL)
+#'scenariosparameters(scenario = "RIL1")
 #'
 scenariosparameters <- function(
   scenario,

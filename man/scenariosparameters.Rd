@@ -42,7 +42,6 @@ A named list of 5 objects.
 scenariosparameters
 }
 \examples{
-scenariosparameters(scenario = "RIL1", objective = NULL,
-fuel = NULL, diversification = NULL, winching = NULL, directionalfelling = NULL)
+scenariosparameters(scenario = "RIL1")
 
 }
