@@ -1,4 +1,4 @@
-#' Check & format your inventory data for the "Maria" package
+#' Check your input inventory data for the  package "Maria"
 #'
 #' @param inventory Your inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
