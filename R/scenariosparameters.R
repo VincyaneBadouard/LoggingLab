@@ -1,4 +1,4 @@
-#'scenariosparameters
+#' Parameters of the scenaios
 #'
 #'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -6,19 +6,19 @@
 #'
 #'@param objective Objective volume per hectare (numeric)
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
-#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
+#' @param fuel Fuel wood exploitation: no exploitation = "0", exploitation of damages and unsed part of logged trees
+#'   for fuelwood = "1", exploitation of hollow trees, damages and unsed part of logged trees for
 #'   fuelwood = "2"
 #'
-#'@param diversification Taking of other species in addition to the main
-#'  commercial species (2 levels of commercial species in the
+#'@param diversification Possibility to log other species in addition to the main
+#'  commercial species (species with a value of 2  for commercial in the
 #'  \code{\link{SpeciesCriteria}} table) (logical)
 #'
-#'@param winching No cable or grapple = "0", only cable = "1", grapple + cable =
+#'@param winching No cable or grapple = "0", cable only = "1", grapple + cable =
 #'  "2"
 #'@param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
-#'  reserve trees + track orientation)
+#'  avoid damage to future and reserve trees), "2" (to avoid damage to future and
+#'  reserve trees and to position the log relatively to the track)
 #'
 #'@return A named list of 5 objects.
 #'@export
@@ -36,7 +36,7 @@ scenariosparameters <- function(
 ){
   # check inputs
   if(!(scenario %in% c("RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow", "manual")))
-    stop(paste('"scenario" argument should be in "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"; not',
+    stop(paste('"scenario" argument should be "in "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"; not',
                scenario))
 
   if(!(class(objective) %in% c("numeric", "NULL")))

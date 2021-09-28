@@ -1,6 +1,6 @@
 #' PlotSlope
 #'
-#' Slopes (in radians) of the plot 6 of Paracou (with a neighbourhood of 8 cells) (French Guiana)
+#' Slopes (in radians) of plot 6 of Paracou (French Guiana) (calculated with a neighbourhood of 8 cells)
 #' @format SpatialPolygonsDataFrame
 #'
 "PlotSlope"

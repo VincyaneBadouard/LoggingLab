@@ -1,4 +1,4 @@
-#'Trees to be exploited selection
+#' Selection of trees to log
 #'
 #'@param inventory Your inventory (see the inputs formats and metadata in the
 #'  \code{\link{vignette}}) (data.frame)
@@ -10,21 +10,21 @@
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  \code{\link{vignette}})
 #'
-#'@param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
-#'  exploitation in fuelwood = "1", exploitation of hollow trees, damages and
-#'  purge in fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of damages and unsed
+#'  part of logged trees for fuelwood = "1", exploitation of hollow trees, damages and
+#'  and unsed part of logged trees for fuelwood = "2"
 #'
-#'@param diversification Taking of other species in addition to the main
-#'  commercial species (2 levels of commercial species in the
+#'@param diversification TPossibility to log other species in addition to the main
+#'  commercial species (species with a value of 2  for commercial in the
 #'  \code{\link{SpeciesCriteria}} table) (logical)
 #'
-#'@param specieslax Allow diversification if stand is too poor, = FALSE by
+#'@param specieslax Allow diversification if the stand is too poor to reach the objective volume without diversification, = FALSE by
 #'  default (logical)
 #'
-#'@param VO The objective volume for the entire surface of the plot (numeric
+#'@param VO Objective volume for the entire area of the plot (numeric
 #'  value)
 #'
-#'@param HVinit the harvestable volume in the plot for your criteria
+#'@param HVinit Harvestable volume in the plot for the chosen scenario
 #'  (\code{\link{SpeciesCriteria}}) (numeric value)
 #'
 #'@param objectivelax Allow exploitation in case of non-achievement of the
@@ -87,11 +87,11 @@ selected <- function(
   # Arguments check
 
   if(!inherits(inventory, "data.frame"))
-    stop("The 'inventory' argument of the 'selected' function must be a data.frame")
+    stop("Argument 'inventory' of the 'selected' function must be a data.frame")
 
   if(!all(unlist(lapply(list(diversification, specieslax, objectivelax), inherits, "logical")))
      && !is.null(diversification))
-    stop("The 'diversification', 'specieslax' and 'objectivelax' arguments
+    stop("Arguments 'diversification', 'specieslax' and 'objectivelax'
          of the 'selected' function must be logical")
 
   # if (!any(scenario == "RIL1" | scenario == "RIL2broken"| scenario == "RIL2"| scenario == "RIL3"| scenario == "RIL3fuel"|
@@ -102,7 +102,7 @@ selected <- function(
   #   stop("The 'fuel' argument of the 'selected' function must be '0', '1', or '2'")
 
   if(!inherits(advancedloggingparameters, "list"))
-    stop("The 'advancedloggingparameters' argument of the 'selected' function must be a list")
+    stop("Argument 'advancedloggingparameters' of the 'selected' function must be a list")
 
   if(scenario == "manual" &&
      (is.null(fuel) || is.null(diversification)))
@@ -110,7 +110,7 @@ selected <- function(
          you must fill in the arguments 'fuel' and 'diversification'")
 
   if(!all(unlist(lapply(list(VO, HVinit), inherits, "numeric"))))
-    stop("The 'VO' and 'HVinit' arguments of the 'selected' function must be numeric")
+    stop("Arguments 'VO' and 'HVinit' of the 'selected' function must be numeric")
 
   # Redefinition of the parameters according to the chosen scenario
   scenariosparameters <- scenariosparameters(scenario = scenario,
@@ -185,18 +185,18 @@ selected <- function(
       if (HVlax < VO && objectivelax)
         message("The exploitable volume (= ",paste(round(HVlax, digits = 1)),"m^3) is still lower
                 (by ",paste(round(VO- HVlax, digits = 1)),"m^3) than your objective volume
-                despite the diversification you have allowed
+                despite the diversification
                 (without the diversification HVinit= ",paste(round(HVinit, digits = 1)),"m^3).
-                In this case, you have chosen to continue harvesting with a volume lower than your objective.")
+                You have chosen to continue harvesting with a volume lower than your objective in this case.")
 
       if (HVlax < VO && !objectivelax)
         stop("The harvestable volume = ",paste(round(HVlax, digits = 1)),"m^3)
              is still lower (by ",paste(round(VO- HVlax, digits = 1)),"m^3)
-             than your objective volume despite the diversification you have allowed
+             than your objective volume despite the diversification
              (without the diversification HVinit= ",paste(round(HVinit, digits = 1)),"m^3).
-             By default or by your choice, the simulation stops.
-             If you wish to continue the exploitation in spite of an exploitable volume lower
-             than your objective volume, you have the argument 'objectivelax'.")
+             By default or because of your choice, the simulation stops.
+             If you wish to continue the exploitation with of an exploitable volume lower
+             than your objective volume, you can use the argument 'objectivelax'.")
 
       if (!HVlax == VO)
         message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was lower
@@ -216,23 +216,23 @@ selected <- function(
     }
 
     if (!diversification && !specieslax && objectivelax)
-      message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) is less
+      message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was lower
               (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume.
-              In this case you have chosen to continue logging without diversifying your species.")
+              You have chosen to continue logging without diversifying in this case.")
     if (diversification && objectivelax)
 
-      message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) is less
+      message("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was lower
               (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume.
-              In this case you have chosen to continue logging.")
+              You have chosen to continue logging in this case.")
 
 
     if ((!specieslax & !objectivelax) | (diversification && !objectivelax))
       stop("The harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) is lower
            (by ",paste(round(VO- HVinit, digits = 1)),"m^3) than your objective volume.
-           By default or by your choice, the simulation stops.
-           If you wish to continue the exploitation in spite of a harvestable volume lower
+           By default or because of your choice, the simulation stops.
+           If you wish to continue the exploitation with of a harvestable volume lower
            than your objective volume, you can use the argument 'objectivelax'
-           or the diversification of species (if it is not already the case).")
+           or the diversification of species (if not already done).")
   }
 
 
@@ -276,11 +276,11 @@ selected <- function(
           filter(Selected == "1")
         HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #Harvestable volume, with "1" rank species and upgraded FD individuals only
 
-        message("The harvestable volume (= ",paste(round(HVupCommercial1, digits = 1)),"m^3) is always higher
+        message("The harvestable volume (= ",paste(round(HVupCommercial1, digits = 1)),"m^3) was higher
                 (by ",paste(round(HVupCommercial1-VO, digits = 1)),"m^3) than your objective volume
                 despite the increase in Minimum Falling Diameter (MinFD)
                 (Initial harvestable volume = ",paste(round(HVinit, digits = 1)),"m^3).
-                In order to reach your objective volume, the trees were selected in decreasing order of volume
+                Trees were selected by decreasing order of volume
                 until the objective volume was reached.")
       }
       if (HVupCommercial1 < VO){
@@ -300,9 +300,9 @@ selected <- function(
 
         message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3)
                 was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume,
-                the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased
-                with retention of some stems with DBH lower than the UpMinFD
-                to ensure that the objective volume was attained.")
+                the Minimum Falling Diameters (MinFD) of the 1st economic rank species were increased to UpMinFD.
+                Some trees with DBH lower than the UpMinFD were however selected
+                to ensure that the objective volume was reached.")
       }
     }
 
@@ -338,9 +338,9 @@ selected <- function(
 
         message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3)
                 was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume,
-                the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased
-                with retention of some stems with DBH lower than the UpMinFD to ensure that the objective
-                volume was attained. It was not necessary to raise the MinFDs of other economic species.")
+                the Minimum Falling Diameters (MinFD) of the 1st economic rank species were increased to UpMinFD.
+                Some trees with DBH lower than the UpMinFD were however selected to ensure that the objective
+                volume was reached. It was not necessary to raise the MinFDs of other economic species.")
       }
 
       if (HVupCommercial1 > VO){

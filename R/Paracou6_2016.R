@@ -1,7 +1,6 @@
 #' Paracou6_2016
 #'
-#' Species inventory
-#' 2016 inventory of Paracou (French Guiana) plot 6.
+#' Tree inventory of plot 6 of Paracou research station (French Guiana) for 2016
 #' Public dataset extracted from the Guyafor database.
 #'
 #' @format A tibble with 3620 rows and 26 variables:
