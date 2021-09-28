@@ -80,9 +80,9 @@ treeselection <- function(
   plotslope,
   speciescriteria,
   scenario,
-  objective,
-  fuel,
-  diversification,
+  objective = NULL,
+  fuel = NULL,
+  diversification = NULL,
   specieslax = FALSE,
   objectivelax = FALSE,
   advancedloggingparameters = loggingparameters()

@@ -121,25 +121,25 @@ test_that("felling1tree", {
 
   # Check the angle between the tree and the trail
 
-  for(Rslt in RsltList){
+  for(rslt in RsltList){
 
     Arrival <- st_point(as.numeric(unlist( # sfc to sfg
-      sf::st_centroid(Rslt$FallenTree))))
+      sf::st_centroid(rslt$FallenTree))))
 
-    OrientationA <- as.numeric(matlib::angle(c(Rslt$TrailPt[1] - Rslt$TrailPt[1], (Rslt$TrailPt[2]+10) - Rslt$TrailPt[2]),
-                                             c(Arrival[1] - Rslt$Foot[1], Arrival[2] - Rslt$Foot[2]),
+    OrientationA <- as.numeric(matlib::angle(c(rslt$TrailPt[1] - rslt$TrailPt[1], (rslt$TrailPt[2]+10) - rslt$TrailPt[2]),
+                                             c(Arrival[1] - rslt$Foot[1], Arrival[2] - rslt$Foot[2]),
                                              degree = TRUE))
 
-    OrientationB <- as.numeric(matlib::angle(c(Rslt$TrailPt[1] - Rslt$TrailPt[1], Rslt$TrailPt[2] - (Rslt$TrailPt[2]+10)),
-                                             c(Arrival[1] - Rslt$Foot[1], Arrival[2] - Rslt$Foot[2]),
+    OrientationB <- as.numeric(matlib::angle(c(rslt$TrailPt[1] - rslt$TrailPt[1], rslt$TrailPt[2] - (rslt$TrailPt[2]+10)),
+                                             c(Arrival[1] - rslt$Foot[1], Arrival[2] - rslt$Foot[2]),
                                              degree = TRUE))
 
-    OrientationC <- as.numeric(matlib::angle(c((Rslt$TrailPt[1]+10) - Rslt$TrailPt[1], Rslt$TrailPt[2] - Rslt$TrailPt[2]),
-                                             c(Arrival[1] - Rslt$Foot[1], Arrival[2] - Rslt$Foot[2]),
+    OrientationC <- as.numeric(matlib::angle(c((rslt$TrailPt[1]+10) - rslt$TrailPt[1], rslt$TrailPt[2] - rslt$TrailPt[2]),
+                                             c(Arrival[1] - rslt$Foot[1], Arrival[2] - rslt$Foot[2]),
                                              degree = TRUE))
 
-    OrientationD <- as.numeric(matlib::angle(c(Rslt$TrailPt[1] - (Rslt$TrailPt[1]+10), Rslt$TrailPt[2] - Rslt$TrailPt[2]),
-                                             c(Arrival[1] - Rslt$Foot[1], Arrival[2] - Rslt$Foot[2]),
+    OrientationD <- as.numeric(matlib::angle(c(rslt$TrailPt[1] - (rslt$TrailPt[1]+10), rslt$TrailPt[2] - rslt$TrailPt[2]),
+                                             c(Arrival[1] - rslt$Foot[1], Arrival[2] - rslt$Foot[2]),
                                              degree = TRUE))
 
 

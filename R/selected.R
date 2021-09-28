@@ -75,8 +75,8 @@ selected <- function(
   inventory,
   topography,
   scenario,
-  fuel,
-  diversification,
+  fuel = NULL,
+  diversification = NULL,
   VO, # objective volume for the entire surface of the plot
   HVinit, # initial Harvestable Volume
   specieslax = FALSE,

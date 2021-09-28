@@ -40,7 +40,7 @@
 timberharvestedvolume <- function(
   inventory,
   scenario,
-  fuel,
+  fuel = NULL,
   advancedloggingparameters = loggingparameters()
 ){
 

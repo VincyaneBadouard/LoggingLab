@@ -83,7 +83,7 @@ Height) and its species, genus or family. (data.frame)}
 \item{cores}{Number of cores for parallelization (numeric). Default = 1.}
 }
 \value{
-
+Your inventory (data.frame) with logging informations.
 }
 \description{
 This function allows to simulate a timber and wood energy

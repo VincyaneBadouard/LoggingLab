@@ -7,7 +7,7 @@
 timberharvestedvolume(
   inventory,
   scenario,
-  fuel,
+  fuel = NULL,
   advancedloggingparameters = loggingparameters()
 )
 }

@@ -7,8 +7,8 @@
 treefelling(
   inventory,
   scenario,
-  fuel,
-  directionalfelling,
+  fuel = NULL,
+  directionalfelling = NULL,
   MainTrail,
   ScndTrail,
   advancedloggingparameters = loggingparameters()
