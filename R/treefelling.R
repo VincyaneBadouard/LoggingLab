@@ -60,32 +60,75 @@
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
-#' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
-#'  fuel = "2", diversification = TRUE, specieslax = FALSE,
+#' inventory <- suppressMessages(treeselection(inventory, objective = 20,
+#'  scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
 #'  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory)
 #'
-#' inventory <- treefelling(inventory, scenario = "manual", fuel = "0",
+#' NewInventory <- treefelling(inventory, scenario = "manual", fuel = "0",
 #' directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
 #' advancedloggingparameters = loggingparameters())
 #'
-#' Treefall <- inventory %>%
+#' Treefall <- NewInventory %>%
 #'    dplyr::filter(DeathCause == "treefall2nd")
 #'
-#' Reserve <- inventory %>%
-#'    dplyr::filter(LoggingStatus == "reserve")
+#' NonHarvestable <- sf::st_as_sf(
+#' dplyr::filter(NewInventory, LoggingStatus == "non-harvestable"),
+#' coords = c("Xutm", "Yutm"))
 #'
-#' Future <- inventory %>%
-#'    dplyr::filter(LoggingStatus == "future")
+#' Harvestable <- sf::st_as_sf(
+#' dplyr::filter(NewInventory, LoggingStatus == "harvestable"),
+#' coords = c("Xutm", "Yutm"))
+#'
+#' HarvestableUp <- sf::st_as_sf(
+#' dplyr::filter(NewInventory, LoggingStatus == "harvestableUp"),
+#' coords = c("Xutm", "Yutm"))
+#'
+#' Selected <- sf::st_as_sf(
+#' dplyr::filter(NewInventory, Selected == "1"), coords = c("Xutm", "Yutm"))
+#'
+#' Reserve <- sf::st_as_sf(
+#' dplyr::filter(NewInventory, LoggingStatus == "reserve"),
+#' coords = c("Xutm", "Yutm"))
+#'
+#' Future <- sf::st_as_sf(
+#' dplyr::filter(NewInventory, LoggingStatus == "future"),
+#' coords = c("Xutm", "Yutm"))
+#'
+#' ProbedHollow <- sf::st_as_sf(
+#' dplyr::filter(NewInventory, ProbedHollow == "1"), coords = c("Xutm", "Yutm"))
+#'
+#' VisibleDefect <- sf::st_as_sf(
+#' dplyr::filter(NewInventory, VisibleDefect == "1"), coords = c("Xutm", "Yutm"))
 #'
 #' library(ggplot2)
 #' ggplot() +
-#'   geom_sf(data = sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
-#'   geom_sf(data = getgeometry (inventory, TreePolygon), fill = "red") + # cuted trees
-#'   geom_sf(data = sf::st_as_sf(Treefall, coords = c("Xutm", "Yutm")), colour = "yellow") +
-#'   geom_sf(data = sf::st_as_sf(Reserve, coords = c("Xutm", "Yutm")), colour = "green") +
-#'   geom_sf(data = sf::st_as_sf(Future, coords = c("Xutm", "Yutm")), colour = "pink")
+#'   geom_sf(data = sf::st_as_sf(NewInventory, coords = c("Xutm", "Yutm"))) +
+#'   geom_sf(data = NonHarvestable,
+#'   aes(colour = "Non-harvestable"), show.legend = "point") +
+#'   geom_sf(data = VisibleDefect,
+#'   aes(colour = "Visible defect"), show.legend = "point") +
+#'   geom_sf(data = Future,
+#'   aes(colour = "Future"), show.legend = "point", size = 4) +
+#'   geom_sf(data = Reserve,
+#'   aes(colour = "Reserve"), show.legend = "point", size = 4) +
+#'   geom_sf(data = Harvestable,
+#'   aes(colour = "Harvestable"), show.legend = "point", size = 4) +
+#'   geom_sf(data = HarvestableUp,
+#'   aes(colour = "HarvestableUp"), show.legend = "point", size = 4) +
+#'   geom_sf(data = getgeometry (NewInventory, TreePolygon), # cuted trees
+#'   alpha = 0.5, fill = "red") +
+#'   geom_sf(data = Selected, aes(colour = "Selected"), show.legend = "point") +
+#'   geom_sf(data = ProbedHollow,
+#'   aes(colour = "Probed hollow"), show.legend = "point") +
+#'
+#'   scale_colour_manual(values = c("Non-harvestable" = "grey",
+#'   "Visible defect" = "pink", "Harvestable" = "skyblue",
+#'   "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
+#'   "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
+#'   labs(color = "Logging status")
+#'
 #'
 #' sf::st_intersection( # trees under the fallen trees
 #'   getgeometry (inventory, TreePolygon),

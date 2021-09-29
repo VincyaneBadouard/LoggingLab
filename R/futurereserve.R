@@ -86,11 +86,12 @@ futurereserve <- function(
   #Future: select essence and diameters
 
   inventory <- inventory %>%
-    mutate(LoggingStatus = ifelse(Commercial == "1" &
+    mutate(LoggingStatus = ifelse(Commercial == "1" & Selected != "1" &
                                     ((Up == "0" &
                                         (DBH >= advancedloggingparameters$FutureTreesMinDiameter & DBH < MinFD))
                                      | (Up == "1" &
-                                          (DBH >= advancedloggingparameters$FutureTreesMinDiameter & DBH < UpMinFD))),
+                                          (DBH >= advancedloggingparameters$FutureTreesMinDiameter & DBH < UpMinFD))
+                                     ),
                                   "future", LoggingStatus))
 
   #Reserve
