@@ -14,7 +14,7 @@ harvestable(
 )
 }
 \arguments{
-\item{inventory}{Your inventory (see the inputs formats and metadata in the
+\item{inventory}{Input inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
@@ -34,7 +34,7 @@ default (logical)}
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
-Your inventory with the exploitability criteria, and if they are
+Input inventory with the exploitability criteria, and if they are
 validated for each of the trees. The function returns the harvestable volume
 too, in the plot for these criteria.
 }

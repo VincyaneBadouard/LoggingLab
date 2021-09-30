@@ -1,36 +1,36 @@
-#' Tree felling
+#'Tree felling
 #'
-#' @param inventory Your inventory (see the inputs formats and metadata in the
-#'   \code{\link{vignette}}) (data.frame)
+#'@param inventory Input inventory (see the inputs formats and metadata in the
+#'  \code{\link{vignette}}) (data.frame)
 #'
-#' @param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
-#'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-#'   \code{\link{vignette}})
+#'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+#'  \code{\link{vignette}})
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
-#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
-#'   fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
+#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
 #'
-#' @param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'   avoid damage to future and reserve trees), "2" (avoid damage to future and
-#'   reserve trees + track orientation)
+#'@param directionalfelling Directional felling = "0" (absent), "1" (only to
+#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
+#'  reserve trees + track orientation)
 #'
-#' @param MainTrail Main trail (sfg)
-#' @param ScndTrail Secondary trails (sfg)
+#'@param MainTrail Main trail (sfg)
+#'@param ScndTrail Secondary trails (sfg)
 #'
-#' @param advancedloggingparameters Other parameters of the logging simulator
-#'   \code{\link{loggingparameters}} (list)
+#'@param advancedloggingparameters Other parameters of the logging simulator
+#'  \code{\link{loggingparameters}} (list)
 #'
 #'
-#' @return "Shadow" polygons + "TreefallSuccess", "TreefallFailure",
-#'   "DamageTreesPoints", "DeadTreesPoints" vectors
+#'@return "Shadow" polygons + "TreefallSuccess", "TreefallFailure",
+#'  "DamageTreesPoints", "DeadTreesPoints" vectors
 #'
-#' @export
+#'@export
 #'
-#' @importFrom dplyr group_by do left_join mutate select
-#' @importFrom tibble add_column
-#' @importFrom sf st_as_sf st_as_text st_geometry
-#' @importFrom tidyr unnest
+#'@importFrom dplyr group_by do left_join mutate select
+#'@importFrom tibble add_column
+#'@importFrom sf st_as_sf st_as_text st_geometry
+#'@importFrom tidyr unnest
 #'
 #' @examples
 #' \dontrun{
@@ -268,32 +268,32 @@ treefelling <- function(
 
 }
 
-#' Directional felling success definition
+#'Directional felling success definition
 #'
-#' @description Defines whether the directed fall of the tree is successful or
-#'   not by drawing in a Bernoulli distribution where the probability of success
-#'   is by default 60%, and can be changed with the
-#'   \code{advancedloggingparameters} argument.
+#'@description Defines whether the directed fall of the tree is successful or
+#'  not by drawing in a Bernoulli distribution where the probability of success
+#'  is by default 60%, and can be changed with the
+#'  \code{advancedloggingparameters} argument.
 #'
-#' @param inventory your inventory (see the inputs formats and metadata in the
-#'   \code{\link{vignette}}) (data.frame)
+#'@param inventory input inventory (see the inputs formats and metadata in the
+#'  \code{\link{vignette}}) (data.frame)
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
-#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
-#'   fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
+#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
 #'
-#' @param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'   avoid damage to future and reserve trees), "2" (avoid damage to future and
-#'   reserve trees + track orientation)
+#'@param directionalfelling Directional felling = "0" (absent), "1" (only to
+#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
+#'  reserve trees + track orientation)
 #'
-#' @param advancedloggingparameters Other parameters of the logging simulator
-#'   \code{\link{loggingparameters}} (list)
+#'@param advancedloggingparameters Other parameters of the logging simulator
+#'  \code{\link{loggingparameters}} (list)
 #'
-#' @return Your inventory with: "TreeFellingOrientationSuccess" new column (see
-#'   the outputs metadata in the \code{\link{vignette}}).
-#' @export
+#'@return Input inventory with: "TreeFellingOrientationSuccess" new column (see
+#'  the outputs metadata in the \code{\link{vignette}}).
+#'@export
 #'
-#' @importFrom dplyr mutate
+#'@importFrom dplyr mutate
 #'
 #' @examples
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
@@ -498,60 +498,60 @@ rotatepolygon <- function(
   return(Turned)
 }
 
-#' felling1tree
+#'felling1tree
 #'
-#' @description Simulates the tree (multipolygon) falling towards the trail or
-#'   not, at a given angle. If it has been decided to exploit fuel wood, the
-#'   tree crowns will be directed towards the trail if they can be accessed with
-#'   a grapple (see the \code{GrappleLength} argument of the
-#'   \code{\link{loggingparameters}} function). In other cases, the fall will be
-#'   made from the base of the tree towards the trail. The orientation of the
-#'   fall succeeds or fails according to a Bernoulli law where the probability
-#'   of success is by default 60%, and can be changed with the
-#'   \code{advancedloggingparameters} argument.
+#'@description Simulates the tree (multipolygon) falling towards the trail or
+#'  not, at a given angle. If it has been decided to exploit fuel wood, the tree
+#'  crowns will be directed towards the trail if they can be accessed with a
+#'  grapple (see the \code{GrappleLength} argument of the
+#'  \code{\link{loggingparameters}} function). In other cases, the fall will be
+#'  made from the base of the tree towards the trail. The orientation of the
+#'  fall succeeds or fails according to a Bernoulli law where the probability of
+#'  success is by default 60%, and can be changed with the
+#'  \code{advancedloggingparameters} argument.
 #'
-#' @param dat 1 row data.frame with columns: Xutm, Yutm, CrownDiameter,
-#'   CrownHeight, DBH, TrunkHeight, TreeHeight, TreeFellingOrientationSuccess
+#'@param dat 1 row data.frame with columns: Xutm, Yutm, CrownDiameter,
+#'  CrownHeight, DBH, TrunkHeight, TreeHeight, TreeFellingOrientationSuccess
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
-#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
-#'   fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
+#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
 #'
-#' @param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'   avoid damage to future and reserve trees), "2" (avoid damage to future and
-#'   reserve trees + track orientation)
+#'@param directionalfelling Directional felling = "0" (absent), "1" (only to
+#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
+#'  reserve trees + track orientation)
 #'
-#' @param MainTrail (sfg)
-#' @param ScndTrail (sfg)
+#'@param MainTrail (sfg)
+#'@param ScndTrail (sfg)
 #'
-#' @param FutureReserveCrowns Future/reserve trees crown (sf)
+#'@param FutureReserveCrowns Future/reserve trees crown (sf)
 #'
-#' @param advancedloggingparameters Other parameters of the logging simulator
-#'   \code{\link{loggingparameters}} (list)
+#'@param advancedloggingparameters Other parameters of the logging simulator
+#'  \code{\link{loggingparameters}} (list)
 #'
-#' @return A list with: FallenTree: a MULTIPOLYGON of the tree oriented
-#'   according to the chosen scenario. Foot: a point for the base of the tree
-#'   (the rotation fixed point). NearestPoints: a linestring for the shortest
-#'   path from the base of the tree to the nearest trail, Trail: the union of
-#'   the main and the secondary trails. TrailPt: the point on the Trail closest
-#'   to the location of the tree.
+#'@return A list with: FallenTree: a MULTIPOLYGON of the tree oriented according
+#'  to the chosen scenario. Foot: a point for the base of the tree (the rotation
+#'  fixed point). NearestPoints: a linestring for the shortest path from the
+#'  base of the tree to the nearest trail, Trail: the union of the main and the
+#'  secondary trails. TrailPt: the point on the Trail closest to the location of
+#'  the tree.
 #'
-#' @seealso \code{\link{loggingparameters}}
+#'@seealso \code{\link{loggingparameters}}
 #'
-#' @export
+#'@export
 #'
-#' @importFrom dplyr mutate
-#' @importFrom sf st_point st_multipolygon st_as_sf st_nearest_points st_cast
-#'   st_intersects
-#' @importFrom nngeo st_ellipse
-#' @importFrom matlib angle
+#'@importFrom dplyr mutate
+#'@importFrom sf st_point st_multipolygon st_as_sf st_nearest_points st_cast
+#'  st_intersects
+#'@importFrom nngeo st_ellipse
+#'@importFrom matlib angle
 #'
 #' @examples
-#' MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
+#' MainTrail <- sf::st_linestring(matrix(c(286400, 582945,
 #'                                         286400, 583250,
-#'                                         286655, 583250,
-#'                                         286655, 583130,
-#'                                         286400, 583130) # the return
+#'                                         286700, 583250,
+#'                                         286700, 582945,
+#'                                         286400, 582945) # the return
 #'                                      ,ncol=2, byrow=TRUE))
 #'
 #' pol1 <- list(matrix(c(286503, 583134,

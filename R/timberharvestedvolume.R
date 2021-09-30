@@ -1,22 +1,23 @@
 #' Compute the timber harvested volume
 #'
-#' @param inventory Your inventory (see the inputs formats and metadata in the
+#' @param inventory Input inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
 #'
 #' @param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'   \code{\link{vignette}})
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
-#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
-#'   fuelwood = "2"
+#' @param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'   damages and unsed part of logged trees for fuelwood = "1", exploitation of
+#'   hollow trees, damages and and unused part of the log for fuelwood = "2"
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
 #'
-#' @return A list with the logged volume (TimberLoggedVolume)
-#' and when fuel = "2", the logged volume without the hollow trees (NoHollowTimberLoggedVolume).
-#' NoHollowTimberLoggedVolume is the logged volume (TimberLoggedVolume) when fuel = "0" or "1".
+#' @return A list with the logged volume (TimberLoggedVolume) and when fuel =
+#'   "2", the logged volume without the hollow trees
+#'   (NoHollowTimberLoggedVolume). NoHollowTimberLoggedVolume is the logged
+#'   volume (TimberLoggedVolume) when fuel = "0" or "1".
 #'
 #' @export
 #'

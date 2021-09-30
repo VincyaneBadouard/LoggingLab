@@ -2,7 +2,7 @@
 #'
 #' @description Joins a commercial criteria table to a forest inventory
 #'
-#' @param inventory your inventory (see the inputs formats and metadata in the
+#' @param inventory input inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
 #'
 #' @param speciescriteria Table of species exploitability criteria : species

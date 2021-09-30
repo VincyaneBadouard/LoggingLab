@@ -11,7 +11,7 @@ futurereserve(
 )
 }
 \arguments{
-\item{inventory}{Your inventory (see the inputs formats and metadata in the
+\item{inventory}{Input inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
@@ -22,7 +22,7 @@ the same format of \code{\link{SpeciesCriteria}} (data.frame)}
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
-your inventory with selected future and reserve trees, for your
+input inventory with selected future and reserve trees, for your
 logging criteria (\code{\link{SpeciesCriteria}})
 }
 \description{

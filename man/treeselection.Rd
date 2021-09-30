@@ -19,7 +19,7 @@ treeselection(
 )
 }
 \arguments{
-\item{inventory}{your inventory (see the inputs formats and metadata in the
+\item{inventory}{input inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
@@ -56,7 +56,7 @@ objective volume (if stand too poor), = FALSE by default (logical)}
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
-A list with: - your inventory with: "DistCrit", "Slope", "SlopeCrit",
+A list with: - input inventory with: "DistCrit", "Slope", "SlopeCrit",
 "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
 "ProbedHollow" new columns (see the outputs metadata in the
 \code{\link{vignette}}). - your objective volume with or without a bonus (if

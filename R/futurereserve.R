@@ -1,6 +1,6 @@
 #' Future & reserve trees designation
 #'
-#' @param inventory Your inventory (see the inputs formats and metadata in the
+#' @param inventory Input inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
 #'
 #' @param speciescriteria Table of species exploitability criteria : species
@@ -10,7 +10,7 @@
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
-#' @return your inventory with selected future and reserve trees, for your
+#' @return input inventory with selected future and reserve trees, for your
 #'   logging criteria (\code{\link{SpeciesCriteria}})
 #'
 #' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},

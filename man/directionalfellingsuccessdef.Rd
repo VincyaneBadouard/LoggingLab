@@ -12,7 +12,7 @@ directionalfellingsuccessdef(
 )
 }
 \arguments{
-\item{inventory}{your inventory (see the inputs formats and metadata in the
+\item{inventory}{input inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", damages and purge
@@ -27,7 +27,7 @@ reserve trees + track orientation)}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-Your inventory with: "TreeFellingOrientationSuccess" new column (see
+Input inventory with: "TreeFellingOrientationSuccess" new column (see
 the outputs metadata in the \code{\link{vignette}}).
 }
 \description{

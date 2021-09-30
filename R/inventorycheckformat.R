@@ -1,6 +1,6 @@
 #' Check your input inventory data for the  package "Maria"
 #'
-#' @param inventory Your inventory (see the inputs formats and metadata in the
+#' @param inventory Input inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
 #'
 #' @return Stop the function if the format is not the one required.
@@ -206,7 +206,7 @@ inventorycheckformat <- function(
   }
 
   if (!GoodData)# inverse value of the object
-    stop(paste ("Your inventory does not comply.", GeneralStop))
+    stop(paste ("Input inventory does not comply.", GeneralStop))
 
   #if DBH (cm) doesn't exist create it
   if (!("DBH" %in% names(inventory)) && ("CircCorr" %in% names(inventory))) {
@@ -227,18 +227,18 @@ inventorycheckformat <- function(
   # length(unique(inventory$Plot)) == 1
   if (!length(unique(inventory$Plot)) == 1){ #all the Plot values are equal?
     GoodData <- FALSE
-    GeneralStop <- paste (GeneralStop,"Your inventory concerns different plots
+    GeneralStop <- paste (GeneralStop,"Input inventory concerns different plots
                           (Plot). Our function simulates logging at the plot level.")
   }
 
   if (!length(unique(inventory$CensusYear)) == 1) {#all is the same year?
     GoodData <- FALSE
-    GeneralStop <- paste (GeneralStop,"Your inventory concerns different years
+    GeneralStop <- paste (GeneralStop,"Input inventory concerns different years
                           (CensusYear). Our function simulates logging at 1 year scale.")
   }
 
   if (!GoodData)# inverse value of the object
-    stop(paste ("Your inventory does not comply.", GeneralStop))
+    stop(paste ("Input inventory does not comply.", GeneralStop))
 
   return(inventory)
 }

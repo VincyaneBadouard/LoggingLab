@@ -12,7 +12,7 @@ timberharvestedvolume(
 )
 }
 \arguments{
-\item{inventory}{Your inventory (see the inputs formats and metadata in the
+\item{inventory}{Input inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",

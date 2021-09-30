@@ -18,7 +18,7 @@ selected(
 )
 }
 \arguments{
-\item{inventory}{Your inventory (see the inputs formats and metadata in the
+\item{inventory}{Input inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
@@ -39,7 +39,7 @@ commercial species (2 levels of commercial species in the
 \item{VO}{The objective volume for the entire surface of the plot (numeric
 value)}
 
-\item{HVinit}{the harvestable volume in the plot for your criteria
+\item{HVinit}{the harvestable volume in the plot for chosen criteria
 (\code{\link{SpeciesCriteria}}) (numeric value)}
 
 \item{specieslax}{Allow diversification if stand is too poor, = FALSE by
@@ -52,7 +52,7 @@ objective volume (if stand too poor), = FALSE by default (logical)}
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
-Your inventory with the trees selected for harvesting (depending on
+Input inventory with the trees selected for harvesting (depending on
 the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
 EnergywoodTrees)
 }

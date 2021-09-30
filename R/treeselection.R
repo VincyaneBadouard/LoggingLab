@@ -1,6 +1,6 @@
 #'Tree selection (trees to be exploited, future and reserve trees)
 #'
-#'@param inventory your inventory (see the inputs formats and metadata in the
+#'@param inventory input inventory (see the inputs formats and metadata in the
 #'  \code{\link{vignette}}) (data.frame)
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
@@ -19,9 +19,9 @@
 #'
 #'@param objective Objective volume per hectare (numeric)
 #'
-#'@param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
-#'  exploitation in fuelwood = "1", exploitation of hollow trees, damages and
-#'  purge in fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
+#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
 #'
 #'@param diversification Taking of other species in addition to the main
 #'  commercial species (2 levels of commercial species in the
@@ -36,7 +36,7 @@
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
-#'@return A list with: - your inventory with: "DistCrit", "Slope", "SlopeCrit",
+#'@return A list with: - input inventory with: "DistCrit", "Slope", "SlopeCrit",
 #'  "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
 #'  "ProbedHollow" new columns (see the outputs metadata in the
 #'  \code{\link{vignette}}). - your objective volume with or without a bonus (if

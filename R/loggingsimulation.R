@@ -1,82 +1,82 @@
-#' loggingsimulation
+#'loggingsimulation
 #'
-#' @description This function allows to simulate a timber and wood energy
-#'   logging on a forest plot. It covers: harvestable area definition, tree
-#'   selection, main (only for ONF plots) and secondary trails layout, tree
-#'   felling, landings implementation (only for ONF plots), timber harvested,
-#'   fuel wood volume and damages quantification.
+#'@description This function allows to simulate a timber and wood energy logging
+#'  on a forest plot. It covers: harvestable area definition, tree selection,
+#'  main (only for ONF plots) and secondary trails layout, tree felling,
+#'  landings implementation (only for ONF plots), timber harvested, fuel wood
+#'  volume and damages quantification.
 #'
-#' @param inventory Your inventory (see the inputs formats and metadata in the
-#'   \code{\link{vignette}}) (data.frame)
+#'@param inventory Input inventory (see the inputs formats and metadata in the
+#'  \code{\link{vignette}}) (data.frame)
 #'
-#' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'   or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
+#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
-#' @param relativeelevation (RasterLayer)
+#'@param relativeelevation (RasterLayer)
 #'
-#' @param speciescriteria Table of species exploitability criteria : species
-#'   names, economic interest level, minimum and maximum felling diameter, in
-#'   the same format of \code{\link{SpeciesCriteria}} (2 levels of commercial
-#'   species) (data.frame)
+#'@param speciescriteria Table of species exploitability criteria : species
+#'  names, economic interest level, minimum and maximum felling diameter, in the
+#'  same format of \code{\link{SpeciesCriteria}} (2 levels of commercial
+#'  species) (data.frame)
 #'
-#' @param volumeparameters Volume parameters table (in the same format of
-#'   \code{\link{ForestZoneVolumeParametersTable}}) to compute the harvestable
-#'   volume of each tree, depend to its geographic zone if several locations
-#'   (data.frame)
+#'@param volumeparameters Volume parameters table (in the same format of
+#'  \code{\link{ForestZoneVolumeParametersTable}}) to compute the harvestable
+#'  volume of each tree, depend to its geographic zone if several locations
+#'  (data.frame)
 #'
-#' @param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
-#'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-#'   \code{\link{vignette}})
+#'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+#'  \code{\link{vignette}})
 #'
-#' @param objective Objective volume per hectare (numeric)
+#'@param objective Objective volume per hectare (numeric)
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
-#'   exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
-#'   fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
+#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
 #'
-#' @param diversification Taking of other species in addition to the main
-#'   commercial species (2 levels of commercial species in the
-#'   \code{\link{SpeciesCriteria}} table) (logical)
+#'@param diversification Taking of other species in addition to the main
+#'  commercial species (2 levels of commercial species in the
+#'  \code{\link{SpeciesCriteria}} table) (logical)
 #'
-#' @param winching No cable or grapple = "0", only cable = "1", grapple + cable
-#'   = "2"
+#'@param winching No cable or grapple = "0", only cable = "1", grapple + cable =
+#'  "2"
 #'
-#' @param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'   avoid damage to future and reserve trees), "2" (avoid damage to future and
-#'   reserve trees + track orientation)
+#'@param directionalfelling Directional felling = "0" (absent), "1" (only to
+#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
+#'  reserve trees + track orientation)
 #'
-#' @param specieslax Allow diversification if stand is too poor, = FALSE by
-#'   default (logical)
+#'@param specieslax Allow diversification if stand is too poor, = FALSE by
+#'  default (logical)
 #'
-#' @param objectivelax Allow exploitation in case of non-achievement of the
-#'   objective volume (if stand too poor), = FALSE by default (logical)
+#'@param objectivelax Allow exploitation in case of non-achievement of the
+#'  objective volume (if stand too poor), = FALSE by default (logical)
 #'
-#' @param crowndiameterparameters Crown diameter allometry parameters table (in
-#'   the same format of \code{\link{ParamCrownDiameterAllometry}}) to compute
-#'   the crown diameter of each tree, depend to its DBH (Diameter at Breast
-#'   Height) and its species, genus or family. (data.frame)
+#'@param crowndiameterparameters Crown diameter allometry parameters table (in
+#'  the same format of \code{\link{ParamCrownDiameterAllometry}}) to compute the
+#'  crown diameter of each tree, depend to its DBH (Diameter at Breast Height)
+#'  and its species, genus or family. (data.frame)
 #'
-#' @param advancedloggingparameters Other parameters of the logging simulator
-#'   \code{\link{loggingparameters}} (list)
+#'@param advancedloggingparameters Other parameters of the logging simulator
+#'  \code{\link{loggingparameters}} (list)
 #'
-#' @param iter Number of iterations (numeric). Default = 1.
-#' @param cores Number of cores for parallelization (numeric). Default = 1.
+#'@param iter Number of iterations (numeric). Default = 1.
+#'@param cores Number of cores for parallelization (numeric). Default = 1.
 #'
-#' @return Your inventory (data.frame) with logging informations.
+#'@return Input inventory (data.frame) with logging informations.
 #'
-#' @seealso \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
-#'   \code{\link{ForestZoneVolumeParametersTable}},
-#'   \code{\link{ParamCrownDiameterAllometry}}, \code{\link{loggingparameters}},
+#'@seealso \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
+#'  \code{\link{ForestZoneVolumeParametersTable}},
+#'  \code{\link{ParamCrownDiameterAllometry}}, \code{\link{loggingparameters}},
 #'
-#'   \code{\link{addtreedim}}, \code{\link{treeselection}},
-#'   \code{\link{harvestable}}, \code{\link{selected}},
-#'   \code{\link{futurereserve}}, \code{\link{treefelling}},
-#'   \code{\link{createcanopy}}, \code{\link{treefromthesky}},
-#'   \code{\link{felling1tree}}, \code{\link{rotatepolygon}},
-#'   \code{\link{getgeometry}}, \code{\link{timberharvestedvolume}},
-#'   \code{\link{exploitablefuelwoodvolume}}
+#'  \code{\link{addtreedim}}, \code{\link{treeselection}},
+#'  \code{\link{harvestable}}, \code{\link{selected}},
+#'  \code{\link{futurereserve}}, \code{\link{treefelling}},
+#'  \code{\link{createcanopy}}, \code{\link{treefromthesky}},
+#'  \code{\link{felling1tree}}, \code{\link{rotatepolygon}},
+#'  \code{\link{getgeometry}}, \code{\link{timberharvestedvolume}},
+#'  \code{\link{exploitablefuelwoodvolume}}
 #'
-#' @export
+#'@export
 #'
 #'@importFrom dplyr filter mutate select left_join bind_rows
 #'@importFrom sf st_as_sf st_point

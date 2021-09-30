@@ -25,7 +25,7 @@ loggingsimulation(
 )
 }
 \arguments{
-\item{inventory}{Your inventory (see the inputs formats and metadata in the
+\item{inventory}{Input inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
@@ -83,7 +83,7 @@ Height) and its species, genus or family. (data.frame)}
 \item{cores}{Number of cores for parallelization (numeric). Default = 1.}
 }
 \value{
-Your inventory (data.frame) with logging informations.
+Input inventory (data.frame) with logging informations.
 }
 \description{
 This function allows to simulate a timber and wood energy

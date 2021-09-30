@@ -338,7 +338,7 @@ InventoryClean <- Paracou6_2016 %>%
 if (any(duplicated(Paracou6_2016)==TRUE))
   stop ("Tree identifiers (idTree) are not unique.") # stop function if the tree identifiers (idTree) are not unique
 if (all(Paracou6_2016$Plot==Paracou6_2016$Plot[1])==FALSE) #all the Plot values are equal?
-  stop ("Your inventory concerns different plots (Plot). Our function simulates logging at the plot level.") 
+  stop ("Input inventory concerns different plots (Plot). Our function simulates logging at the plot level.") 
 # Remove out-plot trees (A faire)
 
 

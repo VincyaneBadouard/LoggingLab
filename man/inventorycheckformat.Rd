@@ -2,19 +2,19 @@
 % Please edit documentation in R/inventorycheckformat.R
 \name{inventorycheckformat}
 \alias{inventorycheckformat}
-\title{Check & format your inventory data for the "Maria" package}
+\title{Check & format input inventory data for the "Maria" package}
 \usage{
 inventorycheckformat(inventory)
 }
 \arguments{
-\item{inventory}{Your inventory (see the inputs formats and metadata in the
+\item{inventory}{Input inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 }
 \value{
 Stop the function if the format is not the one required.
 }
 \description{
-Check & format your inventory data for the "Maria" package
+Check & format input inventory data for the "Maria" package
 }
 \examples{
 

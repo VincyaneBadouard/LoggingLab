@@ -3,7 +3,7 @@
 #'@description The function tells you the harvestable volume in the plot, and
 #'  which trees are harvestable according to your harvestability criteria
 #'
-#'@param inventory Your inventory (see the inputs formats and metadata in the
+#'@param inventory Input inventory (see the inputs formats and metadata in the
 #'  \code{\link{vignette}}) (data.frame)
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
@@ -22,7 +22,7 @@
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
-#'@return Your inventory with the exploitability criteria, and if they are
+#'@return Input inventory with the exploitability criteria, and if they are
 #'  validated for each of the trees. The function returns the harvestable volume
 #'  too, in the plot for these criteria.
 #'

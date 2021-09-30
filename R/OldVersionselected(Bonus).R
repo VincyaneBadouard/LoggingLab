@@ -1,6 +1,6 @@
 #' #'Trees to be exploited selection
 #' #'
-#' #'@param inventory Your inventory (see the inputs formats and metadata in the
+#' #'@param inventory Input inventory (see the inputs formats and metadata in the
 #' #'  \code{\link{vignette}}) (data.frame)
 #' #'
 #' #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
@@ -24,7 +24,7 @@
 #' #'@param VO The objective volume with or without a bonus (if hollow trees
 #' #'  exploitation)(numeric value) (see the \code{\link{loggingparameters}})
 #' #'
-#' #'@param HVinit the harvestable volume in the plot for your criteria
+#' #'@param HVinit the harvestable volume in the plot for chosen criteria
 #' #'  (\code{\link{SpeciesCriteria}}) (numeric value)
 #' #'
 #' #'@param objectivelax Allow exploitation in case of non-achievement of the
@@ -33,7 +33,7 @@
 #' #'@param advancedloggingparameters Other parameters of the logging simulator
 #' #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #' #'
-#' #'@return Your inventory with the trees selected for harvesting (depending on
+#' #'@return Input inventory with the trees selected for harvesting (depending on
 #' #'  the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
 #' #'  EnergywoodTrees)
 #' #'

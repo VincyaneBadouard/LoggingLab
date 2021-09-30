@@ -1,4 +1,4 @@
-#' Parameters of the scenaios
+#' Parameters of the scenarios
 #'
 #'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -6,9 +6,9 @@
 #'
 #'@param objective Objective volume per hectare (numeric)
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", exploitation of damages and unsed part of logged trees
-#'   for fuelwood = "1", exploitation of hollow trees, damages and unsed part of logged trees for
-#'   fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
+#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
 #'
 #'@param diversification Possibility to log other species in addition to the main
 #'  commercial species (species with a value of 2  for commercial in the
@@ -36,7 +36,8 @@ scenariosparameters <- function(
 ){
   # check inputs
   if(!(scenario %in% c("RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow", "manual")))
-    stop(paste('"scenario" argument should be "in "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"; not',
+    stop(paste('"scenario" argument should be in "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
+               "RIL3fuelhollow" or "manual"; not',
                scenario))
 
   if(!(class(objective) %in% c("numeric", "NULL")))

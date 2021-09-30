@@ -109,7 +109,7 @@ exploitablefuelwoodvolume
 
 # Arguments presentation
 
-+ **inventory** : Your inventory (see the inputs formats and metadata in the
++ **inventory** : Input inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)
 
 + **topography** : Digital terrain model (DTM) of the inventoried plot (LiDAR
@@ -197,11 +197,11 @@ kable(ScenariosTable)
 + **Grapple length** = 6 m 
 + **Minimum distance to consider a tree "isolated"** from other trees of its species = 100 m 
 + **Future trees minimum diameter** = 35 cm 
-+ **Proportion of successful felling cases** = 0.6 %
++ **Proportion of successful directional felling events** = 0.6 %
 + **Minimum orientation of the tree fall to the trail** = 30 degree 
 + **Maximum orientation of the tree fall to the trail** = 45 degree 
 + **Part taken from hollow trees for fuel exploitation** = 1/3 
-+ **Purge** = 0.14 m^3 of fuelwood/m^3 of logged trees
++ **Purge (unused part of the log)** = 0.14 m^3 of fuelwood/m^3 of logged trees
 + **Maximum trail density** = 200 m/ha (has no impact on the simulation.
 A message will only be sent to inform you of its validation or not)
 + **Maximum landing area** = 1500 square meters (has no impact on the simulation.
@@ -330,7 +330,7 @@ loggingsummary(Rslt)
 
 # Decomposed harvesting
 
-## Check & format your inventory data for the "Maria" package
+## Check & format input inventory data for the "Maria" package
 ```{r}
 inventory <- inventorycheckformat(Paracou6_2016)
 ```

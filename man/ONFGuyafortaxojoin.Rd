@@ -7,7 +7,7 @@
 ONFGuyafortaxojoin(inventory, speciescriteria)
 }
 \arguments{
-\item{inventory}{your inventory (see the inputs formats and metadata in the
+\item{inventory}{input inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
 \item{speciescriteria}{Table of species exploitability criteria : species

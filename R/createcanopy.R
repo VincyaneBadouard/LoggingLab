@@ -1,6 +1,6 @@
 #' Create the canopy
 #'
-#' @param inventory Your inventory (see the inputs formats and metadata in the
+#' @param inventory Input inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
 #'
 #' @return a dataframe with a column 'Crowns' containing the ellipses

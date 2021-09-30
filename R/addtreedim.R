@@ -1,16 +1,17 @@
 #' Compute tree dimensions (tree and crown height and diameter, harvestable
 #' volume, wood density, and AGB)
 #'
-#' @param inventory Your inventory (see the inputs formats and metadata in the
+#' @param inventory Input inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
 #'
 #'
-#' @param volumeparameters Parameters of the tree volume tables (in the same format of
-#'   \code{\link{ForestZoneVolumeParametersTable}}) used to compute the harvestable volume of each tree,
-#'   depending on its geographic zone if several locations (data.frame)
+#' @param volumeparameters Parameters of the tree volume tables (in the same
+#'   format of \code{\link{ForestZoneVolumeParametersTable}}) used to compute
+#'   the harvestable volume of each tree, depending on its geographic zone if
+#'   several locations (data.frame)
 #'
-#' @param crowndiameterparameters Parameters of crown diameter allometry (in
-#'   the same format of \code{\link{ParamCrownDiameterAllometry}}) used to compute
+#' @param crowndiameterparameters Parameters of crown diameter allometry (in the
+#'   same format of \code{\link{ParamCrownDiameterAllometry}}) used to compute
 #'   the crown diameter of each tree, depending on its DBH (Diameter at Breast
 #'   Height) and its species, genus or family. (data.frame)
 #'

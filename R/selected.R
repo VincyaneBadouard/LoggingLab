@@ -1,6 +1,6 @@
-#' Selection of trees to log
+#'Selection of trees to log
 #'
-#'@param inventory Your inventory (see the inputs formats and metadata in the
+#'@param inventory Input inventory (see the inputs formats and metadata in the
 #'  \code{\link{vignette}}) (data.frame)
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
@@ -10,19 +10,18 @@
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  \code{\link{vignette}})
 #'
-#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of damages and unsed
-#'  part of logged trees for fuelwood = "1", exploitation of hollow trees, damages and
-#'  and unsed part of logged trees for fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
+#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
 #'
-#'@param diversification TPossibility to log other species in addition to the main
-#'  commercial species (species with a value of 2  for commercial in the
+#'@param diversification TPossibility to log other species in addition to the
+#'  main commercial species (species with a value of 2  for commercial in the
 #'  \code{\link{SpeciesCriteria}} table) (logical)
 #'
-#'@param specieslax Allow diversification if the stand is too poor to reach the objective volume without diversification, = FALSE by
-#'  default (logical)
+#'@param specieslax Allow diversification if the stand is too poor to reach the
+#'  objective volume without diversification, = FALSE by default (logical)
 #'
-#'@param VO Objective volume for the entire area of the plot (numeric
-#'  value)
+#'@param VO Objective volume for the entire area of the plot (numeric value)
 #'
 #'@param HVinit Harvestable volume in the plot for the chosen scenario
 #'  (\code{\link{SpeciesCriteria}}) (numeric value)
@@ -33,7 +32,7 @@
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
-#'@return Your inventory with the trees selected for harvesting (depending on
+#'@return Input inventory with the trees selected for harvesting (depending on
 #'  the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
 #'  EnergywoodTrees)
 #'
