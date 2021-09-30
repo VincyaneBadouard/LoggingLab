@@ -42,6 +42,17 @@ too, in the plot for these criteria.
 The function tells you the harvestable volume in the plot, and
 which trees are harvestable according to your harvestability criteria
 }
+\details{
+Trees will be designated as "\strong{harvestable}" if they:
+\itemize{
+\item belonging to species of 1st economic rank or more if diversification
+\item DBH between the MinFD and the MaxFD.
+\item not isolated ( >100m ('IsolateTreeMinDistance') from other individuals of
+the same species)
+\item on slopes < 22\% ('TreeMaxSlope')
+\item off the main tracks.
+}
+}
 \examples{
 
 data(Paracou6_2016)

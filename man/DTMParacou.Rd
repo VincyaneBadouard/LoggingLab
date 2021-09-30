@@ -11,6 +11,6 @@ A RasterLayer
 DTMParacou
 }
 \description{
-Digital terrain model (DTM) of the plot 6 of Paracou (1m resolution, LiDAR campaign of 2016) (French Guiana)
+Digital terrain model (DTM) of plot 6 of Paracou (French Guiana) (1m resolution, 2016)
 }
 \keyword{datasets}

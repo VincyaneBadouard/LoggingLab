@@ -16,6 +16,19 @@ knitr::opts_chunk$set(
 )
 ```
 
+# The different stages of Reduced Impact Logging (RIL) described by the ONF (Office National des Forêts) of French Guiana
+1) Definition of the area to be logged
+2) The layout of the main skidding trails
+3) Tree selection
+4) Selection of trees by the logger
+5) The layout of secondary skidding trails
+6) Felling of the tree
+7) Adjustment of secondary skidding trails in the case of Wood Fuel exploitation (WFE)
+8) Moving the bole
+
+
+
+
 # Load Maria and datasets
 **Install Maria**
 ```{r, eval=F}
@@ -342,8 +355,39 @@ inventory <- addtreedim(inventory, volumeparameters = ForestZoneVolumeParameters
 ```
 
 ## Harvestable area definition
+By default, a prospecting unit is an area connected to a truck trail or a main skid trail, with a slope of less than 27%, avoiding lowlands and the water system (30 m buffer).
+RIL1: SRTM is used.
+RIL2broken/RIL2/RIL3/RIL3/RIL3fuel/RIL3fuelhollow: LIDAR is used.
 
 ## Tree selection
+Trees with visible defects are identified ('VisiblyDefectModel' in 
+'advancedloggingparameters' argument) and therefore not designated.
+
+(*Objective volume*: If the user has chosen not to harvest hollow probed trees for
+energy ('RottenModel' in 'advancedloggingparameters' argument), 20-30% will be
+added to the objective volume in order to compensate for these designated hollow
+trees. If the user has chosen to harvest the hollow probed trees as fuel wood,
+he will harvest strictly his target volume, without *bonus.*)
+
+Trees will be designated as "**harvestable**" if they:
+- belonging to species of 1st economic rank or more if diversification
+- DBH between the MinFD and the MaxFD.
+- not isolated ( >100m ('IsolateTreeMinDistance') from other individuals of the same species)
+- on slopes < 22% ('TreeMaxSlope')
+- off the main tracks.
+
+If the harvestable volume is higher than the objective volume, the MinFD of the 1st economic rank species is first increased, then that of the other species (if diversification), if this is not enough. The volume to be harvested is adjusted if necessary by taking the trees in decreasing order of volume, until the objective volume is reached.
+
+If the harvestable volume is too low, diversification can be applied if it was not already applied ('specieslax') (trees of all commercial ranks are selected in decreasing order of volume until the objective volume is reached), or harvesting can continue despite an unreached objective volume, or be abandoned ('objectivelax')
+
+**Future** trees will be:
+- species of 1st economic rank
+- DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD or UpMinFD if it has been raised for its species. 
+
+**Reserve** trees will be:
+- future trees
+- in the same number as trees to be harvested.
+
 ### In 1 function
 **Trees to be exploited, future and reserve trees**
 ```{r}
@@ -385,6 +429,39 @@ inventory <- futurereserve(inventory, SpeciesCriteria)
 ```
 
 ## Secondary trails layout
+
+Skidding trail (main, secondary): allows wood to be transported from the parcel to truck routes.
+
+The secondary trails are:
+- 4 m width ('ScndTrailWidth')
+- 22% maximum slope in length ('MaxTrailCenterlineSlope')
+- 4% maximum side slope (taken into account in the presence of LIDAR). ('MaxTrailCrossSlope')
+They avoid :
+- the trees to be logged
+- the trees with a DBH of more than 50 cm ('BigTrees')
+- the reserve trees.
+They join in priority:
+1: groups in decreasing order of tree abundance
+2: those with the shortest distance to the nearest track
+3: avoiding future trees
+4: minimising slopes in length and width.
+
+RIL1/RIL2broken: trails go to the base of trees
+RIL2: cable only: trails go up to a maximum of 40 m ('CableLength') from trees.
+RIL3/RIL3 including fuel: grapple (trails with longitudinal slope <20% 
+('GrappleMaxslope')) (trails go up to 6 m ('GrappleLength') from the trees),
+and cable (trails go up to 40 m ('CableLength') from the trees) is used only
+when the longitudinal slope is greater than 20% or when the tree to be skidded
+is isolated from other trees to be exploited, from 6 to 40 m.
+If the crown is not accessible, it will not be harvested, only the trunk can be
+used in fuel wood.
+ 
+If the number of trees connected to a secondary trail exceeds 20 (''), the secondary trail will take the characteristics (width) of a main trail.
+
+Damage :
+- on the trail
+- on the edge of the trail: neglected.
+
 ```{r}
 MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
                                         286400, 583250,
@@ -412,6 +489,33 @@ ScndTrail <- sf::st_multipolygon(PolList)
 
 
 ## Tree felling
+
+The felling of the tree creates a tree (including crown) on the ground, with dimensions calculated with specific allometries ('advancedloggingparameters').
+
+RIL1: random fall
+
+RIL2broken/RIL2:
+- at 40%: random fall
+- at 60% ('TreefallSuccessProportion'): priority 1: *base of the tree towards the nearest trail* (main or 2ndary), priority 2: avoid futures and reserves.
+
+RIL3/RIL3 BO + BE: 
+- at 40%: random fall 
+- at 60% ('TreefallSuccessProportion'): 
+  * if RIL3 + fuel & trees < 6 m from the trail and slope <20%:
+    - 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
+    - *crown* towards the nearest trail
+    - priority 1: avoid futures and reserves,
+    - priority 2: conformation allowing skidding back to the main trail
+
+  * otherwise (RIL3, RIL3 + fuel & trees > 6 m from the trail and/or slope >20%): 
+    - 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
+    - *base* to nearest trail
+    - priority 1: avoid futures and reserves
+    - priority 2: conformation allowing skidding back to the main trail
+
+Damage:
+Secondary windfall: *all trees under the felled tree (timber or energy) will be considered dead*.
+
 ### In 1 function
 ```{r}
 inventory <- treefelling(inventory, scenario = "manual", fuel = "0",
@@ -443,6 +547,12 @@ sf::st_intersection( # trees under the fallen trees
 ```
 
 ## Quantify the volumes achieved
+
+By default, within a hollow tree, 2/3 of the log will be usable as timber,
+1/3 as fuel wood ('TreeHollowPartForFuel').
+For dead trees from the operation (trails, secondary windfall),
+the whole trunk will be exploitable as fuel wood.
+
 ### Compute the timber harvested volume
 ```{r}
 TimberV <- timberharvestedvolume(inventory, scenario = "manual", fuel = "2",

@@ -22,9 +22,9 @@ treefelling(
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 \code{\link{vignette}})}
 
-\item{fuel}{Fuel wood exploitation: no exploitation = "0", damages and purge
-exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
-fuelwood = "2"}
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
+damages and unsed part of logged trees for fuelwood = "1", exploitation of
+hollow trees, damages and and unused part of the log for fuelwood = "2"}
 
 \item{directionalfelling}{Directional felling = "0" (absent), "1" (only to
 avoid damage to future and reserve trees), "2" (avoid damage to future and
@@ -43,6 +43,47 @@ reserve trees + track orientation)}
 }
 \description{
 Tree felling
+}
+\details{
+The felling of the tree creates a tree (including crown) on the
+ground, with dimensions calculated with specific allometries
+('advancedloggingparameters').
+
+RIL1: random fall
+
+RIL2broken/RIL2:
+\itemize{
+\item at 40\%: random fall
+\item at 60\% ('TreefallSuccessProportion'):
+priority 1: \emph{base of the tree towards the nearest trail} (main or 2ndary),
+priority 2: avoid futures and reserves.
+}
+
+RIL3/RIL3 BO + BE:
+\itemize{
+\item at 40\%: random fall
+\item at 60\% ('TreefallSuccessProportion'):
+\itemize{
+\item if RIL3 + fuel & trees < 6 m from the trail and slope <20\%:
+\itemize{
+\item 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
+\item \emph{crown} towards the nearest trail
+\item priority 1: avoid futures and reserves,
+\item priority 2: conformation allowing skidding back to the main trail
+}
+\item otherwise (RIL3, RIL3 + fuel & trees > 6 m from the trail and/or slope >20\%):
+\itemize{
+\item 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
+\item \emph{base} to nearest trail
+\item priority 1: avoid futures and reserves
+\item priority 2: conformation allowing skidding back to the main trail
+}
+}
+}
+
+Damage:
+Secondary windfall: \emph{all trees under the felled tree (timber or energy)
+will be considered dead}.
 }
 \examples{
 \dontrun{

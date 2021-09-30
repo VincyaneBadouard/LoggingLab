@@ -28,6 +28,20 @@ logging criteria (\code{\link{SpeciesCriteria}})
 \description{
 Future & reserve trees designation
 }
+\details{
+\strong{Future} trees will be:
+\itemize{
+\item species of 1st economic rank
+\item DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD
+or UpMinFD if it has been raised for its species.
+}
+
+\strong{Reserve} trees will be:
+\itemize{
+\item future trees
+\item in the same number as trees to be harvested.
+}
+}
 \examples{
 data(Paracou6_2016)
 data(ParamCrownDiameterAllometry)

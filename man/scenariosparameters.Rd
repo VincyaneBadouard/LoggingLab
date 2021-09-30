@@ -2,7 +2,7 @@
 % Please edit documentation in R/scenariosparameters.R
 \name{scenariosparameters}
 \alias{scenariosparameters}
-\title{scenariosparameters}
+\title{Parameters of the scenarios}
 \usage{
 scenariosparameters(
   scenario,
@@ -20,26 +20,26 @@ scenariosparameters(
 
 \item{objective}{Objective volume per hectare (numeric)}
 
-\item{fuel}{Fuel wood exploitation: no exploitation = "0", damages and purge
-exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
-fuelwood = "2"}
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
+damages and unsed part of logged trees for fuelwood = "1", exploitation of
+hollow trees, damages and and unused part of the log for fuelwood = "2"}
 
-\item{diversification}{Taking of other species in addition to the main
-commercial species (2 levels of commercial species in the
+\item{diversification}{Possibility to log other species in addition to the main
+commercial species (species with a value of 2  for commercial in the
 \code{\link{SpeciesCriteria}} table) (logical)}
 
-\item{winching}{No cable or grapple = "0", only cable = "1", grapple + cable =
+\item{winching}{No cable or grapple = "0", cable only = "1", grapple + cable =
 "2"}
 
 \item{directionalfelling}{Directional felling = "0" (absent), "1" (only to
-avoid damage to future and reserve trees), "2" (avoid damage to future and
-reserve trees + track orientation)}
+avoid damage to future and reserve trees), "2" (to avoid damage to future and
+reserve trees and to position the log relatively to the track)}
 }
 \value{
 A named list of 5 objects.
 }
 \description{
-scenariosparameters
+Parameters of the scenarios
 }
 \examples{
 scenariosparameters(scenario = "RIL1")

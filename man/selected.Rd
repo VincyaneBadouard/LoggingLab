@@ -2,7 +2,7 @@
 % Please edit documentation in R/selected.R
 \name{selected}
 \alias{selected}
-\title{Trees to be exploited selection}
+\title{Selection of trees to log}
 \usage{
 selected(
   inventory,
@@ -28,22 +28,21 @@ or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 \code{\link{vignette}})}
 
-\item{fuel}{Fuel wood exploitation: no exploitation = "0", damages and purge
-exploitation in fuelwood = "1", exploitation of hollow trees, damages and
-purge in fuelwood = "2"}
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
+damages and unsed part of logged trees for fuelwood = "1", exploitation of
+hollow trees, damages and and unused part of the log for fuelwood = "2"}
 
-\item{diversification}{Taking of other species in addition to the main
-commercial species (2 levels of commercial species in the
+\item{diversification}{TPossibility to log other species in addition to the
+main commercial species (species with a value of 2  for commercial in the
 \code{\link{SpeciesCriteria}} table) (logical)}
 
-\item{VO}{The objective volume for the entire surface of the plot (numeric
-value)}
+\item{VO}{Objective volume for the entire area of the plot (numeric value)}
 
-\item{HVinit}{the harvestable volume in the plot for chosen criteria
+\item{HVinit}{Harvestable volume in the plot for the chosen scenario
 (\code{\link{SpeciesCriteria}}) (numeric value)}
 
-\item{specieslax}{Allow diversification if stand is too poor, = FALSE by
-default (logical)}
+\item{specieslax}{Allow diversification if the stand is too poor to reach the
+objective volume without diversification, = FALSE by default (logical)}
 
 \item{objectivelax}{Allow exploitation in case of non-achievement of the
 objective volume (if stand too poor), = FALSE by default (logical)}
@@ -57,7 +56,20 @@ the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
 EnergywoodTrees)
 }
 \description{
-Trees to be exploited selection
+Selection of trees to log
+}
+\details{
+If the harvestable volume is higher than the objective volume, the
+MinFD of the 1st economic rank species is first increased, then that of the
+other species (if diversification), if this is not enough. The volume to be
+harvested is adjusted if necessary by taking the trees in decreasing order
+of volume, until the objective volume is reached.
+
+If the harvestable volume is too low, diversification can be applied if it
+was not already applied ('specieslax') (trees of all commercial ranks are
+selected in decreasing order of volume until the objective volume is
+reached), or harvesting can continue despite an unreached objective volume,
+or be abandoned ('objectivelax')
 }
 \examples{
 data(Paracou6_2016)

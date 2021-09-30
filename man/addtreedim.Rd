@@ -16,14 +16,14 @@ addtreedim(
 \item{inventory}{Input inventory (see the inputs formats and metadata in the
 \code{\link{vignette}}) (data.frame)}
 
-\item{volumeparameters}{Volume parameters table (in the same format of
-\code{\link{ForestZoneVolumeParametersTable}}) to compute the harvestable
-volume of each tree, depend to its geographic zone if several locations
-(data.frame)}
+\item{volumeparameters}{Parameters of the tree volume tables (in the same
+format of \code{\link{ForestZoneVolumeParametersTable}}) used to compute
+the harvestable volume of each tree, depending on its geographic zone if
+several locations (data.frame)}
 
-\item{crowndiameterparameters}{Crown diameter allometry parameters table (in
-the same format of \code{\link{ParamCrownDiameterAllometry}}) to compute
-the crown diameter of each tree, depend to its DBH (Diameter at Breast
+\item{crowndiameterparameters}{Parameters of crown diameter allometry (in the
+same format of \code{\link{ParamCrownDiameterAllometry}}) used to compute
+the crown diameter of each tree, depending on its DBH (Diameter at Breast
 Height) and its species, genus or family. (data.frame)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
@@ -46,8 +46,7 @@ data(ParamCrownDiameterAllometry)
 
 if (!("DBH" \%in\% names(Paracou6_2016))) {
 tibble::add_column(Paracou6_2016, DBH = NA) #if DBH doesn't exist create it
-Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi
-} # and compute it
+Paracou6_2016$DBH = Paracou6_2016$CircCorr/pi} # and calculate it
 Paracou6_2016 <- dplyr::filter(Paracou6_2016, DBH >= 10)
 
 addtreedim(Paracou6_2016, volumeparameters = ForestZoneVolumeParametersTable)

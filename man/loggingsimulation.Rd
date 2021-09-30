@@ -34,8 +34,8 @@ or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 \item{relativeelevation}{(RasterLayer)}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
-names, economic interest level, minimum and maximum felling diameter, in
-the same format of \code{\link{SpeciesCriteria}} (2 levels of commercial
+names, economic interest level, minimum and maximum felling diameter, in the
+same format of \code{\link{SpeciesCriteria}} (2 levels of commercial
 species) (data.frame)}
 
 \item{volumeparameters}{Volume parameters table (in the same format of
@@ -49,16 +49,16 @@ volume of each tree, depend to its geographic zone if several locations
 
 \item{objective}{Objective volume per hectare (numeric)}
 
-\item{fuel}{Fuel wood exploitation: no exploitation = "0", damages and purge
-exploitation in fuelwood = "1", exploitation of hollow trees, damages and purge in
-fuelwood = "2"}
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
+damages and unsed part of logged trees for fuelwood = "1", exploitation of
+hollow trees, damages and and unused part of the log for fuelwood = "2"}
 
 \item{diversification}{Taking of other species in addition to the main
 commercial species (2 levels of commercial species in the
 \code{\link{SpeciesCriteria}} table) (logical)}
 
-\item{winching}{No cable or grapple = "0", only cable = "1", grapple + cable
-= "2"}
+\item{winching}{No cable or grapple = "0", only cable = "1", grapple + cable =
+"2"}
 
 \item{directionalfelling}{Directional felling = "0" (absent), "1" (only to
 avoid damage to future and reserve trees), "2" (avoid damage to future and
@@ -71,9 +71,9 @@ default (logical)}
 objective volume (if stand too poor), = FALSE by default (logical)}
 
 \item{crowndiameterparameters}{Crown diameter allometry parameters table (in
-the same format of \code{\link{ParamCrownDiameterAllometry}}) to compute
-the crown diameter of each tree, depend to its DBH (Diameter at Breast
-Height) and its species, genus or family. (data.frame)}
+the same format of \code{\link{ParamCrownDiameterAllometry}}) to compute the
+crown diameter of each tree, depend to its DBH (Diameter at Breast Height)
+and its species, genus or family. (data.frame)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -86,11 +86,11 @@ Height) and its species, genus or family. (data.frame)}
 Input inventory (data.frame) with logging informations.
 }
 \description{
-This function allows to simulate a timber and wood energy
-logging on a forest plot. It covers: harvestable area definition, tree
-selection, main (only for ONF plots) and secondary trails layout, tree
-felling, landings implementation (only for ONF plots), timber harvested,
-fuel wood volume and damages quantification.
+This function allows to simulate a timber and wood energy logging
+on a forest plot. It covers: harvestable area definition, tree selection,
+main (only for ONF plots) and secondary trails layout, tree felling,
+landings implementation (only for ONF plots), timber harvested, fuel wood
+volume and damages quantification.
 }
 \examples{
 \dontrun{

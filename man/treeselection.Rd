@@ -38,9 +38,9 @@ same format of \code{\link{SpeciesCriteria}} (data.frame)}
 
 \item{objective}{Objective volume per hectare (numeric)}
 
-\item{fuel}{Fuel wood exploitation: no exploitation = "0", damages and purge
-exploitation in fuelwood = "1", exploitation of hollow trees, damages and
-purge in fuelwood = "2"}
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
+damages and unsed part of logged trees for fuelwood = "1", exploitation of
+hollow trees, damages and and unused part of the log for fuelwood = "2"}
 
 \item{diversification}{Taking of other species in addition to the main
 commercial species (2 levels of commercial species in the
@@ -66,6 +66,51 @@ reserve, hollow and energy wood trees
 }
 \description{
 Tree selection (trees to be exploited, future and reserve trees)
+}
+\details{
+Trees with visible defects are identified ('VisiblyDefectModel' in
+'advancedloggingparameters' argument) and therefore not designated.
+(Objective volume: If the user has chosen not to harvest hollow probed trees
+for energy ('RottenModel' in 'advancedloggingparameters' argument), 20-30\%
+will be added to the objective volume in order to compensate for these
+designated hollow trees. If the user has chosen to harvest the hollow probed
+trees as fuel wood, he will harvest strictly his target volume, without
+\emph{bonus.})
+
+Trees will be designated as "\strong{harvestable}" if they:
+\itemize{
+\item belonging to species of 1st economic rank or more if diversification
+\item DBH between the MinFD and the MaxFD.
+\item not isolated ( >100m ('IsolateTreeMinDistance') from other individuals of
+the same species)
+\item on slopes < 22\% ('TreeMaxSlope')
+\item off the main tracks.
+}
+
+If the harvestable volume is higher than the objective volume, the MinFD of
+the 1st economic rank species is first increased, then that of the other
+species (if diversification), if this is not enough. The volume to be
+harvested is adjusted if necessary by taking the trees in decreasing order
+of volume, until the objective volume is reached.
+
+If the harvestable volume is too low, diversification can be applied if it
+was not already applied ('specieslax') (trees of all commercial ranks are
+selected in decreasing order of volume until the objective volume is
+reached), or harvesting can continue despite an unreached objective volume,
+or be abandoned ('objectivelax')
+
+\strong{Future} trees will be:
+\itemize{
+\item species of 1st economic rank
+\item DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD
+or UpMinFD if it has been raised for its species.
+}
+
+\strong{Reserve} trees will be:
+\itemize{
+\item future trees
+\item in the same number as trees to be harvested.
+}
 }
 \examples{
 data(Paracou6_2016)

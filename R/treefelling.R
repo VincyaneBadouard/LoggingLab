@@ -25,6 +25,37 @@
 #'@return "Shadow" polygons + "TreefallSuccess", "TreefallFailure",
 #'  "DamageTreesPoints", "DeadTreesPoints" vectors
 #'
+#'@details The felling of the tree creates a tree (including crown) on the
+#' ground, with dimensions calculated with specific allometries
+#' ('advancedloggingparameters').
+#'
+#'RIL1: random fall
+#'
+#'RIL2broken/RIL2:
+#' - at 40%: random fall
+#' - at 60% ('TreefallSuccessProportion'):
+#'  priority 1: *base of the tree towards the nearest trail* (main or 2ndary),
+#'  priority 2: avoid futures and reserves.
+#'
+#'RIL3/RIL3 BO + BE:
+#' - at 40%: random fall
+#' - at 60% ('TreefallSuccessProportion'):
+#'   * if RIL3 + fuel & trees < 6 m from the trail and slope <20%:
+#'     - 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
+#'     - *crown* towards the nearest trail
+#'     - priority 1: avoid futures and reserves,
+#'     - priority 2: conformation allowing skidding back to the main trail
+#'
+#'   * otherwise (RIL3, RIL3 + fuel & trees > 6 m from the trail and/or slope >20%):
+#'     - 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
+#'     - *base* to nearest trail
+#'     - priority 1: avoid futures and reserves
+#'     - priority 2: conformation allowing skidding back to the main trail
+#'
+#'Damage:
+#'Secondary windfall: *all trees under the felled tree (timber or energy)
+#'will be considered dead*.
+#'
 #'@export
 #'
 #'@importFrom dplyr group_by do left_join mutate select

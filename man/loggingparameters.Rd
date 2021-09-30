@@ -43,9 +43,11 @@ loggingparameters(
 )
 }
 \arguments{
-\item{MinDBHValue}{Minimum DBH value. Default = 10, in cm (double)}
+\item{MinDBHValue}{Minimum DBH value of the forest stand. Default = 10, in cm
+(double)}
 
-\item{MaxAreaSlope}{Maximum area slope. Default = 27, in \% (double)}
+\item{MaxAreaSlope}{Maximum area slope for inclusion in a logging unit.
+Default = 27, in \% (double)}
 
 \item{MaxTrailCenterlineSlope}{Maximum main & 2nd trail centerline slope.
 Default = 22, in \% (double)}
@@ -53,17 +55,20 @@ Default = 22, in \% (double)}
 \item{MaxTrailCrossSlope}{Maximum main & 2nd trail cross slope. Default = 4,
 in \% (double)}
 
-\item{GrappleMaxslope}{Grapple maximum slope. Default = 20, in \% (double)}
+\item{GrappleMaxslope}{Maximum slope over which the grapple can pass. Default
+= 20, in \% (double)}
 
-\item{TreeMaxSlope}{Maximum tree slope. Default = 22, in \% (double)}
+\item{TreeMaxSlope}{Maximum slope around the tree to access it. Default = 22,
+in \% (double)}
 
-\item{PlateauMaxSlope}{Plateau maximum slope. Default = 5, in \% (double)}
+\item{PlateauMaxSlope}{Maximum slope of the plateau definition. Default = 5,
+in \% (double)}
 
 \item{SlopeDistance}{Distance to compute slope. Default = 6, in m (3m for
 each side) (double)}
 
-\item{WaterSourcesBufferZone}{Water sources buffer zone. Default = 30, in m
-(double)}
+\item{WaterSourcesBufferZone}{Buffer zone around the water sources. Default =
+30, in m (double)}
 
 \item{MinMainTrailWidth}{Minimum main trail width. Default = 5, in m (double)}
 
@@ -71,68 +76,66 @@ each side) (double)}
 
 \item{ScndTrailWidth}{2nd trail width. Default = 4, in m (double)}
 
-\item{BigTrees}{DBH of trees to be avoided at trail construction.
-Default = 50, in cm (double)}
+\item{BigTrees}{DBH of trees to be avoided at trail construction. Default =
+50, in cm (double)}
 
-\item{ObjectiveBonus}{Objective bonus. Default = 30, in \% (20;30\%) (double)}
+\item{ObjectiveBonus}{Objective bonus. Default = 30, in \% (double)}
 
-\item{CableLength}{Cable. Default = 40, in m (double)}
+\item{CableLength}{Cable length. Default = 40, in m (double)}
 
-\item{GrappleLength}{Grapple. Default = 6, in m (double)}
+\item{GrappleLength}{Grapple length. Default = 6, in m (double)}
 
 \item{IsolateTreeMinDistance}{Minimum distance to consider a tree "isolated"
-from other trees of its species. Default = 100,
-in m (double)}
+from other trees of its species. Default = 100, in m (double)}
 
 \item{FutureTreesMinDiameter}{Future trees minimum diameter. Default = 35, in
 cm (double)}
 
-\item{TreefallSuccessProportion}{Proportion of successful felling cases.
-Default = 0.6 (double)}
+\item{TreefallSuccessProportion}{Proportion of successful directional felling
+events. Default = 0.6 (double)}
 
-\item{MinTreefallOrientation}{Minimum orientation of the tree fall
-to the trail. Default = 30, in degree (double)}
+\item{MinTreefallOrientation}{Minimum orientation of the tree fall to the
+trail. Default = 30, in degree (double)}
 
-\item{MaxTreefallOrientation}{Maximum orientation of the tree fall
-to the trail. Default = 45, in degree (double)}
+\item{MaxTreefallOrientation}{Maximum orientation of the tree fall to the
+trail. Default = 45, in degree (double)}
 
 \item{TreeHollowPartForFuel}{Part taken from hollow trees for fuel
 exploitation. Default = 1/3 (double)}
 
-\item{Purge}{Purge. Default = 0.14, in m^3 of fuelwood/m^3 of logged trees
-(double)}
+\item{Purge}{Unused part of the log. Default = 0.14, in m^3 of fuelwood/m^3
+of volume of timber harvested. (double)}
 
 \item{MaxTrailDensity}{Maximum trail density. Default = 200, in m/ha (double)
-(has no impact on the simulation.
-A message will only be sent to inform you of its validation or not)}
+(has no impact on the simulation. A message will only be sent to inform you
+of its validation or not)}
 
 \item{MaxLandingArea}{Maximum landing area. Default = 1500) in square meters
-(double) (has no impact on the simulation.
-A message will only be sent to inform you of its validation or not)}
+(double) (has no impact on the simulation. A message will only be sent to
+inform you of its validation or not)}
 
-\item{TreeHarvestableVolumeAllometry}{French Guiana ONF formula:
-aCoef + bCoef * (DBH/100)^2, aCoef and bCoef depend on the forest location,
-DBH in cm. (function)}
+\item{TreeHarvestableVolumeAllometry}{Allometry of tree harvestable volume,
+French Guiana ONF formula: aCoef + bCoef * (DBH/100)^2, aCoef and bCoef
+depend on the forest location, DBH in cm. (function)}
 
-\item{TrunkHeightAllometry}{From the cylinder volume formula:
-CylinderVolume = pi(((DBH/100)/2)^2 x H,
-with the height (H) in m and the DBH in cm (function)}
+\item{TrunkHeightAllometry}{Allometry of trunk height, from the cylinder
+volume formula: CylinderVolume = pi(((DBH/100)/2)^2 x H, with the height
+(H) in m and the DBH in cm (function)}
 
-\item{TreeHeightAllometry}{From the BIOMASS package:
-log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344 log(DBH)^2,
-with the height (H) in m and the DBH in cm (function)}
+\item{TreeHeightAllometry}{Allometry of tree height, from the BIOMASS
+package: log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344
+log(DBH)^2, with the height (H) in m and the DBH in cm (function)}
 
-\item{CrownDiameterAllometry}{ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
-and mean σ^2 = 0.0295966977
-with the crown diameter (CD) and the tree height (H) in m,
-and the DBH (D) in cm.(ref)(function)}
+\item{CrownDiameterAllometry}{ln(DBH) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with
+𝜺~N(0,σ^2) and mean σ^2 = 0.0295966977 with the crown diameter (CD) and
+the tree height (H) in m, and the DBH in cm.(ref)(function)}
 
-\item{RottenModel}{Estimates the tree probability of being probed hollow (default:
-1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)}
+\item{RottenModel}{Estimates the tree probability of being probed hollow
+(default: 1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)}
 
-\item{VisiblyDefectModel}{Estimates the tree probability
-to have visible defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * Log(DBH))))
-with DBH in cm (function)}
+\item{VisiblyDefectModel}{Estimates the tree probability to have visible
+defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * Log(DBH)))) with DBH in
+cm (function)}
 }
 \value{
 A named list of 31 objects.

@@ -26,6 +26,14 @@
 #'  validated for each of the trees. The function returns the harvestable volume
 #'  too, in the plot for these criteria.
 #'
+#'@details Trees will be designated as "**harvestable**" if they:
+#'  - belonging to species of 1st economic rank or more if diversification
+#'  - DBH between the MinFD and the MaxFD.
+#'  - not isolated ( >100m ('IsolateTreeMinDistance') from other individuals of
+#'   the same species)
+#'  - on slopes < 22% ('TreeMaxSlope')
+#'  - off the main tracks.
+#'
 #'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{DTMParacou}}, \code{\link{PlotSlope}},
 #'  \code{\link{loggingparameters}}
@@ -41,7 +49,7 @@
 #'@importFrom utils setTxtProgressBar txtProgressBar
 #'
 #'
-#' @examples
+#'@examples
 #'
 #' data(Paracou6_2016)
 #' data(DTMParacou)

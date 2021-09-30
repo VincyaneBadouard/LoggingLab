@@ -44,6 +44,44 @@
 #'  criteria - 6 sets of spatial points: harvestable, selected, future and
 #'  reserve, hollow and energy wood trees
 #'
+#'@details Trees with visible defects are identified ('VisiblyDefectModel' in
+#'  'advancedloggingparameters' argument) and therefore not designated.
+#'  (Objective volume: If the user has chosen not to harvest hollow probed trees
+#'  for energy ('RottenModel' in 'advancedloggingparameters' argument), 20-30%
+#'  will be added to the objective volume in order to compensate for these
+#'  designated hollow trees. If the user has chosen to harvest the hollow probed
+#'  trees as fuel wood, he will harvest strictly his target volume, without
+#'  *bonus.*)
+#'
+#'  Trees will be designated as "**harvestable**" if they:
+#'  - belonging to species of 1st economic rank or more if diversification
+#'  - DBH between the MinFD and the MaxFD.
+#'  - not isolated ( >100m ('IsolateTreeMinDistance') from other individuals of
+#'   the same species)
+#'  - on slopes < 22% ('TreeMaxSlope')
+#'  - off the main tracks.
+#'
+#'  If the harvestable volume is higher than the objective volume, the MinFD of
+#'  the 1st economic rank species is first increased, then that of the other
+#'  species (if diversification), if this is not enough. The volume to be
+#'  harvested is adjusted if necessary by taking the trees in decreasing order
+#'  of volume, until the objective volume is reached.
+#'
+#'  If the harvestable volume is too low, diversification can be applied if it
+#'  was not already applied ('specieslax') (trees of all commercial ranks are
+#'  selected in decreasing order of volume until the objective volume is
+#'  reached), or harvesting can continue despite an unreached objective volume,
+#'  or be abandoned ('objectivelax')
+#'
+#'  **Future** trees will be:
+#'  - species of 1st economic rank
+#'  - DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD
+#'  or UpMinFD if it has been raised for its species.
+#'
+#'  **Reserve** trees will be:
+#'  - future trees
+#'  - in the same number as trees to be harvested.
+#'
 #'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{DTMParacou}}, \code{\link{PlotSlope}},
 #'  \code{\link{loggingparameters}}

@@ -46,7 +46,8 @@ been corrected, multiple values are possible(character)}
 }
 }
 \source{
-\url{http://paracou.cirad.fr}
+\url{http://paracou.cirad.fr ;
+https://paracoudata.cirad.fr/public/pdf/Paracou_data_dictionnary.pdf}
 
 EcoFoG::Guyafor2df(
 WHERE = "Forest='Paracou' AND Plot='6' AND CensusYear=2016",
@@ -57,8 +58,7 @@ dplyr::select(-TreeFieldNum,-Project, -idVern, -CommercialSp, -CensusDate)
 Paracou6_2016
 }
 \description{
-Species inventory
-2016 inventory of Paracou (French Guiana) plot 6.
+Tree inventory of plot 6 of Paracou research station (French Guiana) for 2016
 Public dataset extracted from the Guyafor database.
 }
 \keyword{datasets}

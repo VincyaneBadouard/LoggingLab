@@ -36,6 +36,19 @@
 #'  the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
 #'  EnergywoodTrees)
 #'
+#'@details If the harvestable volume is higher than the objective volume, the
+#'  MinFD of the 1st economic rank species is first increased, then that of the
+#'  other species (if diversification), if this is not enough. The volume to be
+#'  harvested is adjusted if necessary by taking the trees in decreasing order
+#'  of volume, until the objective volume is reached.
+#'
+#'  If the harvestable volume is too low, diversification can be applied if it
+#'  was not already applied ('specieslax') (trees of all commercial ranks are
+#'  selected in decreasing order of volume until the objective volume is
+#'  reached), or harvesting can continue despite an unreached objective volume,
+#'  or be abandoned ('objectivelax')
+
+#'
 #'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{DTMParacou}}, \code{\link{loggingparameters}}
 #'
