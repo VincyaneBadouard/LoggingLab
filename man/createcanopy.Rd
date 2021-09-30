@@ -20,7 +20,7 @@ Create the canopy
 }
 \examples{
 data(Paracou6_2016)
-Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:10)
+Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:10) # inventory reduction
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -33,6 +33,7 @@ library(ggplot2)
 ggplot() +
   geom_sf(data = getgeometry(inventory, Crowns),
           aes(alpha = TreeHeight),
-          fill = "forestgreen")
+          fill = "forestgreen") +
+          labs(alpha = "Tree height")
 
 }

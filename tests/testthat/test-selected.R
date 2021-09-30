@@ -10,7 +10,8 @@ test_that("selected", {
   data(DTMParacou)
   data(PlotSlope)
 
-  inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
+  inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+                          volumeparameters = ForestZoneVolumeParametersTable)
   inventory0 <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
   harvestableOutputs <- harvestable(inventory0, diversification = TRUE, specieslax = FALSE,
@@ -22,9 +23,11 @@ test_that("selected", {
 
   VO <- 20
 
-  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, specieslax = FALSE,
+  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0",
+                                             diversification = TRUE, specieslax = FALSE,
                                              objectivelax = FALSE, topography = DTMParacou,
-                                             advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
+                                             advancedloggingparameters = loggingparameters(),
+                                             VO = VO, HVinit = HVinit))$inventory
 
   MatrixInventory <- as.matrix(Paracou6_2016)
 
@@ -32,7 +35,8 @@ test_that("selected", {
   expect_error(suppressMessages(selected(MatrixInventory)),
                regexp = "The 'inventory' argument of the 'selected' function must be a data.frame")
 
-  expect_error(suppressMessages(selected(inventory, diversification = "1", specieslax = 2, objectivelax = "a")),
+  expect_error(suppressMessages(selected(inventory, diversification = "1",
+                                         specieslax = 2, objectivelax = "a")),
                regexp = "The 'diversification', 'specieslax' and 'objectivelax' arguments
          of the 'selected' function must be logical")
 
@@ -47,7 +51,8 @@ test_that("selected", {
                regexp = "The 'advancedloggingparameters' argument of the 'selected' function must be a list")
 
   expect_error(suppressMessages(selected(
-    inventory, scenario = "manual", diversification = TRUE, fuel = "0", advancedloggingparameters = loggingparameters(),
+    inventory, scenario = "manual", diversification = TRUE, fuel = "0",
+    advancedloggingparameters = loggingparameters(),
     VO = "20", HVinit = HVinit)),
     regexp = "The 'VO' and 'HVinit' arguments of the 'selected' function must be numeric")
 
@@ -61,8 +66,10 @@ test_that("selected", {
 
   # if HVinit == VO : all the "harvestable" trees are Selected == "1"
   VO <- HVinit
-  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, topography = DTMParacou,
-                                             advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
+  testinventory <- suppressMessages(selected(inventory, scenario = "manual",
+                                             fuel = "0", diversification = TRUE, topography = DTMParacou,
+                                             advancedloggingparameters = loggingparameters(),
+                                             VO = VO, HVinit = HVinit))$inventory
   if (HVinit == VO){
     TestRareWorld <- testinventory %>%
       dplyr::filter(LoggingStatus == "harvestable")
@@ -77,11 +84,13 @@ test_that("selected", {
 
   ## if (!diversification && specieslax)
   inventory <- harvestable(inventory0,
-                           diversification = FALSE, specieslax = TRUE, topography = DTMParacou, plotslope = PlotSlope)$inventory
+                           diversification = FALSE, specieslax = TRUE, topography = DTMParacou,
+                           plotslope = PlotSlope)$inventory
 
   testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0",
                                              diversification = FALSE, specieslax = TRUE, objectivelax = TRUE, topography = DTMParacou,
-                                             advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
+                                             advancedloggingparameters = loggingparameters(),
+                                             VO = VO, HVinit = HVinit))$inventory
   Testspecieslax <- testinventory %>%
     dplyr::filter(Selected == "1")
 
@@ -89,47 +98,57 @@ test_that("selected", {
 
   ### objectivelax = FALSE
   expect_error(suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = FALSE, specieslax = TRUE, objectivelax = FALSE,
-                                         topography = DTMParacou, advancedloggingparameters = loggingparameters(),
+                                         topography = DTMParacou,
+                                         advancedloggingparameters = loggingparameters(),
                                          VO = VO, HVinit = HVinit))$inventory,
                "By default or by your choice, the simulation stops")
 
   # if (!diversification && !specieslax && objectivelax)
   inventory <- harvestable(inventory0,
-                           diversification = FALSE,  specieslax = FALSE, topography = DTMParacou, plotslope = PlotSlope)$inventory
+                           diversification = FALSE,  specieslax = FALSE,
+                           topography = DTMParacou, plotslope = PlotSlope)$inventory
 
-  expect_message(selected(inventory, scenario = "manual", fuel = "0", diversification = FALSE,  specieslax = FALSE, objectivelax = TRUE,
-                          topography = DTMParacou, advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit)$inventory,
+  expect_message(selected(inventory, scenario = "manual", fuel = "0",
+                          diversification = FALSE,  specieslax = FALSE, objectivelax = TRUE,
+                          topography = DTMParacou, advancedloggingparameters = loggingparameters(),
+                          VO = VO, HVinit = HVinit)$inventory,
                  "In this case you have chosen to continue logging without diversifying your species.")
 
   # if (diversification && objectivelax)
   inventory <- harvestable(inventory0,
                            diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope)$inventory
 
-  expect_message(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, objectivelax = TRUE,
-                          topography = DTMParacou, advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit)$inventory,
+  expect_message(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE,
+                          objectivelax = TRUE,
+                          topography = DTMParacou, advancedloggingparameters = loggingparameters(),
+                          VO = VO, HVinit = HVinit)$inventory,
                  "In this case you have chosen to continue logging.")
 
   ## if ((!specieslax & !objectivelax) | (diversification && !objectivelax))
   inventory <- harvestable(inventory0,
                            diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope)$inventory
 
-  expect_error(suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE, objectivelax = FALSE,
-                                         topography = DTMParacou, advancedloggingparameters = loggingparameters(),
+  expect_error(suppressMessages(selected(inventory, scenario = "manual", fuel = "0",
+                                         diversification = TRUE, objectivelax = FALSE,
+                                         topography = DTMParacou,
+                                         advancedloggingparameters = loggingparameters(),
                                          VO = VO, HVinit = HVinit))$inventory,
                "By default or by your choice, the simulation stops.")
 
   # if HVinit > VO
   VO <- HVinit - 20
-  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = FALSE, objectivelax = FALSE,
+  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0",
+                                             diversification = FALSE, objectivelax = FALSE,
                                              topography = DTMParacou,
-                                             advancedloggingparameters = loggingparameters(), VO = VO, HVinit = HVinit))$inventory
+                                             advancedloggingparameters = loggingparameters(),
+                                             VO = VO, HVinit = HVinit))$inventory
 
   TestUp <- testinventory %>%
     dplyr::filter(Commercial == "1")
   TestDBHUp <- testinventory %>%
     dplyr::filter(LoggingStatus =="harvestableUp")
 
-  expect_true(any(TestDBHUp$LoggingStatus =="harvestableUp")) # There are harvestableUp among the Commercial = "1"
+  expect_true(any(TestUp$LoggingStatus =="harvestableUp")) # There are harvestableUp among the Commercial = "1"
   expect_true(all(TestDBHUp$DBH >= TestDBHUp$UpMinFD)) # DBH >= UpMinFD
   expect_true(all(TestDBHUp$Up =="1")) #  Up = "1"
 
@@ -149,7 +168,8 @@ test_that("selected", {
 
 
   # Hollow (Rotten model)
-  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE,
+  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0",
+                                             diversification = TRUE,
                                              topography = DTMParacou,
                                              advancedloggingparameters = loggingparameters(),
                                              VO = VO, HVinit = HVinit))$inventory
@@ -163,8 +183,9 @@ test_that("selected", {
   expect_true(all(TestHollow$ProbedHollow == "0" | TestHollow$ProbedHollow == "1")) # doest works with the check..
 
   # if fuel =="2" et que il y a des ProbedHollow == "1" : there are "hollowfuel" in DeathCause
-  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "2", diversification = TRUE,
-                                             topography = DTMParacou, advancedloggingparameters = loggingparameters(),
+  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "2",
+                                             diversification = TRUE, topography = DTMParacou,
+                                             advancedloggingparameters = loggingparameters(),
                                              VO = VO, HVinit = HVinit))$inventory
 
   if (any(inventory$ProbedHollow == "1", na.rm = TRUE)) {

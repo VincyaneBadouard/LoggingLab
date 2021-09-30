@@ -14,7 +14,7 @@
 #'
 #' @examples
 #' data(Paracou6_2016)
-#' Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:10)
+#' Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:10) # inventory reduction
 #'
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -27,7 +27,8 @@
 #' ggplot() +
 #'   geom_sf(data = getgeometry(inventory, Crowns),
 #'           aes(alpha = TreeHeight),
-#'           fill = "forestgreen")
+#'           fill = "forestgreen") +
+#'           labs(alpha = "Tree height")
 #'
 createcanopy <- function(inventory){
 
