@@ -14,10 +14,10 @@ rotatepolygon(p, angle, fixed)
 \item{fixed}{Fixed point on which the polygon will rotate (POINT)}
 }
 \value{
-Your polygon (sfc_POLYGON) oriented at the given angle
+The polygon (sfc_POLYGON) oriented at the given angle
 }
 \description{
-Orient your polygon to a given angle and fixed point.
+Orient the input polygon to a given angle and fixed point.
 }
 \examples{
 data(Paracou6_2016)

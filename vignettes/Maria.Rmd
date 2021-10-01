@@ -224,14 +224,14 @@ A message will only be sent to inform you of its validation or not)
 
 + **Tree harvestable volume** allometry (French Guiana ONF formula):
 aCoef + bCoef * (DBH/100)^2,
-aCoef and bCoef depend on the forest location, DBH in cm.
+aCoef and bCoef depend on the forest location, stored in \code{\link{ForestZoneVolumeParametersTable}}, DBH in cm.
 
 + **Trunk height** allometry (from the cylinder volume formula):
 CylinderVolume = pi(((DBH/100)/2)^2 x H,
 DBH in cm, height (H) in m. 
 
-+ **Tree height** allometry (from the *BIOMASS* package):
-log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344 log(DBH)^2,
++ **Tree height** allometry parameters estimated from Guyanese data with the BIOMASS package:
+log(H) = 0.07359191 + 1.34241216 log(DBH) + (-0.12282344)*log(DBH)^2,
 height (H) in m, DBH in cm
 
 + **Crown diameter allometry** (*ref*): ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺,
@@ -455,7 +455,7 @@ when the longitudinal slope is greater than 20% or when the tree to be skidded
 is isolated from other trees to be exploited, from 6 to 40 m.
 If the crown is not accessible, it will not be harvested, only the trunk can be
 used in fuel wood.
- 
+
 If the number of trees connected to a secondary trail exceeds 20 (''), the secondary trail will take the characteristics (width) of a main trail.
 
 Damage :
@@ -501,17 +501,17 @@ RIL2broken/RIL2:
 RIL3/RIL3 BO + BE: 
 - at 40%: random fall 
 - at 60% ('TreefallSuccessProportion'): 
-  * if RIL3 + fuel & trees < 6 m from the trail and slope <20%:
-    - 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
-    - *crown* towards the nearest trail
-    - priority 1: avoid futures and reserves,
-    - priority 2: conformation allowing skidding back to the main trail
+* if RIL3 + fuel & trees < 6 m from the trail and slope <20%:
+- 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
+- *crown* towards the nearest trail
+- priority 1: avoid futures and reserves,
+- priority 2: conformation allowing skidding back to the main trail
 
-  * otherwise (RIL3, RIL3 + fuel & trees > 6 m from the trail and/or slope >20%): 
-    - 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
-    - *base* to nearest trail
-    - priority 1: avoid futures and reserves
-    - priority 2: conformation allowing skidding back to the main trail
+* otherwise (RIL3, RIL3 + fuel & trees > 6 m from the trail and/or slope >20%): 
+- 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
+- *base* to nearest trail
+- priority 1: avoid futures and reserves
+- priority 2: conformation allowing skidding back to the main trail
 
 Damage:
 Secondary windfall: *all trees under the felled tree (timber or energy) will be considered dead*.
@@ -574,6 +574,18 @@ FuelVolume <- FuelV$FuelVolume
 ```
 
 # Tool functions
+
+'inventorycheckformat' check if the input inventory data is compatible with the "Maria" package (see 'Required format of the inventory' section of the vignette)
+
+'addtreedim' compute tree dimensions with the 'advancedloggingparameters' argument:
+- Tree height (in m) ('TreeHeightAllometry')
+- Tree Harvestable Volume (m^3) ('TreeHarvestableVolumeAllometry')
+- Trunk height (in m) ('TrunkHeightAllometry')
+- Crown height (in m)
+- Crown diameter (in m) ('CrownDiameterAllometry')
+- Wood density (g/cm^3) (by BIOMASS package)
+- Tree above-ground biomass (AGB) (in Mg) (by BIOMASS package)
+
 ```{r include=FALSE}
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
                         volumeparameters = ForestZoneVolumeParametersTable)
@@ -584,6 +596,10 @@ inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 Converts a dataframe with a column of characters, which contains the WKT encoded geometries, into an sf object. The column is converted to sfc.
 
 ## Create the canopy
+
+'createcanopy' function return a dataframe with a column 'Crowns' containing the ellipses
+(*sfc_POLYGON*) as trees crown, with their diameter and height filled in,
+representing trees from the sky.
 ```{r}
 canopy <- createcanopy(inventory)
 
@@ -596,6 +612,8 @@ ggplot() +
 ```
 
 ## 1 tree from the sky
+
+'createcanopy' function return an ellipse (*sfc_POLYGON*) as a crown, with its diameter and height filled in, representing the tree from the sky.
 ```{r}
 dat <- inventory[679,]
 
@@ -608,7 +626,15 @@ ggplot() +
 
 directionalfellingsuccessdef
 felling1tree
-rotatepolygon
+
+
+## Rotate a polygon 
+Orient the input polygon to a given angle and fixed point.
+
+```{r}
+
+```
+
 
 
 

@@ -11,7 +11,7 @@ createcanopy(inventory)
 \code{\link{vignette}}) (data.frame)}
 }
 \value{
-a dataframe with a column 'Crowns' containing the ellipses
+A dataframe with a column 'Crowns' containing the ellipses
 (sfc_POLYGON) as trees crown, with their diameter and height filled in,
 representing trees from the sky.
 }
@@ -29,6 +29,7 @@ inventory <- createcanopy(inventory)
 
 # The small ones first so that they are behind the big ones on the plot
 inventory <- dplyr::arrange(inventory, TreeHeight)
+
 library(ggplot2)
 ggplot() +
   geom_sf(data = getgeometry(inventory, Crowns),

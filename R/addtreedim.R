@@ -1,34 +1,44 @@
-#' Compute tree dimensions (tree and crown height and diameter, harvestable
-#' volume, wood density, and AGB)
+#'Compute tree dimensions (tree and crown height and diameter, harvestable
+#'volume, wood density, and AGB)
 #'
-#' @param inventory Input inventory (see the inputs formats and metadata in the
-#'   \code{\link{vignette}}) (data.frame)
+#'@param inventory Input inventory (see the inputs formats and metadata in the
+#'  \code{\link{vignette}}) (data.frame)
 #'
 #'
-#' @param volumeparameters Parameters of the tree volume tables (in the same
-#'   format of \code{\link{ForestZoneVolumeParametersTable}}) used to compute
-#'   the harvestable volume of each tree, depending on its geographic zone if
-#'   several locations (data.frame)
+#'@param volumeparameters Parameters of the tree volume tables (in the same
+#'  format of \code{\link{ForestZoneVolumeParametersTable}}) used to compute the
+#'  harvestable volume of each tree, depending on its geographic zone if several
+#'  locations (data.frame)
 #'
-#' @param crowndiameterparameters Parameters of crown diameter allometry (in the
-#'   same format of \code{\link{ParamCrownDiameterAllometry}}) used to compute
-#'   the crown diameter of each tree, depending on its DBH (Diameter at Breast
-#'   Height) and its species, genus or family. (data.frame)
+#'@param crowndiameterparameters Parameters of crown diameter allometry (in the
+#'  same format of \code{\link{ParamCrownDiameterAllometry}}) used to compute
+#'  the crown diameter of each tree, depending on its DBH (Diameter at Breast
+#'  Height) and its species, genus or family. (data.frame)
 #'
-#' @param advancedloggingparameters Other parameters of the logging simulator
-#'   \code{\link{loggingparameters}} (list)
+#'@param advancedloggingparameters Other parameters of the logging simulator
+#'  \code{\link{loggingparameters}} (list)
 #'
-#' @return inventory (data.frame) with additional variables: TreeHeight (m),
-#'   TreeHarvestableVolume (m^3), TrunkHeight (m), CrownHeight (m),
-#'   CrownDiameter (m), estimated 'WoodDensity' (g/cm^3) and tree above-ground
-#'   biomass ('AGB') (in Mg)
+#'@return The inventory (data.frame) with additional variables: TreeHeight (m),
+#'  TreeHarvestableVolume (m^3), TrunkHeight (m), CrownHeight (m), CrownDiameter
+#'  (m), estimated 'WoodDensity' (g/cm^3) and tree above-ground biomass ('AGB')
+#'  (in Mg)
 #'
-#' @export
+#'@details 'addtreedim' compute some tree dimensions with the
+#'  'advancedloggingparameters' argument:
+#'  - Tree height (in m) ('TreeHeightAllometry')
+#'  - Tree Harvestable Volume (m^3) ('TreeHarvestableVolumeAllometry')
+#'  - Trunk height (in m) ('TrunkHeightAllometry')
+#'  - Crown height (in m)
+#'  - Crown diameter (in m) ('CrownDiameterAllometry')
+#'  - Wood density (g/cm^3) (by BIOMASS package)
+#'  - Tree above-ground biomass (AGB) (in Mg) (by BIOMASS package)
 #'
-#' @importFrom dplyr filter select left_join mutate rename
-#' @importFrom tidyr unite
-#' @importFrom rlang .data
-#' @importFrom BIOMASS getWoodDensity computeAGB
+#'@export
+#'
+#'@importFrom dplyr filter select left_join mutate rename
+#'@importFrom tidyr unite
+#'@importFrom rlang .data
+#'@importFrom BIOMASS getWoodDensity computeAGB
 #'
 #' @examples
 #' data(Paracou6_2016)

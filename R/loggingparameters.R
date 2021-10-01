@@ -1,80 +1,82 @@
-#' Advanced parameters of the logging simulator
+#'Advanced parameters of the logging simulator
 #'
-#' @param MinDBHValue Minimum DBH value of the forest stand. Default = 10, in cm
-#'   (double)
-#' @param MaxAreaSlope Maximum area slope for inclusion in a logging unit.
-#'   Default = 27, in % (double)
-#' @param MaxTrailCenterlineSlope Maximum main & 2nd trail centerline slope.
-#'   Default = 22, in % (double)
-#' @param MaxTrailCrossSlope Maximum main & 2nd trail cross slope. Default = 4,
-#'   in % (double)
-#' @param GrappleMaxslope Maximum slope over which the grapple can pass. Default
-#'   = 20, in % (double)
-#' @param TreeMaxSlope Maximum slope around the tree to access it. Default = 22,
-#'   in % (double)
-#' @param PlateauMaxSlope Maximum slope of the plateau definition. Default = 5,
-#'   in % (double)
-#' @param SlopeDistance Distance to compute slope. Default = 6, in m (3m for
-#'   each side) (double)
-#' @param WaterSourcesBufferZone Buffer zone around the water sources. Default =
-#'   30, in m (double)
-#' @param MinMainTrailWidth Minimum main trail width. Default = 5, in m (double)
-#' @param MaxMainTrailWidth Maximum main trail width. Default = 6, in m (double)
-#' @param ScndTrailWidth 2nd trail width. Default = 4, in m (double)
-#' @param BigTrees DBH of trees to be avoided at trail construction. Default =
-#'   50, in cm (double)
-#' @param ObjectiveBonus Objective bonus. Default = 30, in % (double)
-#' @param CableLength Cable length. Default = 40, in m (double)
-#' @param GrappleLength Grapple length. Default = 6, in m (double)
-#' @param IsolateTreeMinDistance Minimum distance to consider a tree "isolated"
-#'   from other trees of its species. Default = 100, in m (double)
-#' @param FutureTreesMinDiameter Future trees minimum diameter. Default = 35, in
-#'   cm (double)
-#' @param TreefallSuccessProportion Proportion of successful directional felling
-#'   events. Default = 0.6 (double)
-#' @param MinTreefallOrientation Minimum orientation of the tree fall to the
-#'   trail. Default = 30, in degree (double)
-#' @param MaxTreefallOrientation Maximum orientation of the tree fall to the
-#'   trail. Default = 45, in degree (double)
-#' @param TreeHollowPartForFuel Part taken from hollow trees for fuel
-#'   exploitation. Default = 1/3 (double)
-#' @param Purge Unused part of the log. Default = 0.14, in m^3 of fuelwood/m^3
-#'   of volume of timber harvested. (double)
-#' @param MaxTrailDensity Maximum trail density. Default = 200, in m/ha (double)
-#'   (has no impact on the simulation. A message will only be sent to inform you
-#'   of its validation or not)
-#' @param MaxLandingArea Maximum landing area. Default = 1500) in square meters
-#'   (double) (has no impact on the simulation. A message will only be sent to
-#'   inform you of its validation or not)
+#'@param MinDBHValue Minimum DBH value of the forest stand. Default = 10, in cm
+#'  (double)
+#'@param MaxAreaSlope Maximum area slope for inclusion in a logging unit.
+#'  Default = 27, in % (double)
+#'@param MaxTrailCenterlineSlope Maximum main & 2nd trail centerline slope.
+#'  Default = 22, in % (double)
+#'@param MaxTrailCrossSlope Maximum main & 2nd trail cross slope. Default = 4,
+#'  in % (double)
+#'@param GrappleMaxslope Maximum slope over which the grapple can pass. Default
+#'  = 20, in % (double)
+#'@param TreeMaxSlope Maximum slope around the tree to access it. Default = 22,
+#'  in % (double)
+#'@param PlateauMaxSlope Maximum slope of the plateau definition. Default = 5,
+#'  in % (double)
+#'@param SlopeDistance Distance to compute slope. Default = 6, in m (3m for each
+#'  side) (double)
+#'@param WaterSourcesBufferZone Buffer zone around the water sources. Default =
+#'  30, in m (double)
+#'@param MinMainTrailWidth Minimum main trail width. Default = 5, in m (double)
+#'@param MaxMainTrailWidth Maximum main trail width. Default = 6, in m (double)
+#'@param ScndTrailWidth 2nd trail width. Default = 4, in m (double)
+#'@param BigTrees DBH of trees to be avoided at trail construction. Default =
+#'  50, in cm (double)
+#'@param ObjectiveBonus Objective bonus. Default = 30, in % (double)
+#'@param CableLength Cable length. Default = 40, in m (double)
+#'@param GrappleLength Grapple length. Default = 6, in m (double)
+#'@param IsolateTreeMinDistance Minimum distance to consider a tree "isolated"
+#'  from other trees of its species. Default = 100, in m (double)
+#'@param FutureTreesMinDiameter Future trees minimum diameter. Default = 35, in
+#'  cm (double)
+#'@param TreefallSuccessProportion Proportion of successful directional felling
+#'  events. Default = 0.6 (double)
+#'@param MinTreefallOrientation Minimum orientation of the tree fall to the
+#'  trail. Default = 30, in degree (double)
+#'@param MaxTreefallOrientation Maximum orientation of the tree fall to the
+#'  trail. Default = 45, in degree (double)
+#'@param TreeHollowPartForFuel Part taken from hollow trees for fuel
+#'  exploitation. Default = 1/3 (double)
+#'@param Purge Unused part of the log. Default = 0.14, in m^3 of fuelwood/m^3 of
+#'  volume of timber harvested. (double)
+#'@param MaxTrailDensity Maximum trail density. Default = 200, in m/ha (double)
+#'  (has no impact on the simulation. A message will only be sent to inform you
+#'  of its validation or not)
+#'@param MaxLandingArea Maximum landing area. Default = 1500) in square meters
+#'  (double) (has no impact on the simulation. A message will only be sent to
+#'  inform you of its validation or not)
 #'
-#' @param TreeHarvestableVolumeAllometry Allometry of tree harvestable volume,
-#'   French Guiana ONF formula: aCoef + bCoef * (DBH/100)^2, aCoef and bCoef
-#'   depend on the forest location, DBH in cm. (function)
+#'@param TreeHarvestableVolumeAllometry By default, allometry of tree
+#'  harvestable volume, French Guiana ONF formula: aCoef + bCoef * (DBH/100)^2,
+#'  aCoef and bCoef depend on the forest location, stored in
+#'  \code{\link{ForestZoneVolumeParametersTable}}, DBH in cm. (function)
 #'
-#' @param TrunkHeightAllometry Allometry of trunk height, from the cylinder
-#'   volume formula: CylinderVolume = pi(((DBH/100)/2)^2 x H, with the height
-#'   (H) in m and the DBH in cm (function)
+#'@param TrunkHeightAllometry Allometry of trunk height, from the cylinder
+#'  volume formula: CylinderVolume = pi(((DBH/100)/2)^2 x H, with the height (H)
+#'  in m and the DBH in cm (function)
 #'
-#' @param TreeHeightAllometry Allometry of tree height, from the BIOMASS
-#'   package: log(H) = 0.07359191 + 1.34241216 log(DBH) + -0.12282344
-#'   log(DBH)^2, with the height (H) in m and the DBH in cm (function)
+#'@param TreeHeightAllometry By default, allometry parameters estimated from
+#'  Guyanese data with the BIOMASS package: log(H) = 0.07359191 + 1.34241216
+#'  log(DBH) + (-0.12282344)*log(DBH)^2, with the height (H) in m and the DBH in
+#'  cm (function)
 #'
-#' @param CrownDiameterAllometry ln(DBH) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with
-#'   𝜺~N(0,σ^2) and mean σ^2 = 0.0295966977 with the crown diameter (CD) and
-#'   the tree height (H) in m, and the DBH in cm.(ref)(function)
+#'@param CrownDiameterAllometry ln(DBH) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with𝜺~N(0,σ^2)
+#'  and mean σ^2 = 0.0295966977 with the crown diameter (CD), the tree height
+#'  (H) in m, and the DBH in cm. (ref)(function)
 #'
-#' @param RottenModel Estimates the tree probability of being probed hollow
-#'   (default: 1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)
+#'@param RottenModel Estimates the tree probability of being probed hollow
+#'  (default: 1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)
 #'
-#' @param VisiblyDefectModel Estimates the tree probability to have visible
-#'   defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * Log(DBH)))) with DBH in
-#'   cm (function)
+#'@param VisiblyDefectModel Estimates the tree probability to have visible
+#'  defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * Log(DBH)))) with DBH in cm
+#'  (function)
 #'
-#' @return A named list of 31 objects.
+#'@return A named list of 31 objects.
 #'
-#' @export
+#'@export
 #'
-#' @importFrom stats rnorm
+#'@importFrom stats rnorm
 #'
 #' @examples
 #' loggingparameters(MinDBHValue = 5)

@@ -17,9 +17,9 @@ addtreedim(
 \code{\link{vignette}}) (data.frame)}
 
 \item{volumeparameters}{Parameters of the tree volume tables (in the same
-format of \code{\link{ForestZoneVolumeParametersTable}}) used to compute
-the harvestable volume of each tree, depending on its geographic zone if
-several locations (data.frame)}
+format of \code{\link{ForestZoneVolumeParametersTable}}) used to compute the
+harvestable volume of each tree, depending on its geographic zone if several
+locations (data.frame)}
 
 \item{crowndiameterparameters}{Parameters of crown diameter allometry (in the
 same format of \code{\link{ParamCrownDiameterAllometry}}) used to compute
@@ -30,14 +30,27 @@ Height) and its species, genus or family. (data.frame)}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-inventory (data.frame) with additional variables: TreeHeight (m),
-TreeHarvestableVolume (m^3), TrunkHeight (m), CrownHeight (m),
-CrownDiameter (m), estimated 'WoodDensity' (g/cm^3) and tree above-ground
-biomass ('AGB') (in Mg)
+The inventory (data.frame) with additional variables: TreeHeight (m),
+TreeHarvestableVolume (m^3), TrunkHeight (m), CrownHeight (m), CrownDiameter
+(m), estimated 'WoodDensity' (g/cm^3) and tree above-ground biomass ('AGB')
+(in Mg)
 }
 \description{
 Compute tree dimensions (tree and crown height and diameter, harvestable
 volume, wood density, and AGB)
+}
+\details{
+'addtreedim' compute some tree dimensions with the
+'advancedloggingparameters' argument:
+\itemize{
+\item Tree height (in m) ('TreeHeightAllometry')
+\item Tree Harvestable Volume (m^3) ('TreeHarvestableVolumeAllometry')
+\item Trunk height (in m) ('TrunkHeightAllometry')
+\item Crown height (in m)
+\item Crown diameter (in m) ('CrownDiameterAllometry')
+\item Wood density (g/cm^3) (by BIOMASS package)
+\item Tree above-ground biomass (AGB) (in Mg) (by BIOMASS package)
+}
 }
 \examples{
 data(Paracou6_2016)

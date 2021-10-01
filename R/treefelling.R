@@ -429,13 +429,13 @@ directionalfellingsuccessdef <- function(
 
 #' rotatepolygon
 #'
-#' @description Orient your polygon to a given angle and fixed point.
+#' @description Orient the input polygon to a given angle and fixed point.
 #'
 #' @param p Polygon (POLYGON or sfc_POLYGON)
 #' @param angle Angle in degrees in the clockwise direction (numeric)
 #' @param fixed Fixed point on which the polygon will rotate (POINT)
 #'
-#' @return Your polygon (sfc_POLYGON) oriented at the given angle
+#' @return The polygon (sfc_POLYGON) oriented at the given angle
 #' @export
 #' @importFrom nngeo st_ellipse
 #' @importFrom sf st_polygon

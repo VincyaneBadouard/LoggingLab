@@ -1,4 +1,7 @@
-#' Check your input inventory data for the  package "Maria"
+#' Check the input inventory data for the  "Maria" package
+#'
+#' @description Check if the input inventory data is compatible with the "Maria"
+#'   package (see 'Required format of the inventory' section of the vignette)
 #'
 #' @param inventory Input inventory (see the inputs formats and metadata in the
 #'   \code{\link{vignette}}) (data.frame)
