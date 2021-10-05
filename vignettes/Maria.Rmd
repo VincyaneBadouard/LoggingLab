@@ -260,82 +260,85 @@ Rslt <- loggingsimulation(Paracou6_2016,
 ```
 The harvestable volume may change from one simulation to another because the identification of defect trees contains a random component.
 ```{r}
-# RIL1_Rslt <- loggingsimulation(Paracou6_2016,
-#                                topography = DTMParacou, relativeelevation  = DTMParacou,
-#                                speciescriteria = SpeciesCriteria,
-#                                volumeparameters = ForestZoneVolumeParametersTable,
-#                                scenario = "RIL1", specieslax = FALSE, objectivelax = TRUE,
-#                                crowndiameterparameters = ParamCrownDiameterAllometry,
-#                                advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
-# loggingsummary(RIL1_Rslt)
+RIL1_Rslt <- loggingsimulation(Paracou6_2016,
+                               topography = DTMParacou, relativeelevation  = DTMParacou,
+                               speciescriteria = SpeciesCriteria,
+                               volumeparameters = ForestZoneVolumeParametersTable,
+                               scenario = "RIL1", specieslax = FALSE, objectivelax = TRUE,
+                               crowndiameterparameters = ParamCrownDiameterAllometry,
+                               advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+loggingsummary(RIL1_Rslt)
 # Without diversification the harvestable volume is too poor
 ```
 
 ```{r}
-# RIL2broken_Rslt <- loggingsimulation(Paracou6_2016,
-#                                      topography = DTMParacou, relativeelevation  = DTMParacou,
-#                                      speciescriteria = SpeciesCriteria,
-#                                      volumeparameters = ForestZoneVolumeParametersTable,
-#                                      scenario = "RIL2broken", specieslax = FALSE, objectivelax = TRUE,
-#                                      crowndiameterparameters = ParamCrownDiameterAllometry,
-#                                      advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
-# loggingsummary(RIL2broken_Rslt)
-# RIL2broken_inventory <- RIL2broken_Rslt$inventory
+RIL2broken_Rslt <- loggingsimulation(Paracou6_2016,
+                                     topography = DTMParacou, relativeelevation  = DTMParacou,
+                                     speciescriteria = SpeciesCriteria,
+                                     volumeparameters = ForestZoneVolumeParametersTable,
+                                     scenario = "RIL2broken", specieslax = FALSE, objectivelax = TRUE,
+                                     crowndiameterparameters = ParamCrownDiameterAllometry,
+                                     advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+loggingsummary(RIL2broken_Rslt)
+RIL2broken_inventory <- RIL2broken_Rslt$inventory
 # Without diversification the harvestable volume is too poor
 # Not all harvestable trees are always harvested because they are eventually probed hollow, and there is not always a harvestable tree to replace them.
 ```
 
 ```{r}
-# RIL2_Rslt <- loggingsimulation(Paracou6_2016,
-#                                topography = DTMParacou, relativeelevation  = DTMParacou,
-#                                speciescriteria = SpeciesCriteria,
-#                                volumeparameters = ForestZoneVolumeParametersTable,
-#                                scenario = "RIL2", specieslax = FALSE, objectivelax = TRUE,
-#                                crowndiameterparameters = ParamCrownDiameterAllometry,
-#                                advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
-# loggingsummary(RIL2_Rslt)
+RIL2_Rslt <- loggingsimulation(Paracou6_2016,
+                               topography = DTMParacou, relativeelevation  = DTMParacou,
+                               speciescriteria = SpeciesCriteria,
+                               volumeparameters = ForestZoneVolumeParametersTable,
+                               scenario = "RIL2", specieslax = FALSE, objectivelax = TRUE,
+                               crowndiameterparameters = ParamCrownDiameterAllometry,
+                               advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+loggingsummary(RIL2_Rslt)
 # Without diversification the harvestable volume is too poor
 ```
 
 ```{r}
-# RIL3_Rslt <- loggingsimulation(Paracou6_2016,
-#                                topography = DTMParacou, relativeelevation  = DTMParacou,
-#                                speciescriteria = SpeciesCriteria,
-#                                volumeparameters = ForestZoneVolumeParametersTable,
-#                                scenario = "RIL3", specieslax = FALSE, objectivelax = TRUE,
-#                                crowndiameterparameters = ParamCrownDiameterAllometry,
-#                                advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
-# 
-# RIL3_inventory <- RIL3_Rslt$inventory
-# loggingsummary(RIL3_Rslt)
+RIL3_Rslt <- loggingsimulation(Paracou6_2016,
+                               topography = DTMParacou, relativeelevation  = DTMParacou,
+                               speciescriteria = SpeciesCriteria,
+                               volumeparameters = ForestZoneVolumeParametersTable,
+                               scenario = "RIL3", specieslax = FALSE, objectivelax = TRUE,
+                               crowndiameterparameters = ParamCrownDiameterAllometry,
+                               advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+
+RIL3_inventory <- RIL3_Rslt$inventory
+loggingsummary(RIL3_Rslt)
 # With diversification the harvestable volume is much higher
 # but 30m3/ha is a too high objective for this plot size
 # Not all harvestable trees are always harvested because they are eventually probed hollow, and there is not always a harvestable tree to replace them.
 ```
 
 ```{r}
-# RIL3fuel_Rslt <- loggingsimulation(Paracou6_2016,
-#                                    topography = DTMParacou, relativeelevation  = DTMParacou,
-#                                    speciescriteria = SpeciesCriteria,
-#                                    volumeparameters = ForestZoneVolumeParametersTable,
-#                                    scenario = "RIL3fuel", specieslax = FALSE, objectivelax = TRUE,
-#                                    crowndiameterparameters = ParamCrownDiameterAllometry,
-#                                    advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
-# loggingsummary(RIL3fuel_Rslt)
+RIL3fuel_Rslt <- loggingsimulation(Paracou6_2016,
+                                   topography = DTMParacou, relativeelevation  = DTMParacou,
+                                   speciescriteria = SpeciesCriteria,
+                                   volumeparameters = ForestZoneVolumeParametersTable,
+                                   scenario = "RIL3fuel", specieslax = FALSE, objectivelax = TRUE,
+                                   crowndiameterparameters = ParamCrownDiameterAllometry,
+                                   advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+loggingsummary(RIL3fuel_Rslt)
 # Not all harvestable trees are always harvested because they are eventually probed hollow, and there is not always a harvestable tree to replace them.
 ```
 
 ```{r}
-# RIL3fuelhollow_Rslt <- loggingsimulation(Paracou6_2016,
-#                                          topography = DTMParacou, relativeelevation  = DTMParacou,
-#                                          speciescriteria = SpeciesCriteria,
-#                                          volumeparameters = ForestZoneVolumeParametersTable,
-#                                          scenario = "RIL3fuelhollow", specieslax = FALSE, objectivelax = TRUE,
-#                                          crowndiameterparameters = ParamCrownDiameterAllometry,
-#                                          advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
-# RIL3fuelhollow_inventory <- RIL3fuelhollow_Rslt$inventory
+RIL3fuelhollow_Rslt <- loggingsimulation(Paracou6_2016,
+                                         topography = DTMParacou, relativeelevation  = DTMParacou,
+                                         speciescriteria = SpeciesCriteria,
+                                         volumeparameters = ForestZoneVolumeParametersTable,
+                                         scenario = "RIL3fuelhollow",
+                                         specieslax = FALSE, objectivelax = TRUE,
+                                         crowndiameterparameters = ParamCrownDiameterAllometry,
+                                         advancedloggingparameters = loggingparameters(),
+                                         iter = 1, cores = 1)
+RIL3fuelhollow_inventory <- RIL3fuelhollow_Rslt$inventory
 # loggingsummary(RIL3fuelhollow_Rslt)
 ```
+
 ## Results summary
 ```{r}
 loggingsummary(Rslt)

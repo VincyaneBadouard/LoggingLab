@@ -2,7 +2,8 @@ test_that("scenariosparameters", {
 
   expect_error(scenariosparameters(fuel = "0", diversification = TRUE, objective = 20,
                                    scenario = "CL"),
-               regexp = '"scenario" argument should be in "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow" or "manual"')
+               regexp = '"scenario" argument should be in "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
+               "RIL3fuelhollow" or "manual"; not')
 
   expect_error(scenariosparameters(scenario ="manual", fuel = "0", diversification = TRUE,
                              objective = "RIL"),

@@ -33,11 +33,11 @@ test_that("selected", {
 
   # Tests
   expect_error(suppressMessages(selected(MatrixInventory)),
-               regexp = "The 'inventory' argument of the 'selected' function must be a data.frame")
+               regexp = "Argument 'inventory' of the 'selected' function must be a data.frame")
 
   expect_error(suppressMessages(selected(inventory, diversification = "1",
                                          specieslax = 2, objectivelax = "a")),
-               regexp = "The 'diversification', 'specieslax' and 'objectivelax' arguments
+               regexp = "Arguments 'diversification', 'specieslax' and 'objectivelax'
          of the 'selected' function must be logical")
 
   #   expect_error(suppressMessages(selected(inventory, diversification = TRUE, scenario = "CL")),
@@ -48,13 +48,13 @@ test_that("selected", {
 
   expect_error(suppressMessages(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE,
                                          advancedloggingparameters = as.matrix(loggingparameters()))),
-               regexp = "The 'advancedloggingparameters' argument of the 'selected' function must be a list")
+               regexp = "Argument 'advancedloggingparameters' of the 'selected' function must be a list")
 
   expect_error(suppressMessages(selected(
     inventory, scenario = "manual", diversification = TRUE, fuel = "0",
     advancedloggingparameters = loggingparameters(),
     VO = "20", HVinit = HVinit)),
-    regexp = "The 'VO' and 'HVinit' arguments of the 'selected' function must be numeric")
+    regexp = "Arguments 'VO' and 'HVinit' of the 'selected' function must be numeric")
 
   expect_error(suppressMessages(selected(inventory, scenario = "manual",
                                          fuel = NULL, diversification = T)),
@@ -101,7 +101,7 @@ test_that("selected", {
                                          topography = DTMParacou,
                                          advancedloggingparameters = loggingparameters(),
                                          VO = VO, HVinit = HVinit))$inventory,
-               "By default or by your choice, the simulation stops")
+               "By default or because of your choice, the simulation stops")
 
   # if (!diversification && !specieslax && objectivelax)
   inventory <- harvestable(inventory0,
@@ -112,7 +112,7 @@ test_that("selected", {
                           diversification = FALSE,  specieslax = FALSE, objectivelax = TRUE,
                           topography = DTMParacou, advancedloggingparameters = loggingparameters(),
                           VO = VO, HVinit = HVinit)$inventory,
-                 "In this case you have chosen to continue logging without diversifying your species.")
+                 "You have chosen to continue logging without diversifying")
 
   # if (diversification && objectivelax)
   inventory <- harvestable(inventory0,
@@ -122,7 +122,7 @@ test_that("selected", {
                           objectivelax = TRUE,
                           topography = DTMParacou, advancedloggingparameters = loggingparameters(),
                           VO = VO, HVinit = HVinit)$inventory,
-                 "In this case you have chosen to continue logging.")
+                 "You have chosen to continue logging in this case")
 
   ## if ((!specieslax & !objectivelax) | (diversification && !objectivelax))
   inventory <- harvestable(inventory0,
@@ -133,7 +133,7 @@ test_that("selected", {
                                          topography = DTMParacou,
                                          advancedloggingparameters = loggingparameters(),
                                          VO = VO, HVinit = HVinit))$inventory,
-               "By default or by your choice, the simulation stops.")
+               "By default or because of your choice, the simulation stops")
 
   # if HVinit > VO
   VO <- HVinit - 20

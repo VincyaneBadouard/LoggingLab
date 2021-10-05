@@ -438,12 +438,7 @@ directionalfellingsuccessdef <- function(
 #' @return The polygon (sfc_POLYGON) oriented at the given angle
 #' @export
 #' @importFrom nngeo st_ellipse
-#' @importFrom sf st_polygon
-#' @importFrom sf st_coordinates
-#' @importFrom sf st_sfc
-#' @importFrom sf st_polygon
-#' @importFrom sf st_difference
-#' @importFrom sf st_union
+#' @importFrom sf st_polygon st_coordinates st_sfc st_difference st_union
 #'
 #' @examples
 #' data(Paracou6_2016)
@@ -719,6 +714,9 @@ felling1tree <- function(
   # Compute the angle between the tree default position and the shortest way from the foot to the trail
   theta <- as.numeric(matlib::angle(c(Foot[1] - Foot[1], dat$TreeHeight),
                                     c(TrailPt[1] - Foot[1], TrailPt[2] - Foot[2]), degree = TRUE))
+
+  ## when the tree is on the trail (no angle)
+  if(is.na(theta)) theta <- 0
 
 
   # Scenarios
