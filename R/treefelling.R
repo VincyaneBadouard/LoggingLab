@@ -37,16 +37,17 @@
 #'  priority 1: *base of the tree towards the nearest trail* (main or 2ndary),
 #'  priority 2: avoid futures and reserves.
 #'
-#'RIL3/RIL3 BO + BE:
+#'RIL3/RIL3 timber + fuel wood:
 #' - at 40%: random fall
 #' - at 60% ('TreefallSuccessProportion'):
-#'   * if RIL3 + fuel & trees < 6 m from the trail and slope <20%:
-#'     - 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
-#'     - *crown* towards the nearest trail
+#'   * if RIL3 + fuel & trees < 6 m from the trail and slope <20% (grapple use):
+#'     - no particular angle to orientate to the trail,
+#'     only to orient the tree *crown* as close as possible to the trail
 #'     - priority 1: avoid futures and reserves,
 #'     - priority 2: conformation allowing skidding back to the main trail
 #'
-#'   * otherwise (RIL3, RIL3 + fuel & trees > 6 m from the trail and/or slope >20%):
+#'   * otherwise (RIL3, RIL3 + fuel &
+#'      trees > 6 m from the trail and/or slope >20%)(cable use):
 #'     - 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
 #'     - *base* to nearest trail
 #'     - priority 1: avoid futures and reserves
@@ -720,7 +721,7 @@ felling1tree <- function(
 
 
   # Scenarios
-  # For a random direction felling
+  ## For a random direction felling
   if(directionalfelling == "0" && (fuel !="1" || fuel !="2")){
     RandomAngle <- as.numeric(sample(c(0:359.9), size = 1))
     FallenTree <- st_difference(st_union( # Crown and Trunk together
@@ -730,7 +731,7 @@ felling1tree <- function(
   }
 
 
-  # To direct !only to avoid damage to future and reserve trees!. Winching: Foot before.
+  ## To direct !only to avoid damage to future and reserve trees!. (Winching: Foot before?)
   if (directionalfelling == "1"&& (fuel !="1" || fuel !="2")) {
 
     RandomAngle <- as.numeric(sample(c(0:359.9), size = 4)) # I leave 4 chances to avoid fut/res trees
@@ -765,37 +766,43 @@ felling1tree <- function(
   }
 
 
-  # Scenarios with track orientation:
-  # Compute the last angle of the right-angled triangle (see vignette figure)
+  ## Scenarios with track orientation:
+  # Compute the third angle of the right-angled triangle (see vignette figure)
   # TreefallOrientation is between the mimimun (30°) and the maximum (45°) angle
+  # Orientation for cable
   TreefallOrientation <- as.numeric(sample(c(advancedloggingparameters$MinTreefallOrientation:
                                                advancedloggingparameters$MaxTreefallOrientation), size = 1))
-  OppAng <- 180-(90 + TreefallOrientation)
+  # Orientation for grapple
+  CrownTreefallOrientation <- as.numeric(sample(c(0.1: 179.9), size = 1)) # no particular angle to orientate to the trail, only to orientate the tree crown towards the trail
+
+  OppAng <- 180-(90 + TreefallOrientation) # the angle between the closest position to the trail (90°) and the desired position (desired angle to the trail)
+  CrownOppAng <- 180-(90 + CrownTreefallOrientation) # for grapple case
 
   # Angle depending on whether the trail is to the right/left of the default position of the tree
-  # Right-hand trail
+  ## Right-hand trail
   if(TrailPt[1] >= Foot[1]){ # x trail > x foot
     # Foot oriented
-    Aangle <- as.numeric(180 + OppAng + theta)
-    Bangle <- as.numeric(180 - OppAng + theta)
+    Aangle <- round(as.numeric(180 + OppAng + theta), digits = 0)
+    Bangle <- round(as.numeric(180 - OppAng + theta), digits = 0)
     # Crown oriented
-    CrownAangle <- as.numeric(theta + OppAng)
-    CrownBangle <- as.numeric(360 - OppAng + theta)
+    CrownAangle <- as.numeric(theta) # angle between tree default position and the shortest way from the foot to the trail (to be at 90° to the trail)
+    CrownBangle <- as.numeric(theta + CrownOppAng) # ]0;180[ to the trail
 
 
-    # Left-hand trail
+    ## Left-hand trail
   }else if(TrailPt[1] < Foot[1]){ # x trail < x foot
     # Foot oriented
-    Aangle <- as.numeric(360 - OppAng + theta)
-    Bangle <- as.numeric(theta + OppAng)
+    Aangle <- round(as.numeric(360 - OppAng + theta), digits = 0)
+    Bangle <- round(as.numeric(theta + OppAng), digits = 0)
     # Crown oriented
-    CrownAangle <- as.numeric(180 - OppAng + theta)
-    CrownBangle <- as.numeric(180 + OppAng + theta)
+    CrownAangle <- as.numeric(180 + theta) # angle between tree default position and the shortest way from the foot to the trail (to be at 90° to the trail)
+    CrownBangle <- as.numeric(180 + CrownOppAng + theta) # ]0;180[ to the trail
 
   }
 
 
-  # To direct to avoid damage to future and reserve trees + track orientation. Winching: Foot before.
+  ### To direct to avoid damage to future and reserve trees + track orientation.
+  # Without fuel wood exploitation -> Winching: Foot before.
   if(directionalfelling == "2" && (fuel !="1" || fuel !="2")){
     if(dat$TreeFellingOrientationSuccess == "1"){
 
@@ -883,57 +890,27 @@ felling1tree <- function(
         ACrown <- rotatepolygon(Crown, angle = CrownAangle, fixed = Foot) # turned crown
         BCrown <- rotatepolygon(Crown, angle = CrownBangle, fixed = Foot) # turned crown
 
-        # Test the best to pull the tree back to the main trail (farthest crown from the main trail)
-        ADist <- st_distance(ACrown, MainTrail)[1,1] #matrix to value
-        BDist <- st_distance(BCrown, MainTrail)[1,1]
+        FallenTree <- AFallenTree <- st_difference(st_union( # A configuration (90° to the trail (shortest))
+          rotatepolygon(Trunk, angle = CrownAangle, fixed = Foot), # turned trunk
+          ACrown # turned crown
+        ))
 
-        if(min(ADist, BDist) == ADist){
-
-          FallenTree <- AFallenTree <- st_difference(st_union( # A configuration
-            rotatepolygon(Trunk, angle = CrownAangle, fixed = Foot), # turned trunk
-            ACrown # turned crown
-          ))
-          BFallenTree <- st_sfc(st_point(c(0,0))) # "null" sfc object to compare after
-
-        }else{
-
-          FallenTree <-  BFallenTree <- st_difference(st_union( # B configuration
-            rotatepolygon(Trunk, angle = CrownBangle, fixed = Foot), # turned trunk
-            BCrown # turned crown
-          ))
-          AFallenTree <- st_sfc(st_point(c(0,0))) # "null" sfc object to compare after
-
-        }
+        # No pull towards Maintrail for the grapple
 
         # Check intersection with future/reserve trees
         FRintersect <- sf::st_intersects(FallenTree, FutureReserveCrowns)
 
         if(lengths(FRintersect) > 0) { # if there is an intersection
-          if(FallenTree == AFallenTree){ # if it was A configuration
 
-            FallenTree <- BFallenTree <- st_difference(st_union( # B configuration
-              rotatepolygon(Trunk, angle = CrownBangle, fixed = Foot), # turned trunk
-              BCrown # turned crown
-            ))
+          FallenTree <- BFallenTree <- st_difference(st_union( # B configuration (]0;180[)
+            rotatepolygon(Trunk, angle = CrownBangle, fixed = Foot), # turned trunk
+            BCrown # turned crown
+          ))
 
-            # check intersection for this configuration
-            FRintersect <- sf::st_intersects(BFallenTree, FutureReserveCrowns)
-            if(lengths(FRintersect) > 0) { # if there is an intersection. if not FallenTree stay BFallenTree
-              FallenTree <- AFallenTree # we prefer 1st configuration (the best for winching)
-            }
-
-          }else if(FallenTree == BFallenTree){ # if it was B configuration
-
-            FallenTree <- AFallenTree <- st_difference(st_union( # A configuration
-              rotatepolygon(Trunk, angle = CrownAangle, fixed = Foot), # turned trunk
-              ACrown # turned crown
-            ))
-
-            # check intersection for this configuration
-            FRintersect <- sf::st_intersects(AFallenTree, FutureReserveCrowns)
-            if(lengths(FRintersect) > 0) { # if there is an intersection. if not FallenTree stay AFallenTree
-              FallenTree <- BFallenTree # we prefer 1st configuration (the best for winching)
-            }
+          # check intersection for this new configuration
+          FRintersect <- sf::st_intersects(BFallenTree, FutureReserveCrowns)
+          if(lengths(FRintersect) > 0) { # if there is an intersection. If not FallenTree stay BFallenTree
+            FallenTree <- AFallenTree # we prefer 1st configuration (the best for winching)
           }
         }
 

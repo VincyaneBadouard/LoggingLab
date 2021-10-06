@@ -52,11 +52,33 @@ test_that("felling1tree", {
   dat <- inventory[1,] %>% # just 1 row (1 tree)
     tibble::add_column(TreeFellingOrientationSuccess = "1") # force the orientation success for the test
 
+  # Grapple case (tree < 6 m from the trail)
+  dat$Xutm <- 286508
+  dat$Yutm <- 582950
+
+  Rslt2grapple <- felling1tree(dat,
+                               fuel = "2", directionalfelling = "2",
+                               MainTrail = MainTrail, ScndTrail = ScndTrail,
+                               FutureReserveCrowns = FutureReserveCrowns,
+                               advancedloggingparameters = loggingparameters())
+
+  # Cable case (tree > 6 m from the trail)
+  dat$Xutm <- 286537
+  dat$Yutm <- 582960
+
+  Rslt2cable <- felling1tree(dat,
+                             fuel = "2", directionalfelling = "2",
+                             MainTrail = MainTrail, ScndTrail = ScndTrail,
+                             FutureReserveCrowns = FutureReserveCrowns,
+                             advancedloggingparameters = loggingparameters())
+
+
+  # Other cases
   Rslt <- felling1tree(dat,
-                        fuel = "0", directionalfelling = "1",
-                        MainTrail = MainTrail, ScndTrail = ScndTrail,
-                        FutureReserveCrowns = FutureReserveCrowns,
-                        advancedloggingparameters = loggingparameters())
+                       fuel = "0", directionalfelling = "1",
+                       MainTrail = MainTrail, ScndTrail = ScndTrail,
+                       FutureReserveCrowns = FutureReserveCrowns,
+                       advancedloggingparameters = loggingparameters())
 
   RsltList <- list(
 
@@ -66,11 +88,7 @@ test_that("felling1tree", {
                           FutureReserveCrowns = FutureReserveCrowns,
                           advancedloggingparameters = loggingparameters()),
 
-    Rslt2 <- felling1tree(dat,
-                          fuel = "2", directionalfelling = "2",
-                          MainTrail = MainTrail, ScndTrail = ScndTrail,
-                          FutureReserveCrowns = FutureReserveCrowns,
-                          advancedloggingparameters = loggingparameters())
+    Rslt2cable <- Rslt2cable
   )
 
 
@@ -128,24 +146,51 @@ test_that("felling1tree", {
 
     OrientationA <- as.numeric(matlib::angle(c(rslt$TrailPt[1] - rslt$TrailPt[1], (rslt$TrailPt[2]+10) - rslt$TrailPt[2]),
                                              c(Arrival[1] - rslt$Foot[1], Arrival[2] - rslt$Foot[2]),
-                                             degree = TRUE))
+                                             degree = TRUE)) # vertical trail
 
     OrientationB <- as.numeric(matlib::angle(c(rslt$TrailPt[1] - rslt$TrailPt[1], rslt$TrailPt[2] - (rslt$TrailPt[2]+10)),
                                              c(Arrival[1] - rslt$Foot[1], Arrival[2] - rslt$Foot[2]),
-                                             degree = TRUE))
+                                             degree = TRUE)) # vertical trail
 
     OrientationC <- as.numeric(matlib::angle(c((rslt$TrailPt[1]+10) - rslt$TrailPt[1], rslt$TrailPt[2] - rslt$TrailPt[2]),
                                              c(Arrival[1] - rslt$Foot[1], Arrival[2] - rslt$Foot[2]),
-                                             degree = TRUE))
+                                             degree = TRUE)) # horizontal trail
 
     OrientationD <- as.numeric(matlib::angle(c(rslt$TrailPt[1] - (rslt$TrailPt[1]+10), rslt$TrailPt[2] - rslt$TrailPt[2]),
                                              c(Arrival[1] - rslt$Foot[1], Arrival[2] - rslt$Foot[2]),
-                                             degree = TRUE))
+                                             degree = TRUE)) # horizontal trai
 
 
-    expect_true((OrientationA >= 30 & OrientationA <= 45) | (OrientationB >= 30 & OrientationB <= 45) |
+
+    expect_true((OrientationA >= 30 & OrientationA <= 45) | (OrientationB >= 30 & OrientationB <= 45)|
                   (OrientationC >= 30 & OrientationC <= 45) | (OrientationD >= 30 & OrientationD <= 45))
   }
+
+
+
+  Arrival <- st_point(as.numeric(unlist( # sfc to sfg
+    sf::st_centroid(Rslt2grapple$FallenTree))))
+
+  OrientationA <- as.numeric(matlib::angle(c(Rslt2grapple$TrailPt[1] - Rslt2grapple$TrailPt[1], (Rslt2grapple$TrailPt[2]+10) - Rslt2grapple$TrailPt[2]),
+                                           c(Arrival[1] - Rslt2grapple$Foot[1], Arrival[2] - Rslt2grapple$Foot[2]),
+                                           degree = TRUE))
+
+  OrientationB <- as.numeric(matlib::angle(c(Rslt2grapple$TrailPt[1] - Rslt2grapple$TrailPt[1], Rslt2grapple$TrailPt[2] - (Rslt2grapple$TrailPt[2]+10)),
+                                           c(Arrival[1] - Rslt2grapple$Foot[1], Arrival[2] - Rslt2grapple$Foot[2]),
+                                           degree = TRUE))
+
+  OrientationC <- as.numeric(matlib::angle(c((Rslt2grapple$TrailPt[1]+10) - Rslt2grapple$TrailPt[1], Rslt2grapple$TrailPt[2] - Rslt2grapple$TrailPt[2]),
+                                           c(Arrival[1] - Rslt2grapple$Foot[1], Arrival[2] - Rslt2grapple$Foot[2]),
+                                           degree = TRUE))
+
+  OrientationD <- as.numeric(matlib::angle(c(Rslt2grapple$TrailPt[1] - (Rslt2grapple$TrailPt[1]+10), Rslt2grapple$TrailPt[2] - Rslt2grapple$TrailPt[2]),
+                                           c(Arrival[1] - Rslt2grapple$Foot[1], Arrival[2] - Rslt2grapple$Foot[2]),
+                                           degree = TRUE))
+
+
+  expect_true((OrientationA > 0 & OrientationA < 180) | (OrientationB > 0 & OrientationB < 180)|
+                (OrientationC > 0 & OrientationC < 180) | (OrientationD > 0 & OrientationD < 180))
+
 
 })
 
@@ -161,11 +206,11 @@ test_that("felling1tree", {
 
 # library(ggplot2)
 # ggplot() +
-#   geom_sf(data = Rslt$Foot) +
-#   geom_sf(data = Rslt$Trail) +
-#   geom_sf(data = Rslt$NearestPoints) +
-#   geom_sf(data = Rslt$TrailPt) +
-#   geom_sf(data = Rslt$FallenTree) +
+#   geom_sf(data = Rslt1$Foot) +
+#   geom_sf(data = Rslt1$Trail) +
+#   geom_sf(data = Rslt1$NearestPoints) +
+#   geom_sf(data = Rslt1$TrailPt) +
+#   geom_sf(data = Rslt1$FallenTree) +
 #   geom_sf(data = FutureReserveCrowns)
 #   geom_sf(data = Arrival)
 

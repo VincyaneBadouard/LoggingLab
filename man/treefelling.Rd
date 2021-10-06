@@ -59,19 +59,20 @@ priority 1: \emph{base of the tree towards the nearest trail} (main or 2ndary),
 priority 2: avoid futures and reserves.
 }
 
-RIL3/RIL3 BO + BE:
+RIL3/RIL3 timber + fuel wood:
 \itemize{
 \item at 40\%: random fall
 \item at 60\% ('TreefallSuccessProportion'):
 \itemize{
-\item if RIL3 + fuel & trees < 6 m from the trail and slope <20\%:
+\item if RIL3 + fuel & trees < 6 m from the trail and slope <20\% (grapple use):
 \itemize{
-\item 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
-\item \emph{crown} towards the nearest trail
+\item no particular angle to orientate to the trail,
+only to orient the tree \emph{crown} as close as possible to the trail
 \item priority 1: avoid futures and reserves,
 \item priority 2: conformation allowing skidding back to the main trail
 }
-\item otherwise (RIL3, RIL3 + fuel & trees > 6 m from the trail and/or slope >20\%):
+\item otherwise (RIL3, RIL3 + fuel &
+trees > 6 m from the trail and/or slope >20\%)(cable use):
 \itemize{
 \item 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
 \item \emph{base} to nearest trail
