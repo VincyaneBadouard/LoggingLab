@@ -7,11 +7,11 @@
 #'
 #' @param speciescriteria Table of species exploitability criteria : species
 #'   names, economic interest level, minimum and maximum felling diameter, in
-#'   the same format of \code{\link{SpeciesCriteria}} (data.frame)
+#'   the same format as \code{\link{SpeciesCriteria}} (data.frame)
 #'
-#' @return The forest inventory with economic informations (economic name, rank,
-#'   mimimum/maximum falling diameter, upped mimimum falling diameter) per
-#'   individuals (data.frame)
+#' @return The forest inventory with economic informations (commercial name, economic interest level,
+#'   minimum/maximum felling diameter, increased minimum felling diameter) added for each
+#'   individual in the variables ONFName, Commercial, MinFD, UpMinFD, MaxFD (data.frame)
 #'
 #' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}}
 #'
