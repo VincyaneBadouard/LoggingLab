@@ -7,13 +7,13 @@
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  \code{\link{vignette}})
 #'
-#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
-#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
-#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
+#'@param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
 #'
 #'@param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
-#'  reserve trees + track orientation)
+#'  avoid damage to future and reserve trees), "2" (to avoid damage to future and
+#'  reserve trees and to position the log relative to the track)
 #'
 #'@param MainTrail Main trail (sfg)
 #'@param ScndTrail Secondary trails (sfg)
@@ -315,13 +315,13 @@ treefelling <- function(
 #'  hollow trees, damages and and unused part of the log for fuelwood = "2"
 #'
 #'@param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
-#'  reserve trees + track orientation)
+#'  avoid damage to future and reserve trees), "2" (to avoid damage to future and
+#'  reserve trees and to position the log relative to the track)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
-#'@return Input inventory with: "TreeFellingOrientationSuccess" new column (see
+#'@return Input inventory with the "TreeFellingOrientationSuccess" new column (see
 #'  the outputs metadata in the \code{\link{vignette}}).
 #'@export
 #'
@@ -540,13 +540,13 @@ rotatepolygon <- function(
 #'@param dat 1 row data.frame with columns: Xutm, Yutm, CrownDiameter,
 #'  CrownHeight, DBH, TrunkHeight, TreeHeight, TreeFellingOrientationSuccess
 #'
-#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
-#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
-#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
+#'@param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
 #'
 #'@param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
-#'  reserve trees + track orientation)
+#'  avoid damage to future and reserve trees), "2" (to avoid damage to future and
+#'  reserve trees and to position the log relative to the track)
 #'
 #'@param MainTrail (sfg)
 #'@param ScndTrail (sfg)

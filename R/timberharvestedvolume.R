@@ -7,9 +7,9 @@
 #'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'   \code{\link{vignette}})
 #'
-#' @param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
-#'   damages and unused part of logged trees for fuelwood = "1", exploitation of
-#'   hollow trees, damages and and unused part of the log for fuelwood = "2"
+#' @param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
