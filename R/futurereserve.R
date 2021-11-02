@@ -13,13 +13,13 @@
 #' @return input inventory with selected future and reserve trees, for your
 #'   logging criteria (\code{\link{SpeciesCriteria}})
 #'
-#' @details **Future** trees will be all trees satisfying the following conditions:
+#' @details **Future** trees are all trees satisfying the following conditions:
 #'  - species of 1st economic rank
 #'  - DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD
 #'  or UpMinFD if it has been raised for its species.
 #'
-#'  **Reserve** trees will be randomly chosen among future trees so that
-#'  the number of reserve trees is equal to the number of harvested trees,
+#'  **Reserve** trees are randomly chosen among future trees so that
+#'  the number of reserve trees is equal to the number of harvested trees.
 #'
 #' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'   \code{\link{loggingparameters}}
