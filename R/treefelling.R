@@ -310,9 +310,9 @@ treefelling <- function(
 #'@param inventory input inventory (see the inputs formats and metadata in the
 #'  \code{\link{vignette}}) (data.frame)
 #'
-#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
-#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
-#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
+#'@param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
 #'
 #'@param directionalfelling Directional felling = "0" (absent), "1" (only to
 #'  avoid damage to future and reserve trees), "2" (to avoid damage to future and

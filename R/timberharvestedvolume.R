@@ -19,10 +19,11 @@
 #'   (NoHollowTimberLoggedVolume). NoHollowTimberLoggedVolume is the logged
 #'   volume (TimberLoggedVolume) when fuel = "0" or "1".
 #'
-#' @details By default, within a hollow tree, 2/3 of the log will be usable as
-#'   timber, 1/3 as fuel wood ('TreeHollowPartForFuel'). For dead trees from the
-#'   operation (trails, secondary windfall), the whole trunk will be exploitable
-#'   as fuel wood.
+#' @details When fuel is "2", by default, 2/3 of the log of a hollow tree will be usable as
+#'   timber and 1/3 as fuel wood ('TreeHollowPartForFuel').
+#'   When fuel is not "2", hollow trees are not used for timber nor fuelwood.
+#'   Dead trees from the
+#'   operation (trails, secondary windfall) are never exploited as timber.
 #'
 #' @export
 #'
