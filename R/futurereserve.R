@@ -5,7 +5,7 @@
 #'
 #' @param speciescriteria Table of species exploitability criteria : species
 #'   names, economic interest level, minimum and maximum felling diameter, in
-#'   the same format of \code{\link{SpeciesCriteria}} (data.frame)
+#'   the same format as \code{\link{SpeciesCriteria}} (data.frame)
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list) MainTrail (multiline)
@@ -13,14 +13,13 @@
 #' @return input inventory with selected future and reserve trees, for your
 #'   logging criteria (\code{\link{SpeciesCriteria}})
 #'
-#' @details **Future** trees will be:
+#' @details **Future** trees will be all trees satisfying the following conditions:
 #'  - species of 1st economic rank
 #'  - DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD
 #'  or UpMinFD if it has been raised for its species.
 #'
-#'  **Reserve** trees will be:
-#'  - future trees
-#'  - in the same number as trees to be harvested.
+#'  **Reserve** trees will be randomly chosen among future trees so that
+#'  the number of reserve trees is equal to the number of harvested trees,
 #'
 #' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'   \code{\link{loggingparameters}}

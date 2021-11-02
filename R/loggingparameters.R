@@ -66,10 +66,10 @@
 #'  (H) in m, and the DBH in cm. (ref)(function)
 #'
 #'@param RottenModel Estimates the tree probability of being probed hollow
-#'  (default: 1 / (1 + exp(-(-5.151 + 0.042 DBH))) with DBH in cm) (function)
+#'  (default: 1 / (1 + exp(-(-5.151 + 0.042 x DBH))) with DBH in cm) (function)
 #'
 #'@param VisiblyDefectModel Estimates the tree probability to have visible
-#'  defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * Log(DBH)))) with DBH in cm
+#'  defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 x ln(DBH)))) with DBH in cm
 #'  (function)
 #'
 #'@return A named list of 31 objects.
