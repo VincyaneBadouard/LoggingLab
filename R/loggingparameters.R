@@ -1,6 +1,6 @@
 #'Advanced parameters of the logging simulator
 #'
-#'@param MinDBHValue Minimum DBH value of the forest stand. Default = 10, in cm
+#'@param MinDBHValue Minimum DBH for inclusion in the forest inventory. Default = 10, in cm
 #'  (double)
 #'@param MaxAreaSlope Maximum area slope for inclusion in a logging unit.
 #'  Default = 27, in % (double)
@@ -8,20 +8,20 @@
 #'  Default = 22, in % (double)
 #'@param MaxTrailCrossSlope Maximum main & 2nd trail cross slope. Default = 4,
 #'  in % (double)
-#'@param GrappleMaxslope Maximum slope over which the grapple can pass. Default
+#'@param GrappleMaxslope Maximum slope accessible by the grapple. Default
 #'  = 20, in % (double)
 #'@param TreeMaxSlope Maximum slope around the tree to access it. Default = 22,
 #'  in % (double)
-#'@param PlateauMaxSlope Maximum slope of the plateau definition. Default = 5,
+#'@param PlateauMaxSlope Maximum slope to define an area as a plateau. Default = 5,
 #'  in % (double)
-#'@param SlopeDistance Distance to compute slope. Default = 6, in m (3m for each
+#'@param SlopeDistance Distance over which the slope is calculated. Default = 6, in m (3m each
 #'  side) (double)
 #'@param WaterSourcesBufferZone Buffer zone around the water sources. Default =
 #'  30, in m (double)
 #'@param MinMainTrailWidth Minimum main trail width. Default = 5, in m (double)
 #'@param MaxMainTrailWidth Maximum main trail width. Default = 6, in m (double)
 #'@param ScndTrailWidth 2nd trail width. Default = 4, in m (double)
-#'@param BigTrees DBH of trees to be avoided at trail construction. Default =
+#'@param BigTrees Minimum DBH of trees to be avoided by trails. Default =
 #'  50, in cm (double)
 #'@param ObjectiveBonus Objective bonus. Default = 30, in % (double)
 #'@param CableLength Cable length. Default = 40, in m (double)
@@ -36,32 +36,32 @@
 #'  trail. Default = 30, in degree (double)
 #'@param MaxTreefallOrientation Maximum orientation of the tree fall to the
 #'  trail. Default = 45, in degree (double)
-#'@param TreeHollowPartForFuel Part taken from hollow trees for fuel
-#'  exploitation. Default = 1/3 (double)
-#'@param Purge Unused part of the log. Default = 0.14, in m^3 of fuelwood/m^3 of
+#'@param TreeHollowPartForFuel Proportion of hollow trees used as fuelwood
+#'  . Default = 1/3 (double)
+#'@param Purge Part of the log no used for timber, can be used for fuelwood. Default = 0.14, in m^3 of purge/m^3 of
 #'  volume of timber harvested. (double)
 #'@param MaxTrailDensity Maximum trail density. Default = 200, in m/ha (double)
-#'  (has no impact on the simulation. A message will only be sent to inform you
-#'  of its validation or not)
+#'  (has no impact on the simulation. A message will be sent to inform if
+#'  this threshold has been exceeded)
 #'@param MaxLandingArea Maximum landing area. Default = 1500) in square meters
-#'  (double) (has no impact on the simulation. A message will only be sent to
-#'  inform you of its validation or not)
+#'  (double) (has no impact on the simulation. A message will be sent to inform if
+#'  this threshold has been exceeded)
 #'
 #'@param TreeHarvestableVolumeAllometry By default, allometry of tree
-#'  harvestable volume, French Guiana ONF formula: aCoef + bCoef * (DBH/100)^2,
+#'  harvestable volume, French Guiana ONF formula: aCoef + bCoef x (DBH/100)^2,
 #'  aCoef and bCoef depend on the forest location, stored in
 #'  \code{\link{ForestZoneVolumeParametersTable}}, DBH in cm. (function)
 #'
-#'@param TrunkHeightAllometry Allometry of trunk height, from the cylinder
-#'  volume formula: CylinderVolume = pi(((DBH/100)/2)^2 x H, with the height (H)
+#'@param TrunkHeightAllometry Allometry of trunk height, based on the cylinder
+#'  volume formula: CylinderVolume = pi x ((DBH/100)/2)^2 x H, with the height (H)
 #'  in m and the DBH in cm (function)
 #'
 #'@param TreeHeightAllometry By default, allometry parameters estimated from
-#'  Guyanese data with the BIOMASS package: log(H) = 0.07359191 + 1.34241216
-#'  log(DBH) + (-0.12282344)*log(DBH)^2, with the height (H) in m and the DBH in
+#'  Guyanese data with the BIOMASS package: ln(H) = 0.07359191 + 1.34241216 x
+#'  ln(DBH) -0.12282344 x ln(DBH)^2, with the height (H) in m and the DBH in
 #'  cm (function)
 #'
-#'@param CrownDiameterAllometry ln(DBH) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with𝜺~N(0,σ^2)
+#'@param CrownDiameterAllometry ln(DBH) = 𝜶+ 𝜷 x ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
 #'  and mean σ^2 = 0.0295966977 with the crown diameter (CD), the tree height
 #'  (H) in m, and the DBH in cm. (ref)(function)
 #'
