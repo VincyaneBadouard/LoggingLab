@@ -1,9 +1,9 @@
 #' Get geometry
 #'
-#'@description Converts a dataframe with a column of characters, which contains
-#'  the WKT encoded geometries, into an sf object. The column is converted to sfc.
+#'@description Converts a dataframe with a column of characters containing
+#'  the WKT encoded geometries into an sf object. The column is converted to sfc.
 #'
-#'@param inventory (data.frame) With a column of characters, which contains the
+#'@param inventory (data.frame) with a column of characters, which contains the
 #'  WKT encoded geometries.
 #'@param var Name of the character column that holds WKT encoded geometries, as a data/env-variable.
 #'

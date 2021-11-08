@@ -30,9 +30,9 @@
 #'
 #'@param objective Objective volume per hectare (numeric)
 #'
-#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
-#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
-#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
+#'@param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
 #'
 #'@param diversification Taking of other species in addition to the main
 #'  commercial species (2 levels of commercial species in the

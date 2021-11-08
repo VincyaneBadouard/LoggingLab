@@ -7,13 +7,13 @@
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  \code{\link{vignette}})
 #'
-#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
-#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
-#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
+#'@param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
 #'
 #'@param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
-#'  reserve trees + track orientation)
+#'  avoid damage to future and reserve trees), "2" (to avoid damage to future and
+#'  reserve trees and to position the log relative to the track)
 #'
 #'@param MainTrail Main trail (sfg)
 #'@param ScndTrail Secondary trails (sfg)
@@ -310,18 +310,18 @@ treefelling <- function(
 #'@param inventory input inventory (see the inputs formats and metadata in the
 #'  \code{\link{vignette}}) (data.frame)
 #'
-#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
-#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
-#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
+#'@param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
 #'
 #'@param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
-#'  reserve trees + track orientation)
+#'  avoid damage to future and reserve trees), "2" (to avoid damage to future and
+#'  reserve trees and to position the log relative to the track)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
-#'@return Input inventory with: "TreeFellingOrientationSuccess" new column (see
+#'@return Input inventory with the "TreeFellingOrientationSuccess" new column (see
 #'  the outputs metadata in the \code{\link{vignette}}).
 #'@export
 #'
@@ -430,13 +430,13 @@ directionalfellingsuccessdef <- function(
 
 #' rotatepolygon
 #'
-#' @description Orient the input polygon to a given angle and fixed point.
+#' @description Rotate the input polygon with a given angle and around a fix point.
 #'
 #' @param p Polygon (POLYGON or sfc_POLYGON)
 #' @param angle Angle in degrees in the clockwise direction (numeric)
-#' @param fixed Fixed point on which the polygon will rotate (POINT)
+#' @param fixed Fix point around which the polygon will be rotated (POINT)
 #'
-#' @return The polygon (sfc_POLYGON) oriented at the given angle
+#' @return The polygon (sfc_POLYGON) rotated
 #' @export
 #' @importFrom nngeo st_ellipse
 #' @importFrom sf st_polygon st_coordinates st_sfc st_difference st_union
@@ -540,13 +540,13 @@ rotatepolygon <- function(
 #'@param dat 1 row data.frame with columns: Xutm, Yutm, CrownDiameter,
 #'  CrownHeight, DBH, TrunkHeight, TreeHeight, TreeFellingOrientationSuccess
 #'
-#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
-#'  damages and unsed part of logged trees for fuelwood = "1", exploitation of
-#'  hollow trees, damages and and unused part of the log for fuelwood = "2"
+#'@param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
 #'
 #'@param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
-#'  reserve trees + track orientation)
+#'  avoid damage to future and reserve trees), "2" (to avoid damage to future and
+#'  reserve trees and to position the log relative to the track)
 #'
 #'@param MainTrail (sfg)
 #'@param ScndTrail (sfg)
