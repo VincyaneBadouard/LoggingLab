@@ -7,7 +7,7 @@
 getgeometry(inventory, var)
 }
 \arguments{
-\item{inventory}{(data.frame) With a column of characters, which contains the
+\item{inventory}{(data.frame) with a column of characters, which contains the
 WKT encoded geometries.}
 
 \item{var}{Name of the character column that holds WKT encoded geometries, as a data/env-variable.}
@@ -16,8 +16,8 @@ WKT encoded geometries.}
 An sf object
 }
 \description{
-Converts a dataframe with a column of characters, which contains
-the WKT encoded geometries, into an sf object. The column is converted to sfc.
+Converts a dataframe with a column of characters containing
+the WKT encoded geometries into an sf object. The column is converted to sfc.
 }
 \examples{
 data(Paracou6_2016)

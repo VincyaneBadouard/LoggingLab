@@ -9,7 +9,7 @@ output: html_document
 
 inventory
 multilignes "MainTrail ", "2ndTrail"
-vecteur "AccessibleTreesPoints", "SelectedTreesPoints",  "AvenirTreesPoints",  "ReserveTreesPoints", "DeadTreesPoints", "HollowTreesPoints" et "FuelwoodTreesPoints"
+vecteur "AccessibleTreesPoints", "SelectedTreesPoints",  "AvenirTreesPoints",  "ReserveTreesPoints", "DeadTreesPoints", "HollowTreesPoints" et "Fuel woodTreesPoints"
 
 # OUTPUT : 
 inventory + polygone "Shadow" + vecteurs "TreefallSuccess", "TreefallFailure", "DamageTreesPoints", "DeadTreesPoints"

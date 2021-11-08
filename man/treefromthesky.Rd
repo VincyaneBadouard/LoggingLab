@@ -11,7 +11,7 @@ treefromthesky(dat)
 Xutm, Yutm (Tree coordinates), CrownDiameter, CrownHeight}
 }
 \value{
-An ellipse (sfc_POLYGON) as a crown, with its diameter and height
+A circle (sfc_POLYGON) representing the tree crown, with its diameter
 filled in, representing the tree from the sky.
 }
 \description{

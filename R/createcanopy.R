@@ -1,18 +1,20 @@
-#' Create the canopy
+#'Create the canopy
 #'
 #'@description Create a vertical projection of the the crown of each tree
 #'
-#' @param inventory Input inventory (see the inputs formats and metadata in the
-#'   \code{\link{vignette}})
+#'@param inventory Input inventory containing the crown diameter (CrownDiameter,
+#'  in m) (calculable with the addtreedim function) of each tree
+#'  (data.frame)(see the inputs formats and metadata in the
+#'  \code{\link{vignette}})
 #'
-#' @return A dataframe with a column 'Crowns' containing the ellipses
-#'   (sfc_POLYGON) as trees crown, with their diameter and height filled in,
-#'   representing trees from the sky.
-#' @export
+#'@return A dataframe with a column 'Crowns' containing the ellipses
+#'  (sfc_POLYGON) as trees crown, with their diameter filled in, representing
+#'  trees from the sky.
+#'@export
 #'
-#' @importFrom dplyr group_by do left_join
-#' @importFrom sf st_as_text
-#' @importFrom tidyr unnest
+#'@importFrom dplyr group_by do left_join
+#'@importFrom sf st_as_text
+#'@importFrom tidyr unnest
 #'
 #' @examples
 #' data(Paracou6_2016)
@@ -66,7 +68,7 @@ createcanopy <- function(inventory){
 #' @param dat 1 row data.frame with columns:
 #' Xutm, Yutm (Tree coordinates), CrownDiameter, CrownHeight
 #'
-#' @return A circle (sfc_POLYGON) representing the tree crown, with its diameter and height
+#' @return A circle (sfc_POLYGON) representing the tree crown, with its diameter
 #'   filled in, representing the tree from the sky.
 #' @export
 #'

@@ -30,7 +30,7 @@ neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the
-same format of \code{\link{SpeciesCriteria}} (data.frame)}
+same format as \code{\link{SpeciesCriteria}} (data.frame)}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -39,30 +39,37 @@ same format of \code{\link{SpeciesCriteria}} (data.frame)}
 \item{objective}{Objective volume per hectare (numeric)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
-damages and unsed part of logged trees for fuelwood = "1", exploitation of
-hollow trees, damages and and unused part of the log for fuelwood = "2"}
+damage and unused part of logged trees for fuel = "1", exploitation of
+hollow trees, damage and and unused part of the log for fuel = "2"}
 
-\item{diversification}{Taking of other species in addition to the main
-commercial species (2 levels of commercial species in the
+\item{diversification}{Possibility to log other species in addition to the
+main commercial species (species with a value of 2 for commercial in the
 \code{\link{SpeciesCriteria}} table) (logical)}
 
-\item{specieslax}{Allow diversification if stand is too poor, = FALSE by
+\item{specieslax}{Allow diversification if the stand is too poor to reach the
+objective volume without diversification, = FALSE by
 default (logical)}
 
 \item{objectivelax}{Allow exploitation in case of non-achievement of the
 objective volume (if stand too poor), = FALSE by default (logical)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
-\code{\link{loggingparameters}} (list) MainTrail (multiline)}
+\code{\link{loggingparameters}} (list)}
 }
 \value{
-A list with: - input inventory with: "DistCrit", "Slope", "SlopeCrit",
+A list with:
+\itemize{
+\item input inventory with: "DistCrit", "Slope", "SlopeCrit",
 "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
 "ProbedHollow" new columns (see the outputs metadata in the
-\code{\link{vignette}}). - your objective volume with or without a bonus (if
-hollow trees exploitation) - the harvestable volume with your initial
-criteria - 6 sets of spatial points: harvestable, selected, future and
-reserve, hollow and energy wood trees
+\code{\link{vignette}}).
+\item the objective volume with or without a bonus (if
+hollow trees exploitation) (VO) for the entire plot
+\item the harvestable volume with the initial
+criteria (HVinit) for the entire plot
+\item 6 layers of spatial points: harvestable, selected, future and
+reserve, hollow and fuel wood trees
+}
 }
 \description{
 Tree selection (trees to be exploited, future and reserve trees)
@@ -73,44 +80,40 @@ Trees with visible defects are identified ('VisiblyDefectModel' in
 (Objective volume: If the user has chosen not to harvest hollow probed trees
 for energy ('RottenModel' in 'advancedloggingparameters' argument), 20-30\%
 will be added to the objective volume in order to compensate for these
-designated hollow trees. If the user has chosen to harvest the hollow probed
-trees as fuel wood, he will harvest strictly his target volume, without
-\emph{bonus.})
+designated hollow trees.)
 
 Trees will be designated as "\strong{harvestable}" if they:
 \itemize{
-\item belonging to species of 1st economic rank or more if diversification
-\item DBH between the MinFD and the MaxFD.
-\item not isolated ( >100m ('IsolateTreeMinDistance') from other individuals of
+\item belong to species of 1st economic level (if no diversification) or 1st and 2nd level if (diversification)
+\item have a DBH between MinFD and MaxFD.
+\item are not isolated (> 100m ('IsolateTreeMinDistance') from other individuals of
 the same species)
-\item on slopes < 22\% ('TreeMaxSlope')
-\item off the main tracks.
+\item are on slopes < 22\% ('TreeMaxSlope')
+\item are off the main tracks.
 }
 
-If the harvestable volume is higher than the objective volume, the MinFD of
-the 1st economic rank species is first increased, then that of the other
-species (if diversification), if this is not enough. The volume to be
-harvested is adjusted if necessary by taking the trees in decreasing order
+If the harvestable volume is higher than the objective volume, MinFD of
+the 1st economic rank species is increased. If this is not enough and if diversification is allowed,
+MinFD of 2nd economic level species is increased.
+Then, the trees to be harvested are chosen in decreasing order
 of volume, until the objective volume is reached.
 
-If the harvestable volume is too low, diversification can be applied if it
+If the harvestable volume is lower than the objective volume, diversification
+can be applied if it
 was not already applied ('specieslax') (trees of all commercial ranks are
 selected in decreasing order of volume until the objective volume is
 reached), or harvesting can continue despite an unreached objective volume,
 or be abandoned ('objectivelax')
 
-\strong{Future} trees will be:
+\strong{Future} trees are all trees satisfying the following conditions:
 \itemize{
 \item species of 1st economic rank
 \item DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD
 or UpMinFD if it has been raised for its species.
 }
 
-\strong{Reserve} trees will be:
-\itemize{
-\item future trees
-\item in the same number as trees to be harvested.
-}
+\strong{Reserve} trees are randomly chosen among future trees so that
+the number of reserve trees is equal to the number of harvested trees.
 }
 \examples{
 data(Paracou6_2016)
@@ -125,7 +128,7 @@ topography = DTMParacou, plotslope = PlotSlope,
 speciescriteria = SpeciesCriteria, objective = 20,
 scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
 objectivelax = TRUE,
-advancedloggingparameters = loggingparameters()) #  MainTrail
+advancedloggingparameters = loggingparameters())
 
 NewInventory <- treeselectionoutputs$inventory
 

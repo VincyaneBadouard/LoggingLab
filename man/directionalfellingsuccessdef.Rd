@@ -16,18 +16,18 @@ directionalfellingsuccessdef(
 \code{\link{vignette}}) (data.frame)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
-damages and unsed part of logged trees for fuelwood = "1", exploitation of
-hollow trees, damages and and unused part of the log for fuelwood = "2"}
+damage and unused part of logged trees for fuel = "1", exploitation of
+hollow trees, damage and and unused part of the log for fuel = "2"}
 
 \item{directionalfelling}{Directional felling = "0" (absent), "1" (only to
-avoid damage to future and reserve trees), "2" (avoid damage to future and
-reserve trees + track orientation)}
+avoid damage to future and reserve trees), "2" (to avoid damage to future and
+reserve trees and to position the log relative to the track)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-Input inventory with: "TreeFellingOrientationSuccess" new column (see
+Input inventory with the "TreeFellingOrientationSuccess" new column (see
 the outputs metadata in the \code{\link{vignette}}).
 }
 \description{
@@ -46,7 +46,7 @@ inventory <- treeselection(inventory, objective = 20, scenario ="manual",
  speciescriteria = SpeciesCriteria,
  advancedloggingparameters = loggingparameters())$inventory
 
-directionalfellingsuccessdef(inventory,fuel = "2",directionalfelling = "2",
+new <- directionalfellingsuccessdef(inventory,fuel = "2", directionalfelling = "2",
 advancedloggingparameters = loggingparameters())
 
 }

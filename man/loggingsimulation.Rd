@@ -50,8 +50,8 @@ volume of each tree, depend to its geographic zone if several locations
 \item{objective}{Objective volume per hectare (numeric)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
-damages and unsed part of logged trees for fuelwood = "1", exploitation of
-hollow trees, damages and and unused part of the log for fuelwood = "2"}
+damage and unused part of logged trees for fuel = "1", exploitation of
+hollow trees, damage and and unused part of the log for fuel = "2"}
 
 \item{diversification}{Taking of other species in addition to the main
 commercial species (2 levels of commercial species in the

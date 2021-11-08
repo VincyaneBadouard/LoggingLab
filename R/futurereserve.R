@@ -8,7 +8,7 @@
 #'   the same format as \code{\link{SpeciesCriteria}} (data.frame)
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
-#'   \code{\link{loggingparameters}} (list) MainTrail (multiline)
+#'   \code{\link{loggingparameters}} (list)
 #'
 #' @return input inventory with selected future and reserve trees, for your
 #'   logging criteria (\code{\link{SpeciesCriteria}})

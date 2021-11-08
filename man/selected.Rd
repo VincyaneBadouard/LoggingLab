@@ -29,8 +29,8 @@ or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 \code{\link{vignette}})}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
-damages and unsed part of logged trees for fuelwood = "1", exploitation of
-hollow trees, damages and and unused part of the log for fuelwood = "2"}
+damage and unused part of logged trees for fuel = "1", exploitation of
+hollow trees, damage and and unused part of the log for fuel = "2"}
 
 \item{diversification}{TPossibility to log other species in addition to the
 main commercial species (species with a value of 2  for commercial in the
@@ -59,13 +59,14 @@ EnergywoodTrees)
 Selection of trees to log
 }
 \details{
-If the harvestable volume is higher than the objective volume, the
-MinFD of the 1st economic rank species is first increased, then that of the
-other species (if diversification), if this is not enough. The volume to be
-harvested is adjusted if necessary by taking the trees in decreasing order
+If the harvestable volume is higher than the objective volume, MinFD of
+the 1st economic rank species is increased. If this is not enough and if diversification is allowed,
+MinFD of 2nd economic level species is increased.
+Then, the trees to be harvested are chosen in decreasing order
 of volume, until the objective volume is reached.
 
-If the harvestable volume is too low, diversification can be applied if it
+If the harvestable volume is lower than the objective volume, diversification
+can be applied if it
 was not already applied ('specieslax') (trees of all commercial ranks are
 selected in decreasing order of volume until the objective volume is
 reached), or harvesting can continue despite an unreached objective volume,

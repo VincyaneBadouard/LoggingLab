@@ -7,16 +7,18 @@
 createcanopy(inventory)
 }
 \arguments{
-\item{inventory}{Input inventory (see the inputs formats and metadata in the
-\code{\link{vignette}}) (data.frame)}
+\item{inventory}{Input inventory containing the crown diameter (CrownDiameter,
+in m) (calculable with the addtreedim function) of each tree
+(data.frame)(see the inputs formats and metadata in the
+\code{\link{vignette}})}
 }
 \value{
 A dataframe with a column 'Crowns' containing the ellipses
-(sfc_POLYGON) as trees crown, with their diameter and height filled in,
-representing trees from the sky.
+(sfc_POLYGON) as trees crown, with their diameter filled in, representing
+trees from the sky.
 }
 \description{
-Create the canopy
+Create a vertical projection of the the crown of each tree
 }
 \examples{
 data(Paracou6_2016)
@@ -27,7 +29,7 @@ volumeparameters = ForestZoneVolumeParametersTable)
 
 inventory <- createcanopy(inventory)
 
-# The small ones first so that they are behind the big ones on the plot
+# The small ones first so that they are plotted below the big ones
 inventory <- dplyr::arrange(inventory, TreeHeight)
 
 library(ggplot2)

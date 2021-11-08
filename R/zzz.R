@@ -54,7 +54,7 @@ NULL
     # MinTreefallOrientation = 30, #in degree
     # MaxTreefallOrientation = 45, #in degree
     # TreeHollowPartForFuel = 1/3, #(Hollow) Part taken from hollow trees for fuel exploitation
-    # Purge = 0.14, # in m^3 of fuelwood/m^3 of logged trees
+    # Purge = 0.14, # in m^3 of fuel wood/m^3 of logged trees
     # MaxTrailDensity = 200, #in m/ha
     # MaxLandingArea = 1500, #in square meters
     # ## Models

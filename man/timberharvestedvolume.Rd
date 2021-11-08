@@ -20,8 +20,8 @@ timberharvestedvolume(
 \code{\link{vignette}})}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
-damages and unused part of logged trees for fuelwood = "1", exploitation of
-hollow trees, damages and and unused part of the log for fuelwood = "2"}
+damage and unused part of logged trees for fuel = "1", exploitation of
+hollow trees, damage and and unused part of the log for fuel = "2"}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -36,10 +36,11 @@ volume (TimberLoggedVolume) when fuel = "0" or "1".
 Compute the timber harvested volume
 }
 \details{
-By default, within a hollow tree, 2/3 of the log will be usable as
-timber, 1/3 as fuel wood ('TreeHollowPartForFuel'). For dead trees from the
-operation (trails, secondary windfall), the whole trunk will be exploitable
-as fuel wood.
+When fuel is "2", by default, 2/3 of the log of a hollow tree will
+be usable as timber and 1/3 as fuel wood ('TreeHollowPartForFuel'). When
+fuel is not "2", hollow trees are not used for timber nor fuel wood. Dead
+trees from the operation (trails, secondary windfall) are never exploited
+as timber, but as fuel wood if chosen.
 }
 \examples{
 data(Paracou6_2016)

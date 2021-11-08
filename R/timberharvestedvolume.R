@@ -7,9 +7,9 @@
 #'   "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'   \code{\link{vignette}})
 #'
-#' @param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
-#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
-#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
+#' @param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuel = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuel = "2"
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
@@ -19,11 +19,11 @@
 #'   (NoHollowTimberLoggedVolume). NoHollowTimberLoggedVolume is the logged
 #'   volume (TimberLoggedVolume) when fuel = "0" or "1".
 #'
-#' @details When fuel is "2", by default, 2/3 of the log of a hollow tree will be usable as
-#'   timber and 1/3 as fuel wood ('TreeHollowPartForFuel').
-#'   When fuel is not "2", hollow trees are not used for timber nor fuelwood.
-#'   Dead trees from the
-#'   operation (trails, secondary windfall) are never exploited as timber.
+#' @details When fuel is "2", by default, 2/3 of the log of a hollow tree will
+#'   be usable as timber and 1/3 as fuel wood ('TreeHollowPartForFuel'). When
+#'   fuel is not "2", hollow trees are not used for timber nor fuel wood. Dead
+#'   trees from the operation (trails, secondary windfall) are never exploited
+#'   as timber, but as fuel wood if chosen.
 #'
 #' @export
 #'

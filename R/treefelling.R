@@ -7,9 +7,9 @@
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  \code{\link{vignette}})
 #'
-#'@param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
-#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
-#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuel = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuel = "2"
 #'
 #'@param directionalfelling Directional felling = "0" (absent), "1" (only to
 #'  avoid damage to future and reserve trees), "2" (to avoid damage to future and
@@ -310,9 +310,9 @@ treefelling <- function(
 #'@param inventory input inventory (see the inputs formats and metadata in the
 #'  \code{\link{vignette}}) (data.frame)
 #'
-#'@param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
-#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
-#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuel = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuel = "2"
 #'
 #'@param directionalfelling Directional felling = "0" (absent), "1" (only to
 #'  avoid damage to future and reserve trees), "2" (to avoid damage to future and
@@ -337,7 +337,7 @@ treefelling <- function(
 #'  speciescriteria = SpeciesCriteria,
 #'  advancedloggingparameters = loggingparameters())$inventory
 #'
-#' directionalfellingsuccessdef(inventory,fuel = "2",directionalfelling = "2",
+#' new <- directionalfellingsuccessdef(inventory,fuel = "2", directionalfelling = "2",
 #' advancedloggingparameters = loggingparameters())
 #'
 directionalfellingsuccessdef <- function(
@@ -381,18 +381,19 @@ directionalfellingsuccessdef <- function(
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
 
-  if (fuel == "0" && directionalfelling == "0"){
+  if (fuel == "0" && directionalfelling == "0"){ # No hollow trees exploitation, no directional felling
     inventory <- inventory %>%
-      mutate(TreeFellingOrientationSuccess = ifelse(Selected == "1", 0, NA))
+      mutate(TreeFellingOrientationSuccess = ifelse(Selected == "1", 0, NA)) # always fail
   }
 
-  if (fuel == "0" && directionalfelling != "0"){
+  if (fuel == "0" && directionalfelling != "0"){ # directional felling
     inventory <- inventory %>%
+      rowwise() %>%
       mutate(TreeFellingOrientationSuccess =
                ifelse(Selected == "1",
                       sample(c(1,0), size = 1, replace = F,
                              prob = c(advancedloggingparameters$TreefallSuccessProportion,
-                                      1-advancedloggingparameters$TreefallSuccessProportion)), NA)) # Accessible = linked by 2ndtrails
+                                      1-advancedloggingparameters$TreefallSuccessProportion)), NA))
     # Accessible <- Selected !!!!!!!!!!!! pas oublier pour if (fuel == "0" && directionalfelling != "0")
 
   }
@@ -400,6 +401,7 @@ directionalfellingsuccessdef <- function(
   if (fuel =="1") {
 
     inventory <- inventory %>%
+      rowwise() %>%
       mutate(TreeFellingOrientationSuccess =
                ifelse(Selected == "1",  # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
                       sample(c(1,0), size = 1, replace = F,
@@ -412,6 +414,7 @@ directionalfellingsuccessdef <- function(
   if (fuel =="2") {
 
     inventory <- inventory %>%
+      rowwise() %>%
       mutate(TreeFellingOrientationSuccess =
                ifelse(Selected == "1"| (Selected == "1" & ProbedHollow == "1"), # Selected = not yet linked by 2ndtrails, because 2ndtrails came after
                       sample(c(1,0), size = 1, replace = F,
@@ -540,9 +543,9 @@ rotatepolygon <- function(
 #'@param dat 1 row data.frame with columns: Xutm, Yutm, CrownDiameter,
 #'  CrownHeight, DBH, TrunkHeight, TreeHeight, TreeFellingOrientationSuccess
 #'
-#'@param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
-#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
-#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuel = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuel = "2"
 #'
 #'@param directionalfelling Directional felling = "0" (absent), "1" (only to
 #'  avoid damage to future and reserve trees), "2" (to avoid damage to future and
@@ -875,7 +878,7 @@ felling1tree <- function(
     }
   }
 
-  # Fuelwood exploitation in the crowns + to avoid damage to future and reserve trees + track orientation
+  # Fuel wood exploitation in the crowns + to avoid damage to future and reserve trees + track orientation
   if(fuel =="1" || fuel =="2"){
 
     TrailDist <- st_distance(Foot, TrailPt) # distance between the tree foot and the Trail closest point

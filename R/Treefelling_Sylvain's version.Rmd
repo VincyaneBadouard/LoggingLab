@@ -190,7 +190,7 @@ felling1tree <- function(dat,
     
   }
   
-  # Fuelwood exploitation in the crowns
+  # Fuel wood exploitation in the crowns
   if(fuel =="1" |fuel =="2"){
     
     TrailDist <- st_distance(Foot, TrailPt)

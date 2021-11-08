@@ -19,9 +19,9 @@
 #'
 #'@param objective Objective volume per hectare (numeric)
 #'
-#'@param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
-#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
-#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuel = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuel = "2"
 #'
 #'@param diversification Possibility to log other species in addition to the
 #' main commercial species (species with a value of 2 for commercial in the
@@ -35,7 +35,7 @@
 #'  objective volume (if stand too poor), = FALSE by default (logical)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
-#'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
+#'  \code{\link{loggingparameters}} (list)
 #'
 #'@return A list with:
 #'  - input inventory with: "DistCrit", "Slope", "SlopeCrit",
@@ -47,7 +47,7 @@
 #'  - the harvestable volume with the initial
 #'  criteria (HVinit) for the entire plot
 #'  - 6 layers of spatial points: harvestable, selected, future and
-#'  reserve, hollow and fuelwood trees
+#'  reserve, hollow and fuel wood trees
 #'
 #'@details Trees with visible defects are identified ('VisiblyDefectModel' in
 #'  'advancedloggingparameters' argument) and therefore not designated.
@@ -112,7 +112,7 @@
 #' speciescriteria = SpeciesCriteria, objective = 20,
 #' scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
 #' objectivelax = TRUE,
-#' advancedloggingparameters = loggingparameters()) #  MainTrail
+#' advancedloggingparameters = loggingparameters())
 #'
 #' NewInventory <- treeselectionoutputs$inventory
 #'

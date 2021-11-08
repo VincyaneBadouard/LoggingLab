@@ -12,12 +12,12 @@ ONFGuyafortaxojoin(inventory, speciescriteria)
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in
-the same format of \code{\link{SpeciesCriteria}} (data.frame)}
+the same format as \code{\link{SpeciesCriteria}} (data.frame)}
 }
 \value{
-The forest inventory with economic informations (economic name, rank,
-mimimum/maximum falling diameter, upped mimimum falling diameter) per
-individuals (data.frame)
+The forest inventory with economic informations (commercial name, economic interest level,
+minimum/maximum felling diameter, increased minimum felling diameter) added for each
+individual in the variables ONFName, Commercial, MinFD, UpMinFD, MaxFD (data.frame)
 }
 \description{
 Joins a commercial criteria table to a forest inventory

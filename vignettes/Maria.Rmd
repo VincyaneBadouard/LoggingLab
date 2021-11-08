@@ -146,8 +146,8 @@ volume of each tree, depend to its geographic zone if several locations
 + **objective** : Objective volume per hectare (numeric)
 
 + **fuel** : Fuel wood exploitation: **no exploitation** = "**0**", **damages and purge**
-exploitation in fuelwood = "**1**", exploitation of **hollow trees, damages and purge** in
-fuelwood = "**2**"
+exploitation in fuel = "**1**", exploitation of **hollow trees, damages and purge** in
+fuel = "**2**"
 
 + **diversification** : Taking of other species in addition to the main
 commercial species (2 levels of commercial species in the
@@ -214,7 +214,7 @@ kable(ScenariosTable)
 + **Minimum orientation of the tree fall to the trail** = 30 degree 
 + **Maximum orientation of the tree fall to the trail** = 45 degree 
 + **Part taken from hollow trees for fuel exploitation** = 1/3 
-+ **Purge (unused part of the log)** = 0.14 m^3 of fuelwood/m^3 of logged trees
++ **Purge (unused part of the log)** = 0.14 m^3 of fuel wood/m^3 of logged trees
 + **Maximum trail density** = 200 m/ha (has no impact on the simulation.
 A message will only be sent to inform you of its validation or not)
 + **Maximum landing area** = 1500 square meters (has no impact on the simulation.
@@ -602,7 +602,7 @@ Converts a dataframe with a column of characters, which contains the WKT encoded
 ## Create the canopy
 
 'createcanopy' function return a dataframe with a column 'Crowns' containing the ellipses
-(*sfc_POLYGON*) as trees crown, with their diameter and height filled in,
+(*sfc_POLYGON*) as trees crown, with their diameter filled in,
 representing trees from the sky.
 ```{r}
 canopy <- createcanopy(inventory)
@@ -617,7 +617,7 @@ ggplot() +
 
 ## 1 tree from the sky
 
-'createcanopy' function return an ellipse (*sfc_POLYGON*) as a crown, with its diameter and height filled in, representing the tree from the sky.
+'createcanopy' function return an ellipse (*sfc_POLYGON*) as a crown, with its diameter filled in, representing the tree from the sky.
 ```{r}
 dat <- inventory[679,]
 

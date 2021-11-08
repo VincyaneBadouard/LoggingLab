@@ -10,9 +10,9 @@
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  \code{\link{vignette}})
 #'
-#'@param fuel Fuelwood exploitation: no exploitation = "0", exploitation of
-#'   damage and unused part of logged trees for fuelwood = "1", exploitation of
-#'   hollow trees, damage and and unused part of the log for fuelwood = "2"
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuel = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuel = "2"
 #'
 #'@param diversification TPossibility to log other species in addition to the
 #'  main commercial species (species with a value of 2  for commercial in the
@@ -480,7 +480,7 @@ selected <- function(
   }
 
   if ((fuel == "2") & any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
-    # Hollow trees = fuelwood:
+    # Hollow trees = fuel wood:
     inventory <- inventory %>%
       mutate(DeathCause = ifelse(Selected == "1" & ProbedHollow == "1", "hollowfuel", NA))# replace "NA" par "DeathCause" in this code line in the ONF simulator
 

@@ -325,7 +325,7 @@
 # }
 #
 # if ((fuel == "2") & any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
-#   # Hollow trees = fuelwood:
+#   # Hollow trees = fuel wood:
 #   inventory <- inventory %>%
 #     mutate(DeathCause = ifelse(Selected == "1" & ProbedHollow == "1", "hollowfuel", NA))# replace "NA" par "DeathCause" in this code line in the ONF simulator
 #

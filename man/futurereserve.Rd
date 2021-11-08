@@ -16,10 +16,10 @@ futurereserve(
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in
-the same format of \code{\link{SpeciesCriteria}} (data.frame)}
+the same format as \code{\link{SpeciesCriteria}} (data.frame)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
-\code{\link{loggingparameters}} (list) MainTrail (multiline)}
+\code{\link{loggingparameters}} (list)}
 }
 \value{
 input inventory with selected future and reserve trees, for your
@@ -29,18 +29,15 @@ logging criteria (\code{\link{SpeciesCriteria}})
 Future & reserve trees designation
 }
 \details{
-\strong{Future} trees will be:
+\strong{Future} trees are all trees satisfying the following conditions:
 \itemize{
 \item species of 1st economic rank
 \item DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD
 or UpMinFD if it has been raised for its species.
 }
 
-\strong{Reserve} trees will be:
-\itemize{
-\item future trees
-\item in the same number as trees to be harvested.
-}
+\strong{Reserve} trees are randomly chosen among future trees so that
+the number of reserve trees is equal to the number of harvested trees.
 }
 \examples{
 data(Paracou6_2016)

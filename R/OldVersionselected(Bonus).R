@@ -11,8 +11,8 @@
 #' #'  \code{\link{vignette}})
 #' #'
 #' #'@param fuel Fuel wood exploitation: no exploitation = "0", damages and purge
-#' #'  exploitation in fuelwood = "1", exploitation of hollow trees, damages and
-#' #'  purge in fuelwood = "2"
+#' #'  exploitation in fuel = "1", exploitation of hollow trees, damages and
+#' #'  purge in fuel = "2"
 #' #'
 #' #'@param diversification Taking of other species in addition to the main
 #' #'  commercial species (2 levels of commercial species in the
@@ -420,7 +420,7 @@
 #'   }
 #'
 #'   if ((fuel =="2") & any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
-#'     # Hollow trees = fuelwood:
+#'     # Hollow trees = fuel wood:
 #'     inventory <- inventory %>%
 #'       mutate(DeathCause = ifelse(ProbedHollow == "1", "hollowfuel", NA)) # remplacer NA par DeathCause dans le simulateur ONF
 #'

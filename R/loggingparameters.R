@@ -36,9 +36,9 @@
 #'  trail. Default = 30, in degree (double)
 #'@param MaxTreefallOrientation Maximum orientation of the tree fall to the
 #'  trail. Default = 45, in degree (double)
-#'@param TreeHollowPartForFuel Proportion of hollow trees used as fuelwood
+#'@param TreeHollowPartForFuel Proportion of hollow trees used as fuel wood
 #'  . Default = 1/3 (double)
-#'@param Purge Part of the log no used for timber, can be used for fuelwood. Default = 0.14, in m^3 of purge/m^3 of
+#'@param Purge Part of the log no used for timber, can be used for fuel wood. Default = 0.14, in m^3 of purge/m^3 of
 #'  volume of timber harvested. (double)
 #'@param MaxTrailDensity Maximum trail density. Default = 200, in m/ha (double)
 #'  (has no impact on the simulation. A message will be sent to inform if
@@ -104,7 +104,7 @@ loggingparameters <- function(
   MinTreefallOrientation = 30, #in degree
   MaxTreefallOrientation = 45, #in degree
   TreeHollowPartForFuel = 1/3, #Part taken from hollow trees for fuel exploitation
-  Purge = 0.14, # in m^3 of fuelwood/m^3 of logged trees
+  Purge = 0.14, # in m^3 of fuel wood/m^3 of logged trees
   MaxTrailDensity = 200, #in m/ha
   MaxLandingArea = 1500, #in square meters
 

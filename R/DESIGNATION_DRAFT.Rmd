@@ -410,7 +410,7 @@ VolumewithHollowslost <- sum(HarvestableTable$TreeHarvestableVolume) #128.5047. 
 VO - VolumewithHollowslost #34 m3 lost: the bonus is therefore generous here (37.5 m3 of bonus).
 
 if (scenario == "RIL3fuelhollow"| (scenario == "manual"& fuel =="2")) {
-  # Hollow trees = fuelwood:
+  # Hollow trees = fuel wood:
   inventoryH <- inventoryG %>%
     mutate(DeathCause = ifelse(ProbedHollow == "1", "hollowfuel", NA)) # remplacer NA par DeathCause dans le simulateur ONF
   
