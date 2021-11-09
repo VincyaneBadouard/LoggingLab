@@ -31,6 +31,10 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
+      - name: Install librarires
+        run: |
+          sudo apt-get install libglpk-dev
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
