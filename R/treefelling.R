@@ -282,7 +282,7 @@ treefelling <- function(
 
   DeadTrees <- suppressWarnings(sf::st_intersection(
     st_as_sf(inventory, coords = c("Xutm", "Yutm")),
-    sf::st_buffer(getgeometry(felttrees, TreePolygon), dist = 0) # buffer to avoid self-intersection
+    sf::st_make_valid(getgeometry(felttrees, TreePolygon)) # buffer to avoid self-intersection
   )) %>%
     add_column(DeadTrees = "1") %>%
     select(idTree, DeadTrees)
