@@ -125,8 +125,14 @@ test_that("selected", {
                  "You have chosen to continue logging in this case")
 
   ## if ((!specieslax & !objectivelax) | (diversification && !objectivelax))
-  inventory <- harvestable(inventory0,
-                           diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope)$inventory
+
+
+  harvestableOutputs <- harvestable(inventory0,
+                           diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope)
+
+  inventory <- harvestableOutputs$inventory
+  HVinit <- harvestableOutputs$HVinit
+
 
   expect_error(suppressMessages(selected(inventory, scenario = "manual", fuel = "0",
                                          diversification = TRUE, objectivelax = FALSE,
@@ -148,7 +154,7 @@ test_that("selected", {
   TestDBHUp <- testinventory %>%
     dplyr::filter(LoggingStatus =="harvestableUp")
 
-  expect_true(any(TestUp$LoggingStatus =="harvestableUp")) # There are harvestableUp among the Commercial = "1"
+  expect_true(any(TestUp$LoggingStatus == "harvestableUp")) # There are harvestableUp among the Commercial = "1"
   expect_true(all(TestDBHUp$DBH >= TestDBHUp$UpMinFD)) # DBH >= UpMinFD
   expect_true(all(TestDBHUp$Up =="1")) #  Up = "1"
 

@@ -90,7 +90,7 @@
 #
 # DeadTrees <- sf::st_intersection(
 #   st_as_sf(inventory, coords = c("Xutm", "Yutm")), # getgeometry(neigbour, Crowns)
-#   sf::st_buffer(getgeometry(felttrees, TreePolygon), dist = 0)
+#   sf::st_make_valid(getgeometry(felttrees, TreePolygon)) # buffer to avoid self-intersection
 # ) %>%
 #   add_column(DeadTrees = "1") %>%
 #   select(idTree, DeadTrees)

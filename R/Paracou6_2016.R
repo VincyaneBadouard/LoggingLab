@@ -42,8 +42,8 @@
 #'   been corrected, multiple values are possible(character)}
 #'   ...
 #' }
-#' @source \url{http://paracou.cirad.fr ;
-#' https://paracoudata.cirad.fr/public/pdf/Paracou_data_dictionnary.pdf}
+#' @source \url{http://paracou.cirad.fr} ;
+#' \url{https://paracoudata.cirad.fr/public/pdf/Paracou_data_dictionnary.pdf}
 #'
 #' EcoFoG::Guyafor2df(
 #' WHERE = "Forest='Paracou' AND Plot='6' AND CensusYear=2016",

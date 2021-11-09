@@ -113,7 +113,8 @@ test_that("treefelling", {
 
     DeadTrees <- suppressWarnings(sf::st_intersection(
       sf::st_as_sf(testinventory, coords = c("Xutm", "Yutm")), # all the inventory trees
-    getgeometry(felttrees, TreePolygon) # felt trees
+      sf::st_make_valid(getgeometry(felttrees, TreePolygon)) # "make valid" to avoid self-intersection
+      # felt trees
   )) %>%
       dplyr::filter(is.na(TreePolygon)) %>%
       # dplyr::filter(Selected != "1"| is.na(Selected)) %>% # not already cutted trees
