@@ -543,7 +543,7 @@ ggplot() +
   geom_sf(data = sf::st_as_sf(Future, coords = c("Xutm", "Yutm")), colour = "pink")
 
 sf::st_intersection( # trees under the fallen trees
-  sf::st_make_valid(getgeometry(felttrees, TreePolygon)), # "make valid" to avoid self-intersection
+  sf::st_make_valid(getgeometry(inventory, TreePolygon)), # "make valid" to avoid self-intersection
   sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))
 ) %>%
   ggplot() +

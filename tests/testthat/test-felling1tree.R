@@ -26,7 +26,7 @@ test_that("felling1tree", {
                       ,ncol=2, byrow=TRUE))
 
   PolList = list(pol1,pol2)
-  ScndTrail <- st_multipolygon(PolList)
+  ScndTrail <- sf::st_multipolygon(PolList)
 
 
   inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
@@ -115,7 +115,7 @@ test_that("felling1tree", {
   expect_error(felling1tree(dat,
                             fuel = "2", directionalfelling = "2",
                             advancedloggingparameters = loggingparameters(),
-                            MainTrail = st_as_text(MainTrail), ScndTrail = st_as_text(ScndTrail)),
+                            MainTrail = sf::st_as_text(MainTrail), ScndTrail = sf::st_as_text(ScndTrail)),
                regexp = "The 'MainTrail' and 'ScndTrail' arguments of the 'felling1tree' function must be sfg")
 
 
@@ -141,7 +141,7 @@ test_that("felling1tree", {
 
   for(rslt in RsltList){
 
-    Arrival <- st_point(as.numeric(unlist( # sfc to sfg
+    Arrival <- sf::st_point(as.numeric(unlist( # sfc to sfg
       sf::st_centroid(rslt$FallenTree))))
 
     OrientationA <- as.numeric(matlib::angle(c(rslt$TrailPt[1] - rslt$TrailPt[1], (rslt$TrailPt[2]+10) - rslt$TrailPt[2]),
@@ -158,7 +158,7 @@ test_that("felling1tree", {
 
     OrientationD <- as.numeric(matlib::angle(c(rslt$TrailPt[1] - (rslt$TrailPt[1]+10), rslt$TrailPt[2] - rslt$TrailPt[2]),
                                              c(Arrival[1] - rslt$Foot[1], Arrival[2] - rslt$Foot[2]),
-                                             degree = TRUE)) # horizontal trai
+                                             degree = TRUE)) # horizontal trail
 
 
 
@@ -168,7 +168,7 @@ test_that("felling1tree", {
 
 
 
-  Arrival <- st_point(as.numeric(unlist( # sfc to sfg
+  Arrival <- sf::st_point(as.numeric(unlist( # sfc to sfg
     sf::st_centroid(Rslt2grapple$FallenTree))))
 
   OrientationA <- as.numeric(matlib::angle(c(Rslt2grapple$TrailPt[1] - Rslt2grapple$TrailPt[1], (Rslt2grapple$TrailPt[2]+10) - Rslt2grapple$TrailPt[2]),
