@@ -34,7 +34,6 @@ Suggests:
     knitr,
     kableExtra,
     rmarkdown,
-    igraph, 
     testthat (>= 3.0.4)
 VignetteBuilder: knitr
 Depends: 
