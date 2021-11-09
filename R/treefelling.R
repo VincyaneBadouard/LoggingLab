@@ -61,7 +61,7 @@
 #'
 #'@importFrom dplyr group_by do left_join mutate select
 #'@importFrom tibble add_column
-#'@importFrom sf st_as_sf st_as_text st_geometry
+#'@importFrom sf st_as_sf st_as_text st_geometry st_intersection
 #'@importFrom tidyr unnest
 #'
 #' @examples
@@ -282,7 +282,7 @@ treefelling <- function(
 
   DeadTrees <- suppressWarnings(sf::st_intersection(
     st_as_sf(inventory, coords = c("Xutm", "Yutm")),
-    getgeometry(felttrees, TreePolygon)
+    sf::st_buffer(getgeometry(felttrees, TreePolygon), dist = 0)
   )) %>%
     add_column(DeadTrees = "1") %>%
     select(idTree, DeadTrees)

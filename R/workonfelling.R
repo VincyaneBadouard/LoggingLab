@@ -29,7 +29,7 @@
 # inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
 # inventory <- suppressMessages(treeselection(inventory, objective = 30, scenario ="manual",
 #                                             fuel = "2", diversification = TRUE, specieslax = FALSE,
-#                                             objectivelax = FALSE, topography = DTMParacou, plotslope = PlotSlope,
+#                                             objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
 #                                             speciescriteria = SpeciesCriteria,
 #                                             advancedloggingparameters = loggingparameters())$inventory)
 #
@@ -71,11 +71,11 @@
 #
 # # Records the felled trees
 # if (!("DeathCause" %in% names(inventory))){
-#   inventory2 <- inventory %>%
+#   inventory <- inventory %>%
 #     add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
 # }
 #
-# inventory2 <- inventory2 %>%
+# inventory <- inventory %>%
 #   mutate(DeathCause = ifelse(is.na(DeathCause) & !is.na(TreePolygon) & ProbedHollow == "0",
 #                              "cutted", DeathCause)) %>% # timber exploitation
 #   mutate(DeathCause = ifelse(is.na(DeathCause) & !is.na(TreePolygon) & ProbedHollow == "1",
@@ -84,26 +84,26 @@
 # # Trees under the fallen trees
 # felttrees <- select(felttrees, -idTree) # to keep the information of the points
 #
-# neigbour <- inventory2 %>%
+# neigbour <- inventory %>%
 #   filter(Selected != "1"| is.na(Selected)) %>%
 #   filter(Selected != "deselected" | is.na(Selected))
 #
 # DeadTrees <- sf::st_intersection(
 #   st_as_sf(inventory, coords = c("Xutm", "Yutm")), # getgeometry(neigbour, Crowns)
-#   getgeometry(felttrees, TreePolygon)
+#   sf::st_buffer(getgeometry(felttrees, TreePolygon), dist = 0)
 # ) %>%
 #   add_column(DeadTrees = "1") %>%
 #   select(idTree, DeadTrees)
 # sf::st_geometry(DeadTrees) <- NULL # remove TreePolygon column (sf to data.frame)
 # DeadTrees <- unique(DeadTrees)
 #
-# inventory3 <- inventory2 %>%
+# inventory <- inventory %>%
 #   left_join(DeadTrees, by = "idTree") %>%
 #   mutate(DeathCause = ifelse(is.na(DeathCause) & is.na(TreePolygon) & DeadTrees == "1",
 #                              "treefall2nd", DeathCause)) %>%  # Damage trees
 #   select(-DeadTrees)
 #
-# treefall2nd <- inventory3 %>%
+# treefall2nd <- inventory %>%
 #   filter(DeadTrees == "1")
 #
 # sf::st_intersection( # trees under the fallen trees
