@@ -81,7 +81,6 @@
 #'@importFrom dplyr filter mutate select left_join bind_rows
 #'@importFrom sf st_as_sf st_point
 #'@importFrom raster crs extract
-#'@importFrom topoDistance topoDist
 #'@importFrom methods as
 #'
 #' @examples

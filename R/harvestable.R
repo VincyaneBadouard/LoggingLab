@@ -44,7 +44,6 @@
 #'@importFrom tibble as_tibble add_column
 #'@importFrom sp coordinates proj4string
 #'@importFrom sf st_as_sf st_distance
-#'@importFrom topoDistance topoDist
 #'@importFrom raster crs extract
 #'@importFrom utils setTxtProgressBar txtProgressBar
 #'
