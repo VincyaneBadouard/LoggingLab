@@ -80,12 +80,15 @@ test_that("selected", {
 
 
   # if HVinit < VO
-  VO <- HVinit + 20
 
   ## if (!diversification && specieslax)
-  inventory <- harvestable(inventory0,
-                           diversification = FALSE, specieslax = TRUE, topography = DTMParacou,
-                           plotslope = PlotSlope)$inventory
+  harvestableOutputs <- harvestable(inventory0,
+                                    diversification = FALSE, specieslax = TRUE, topography = DTMParacou,
+                                    plotslope = PlotSlope)
+  inventory <- harvestableOutputs$inventory
+  HVinit <- harvestableOutputs$HVinit
+
+  VO <- HVinit + 20
 
   testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0",
                                              diversification = FALSE, specieslax = TRUE, objectivelax = TRUE, topography = DTMParacou,
@@ -104,9 +107,14 @@ test_that("selected", {
                "By default or because of your choice, the simulation stops")
 
   # if (!diversification && !specieslax && objectivelax)
-  inventory <- harvestable(inventory0,
-                           diversification = FALSE,  specieslax = FALSE,
-                           topography = DTMParacou, plotslope = PlotSlope)$inventory
+  harvestableOutputs <- harvestable(inventory0,
+                                    diversification = FALSE,  specieslax = FALSE,
+                                    topography = DTMParacou, plotslope = PlotSlope)
+  inventory <- harvestableOutputs$inventory
+  HVinit <- harvestableOutputs$HVinit
+
+  VO <- HVinit + 20
+
 
   expect_message(selected(inventory, scenario = "manual", fuel = "0",
                           diversification = FALSE,  specieslax = FALSE, objectivelax = TRUE,
@@ -115,8 +123,12 @@ test_that("selected", {
                  "You have chosen to continue logging without diversifying")
 
   # if (diversification && objectivelax)
-  inventory <- harvestable(inventory0,
-                           diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope)$inventory
+  harvestableOutputs <- harvestable(inventory0,
+                                    diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope)
+  inventory <- harvestableOutputs$inventory
+  HVinit <- harvestableOutputs$HVinit
+
+  VO <- HVinit + 20
 
   expect_message(selected(inventory, scenario = "manual", fuel = "0", diversification = TRUE,
                           objectivelax = TRUE,
@@ -150,13 +162,20 @@ test_that("selected", {
                                              VO = VO, HVinit = HVinit))$inventory
 
   TestUp <- testinventory %>%
-    dplyr::filter(Commercial == "1")
-  TestDBHUp <- testinventory %>%
-    dplyr::filter(LoggingStatus =="harvestableUp")
+    dplyr::filter(Commercial == "1") %>%
+    dplyr::filter(DBH >= UpMinFD & DBH <= MaxFD) %>%
+    dplyr::filter(LoggingStatus != "non-harvestable") %>%
+    dplyr::filter(ProbedHollow == "0")
 
-  expect_true(any(TestUp$LoggingStatus == "harvestableUp")) # There are harvestableUp among the Commercial = "1"
-  expect_true(all(TestDBHUp$DBH >= TestDBHUp$UpMinFD)) # DBH >= UpMinFD
-  expect_true(all(TestDBHUp$Up =="1")) #  Up = "1"
+
+  TestDBHUp <- testinventory %>%
+    dplyr::filter(LoggingStatus == "harvestableUp")
+
+  if(nrow(TestUp)>0){
+    expect_true(all(TestUp$LoggingStatus == "harvestableUp")) # There are harvestableUp among the Commercial = "1"
+    expect_true(all(TestDBHUp$DBH >= TestDBHUp$UpMinFD)) # DBH >= UpMinFD
+    expect_true(all(TestDBHUp$Up =="1")) #  Up = "1"
+  }
 
   ## if (!diversification)
   expect_false(any(TestDBHUp$Commercial == "2")) # no Commercial = "2" among the harvestableUp

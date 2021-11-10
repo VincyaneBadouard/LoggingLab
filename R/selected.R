@@ -366,7 +366,7 @@ selected <- function(
       if (HVupCommercial1 > VO){
 
         inventory <- inventory %>%
-          mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" & Commercial == "2" & DBH >= UpMinFD, #designate preferred individuals of 2nd economic rank species too, when the plot is species-rich.
+          mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" & Commercial == "2" & DBH >= UpMinFD & DBH <= MaxFD, #designate preferred individuals of 2nd economic rank species too, when the plot is species-rich.
                                         "harvestableUp", LoggingStatus))
 
         HarvestableTable <- inventory %>%
