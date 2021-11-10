@@ -38,10 +38,18 @@
 #'  \code{\link{loggingparameters}} (list)
 #'
 #'@return A list with:
-#'  - input inventory with: "DistCrit", "Slope", "SlopeCrit",
-#'  "LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
-#'  "ProbedHollow" new columns (see the outputs metadata in the
-#'  \code{\link{vignette}}).
+#'  - input inventory with new columns:
+#'     - The probability of a tree having visible defects ("VisibleDefectProba")
+#'         and the visible defect trees ("VisibleDefect").
+#'     - The exploitability criteria ("DistCrit", "Slope", "SlopeCrit"), and if
+#'        they are validated for each of the trees ("LoggingStatus").
+#'     - The trees selected for harvesting ("Selected"), if the Minimum
+#'        Felling Diameter (MinFD) of their species has been raised ("Up").
+#'        The cumulative harvestable volume of harvestable trees("VolumeCumSum").
+#'     - The probability of a tree being probed hollow ("ProbedHollowProba")
+#'         and the probed hollow trees ("ProbedHollow").
+#'     - Future and reserve trees (LoggingStatus = "future"/"reserve")
+#'    (see the outputs metadata in the \code{\link{vignette}})
 #'  - the objective volume with or without a bonus (if
 #'  hollow trees exploitation) (VO) for the entire plot
 #'  - the harvestable volume with the initial

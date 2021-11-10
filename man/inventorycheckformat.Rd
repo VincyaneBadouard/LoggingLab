@@ -2,7 +2,7 @@
 % Please edit documentation in R/inventorycheckformat.R
 \name{inventorycheckformat}
 \alias{inventorycheckformat}
-\title{Check the input inventory data for the  "Maria" package}
+\title{Check the input inventory data for the "Maria" package}
 \usage{
 inventorycheckformat(inventory)
 }
@@ -11,6 +11,7 @@ inventorycheckformat(inventory)
 \code{\link{vignette}}) (data.frame)}
 }
 \value{
+The inventory if the inventory is in the required format.
 Stop the function if the format is not the one required.
 }
 \description{

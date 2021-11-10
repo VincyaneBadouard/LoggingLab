@@ -32,9 +32,16 @@
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
-#'@return Input inventory with the trees selected for harvesting (depending on
-#'  the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
-#'  EnergywoodTrees)
+#'@return Input inventory with
+#'- The trees selected for harvesting ("Selected")
+#'- whether the Minimum Felling Diameter (MinFD) of their species has been
+#'   raised ("Up")
+#'- The cumulative harvestable volume of harvestable trees("VolumeCumSum").
+#'- The probability of a tree being probed hollow ("ProbedHollowProba")
+#'   and the probed hollow trees ("ProbedHollow").
+#'See the outputs metadata in the \code{\link{vignette}}
+#'
+#'2 sets of spatial points: (HollowTrees and EnergywoodTrees)
 #'
 #'@details If the harvestable volume is higher than the objective volume, MinFD of
 #'  the 1st economic rank species is increased. If this is not enough and if diversification is allowed,

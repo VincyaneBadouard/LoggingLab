@@ -127,13 +127,6 @@ test_that("selected", {
   ## if ((!specieslax & !objectivelax) | (diversification && !objectivelax))
 
 
-  harvestableOutputs <- harvestable(inventory0,
-                           diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope)
-
-  inventory <- harvestableOutputs$inventory
-  HVinit <- harvestableOutputs$HVinit
-
-
   expect_error(suppressMessages(selected(inventory, scenario = "manual", fuel = "0",
                                          diversification = TRUE, objectivelax = FALSE,
                                          topography = DTMParacou,
@@ -142,6 +135,13 @@ test_that("selected", {
                "By default or because of your choice, the simulation stops")
 
   # if HVinit > VO
+
+  harvestableOutputs <- harvestable(inventory0,
+                                    diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope)
+
+  inventory <- harvestableOutputs$inventory
+  HVinit <- harvestableOutputs$HVinit
+
   VO <- HVinit - 20
   testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0",
                                              diversification = FALSE, objectivelax = FALSE,

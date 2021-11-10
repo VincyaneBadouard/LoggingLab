@@ -59,10 +59,20 @@ objective volume (if stand too poor), = FALSE by default (logical)}
 \value{
 A list with:
 \itemize{
-\item input inventory with: "DistCrit", "Slope", "SlopeCrit",
-"LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
-"ProbedHollow" new columns (see the outputs metadata in the
-\code{\link{vignette}}).
+\item input inventory with new columns:
+\itemize{
+\item The probability of a tree having visible defects ("VisibleDefectProba")
+and the visible defect trees ("VisibleDefect").
+\item The exploitability criteria ("DistCrit", "Slope", "SlopeCrit"), and if
+they are validated for each of the trees ("LoggingStatus").
+\item The trees selected for harvesting ("Selected"), if the Minimum
+Felling Diameter (MinFD) of their species has been raised ("Up").
+The cumulative harvestable volume of harvestable trees("VolumeCumSum").
+\item The probability of a tree being probed hollow ("ProbedHollowProba")
+and the probed hollow trees ("ProbedHollow").
+\item Future and reserve trees (LoggingStatus = "future"/"reserve")
+(see the outputs metadata in the \code{\link{vignette}})
+}
 \item the objective volume with or without a bonus (if
 hollow trees exploitation) (VO) for the entire plot
 \item the harvestable volume with the initial

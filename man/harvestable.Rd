@@ -34,24 +34,21 @@ default (logical)}
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
-Input inventory with the exploitability criteria, and if they are
-validated for each of the trees. The function returns the harvestable volume
-too, in the plot for these criteria.
+Input inventory with the exploitability criteria ("DistCrit", "Slope",
+"SlopeCrit"), and if they are validated for each of the trees
+("LoggingStatus"). The function returns the harvestable volume too, in the
+plot for these criteria.
 }
 \description{
 The function tells you the harvestable volume in the plot, and
 which trees are harvestable according to your harvestability criteria
 }
 \details{
-Trees will be designated as "\strong{harvestable}" if they:
-\itemize{
-\item belonging to species of 1st economic rank or more if diversification
-\item DBH between the MinFD and the MaxFD.
-\item not isolated ( >100m ('IsolateTreeMinDistance') from other individuals of
-the same species)
-\item on slopes < 22\% ('TreeMaxSlope')
-\item off the main tracks.
-}
+Trees will be designated as "\strong{harvestable}" if they: - belonging to
+species of 1st economic rank or more if diversification - DBH between the
+MinFD and the MaxFD. - not isolated ( >100m ('IsolateTreeMinDistance') from
+other individuals of the same species) - on slopes < 22\% ('TreeMaxSlope') -
+off the main tracks.
 }
 \examples{
 

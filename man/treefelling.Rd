@@ -38,8 +38,14 @@ reserve trees and to position the log relative to the track)}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-"Shadow" polygons + "TreefallSuccess", "TreefallFailure",
-"DamageTreesPoints", "DeadTreesPoints" vectors
+Input inventory with new columns:
+\itemize{
+\item The tree felling success or fail("TreeFellingOrientationSuccess")
+\item The crowns of all the trees in the inventory  (Polygon)
+\item The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
+according to the chosen scenario
+\item The dead trees under felled trees (DeathCause = "treefall2nd")
+}
 }
 \description{
 Tree felling

@@ -14,7 +14,7 @@ rotatepolygon(p, angle, fixed)
 \item{fixed}{Fix point around which the polygon will be rotated (POINT)}
 }
 \value{
-The polygon (sfc_POLYGON) rotated
+The polygon (sfc_POLYGON) rotated.
 }
 \description{
 Rotate the input polygon with a given angle and around a fix point.

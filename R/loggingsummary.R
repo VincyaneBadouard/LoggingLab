@@ -2,7 +2,7 @@
 #'
 #' @param x Outputs of the loggingsimulation function (list)
 #'
-#' @return a summary of the outputs of the loggingsimulation function:
+#' @return A summary of the outputs of the loggingsimulation function:
 #' - a reminder of the inputs
 #' - the outgoing figures
 #' - a print of the output inventory

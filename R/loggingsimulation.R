@@ -62,7 +62,8 @@
 #'@param iter Number of iterations (numeric). Default = 1.
 #'@param cores Number of cores for parallelization (numeric). Default = 1.
 #'
-#'@return Input inventory (data.frame) with logging informations.
+#'@return Input inventory (data.frame) with logging informations
+#'(see the outputs metadata in the \code{\link{vignette}}).
 #'
 #'@seealso \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{ForestZoneVolumeParametersTable}},

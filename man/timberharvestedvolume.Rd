@@ -27,10 +27,11 @@ hollow trees, damage and and unused part of the log for fuel = "2"}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-A list with the logged volume (TimberLoggedVolume) and when fuel =
-"2", the logged volume without the hollow trees
-(NoHollowTimberLoggedVolume). NoHollowTimberLoggedVolume is the logged
-volume (TimberLoggedVolume) when fuel = "0" or "1".
+A list with the logged volume (TimberLoggedVolume)
+and when fuel = "2", the logged volume without the hollow trees
+(NoHollowTimberLoggedVolume).
+NoHollowTimberLoggedVolume is the logged volume (TimberLoggedVolume)
+when fuel = "0" or "1".
 }
 \description{
 Compute the timber harvested volume

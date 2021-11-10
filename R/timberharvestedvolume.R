@@ -14,10 +14,11 @@
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
 #'
-#' @return A list with the logged volume (TimberLoggedVolume) and when fuel =
-#'   "2", the logged volume without the hollow trees
-#'   (NoHollowTimberLoggedVolume). NoHollowTimberLoggedVolume is the logged
-#'   volume (TimberLoggedVolume) when fuel = "0" or "1".
+#' @return A list with the logged volume (TimberLoggedVolume)
+#' and when fuel = "2", the logged volume without the hollow trees
+#'   (NoHollowTimberLoggedVolume).
+#'   NoHollowTimberLoggedVolume is the logged volume (TimberLoggedVolume)
+#'   when fuel = "0" or "1".
 #'
 #' @details When fuel is "2", by default, 2/3 of the log of a hollow tree will
 #'   be usable as timber and 1/3 as fuel wood ('TreeHollowPartForFuel'). When

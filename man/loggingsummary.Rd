@@ -10,7 +10,7 @@ loggingsummary(x)
 \item{x}{Outputs of the loggingsimulation function (list)}
 }
 \value{
-a summary of the outputs of the loggingsimulation function:
+A summary of the outputs of the loggingsimulation function:
 \itemize{
 \item a reminder of the inputs
 \item the outgoing figures

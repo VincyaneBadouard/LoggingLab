@@ -1,4 +1,4 @@
-#' Harvestable trees identification
+#'Harvestable trees identification
 #'
 #'@description The function tells you the harvestable volume in the plot, and
 #'  which trees are harvestable according to your harvestability criteria
@@ -22,17 +22,16 @@
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
 #'
-#'@return Input inventory with the exploitability criteria, and if they are
-#'  validated for each of the trees. The function returns the harvestable volume
-#'  too, in the plot for these criteria.
+#'@return Input inventory with the exploitability criteria ("DistCrit", "Slope",
+#'  "SlopeCrit"), and if they are validated for each of the trees
+#'  ("LoggingStatus"). The function returns the harvestable volume too, in the
+#'  plot for these criteria.
 #'
-#'@details Trees will be designated as "**harvestable**" if they:
-#'  - belonging to species of 1st economic rank or more if diversification
-#'  - DBH between the MinFD and the MaxFD.
-#'  - not isolated ( >100m ('IsolateTreeMinDistance') from other individuals of
-#'   the same species)
-#'  - on slopes < 22% ('TreeMaxSlope')
-#'  - off the main tracks.
+#'@details Trees will be designated as "**harvestable**" if they: - belonging to
+#'  species of 1st economic rank or more if diversification - DBH between the
+#'  MinFD and the MaxFD. - not isolated ( >100m ('IsolateTreeMinDistance') from
+#'  other individuals of the same species) - on slopes < 22% ('TreeMaxSlope') -
+#'  off the main tracks.
 #'
 #'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{DTMParacou}}, \code{\link{PlotSlope}},

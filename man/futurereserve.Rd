@@ -22,8 +22,9 @@ the same format as \code{\link{SpeciesCriteria}} (data.frame)}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-input inventory with selected future and reserve trees, for your
-logging criteria (\code{\link{SpeciesCriteria}})
+input inventory with selected future and reserve trees
+(LoggingStatus = "future"/"reserve"),
+for your logging criteria (\code{\link{SpeciesCriteria}})
 }
 \description{
 Future & reserve trees designation

@@ -51,9 +51,18 @@ objective volume (if stand too poor), = FALSE by default (logical)}
 \code{\link{loggingparameters}} (list) MainTrail (multiline)}
 }
 \value{
-Input inventory with the trees selected for harvesting (depending on
-the logging scenario chosen), and 2 sets of spatial points: (HollowTrees and
-EnergywoodTrees)
+Input inventory with
+\itemize{
+\item The trees selected for harvesting ("Selected")
+\item whether the Minimum Felling Diameter (MinFD) of their species has been
+raised ("Up")
+\item The cumulative harvestable volume of harvestable trees("VolumeCumSum").
+\item The probability of a tree being probed hollow ("ProbedHollowProba")
+and the probed hollow trees ("ProbedHollow").
+See the outputs metadata in the \code{\link{vignette}}
+}
+
+2 sets of spatial points: (HollowTrees and EnergywoodTrees)
 }
 \description{
 Selection of trees to log

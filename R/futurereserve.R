@@ -10,8 +10,9 @@
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
 #'
-#' @return input inventory with selected future and reserve trees, for your
-#'   logging criteria (\code{\link{SpeciesCriteria}})
+#' @return input inventory with selected future and reserve trees
+#' (LoggingStatus = "future"/"reserve"),
+#' for your logging criteria (\code{\link{SpeciesCriteria}})
 #'
 #' @details **Future** trees are all trees satisfying the following conditions:
 #'  - species of 1st economic rank

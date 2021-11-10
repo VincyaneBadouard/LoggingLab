@@ -83,7 +83,8 @@ and its species, genus or family. (data.frame)}
 \item{cores}{Number of cores for parallelization (numeric). Default = 1.}
 }
 \value{
-Input inventory (data.frame) with logging informations.
+Input inventory (data.frame) with logging informations
+(see the outputs metadata in the \code{\link{vignette}}).
 }
 \description{
 This function allows to simulate a timber and wood energy logging

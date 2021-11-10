@@ -22,8 +22,12 @@
 #'  \code{\link{loggingparameters}} (list)
 #'
 #'
-#'@return "Shadow" polygons + "TreefallSuccess", "TreefallFailure",
-#'  "DamageTreesPoints", "DeadTreesPoints" vectors
+#'@return Input inventory with new columns:
+#'- The tree felling success or fail("TreeFellingOrientationSuccess")
+#'- The crowns of all the trees in the inventory  (Polygon)
+#'- The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
+#'   according to the chosen scenario
+#'- The dead trees under felled trees (DeathCause = "treefall2nd")
 #'
 #'@details The felling of the tree creates a tree (including crown) on the
 #' ground, with dimensions calculated with specific allometries
@@ -439,7 +443,7 @@ directionalfellingsuccessdef <- function(
 #' @param angle Angle in degrees in the clockwise direction (numeric)
 #' @param fixed Fix point around which the polygon will be rotated (POINT)
 #'
-#' @return The polygon (sfc_POLYGON) rotated
+#' @return The polygon (sfc_POLYGON) rotated.
 #' @export
 #' @importFrom nngeo st_ellipse
 #' @importFrom sf st_polygon st_coordinates st_sfc st_difference st_union
