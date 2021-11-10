@@ -162,8 +162,8 @@ test_that("felling1tree", {
 
 
 
-    expect_true((OrientationA >= 30 & OrientationA <= 45) | (OrientationB >= 30 & OrientationB <= 45)|
-                  (OrientationC >= 30 & OrientationC <= 45) | (OrientationD >= 30 & OrientationD <= 45))
+    expect_true((OrientationA >= 29.9 & OrientationA <= 45) | (OrientationB >= 29.9 & OrientationB <= 45)|
+                  (OrientationC >= 29.9 & OrientationC <= 45) | (OrientationD >= 29.9 & OrientationD <= 45))
   }
 
 
