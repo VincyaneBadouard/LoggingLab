@@ -1,9 +1,10 @@
 #' HarvestableAreaDefinition
 #'
 #' @param plot Studied plots (sf data.frame)
-#' @param DEM Digital elevation model (raster)
-#' @param HCrique Relative elevation from nearest channel network (raster)
+#' @param dtm Digital terrain model (raster)
+#' @param verticalcreekheight Relative elevation from nearest channel network (raster)
 #' @param advancedloggingparameters Other parameters of the logging simulator
+#'   \code{\link{loggingparameters}} (list)
 #'
 #' @return A collection of polygones defined as 1 : harvestable area / 0 : non-harvestable area
 #'
@@ -14,8 +15,14 @@
 #' @import dplyr
 #'
 #' @examples
+#' data(Plots)
+#' data(DTMParacou)
+#' data(VerticalCreekHeight)
 #'
-#' ExploitPolygones <- HarvestableAreaDefinition(plot = Plots,DEM = DEM,verticalcreekheight = VerticalCreekHeight)
+#'
+#'ExploitPolygones <- HarvestableAreaDefinition(plot = Plots,
+#'                                              dtm = DTMParacou,
+#'                                              verticalcreekheight = VerticalCreekHeight)
 #'
 HarvestableAreaDefinition <- function(plot = Plots,
                                       dtm = DTMParacou,
