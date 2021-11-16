@@ -10,9 +10,9 @@
 #'
 #' @export
 #'
-#' @import sf
-#' @importFrom  raster mask terrain rasterFromXYZ rasterToPolygons
-#' @import dplyr
+#' @importFrom  sf st_as_sf st_cast
+#' @importFrom  raster mask terrain rasterFromXYZ rasterToPolygons rasterToPoints
+#' @importFrom  dplyr as_tibble left_join rename mutate if_else
 #'
 #' @examples
 #' data(Plots)
@@ -43,25 +43,25 @@ HarvestableAreaDefinition <- function(plot,
                            #   mask = plot) # Mask verticalcreekheight raster by plot
 
   # Slope Calculation
-  PlotSlope <- raster::terrain(dtm,
-                               opt = "slope",
-                               units = 'radians',
-                               neigbors = 8)
+  PlotSlope <- terrain(dtm,
+               opt = "slope",
+               units = 'radians',
+               neighbors = 8)
   # RastersToPoints
 
   PlotSlopePoint <-
-    dplyr::as_tibble(raster::rasterToPoints(PlotSlope))
+    as_tibble(rasterToPoints(PlotSlope))
 
   CreekVHeightPlotPoint <-
-    dplyr::as_tibble(raster::rasterToPoints(verticalcreekheight))
+    as_tibble(rasterToPoints(verticalcreekheight))
 
   # Join tibbles by x and y
   PlotTib <-
-    dplyr::left_join(PlotSlopePoint, CreekVHeightPlotPoint, by = c('x', 'y'))
+    left_join(PlotSlopePoint, CreekVHeightPlotPoint, by = c('x', 'y'))
 
     SlpCrit <- atan(advancedloggingparameters$MaxAreaSlope/100)
 
-  PlotTib %>% dplyr::rename("CreekVHeight" = names(PlotTib[4]))  %>%
+  PlotTib %>% rename("CreekVHeight" = names(PlotTib[4]))  %>%
     mutate(Exploit = if_else(
       condition = CreekVHeight > 2 &
         slope <= SlpCrit ,
@@ -74,22 +74,22 @@ HarvestableAreaDefinition <- function(plot,
 
   # transform tibble to raster
   RasterExploit <-
-    raster::rasterFromXYZ(PlotSlopeCreekVHeight, crs = 32622) # set crs to WGS84 UTM 22N
+    rasterFromXYZ(PlotSlopeCreekVHeight, crs = 32622) # set crs to WGS84 UTM 22N
 
   # raster to polygon
   PolygoneExploit <-
-    raster::rasterToPolygons(x = RasterExploit$Exploit,
-                             n = 16,
-                             dissolve = TRUE)
+    rasterToPolygons(x = RasterExploit$Exploit,
+                     n = 16,
+                     dissolve = TRUE)
 
 
 
-  sf_PolygoneExploit <- sf::st_as_sf(PolygoneExploit) # transform PolygonExploit to an sf object
+  sf_PolygoneExploit <- st_as_sf(PolygoneExploit) # transform PolygonExploit to an sf object
 
   # Disaggregate PolygonExploit
 
   ExploitPolygones <-
-    sf::st_cast(x = sf_PolygoneExploit, to = "POLYGON", warn=FALSE)
+    st_cast(x = sf_PolygoneExploit, to = "POLYGON", warn=FALSE)
 
   return(ExploitPolygones)
 
