@@ -22,12 +22,18 @@
 #'
 #'ExploitPolygones <- HarvestableAreaDefinition(plot = Plots,
 #'                                              dtm = DTMParacou,
-#'                                              verticalcreekheight = VerticalCreekHeight)
+#'                                              verticalcreekheight = VerticalCreekHeight,
+#'                                              advancedloggingparameters = loggingparameters())
 #'
-HarvestableAreaDefinition <- function(plot = Plots,
-                                      dtm = DTMParacou,
-                                      verticalcreekheight = VerticalCreekHeight,
-                                      advancedloggingparameters = loggingparameters()) {
+HarvestableAreaDefinition <- function(plot,
+                                      dtm,
+                                      verticalcreekheight,
+                                      advancedloggingparameters) {
+
+  # Variables
+  PlotSlope <- PlotSlopePoint <- CreekVHeightPlotPoint <- PlotTib <- NULL
+  SlpCrit <- PlotSlopeCreekVHeight <- RasterExploit <- PolygoneExploit <- NULL
+  sf_PolygoneExploit <- ExploitPolygones <- CreekVHeight<- slope <-  NULL
 
 
   # Mask rasters by plot
@@ -83,7 +89,7 @@ HarvestableAreaDefinition <- function(plot = Plots,
   # Disaggregate PolygonExploit
 
   ExploitPolygones <-
-    sf::st_cast(x = sf_PolygoneExploit, to = "POLYGON")
+    sf::st_cast(x = sf_PolygoneExploit, to = "POLYGON", warn=FALSE)
 
   return(ExploitPolygones)
 

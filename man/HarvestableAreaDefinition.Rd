@@ -5,10 +5,10 @@
 \title{HarvestableAreaDefinition}
 \usage{
 HarvestableAreaDefinition(
-  plot = Plots,
-  dtm = DTMParacou,
-  verticalcreekheight = VerticalCreekHeight,
-  advancedloggingparameters = loggingparameters()
+  plot,
+  dtm,
+  verticalcreekheight,
+  advancedloggingparameters
 )
 }
 \arguments{
@@ -35,6 +35,7 @@ data(VerticalCreekHeight)
 
 ExploitPolygones <- HarvestableAreaDefinition(plot = Plots,
                                              dtm = DTMParacou,
-                                             verticalcreekheight = VerticalCreekHeight)
+                                             verticalcreekheight = VerticalCreekHeight,
+                                             advancedloggingparameters = loggingparameters())
 
 }
