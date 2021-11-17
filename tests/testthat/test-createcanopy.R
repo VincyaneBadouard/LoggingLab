@@ -13,6 +13,10 @@ test_that("createcanopy", {
   expect_error(createcanopy(MatrixInventory),
                regexp = "The 'inventory' argument of the 'createcanopy' function must be a data.frame")
 
+  expect_error(createcanopy(Paracou6_2016),
+               regexp = "CrownDiameter is not part of the inventory columns")
+
+
   # Check output
   expect_s3_class(Rslt, "data.frame")
   expect_type(Rslt$Crowns, "character")

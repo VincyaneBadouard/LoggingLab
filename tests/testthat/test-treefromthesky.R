@@ -6,6 +6,7 @@ test_that("treefromthesky", {
 
   dat <- inventory[1,]
   MatrixInventory <- as.matrix(dat)
+  NoCrown <- Paracou6_2016[1,]
 
   Rslt <- treefromthesky(dat)
 
@@ -18,6 +19,9 @@ test_that("treefromthesky", {
   expect_error(treefromthesky(inventory),
                regexp = "the data.frame given in the 'dat' argument
          of the 'treefromthesky' function must contain only 1 row")
+
+  expect_error(treefromthesky(NoCrown),
+               regexp = "CrownDiameter is not part of the dat columns")
 
 
   # Results class:

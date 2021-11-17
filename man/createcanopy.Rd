@@ -13,7 +13,7 @@ in m) (calculable with the addtreedim function) of each tree
 \code{\link{vignette}})}
 }
 \value{
-A dataframe with a column 'Crowns' containing the ellipses
+A dataframe with a column 'Crowns' containing the circles
 (sfc_POLYGON) as trees crown, with their diameter filled in, representing
 trees from the sky.
 }

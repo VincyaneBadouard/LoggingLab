@@ -11,8 +11,8 @@
 #'  \code{\link{vignette}})
 #'
 #'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
-#'   damage and unused part of logged trees for fuel = "1", exploitation of
-#'   hollow trees, damage and and unused part of the log for fuel = "2"
+#'  damage and unused part of logged trees for fuel = "1", exploitation of
+#'  hollow trees, damage and and unused part of the log for fuel = "2"
 #'
 #'@param diversification TPossibility to log other species in addition to the
 #'  main commercial species (species with a value of 2  for commercial in the
@@ -34,28 +34,33 @@
 #'
 #'@return Input inventory with
 #'- The trees selected for harvesting ("Selected")
-#'- whether the Minimum Felling Diameter (MinFD) of their species has been
-#'   raised ("Up")
+#'- if the Minimum Felling Diameter (MinFD) of their species has been raised
+#'  ("Up")
 #'- The cumulative harvestable volume of harvestable trees("VolumeCumSum").
-#'- The probability of a tree being probed hollow ("ProbedHollowProba")
-#'   and the probed hollow trees ("ProbedHollow").
+#'- The probability of a tree being probed hollow ("ProbedHollowProba") and the
+#'   probed hollow trees ("ProbedHollow").
 #'See the outputs metadata in the \code{\link{vignette}}
 #'
 #'2 sets of spatial points: (HollowTrees and EnergywoodTrees)
 #'
-#'@details If the harvestable volume is higher than the objective volume, MinFD of
-#'  the 1st economic rank species is increased. If this is not enough and if diversification is allowed,
-#'  MinFD of 2nd economic level species is increased.
-#'  Then, the trees to be harvested are chosen in decreasing order
-#'  of volume, until the objective volume is reached.
+#'@details This function allows the selection of trees to be exploited among the
+#'  exploitable trees. It also informs about the trees that were finally found
+#'  to be hollow during the probe. If fuel = 2, the hollow trees will be
+#'  harvested and are therefore included in the objective volume. If fuel = 0 or
+#'  1, the hollow trees will not be exploited, so the function looks for other
+#'  trees to reach the objective volume (if possible).
 #'
-#'  If the harvestable volume is lower than the objective volume, diversification
-#'  can be applied if it
-#'  was not already applied ('specieslax') (trees of all commercial ranks are
-#'  selected in decreasing order of volume until the objective volume is
-#'  reached), or harvesting can continue despite an unreached objective volume,
-#'  or be abandoned ('objectivelax')
-
+#'  If the harvestable volume is higher than the objective volume, MinFD of the
+#'  1st economic rank species is increased.
+#'  If this is not enough and if diversification is allowed, MinFD of 2nd
+#'  economic level species is increased. Then, the trees to be harvested are
+#'  chosen in decreasing order of volume, until the objective volume is reached.
+#'
+#'  If the harvestable volume is lower than the objective volume,
+#'  diversification can be applied if it was not already applied ('specieslax')
+#'  (trees of all commercial ranks are selected in decreasing order of volume
+#'  until the objective volume is reached), or harvesting can continue despite
+#'  an unreached objective volume, or be abandoned ('objectivelax')
 #'
 #'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{DTMParacou}}, \code{\link{loggingparameters}}

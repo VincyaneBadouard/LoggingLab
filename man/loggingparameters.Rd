@@ -18,7 +18,6 @@ loggingparameters(
   MaxMainTrailWidth = 6,
   ScndTrailWidth = 4,
   BigTrees = 50,
-  ObjectiveBonus = 30,
   CableLength = 40,
   GrappleLength = 6,
   IsolateTreeMinDistance = 100,
@@ -79,8 +78,6 @@ side) (double)}
 \item{BigTrees}{Minimum DBH of trees to be avoided by trails. Default =
 50, in cm (double)}
 
-\item{ObjectiveBonus}{Objective bonus. Default = 30, in \% (double)}
-
 \item{CableLength}{Cable length. Default = 40, in m (double)}
 
 \item{GrappleLength}{Grapple length. Default = 6, in m (double)}
@@ -115,28 +112,28 @@ this threshold has been exceeded)}
 this threshold has been exceeded)}
 
 \item{TreeHarvestableVolumeAllometry}{By default, allometry of tree
-harvestable volume, French Guiana ONF formula: aCoef + bCoef x (DBH/100)^2,
+harvestable volume, French Guiana ONF formula: aCoef + bCoef * (DBH/100)^2,
 aCoef and bCoef depend on the forest location, stored in
 \code{\link{ForestZoneVolumeParametersTable}}, DBH in cm. (function)}
 
 \item{TrunkHeightAllometry}{Allometry of trunk height, based on the cylinder
-volume formula: CylinderVolume = pi x ((DBH/100)/2)^2 x H, with the height (H)
+volume formula: CylinderVolume = pi ((DBH/100)/2)^2 * H, with the height (H)
 in m and the DBH in cm (function)}
 
 \item{TreeHeightAllometry}{By default, allometry parameters estimated from
-Guyanese data with the BIOMASS package: ln(H) = 0.07359191 + 1.34241216 x
-ln(DBH) -0.12282344 x ln(DBH)^2, with the height (H) in m and the DBH in
+Guyanese data with the BIOMASS package: ln(H) = 0.07359191 + 1.34241216 *
+ln(DBH) -0.12282344 * ln(DBH)^2, with the height (H) in m and the DBH in
 cm (function)}
 
-\item{CrownDiameterAllometry}{ln(DBH) = 𝜶+ 𝜷 x ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
+\item{CrownDiameterAllometry}{ln(DBH) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
 and mean σ^2 = 0.0295966977 with the crown diameter (CD), the tree height
 (H) in m, and the DBH in cm. (ref)(function)}
 
 \item{RottenModel}{Estimates the tree probability of being probed hollow
-(default: 1 / (1 + exp(-(-5.151 + 0.042 x DBH))) with DBH in cm) (function)}
+(default: 1 / (1 + exp(-(-5.151 + 0.042  DBH))) with DBH in cm) (function)}
 
 \item{VisiblyDefectModel}{Estimates the tree probability to have visible
-defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 x ln(DBH)))) with DBH in cm
+defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 (function)}
 }
 \value{

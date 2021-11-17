@@ -73,8 +73,7 @@ and the probed hollow trees ("ProbedHollow").
 \item Future and reserve trees (LoggingStatus = "future"/"reserve")
 (see the outputs metadata in the \code{\link{vignette}})
 }
-\item the objective volume with or without a bonus (if
-hollow trees exploitation) (VO) for the entire plot
+\item the objective volume (VO) for the entire plot
 \item the harvestable volume with the initial
 criteria (HVinit) for the entire plot
 \item 6 layers of spatial points: harvestable, selected, future and
@@ -87,24 +86,27 @@ Tree selection (trees to be exploited, future and reserve trees)
 \details{
 Trees with visible defects are identified ('VisiblyDefectModel' in
 'advancedloggingparameters' argument) and therefore not designated.
-(Objective volume: If the user has chosen not to harvest hollow probed trees
-for energy ('RottenModel' in 'advancedloggingparameters' argument), 20-30\%
-will be added to the objective volume in order to compensate for these
-designated hollow trees.)
 
 Trees will be designated as "\strong{harvestable}" if they:
 \itemize{
-\item belong to species of 1st economic level (if no diversification) or 1st and 2nd level if (diversification)
+\item belong to species of 1st economic level (if no diversification) or 1st and
+2nd level if (diversification)
 \item have a DBH between MinFD and MaxFD.
-\item are not isolated (> 100m ('IsolateTreeMinDistance') from other individuals of
-the same species)
-\item are on slopes < 22\% ('TreeMaxSlope')
+\item are not isolated (> 100m (default) ('IsolateTreeMinDistance') from other
+individuals of the same species)
+\item are on slopes < 22\% (default) ('TreeMaxSlope')
 \item are off the main tracks.
 }
 
+If fuel = 2, the hollow trees (identified with the "RottenModel"
+(\code{\link{loggingparameters}})) will be harvested and are therefore
+included in the objective volume. If fuel = 0 or 1, the hollow trees will
+not be exploited, so the function looks for other trees to reach the
+objective volume (if possible).
+
 If the harvestable volume is higher than the objective volume, MinFD of
-the 1st economic rank species is increased. If this is not enough and if diversification is allowed,
-MinFD of 2nd economic level species is increased.
+the 1st economic rank species is increased. If this is not enough and if
+diversification is allowed, MinFD of 2nd economic level species is increased.
 Then, the trees to be harvested are chosen in decreasing order
 of volume, until the objective volume is reached.
 
@@ -118,7 +120,7 @@ or be abandoned ('objectivelax')
 \strong{Future} trees are all trees satisfying the following conditions:
 \itemize{
 \item species of 1st economic rank
-\item DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD
+\item DBH between 35cm (default) ('FutureTreesMinDiameter') and the species MinFD
 or UpMinFD if it has been raised for its species.
 }
 

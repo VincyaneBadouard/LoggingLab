@@ -8,7 +8,7 @@ treefromthesky(dat)
 }
 \arguments{
 \item{dat}{1 row data.frame with columns:
-Xutm, Yutm (Tree coordinates), CrownDiameter, CrownHeight}
+"Xutm", "Yutm" (Tree coordinates) and "CrownDiameter".}
 }
 \value{
 A circle (sfc_POLYGON) representing the tree crown, with its diameter

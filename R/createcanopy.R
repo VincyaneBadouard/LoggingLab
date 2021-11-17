@@ -7,7 +7,7 @@
 #'  (data.frame)(see the inputs formats and metadata in the
 #'  \code{\link{vignette}})
 #'
-#'@return A dataframe with a column 'Crowns' containing the ellipses
+#'@return A dataframe with a column 'Crowns' containing the circles
 #'  (sfc_POLYGON) as trees crown, with their diameter filled in, representing
 #'  trees from the sky.
 #'@export
@@ -42,6 +42,9 @@ createcanopy <- function(inventory){
   if(!inherits(inventory, "data.frame"))
     stop("The 'inventory' argument of the 'createcanopy' function must be a data.frame")
 
+  if(!"CrownDiameter" %in% names(inventory)) # check that "CrownDiameter" column exists
+    stop("CrownDiameter is not part of the inventory columns")
+
   # Global variables
   idTree <- Crowns <- . <- NULL
 
@@ -66,7 +69,7 @@ createcanopy <- function(inventory){
 #' treefromthesky
 #'
 #' @param dat 1 row data.frame with columns:
-#' Xutm, Yutm (Tree coordinates), CrownDiameter, CrownHeight
+#' "Xutm", "Yutm" (Tree coordinates) and "CrownDiameter".
 #'
 #' @return A circle (sfc_POLYGON) representing the tree crown, with its diameter
 #'   filled in, representing the tree from the sky.
@@ -101,6 +104,10 @@ treefromthesky <- function(dat){
   if(nrow(dat)!=1)
     stop("the data.frame given in the 'dat' argument
          of the 'treefromthesky' function must contain only 1 row")
+
+  if(!"CrownDiameter" %in% names(dat)) # check that "CrownDiameter" column exists
+    stop("CrownDiameter is not part of the dat columns")
+
 
   # Global variables
   Xutm <- Yutm <- CrownDiameter <- NULL

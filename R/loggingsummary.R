@@ -50,7 +50,7 @@ loggingsummary <- function(x
   # Numeric values:
   # cat('Harvestable area :', x$HarvestableArea, '\n') # harvestable area (m^2)
 
-  cat('Objective volume :', x$VO, '\n') # your objective volume (m^3) with or without a bonus (if hollow trees exploitation)
+  cat('Objective volume :', x$VO, '\n') # your objective volume (m^3)
 
   cat('Initial harvestable volume :', x$HVinit, '\n') # the harvestable volume (m^3) with your initial criteria
 

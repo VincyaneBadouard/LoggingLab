@@ -54,11 +54,11 @@ objective volume (if stand too poor), = FALSE by default (logical)}
 Input inventory with
 \itemize{
 \item The trees selected for harvesting ("Selected")
-\item whether the Minimum Felling Diameter (MinFD) of their species has been
-raised ("Up")
+\item if the Minimum Felling Diameter (MinFD) of their species has been raised
+("Up")
 \item The cumulative harvestable volume of harvestable trees("VolumeCumSum").
-\item The probability of a tree being probed hollow ("ProbedHollowProba")
-and the probed hollow trees ("ProbedHollow").
+\item The probability of a tree being probed hollow ("ProbedHollowProba") and the
+probed hollow trees ("ProbedHollow").
 See the outputs metadata in the \code{\link{vignette}}
 }
 
@@ -68,18 +68,24 @@ See the outputs metadata in the \code{\link{vignette}}
 Selection of trees to log
 }
 \details{
-If the harvestable volume is higher than the objective volume, MinFD of
-the 1st economic rank species is increased. If this is not enough and if diversification is allowed,
-MinFD of 2nd economic level species is increased.
-Then, the trees to be harvested are chosen in decreasing order
-of volume, until the objective volume is reached.
+This function allows the selection of trees to be exploited among the
+exploitable trees. It also informs about the trees that were finally found
+to be hollow during the probe. If fuel = 2, the hollow trees will be
+harvested and are therefore included in the objective volume. If fuel = 0 or
+1, the hollow trees will not be exploited, so the function looks for other
+trees to reach the objective volume (if possible).
 
-If the harvestable volume is lower than the objective volume, diversification
-can be applied if it
-was not already applied ('specieslax') (trees of all commercial ranks are
-selected in decreasing order of volume until the objective volume is
-reached), or harvesting can continue despite an unreached objective volume,
-or be abandoned ('objectivelax')
+If the harvestable volume is higher than the objective volume, MinFD of the
+1st economic rank species is increased.
+If this is not enough and if diversification is allowed, MinFD of 2nd
+economic level species is increased. Then, the trees to be harvested are
+chosen in decreasing order of volume, until the objective volume is reached.
+
+If the harvestable volume is lower than the objective volume,
+diversification can be applied if it was not already applied ('specieslax')
+(trees of all commercial ranks are selected in decreasing order of volume
+until the objective volume is reached), or harvesting can continue despite
+an unreached objective volume, or be abandoned ('objectivelax')
 }
 \examples{
 data(Paracou6_2016)
