@@ -71,7 +71,7 @@
 #'  defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 #'  (function)
 #'
-#'@return A named list of 31 objects.
+#'@return A named list of 30 objects.
 #'
 #'@export
 #'

@@ -137,7 +137,7 @@ defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 (function)}
 }
 \value{
-A named list of 31 objects.
+A named list of 30 objects.
 }
 \description{
 Advanced parameters of the logging simulator

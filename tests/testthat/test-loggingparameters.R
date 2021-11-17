@@ -1,6 +1,6 @@
 test_that("loggingparameters", {
 
-  expect_error(loggingparameters(ObjectiveBonus = "10"),
+  expect_error(loggingparameters(MinDBHValue = "10"),
   regexp = "You have assigned a non-numerical value to one of the arguments of the 'loggingparameters' function
          expects a numerical value.")
 
@@ -10,5 +10,5 @@ test_that("loggingparameters", {
   lp <- loggingparameters()
 
   expect_equal(class(lp), "list")
-  expect_equal(length(lp), 31)
+  expect_equal(length(lp), 30)
 })
