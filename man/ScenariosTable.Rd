@@ -21,7 +21,7 @@ commercial species (logical)}
 
 \item{DirectionalFelling}{Directional felling = "0" (absent), "1" (only to
 avoid damage to future and reserve trees), "2" (avoid damage to future and
-reserve trees + track orientation) (factor)}
+reserve trees + trail orientation) (factor)}
 ...
 }
 }

@@ -36,7 +36,7 @@ same format as \code{\link{SpeciesCriteria}} (data.frame)}
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 \code{\link{vignette}})}
 
-\item{objective}{Objective volume per hectare (numeric)}
+\item{objective}{Objective volume (m^3/ha) (numeric)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of
@@ -61,10 +61,10 @@ A list with:
 \itemize{
 \item input inventory with new columns:
 \itemize{
+\item The exploitability criteria ("DistCrit", "Slope" (in radians), "SlopeCrit"), and if
+they are validated for each of the trees ("LoggingStatus").
 \item The probability of a tree having visible defects ("VisibleDefectProba")
 and the visible defect trees ("VisibleDefect").
-\item The exploitability criteria ("DistCrit", "Slope", "SlopeCrit"), and if
-they are validated for each of the trees ("LoggingStatus").
 \item The trees selected for harvesting ("Selected"), if the Minimum
 Felling Diameter (MinFD) of their species has been raised ("Up").
 The cumulative harvestable volume of harvestable trees("VolumeCumSum").
@@ -84,19 +84,22 @@ reserve, hollow and fuel wood trees
 Tree selection (trees to be exploited, future and reserve trees)
 }
 \details{
-Trees with visible defects are identified ('VisiblyDefectModel' in
-'advancedloggingparameters' argument) and therefore not designated.
-
 Trees will be designated as "\strong{harvestable}" if they:
 \itemize{
 \item belong to species of 1st economic level (if no diversification) or 1st and
 2nd level if (diversification)
 \item have a DBH between MinFD and MaxFD.
-\item are not isolated (> 100m (default) ('IsolateTreeMinDistance') from other
-individuals of the same species)
-\item are on slopes < 22\% (default) ('TreeMaxSlope')
-\item are off the main tracks.
+\item not isolated ( >100m ('IsolateTreeMinDistance' in
+\code{\link{loggingparameters}})) from other individuals of the same
+species in the aggregative species case (\code{\link{SpeciesCriteria}},
+'Aggregative' column).
+\item on slopes < 22\% ('TreeMaxSlope'in \code{\link{loggingparameters}})
+\item off the main trails.
 }
+
+Trees with visible defects are identified ('VisiblyDefectModel' in
+'advancedloggingparameters' argument) among the trees with harvestable
+criteria and are therefore considered 'non-harvestable'.
 
 If fuel = 2, the hollow trees (identified with the "RottenModel"
 (\code{\link{loggingparameters}})) will be harvested and are therefore

@@ -26,9 +26,12 @@ treefelling(
 damage and unused part of logged trees for fuel = "1", exploitation of
 hollow trees, damage and and unused part of the log for fuel = "2"}
 
-\item{directionalfelling}{Directional felling = "0" (absent), "1" (only to
-avoid damage to future and reserve trees), "2" (to avoid damage to future and
-reserve trees and to position the log relative to the track)}
+\item{directionalfelling}{Directional felling =
+"0": only to direct the foot of the tree towards the trail
+"1": to direct the foot of the tree towards the trail + to avoid damage to
+future and reserve trees
+"2": to avoid damage to future and reserve trees + orientation angle
+to the trail}
 
 \item{MainTrail}{Main trail (sfg)}
 
@@ -55,14 +58,11 @@ The felling of the tree creates a tree (including crown) on the
 ground, with dimensions calculated with specific allometries
 ('advancedloggingparameters').
 
-RIL1: random fall
-
-RIL2broken/RIL2:
+RIL1/RIL2broken/RIL2:
 \itemize{
 \item at 40\%: random fall
 \item at 60\% ('TreefallSuccessProportion'):
-priority 1: \emph{base of the tree towards the nearest trail} (main or 2ndary),
-priority 2: avoid futures and reserves.
+\emph{base of the tree towards the nearest trail} (main or 2ndary)
 }
 
 RIL3/RIL3 timber + fuel wood:

@@ -3,14 +3,14 @@
 \docType{data}
 \name{VerticalCreekHeight}
 \alias{VerticalCreekHeight}
-\title{Paracou VerticalCreekHeight}
+\title{Vertical creek height}
 \format{
-A RasterLayer
+A Large RasterLayer
 }
 \usage{
 VerticalCreekHeight
 }
 \description{
-Vertical Creek Height of plot 6 of Paracou (French Guiana) (1 m resolution, 2016)
+Vertical creek height of plot 6 of Paracou (French Guiana) (1 m resolution, 2016)
 }
 \keyword{datasets}

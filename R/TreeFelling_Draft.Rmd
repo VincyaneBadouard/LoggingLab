@@ -572,7 +572,7 @@ if (directionalfelling == "1") {
 # hauteur de l’ellipse
 # diamètre de l’ellipse
 
-## To direct to avoid damage to future and reserve trees + track orientation
+## To direct to avoid damage to future and reserve trees + trail orientation
 if (directionalfelling == "2") {
   
   

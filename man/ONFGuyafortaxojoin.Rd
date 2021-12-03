@@ -25,7 +25,7 @@ Joins a commercial criteria table to a forest inventory
 \examples{
 data(Paracou6_2016)
 data(SpeciesCriteria)
-ONFGuyafortaxojoin(Paracou6_2016, SpeciesCriteria)
+new <- ONFGuyafortaxojoin(Paracou6_2016, SpeciesCriteria)
 
 }
 \seealso{

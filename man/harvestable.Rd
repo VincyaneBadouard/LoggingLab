@@ -31,12 +31,18 @@ commercial species (2 levels of commercial species in the
 default (logical)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
-\code{\link{loggingparameters}} (list) MainTrail (multiline)}
+(\code{\link{loggingparameters}}) (list)}
 }
 \value{
-Input inventory with the exploitability criteria ("DistCrit", "Slope",
-"SlopeCrit"), and if they are validated for each of the trees
-("LoggingStatus"). The function returns the harvestable volume too, in the
+input inventory with new columns:
+\itemize{
+\item The exploitability criteria ("DistCrit", "Slope"(in radians), "SlopeCrit"), and if
+they are validated for each of the trees ("LoggingStatus").
+\item The probability of a tree having visible defects ("VisibleDefectProba")
+and the visible defect trees ("VisibleDefect").
+}
+
+The function returns the harvestable volume too, in the
 plot for these criteria.
 }
 \description{
@@ -44,11 +50,21 @@ The function tells you the harvestable volume in the plot, and
 which trees are harvestable according to your harvestability criteria
 }
 \details{
-Trees will be designated as "\strong{harvestable}" if they: - belonging to
-species of 1st economic rank or more if diversification - DBH between the
-MinFD and the MaxFD. - not isolated ( >100m ('IsolateTreeMinDistance') from
-other individuals of the same species) - on slopes < 22\% ('TreeMaxSlope') -
-off the main tracks.
+Trees will be designated as "\strong{harvestable}" if they:
+\itemize{
+\item belonging to species of 1st economic rank or more if diversification
+\item DBH between the MinFD and the MaxFD.
+\item not isolated ( >100m ('IsolateTreeMinDistance' in
+\code{\link{loggingparameters}})) from other individuals of the same
+species in the aggregative species case (\code{\link{SpeciesCriteria}},
+'Aggregative' column).
+\item on slopes < 22\% ('TreeMaxSlope'in \code{\link{loggingparameters}})
+\item off the main trails.
+}
+
+Trees with visible defects are identified ('VisiblyDefectModel' in
+'advancedloggingparameters' argument) among the trees with harvestable
+criteria and are therefore considered 'non-harvestable'.
 }
 \examples{
 
@@ -65,6 +81,8 @@ inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 plotslope = PlotSlope, diversification = TRUE, specieslax = FALSE,
 advancedloggingparameters = loggingparameters())
+
+new <- harvestableOutputs$inventory
 
 }
 \seealso{

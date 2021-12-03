@@ -12,17 +12,19 @@ HarvestableAreaDefinition(
 )
 }
 \arguments{
-\item{plot}{Studied plots (sf data.frame)}
+\item{plot}{Studied plot (SpatialPolygonsDataFrame)}
 
-\item{dtm}{Digital terrain model (raster)}
+\item{dtm}{Digital terrain model (Large RasterLayer)}
 
-\item{verticalcreekheight}{Relative elevation from nearest channel network (raster)}
+\item{verticalcreekheight}{Relative elevation from nearest channel network
+(Large RasterLayer)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-A collection of polygones defined as 1 : harvestable area / 0 : non-harvestable area
+A collection of polygons defined as 1 : harvestable area, 0 :
+non-harvestable area
 }
 \description{
 HarvestableAreaDefinition
@@ -33,9 +35,10 @@ data(DTMParacou)
 data(VerticalCreekHeight)
 
 
-ExploitPolygones <- HarvestableAreaDefinition(plot = Plots,
+HarvestableArea <- HarvestableAreaDefinition(plot = Plots,
                                              dtm = DTMParacou,
                                              verticalcreekheight = VerticalCreekHeight,
                                              advancedloggingparameters = loggingparameters())
+plot(HarvestableArea)
 
 }

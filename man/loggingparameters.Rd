@@ -83,7 +83,9 @@ side) (double)}
 \item{GrappleLength}{Grapple length. Default = 6, in m (double)}
 
 \item{IsolateTreeMinDistance}{Minimum distance to consider a tree "isolated"
-from other trees of its species. Default = 100, in m (double)}
+from other trees of its species, in the aggregative species case
+(\code{\link{SpeciesCriteria}}, 'Aggregative' column).
+Default = 100, in m (double)}
 
 \item{FutureTreesMinDiameter}{Future trees minimum diameter. Default = 35, in
 cm (double)}
@@ -127,7 +129,7 @@ cm (function)}
 
 \item{CrownDiameterAllometry}{ln(DBH) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
 and mean σ^2 = 0.0295966977 with the crown diameter (CD), the tree height
-(H) in m, and the DBH in cm. (ref)(function)}
+(H) in m, and the DBH in cm. (Aubry-Kientz et al.2019)(function)}
 
 \item{RottenModel}{Estimates the tree probability of being probed hollow
 (default: 1 / (1 + exp(-(-5.151 + 0.042  DBH))) with DBH in cm) (function)}

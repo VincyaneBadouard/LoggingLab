@@ -17,7 +17,7 @@
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  \code{\link{vignette}})
 #'
-#'@param objective Objective volume per hectare (numeric)
+#'@param objective Objective volume (m^3/ha) (numeric)
 #'
 #'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
@@ -39,10 +39,10 @@
 #'
 #'@return A list with:
 #'  - input inventory with new columns:
+#'     - The exploitability criteria ("DistCrit", "Slope" (in radians), "SlopeCrit"), and if
+#'        they are validated for each of the trees ("LoggingStatus").
 #'     - The probability of a tree having visible defects ("VisibleDefectProba")
 #'         and the visible defect trees ("VisibleDefect").
-#'     - The exploitability criteria ("DistCrit", "Slope", "SlopeCrit"), and if
-#'        they are validated for each of the trees ("LoggingStatus").
 #'     - The trees selected for harvesting ("Selected"), if the Minimum
 #'        Felling Diameter (MinFD) of their species has been raised ("Up").
 #'        The cumulative harvestable volume of harvestable trees("VolumeCumSum").
@@ -56,17 +56,20 @@
 #'  - 6 layers of spatial points: harvestable, selected, future and
 #'  reserve, hollow and fuel wood trees
 #'
-#'@details Trees with visible defects are identified ('VisiblyDefectModel' in
-#'  'advancedloggingparameters' argument) and therefore not designated.
-#'
-#'  Trees will be designated as "**harvestable**" if they:
+#'@details Trees will be designated as "**harvestable**" if they:
 #'  - belong to species of 1st economic level (if no diversification) or 1st and
 #'     2nd level if (diversification)
 #'  - have a DBH between MinFD and MaxFD.
-#'  - are not isolated (> 100m (default) ('IsolateTreeMinDistance') from other
-#'     individuals of the same species)
-#'  - are on slopes < 22% (default) ('TreeMaxSlope')
-#'  - are off the main tracks.
+#'  - not isolated ( >100m ('IsolateTreeMinDistance' in
+#'   \code{\link{loggingparameters}})) from other individuals of the same
+#'   species in the aggregative species case (\code{\link{SpeciesCriteria}},
+#'   'Aggregative' column).
+#'  - on slopes < 22% ('TreeMaxSlope'in \code{\link{loggingparameters}})
+#'  - off the main trails.
+#'
+#'Trees with visible defects are identified ('VisiblyDefectModel' in
+#''advancedloggingparameters' argument) among the trees with harvestable
+#'criteria and are therefore considered 'non-harvestable'.
 #'
 #'  If fuel = 2, the hollow trees (identified with the "RottenModel"
 #'  (\code{\link{loggingparameters}})) will be harvested and are therefore
@@ -231,8 +234,8 @@ treeselection <- function(
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- VisibleDefect <- LogDBH <- NULL
-  ForestZoneVolumeParametersTable <- Genus <- Logged <- VisibleDefectProba <- NULL
+  DeathCause <- DistCrit <- Family <- LogDBH <- NULL
+  ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
@@ -258,27 +261,11 @@ treeselection <- function(
 
   if ("DeathCause" %in% names(inventory)) filter(inventory, is.null(DeathCause)) #select only still alived trees (after MainTrails) NULL ou NA
 
-  inventory <- inventory %>%
-    # Visible defect trees detection:
-    mutate(LogDBH = log(DBH)) %>% # DBH is logged in the model
-
-    mutate(VisibleDefectProba = advancedloggingparameters$VisiblyDefectModel(LogDBH)) %>%  # Proba to have defects for each tree
-
-    # generate either "1" or "0" randomly for each line, depending on the proba associated with the line:
-    rowwise() %>%
-    mutate(VisibleDefect = sample(c(1,0), size = 1, replace = F,
-                                  prob = c(VisibleDefectProba, 1-VisibleDefectProba))) %>% # 1 = visible defects tree, 0 = no visible defects
-    ungroup() %>%
-    mutate(VisibleDefect = as.factor(VisibleDefect))
-
   # Compute the objective volume for the entire surface of the plot
   VO <- objective * unique(inventory$PlotArea)
 
   # Joins commercial criteria to the inventory
   inventory <- ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria)
-
-  VisibleDefectTable <- filter(inventory, VisibleDefect == "1")
-  inventory <- filter(inventory, VisibleDefect == "0") # we continue with just visibly healthy trees
 
   # Harvestable trees identification
   harvestableOutputs <- harvestable(inventory,
@@ -360,12 +347,8 @@ treeselection <- function(
   # where specieslax was not necessary, consider eco2s as non-exploitable:
   inventory <- inventory %>%
     mutate(LoggingStatus = ifelse(HVinit > VO & LoggingStatus == "harvestable2nd", "non-harvestable",
-                                  LoggingStatus)) %>%
-
-    # Add the visible defects trees removed until now
-    bind_rows(VisibleDefectTable) %>%
-    mutate(LoggingStatus = ifelse(VisibleDefect == "1", "non-harvestable",
                                   LoggingStatus))
+
   # OUTPUTS list
   treeselectionOutputs <- list(inventory = inventory,
                                VO = VO,
