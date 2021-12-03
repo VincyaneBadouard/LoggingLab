@@ -76,8 +76,6 @@ test_that("treeselection", {
   # All alived
   if ("DeathCause" %in% names(inventory)) expect_true(all(is.null(DeathCause)))
 
-  # All healthy: expect_true(all(VisibleDefect == "0")) A FAIRE
-
   # Objective Volume:
   objective <- 20
   expected <- objective * unique(inventory$PlotArea)
@@ -104,7 +102,6 @@ test_that("treeselection", {
 # advancedloggingparameters (liste)
 
 # All alived: if ("DeathCause" %in% names(inventory)) expect_true(all(is.null(DeathCause)))
-# All healthy: expect_true(all(VisibleDefect == "0"))
 # Objective Volume: if (scenario == "RIL3fuelhollow"| (scenario == "manual"& fuel =="2")) {expect_true(VO = objective)
 # }else{
 # expect_true(VO = objective + advancedloggingparameters$ObjectiveBonus)

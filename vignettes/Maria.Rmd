@@ -156,9 +156,11 @@ commercial species (2 levels of commercial species in the
 + **winching** : No cable or grapple = "**0**", only **cable** = "**1**", **grapple + cable**
 = "**2**"
 
-+ **directionalfelling** : Directional felling = "**0**" (absent), "**1**" (only to
-avoid damage to future and reserve trees), "**2**" (avoid damage to future and
-reserve trees + track orientation)
++ **directionalfelling** : Directional felling =
+ "0": only to direct the foot of the tree towards the trail
+ "1": to direct the foot of the tree towards the trail + to avoid damage to future and reserve trees
+ "2": to avoid damage to future and reserve trees + orientation angle to the trail
+
 
 + **specieslax** : Allow diversification if stand is too poor, = FALSE by
 default (logical)
@@ -169,7 +171,7 @@ objective volume (if stand too poor), = FALSE by default (logical)
 + **crowndiameterparameters** : Crown diameter allometry parameters table (in
 the same format of \code{\link{ParamCrownDiameterAllometry}}) to compute
 the crown diameter of each tree, depend to its DBH (Diameter at Breast
-Height) and its species, genus or family. (data.frame)
+Height) and its species, genus or family (Aubry-Kientz et al.2019). (data.frame)
 
 + **advancedloggingparameters** : Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)
@@ -208,7 +210,8 @@ kable(ScenariosTable)
 + **Objective bonus** = 30 % (20;30%) 
 + **Cable length** = 40 m 
 + **Grapple length** = 6 m 
-+ **Minimum distance to consider a tree "isolated"** from other trees of its species = 100 m 
++ **Minimum distance to consider a tree "isolated"** from other trees of its species, in the aggregative species case
+(\code{\link{SpeciesCriteria}}, 'Aggregative' column) = 100 m 
 + **Future trees minimum diameter** = 35 cm 
 + **Proportion of successful directional felling events** = 0.6 %
 + **Minimum orientation of the tree fall to the trail** = 30 degree 
@@ -236,7 +239,7 @@ height (H) in m, DBH in cm
 
 + **Crown diameter allometry** (*ref*): ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺,
 with 𝜺~N(0,σ^2) and mean σ^2 = 0.0295966977
-with the crown diameter (CD) and the tree height (H) in m, and the DBH (D) in cm.
+with the crown diameter (CD) and the tree height (H) in m, and the DBH (D) in cm (Aubry-Kientz et al.2019).
 
 + **Rotten model**, estimates the tree probability of being probed hollow:
 1 / (1 + exp(-(-5.151 + 0.042 DBH))), with DBH in cm 
@@ -375,9 +378,10 @@ he will harvest strictly his target volume, without *bonus.*)
 Trees will be designated as "**harvestable**" if they:
 - belonging to species of 1st economic rank or more if diversification
 - DBH between the MinFD and the MaxFD.
-- not isolated ( >100m ('IsolateTreeMinDistance') from other individuals of the same species)
-- on slopes < 22% ('TreeMaxSlope')
-- off the main tracks.
+- not isolated ( >100m ('IsolateTreeMinDistance' in \code{\link{loggingparameters}})) from other individuals of the same
+   species in the aggregative species case (\code{\link{SpeciesCriteria}}, 'Aggregative' column).
+- on slopes < 22% ('TreeMaxSlope'in \code{\link{loggingparameters}})
+- off the main trails.
 
 If the harvestable volume is higher than the objective volume, the MinFD of the 1st economic rank species is first increased, then that of the other species (if diversification), if this is not enough. The volume to be harvested is adjusted if necessary by taking the trees in decreasing order of volume, until the objective volume is reached.
 
@@ -495,11 +499,9 @@ ScndTrail <- sf::st_multipolygon(PolList)
 
 The felling of the tree creates a tree (including crown) on the ground, with dimensions calculated with specific allometries ('advancedloggingparameters').
 
-RIL1: random fall
-
-RIL2broken/RIL2:
+RIL1/RIL2broken/RIL2:
 - at 40%: random fall
-- at 60% ('TreefallSuccessProportion'): priority 1: *base of the tree towards the nearest trail* (main or 2ndary), priority 2: avoid futures and reserves.
+- at 60% ('TreefallSuccessProportion'): *base of the tree towards the nearest trail* (main or 2ndary)
 
 RIL3/RIL3 timber + fuel wood:
 - at 40%: random fall

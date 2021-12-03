@@ -28,7 +28,7 @@
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  \code{\link{vignette}})
 #'
-#'@param objective Objective volume per hectare (numeric)
+#'@param objective Objective volume (m^3/ha) (numeric)
 #'
 #'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
@@ -41,9 +41,12 @@
 #'@param winching No cable or grapple = "0", only cable = "1", grapple + cable =
 #'  "2"
 #'
-#'@param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'  avoid damage to future and reserve trees), "2" (avoid damage to future and
-#'  reserve trees + track orientation)
+#'@param directionalfelling Directional felling =
+#' "0": only to direct the foot of the tree towards the trail
+#' "1": to direct the foot of the tree towards the trail + to avoid damage to
+#'         future and reserve trees
+#' "2": to avoid damage to future and reserve trees + orientation angle
+#'       to the trail
 #'
 #'@param specieslax Allow diversification if stand is too poor, = FALSE by
 #'  default (logical)

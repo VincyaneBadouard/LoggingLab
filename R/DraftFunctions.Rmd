@@ -54,12 +54,14 @@ SpeciesCriteria <- read_csv("D:/VSC Kourou/DATA/SpeciesCriteria.csv",
                                                                                 "1", "2")), MinFD = col_number(),
                                              UpMinFD = col_number(), MaxFD = col_number()),
                             locale = locale(encoding = "Latin1")) %>%
-  separate(ScientificName, sep = " ", into = c("Genus", "Species"), remove = T)
+  separate(ScientificName, sep = " ", into = c("Genus", "Species"), remove = T) %>% 
+  mutate(Aggregative = ifelse(VernName == "Angélique" | VernName == "Gonfolo rose",
+                              TRUE, FALSE))
 # unite(Genus, Species, col = "ScientificName", sep = "_", remove = F)
 
 SpeciesCriteria$VernName <- tolower(SpeciesCriteria$VernName)
 
-usethis::use_data(SpeciesCriteria)
+# usethis::use_data(SpeciesCriteria, overwrite = TRUE)
 ```
 ```{r}
 ScenariosTable <- read_csv("D:/VSC Kourou/DATA/ScenariosTable.csv", 
@@ -67,7 +69,7 @@ ScenariosTable <- read_csv("D:/VSC Kourou/DATA/ScenariosTable.csv",
         "1", "2")), DirectionalFelling = col_factor(levels = c("0", 
         "1", "2"))), trim_ws = TRUE)
 
-usethis::use_data(ScenariosTable)
+# usethis::use_data(ScenariosTable,overwrite = TRUE)
 ```
 
 # Data loading

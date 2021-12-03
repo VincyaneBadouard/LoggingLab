@@ -21,12 +21,16 @@ test_that("harvestable", {
   inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
   inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
-  testinventory1 <- harvestable(inventory,
-                                diversification = T, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)$inventory
-  testinventory2 <- harvestable(inventory,
-                                diversification = F, specieslax = T, topography = DTMParacou, plotslope = PlotSlope)$inventory
-  testinventory3 <- harvestable(inventory,
-                                diversification = F, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)$inventory
+  Outputs1 <- harvestable(inventory,
+                          diversification = T, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)
+  Outputs2 <- harvestable(inventory,
+                          diversification = F, specieslax = T, topography = DTMParacou, plotslope = PlotSlope)
+  Outputs3 <- harvestable(inventory,
+                          diversification = F, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)
+
+  testinventory1 <- Outputs1$inventory
+  testinventory2 <- Outputs2$inventory
+  testinventory3 <- Outputs3$inventory
 
 
   expect_false(any(is.na(testinventory1$LoggingStatus)))
@@ -55,23 +59,31 @@ test_that("harvestable", {
   expect_true(any(testinventory2a$LoggingStatus =="harvestable2nd"))
 
 
-
   # "harvestable": Commercial == "1"  diversification=F & specieslax=F
   testinventory3a <- testinventory3 %>%
     filter(Commercial != "1")
-  expect_true(all(testinventory3a$LoggingStatus =="non-harvestable"))
+  expect_true(all(testinventory3a$LoggingStatus == "non-harvestable"))
 
 
-  # "harvestable": check spatial!! A FAIRE
+  # "harvestable": check spatial!! "DistCrit", "Slope", "SlopeCrit"
+
+  StatialTable <- testinventory1 %>%
+    filter(DBH >= MinFD & DBH <= MaxFD)
+
+  ## Aggregative species individuals are checked for the distance between individuals of the same species
+  AggregativeTable <- StatialTable %>%
+    filter(Aggregative)
+
+  expect_true(all(!is.na(AggregativeTable$DistCrit)))
+  expect_true(all(!is.na(StatialTable$Slope)))
+  expect_true(all(!is.na(StatialTable$SlopeCrit)))
+
 
   # HVinit = sum of "TreeHarvestableVolume" values of "harvestable" trees.
   ## Test data preparation
-  HVinit1 <- harvestable(inventory,
-                         diversification = T, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)$HVinit
-  HVinit2 <- harvestable(inventory,
-                         diversification = F, specieslax = T, topography = DTMParacou, plotslope = PlotSlope)$HVinit
-  HVinit3 <- harvestable(inventory,
-                         diversification = F, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)$HVinit
+  HVinit1 <- Outputs1$HVinit
+  HVinit2 <- Outputs2$HVinit
+  HVinit3 <- Outputs3$HVinit
 
   HarvestableTable1 <- testinventory1 %>%
     filter(LoggingStatus == "harvestable")
@@ -83,6 +95,21 @@ test_that("harvestable", {
   expect_true(HVinit1 == sum(HarvestableTable1$TreeHarvestableVolume))
   expect_true(HVinit2 == sum(HarvestableTable2$TreeHarvestableVolume))
   expect_true(HVinit3 == sum(HarvestableTable3$TreeHarvestableVolume))
+
+  # All healthy:
+  expect_true(all(HarvestableTable1$VisibleDefect == "0"))
+  expect_true(all(HarvestableTable2$VisibleDefect == "0"))
+  expect_true(all(HarvestableTable3$VisibleDefect == "0"))
+
+# Harvestables have the good maximum slope, and good distance between individuals for aggregative species
+  expect_true(all(!HarvestableTable1$DistCrit %in% FALSE))
+  expect_true(all(!HarvestableTable1$DistCrit %in% FALSE))
+  expect_true(all(!HarvestableTable1$DistCrit %in% FALSE))
+
+  expect_true(all(HarvestableTable1$SlopeCrit %in% TRUE))
+  expect_true(all(HarvestableTable1$SlopeCrit %in% TRUE))
+  expect_true(all(HarvestableTable1$SlopeCrit %in% TRUE))
+
 
 })
 

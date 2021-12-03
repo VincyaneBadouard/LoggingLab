@@ -19,9 +19,12 @@ directionalfellingsuccessdef(
 damage and unused part of logged trees for fuel = "1", exploitation of
 hollow trees, damage and and unused part of the log for fuel = "2"}
 
-\item{directionalfelling}{Directional felling = "0" (absent), "1" (only to
-avoid damage to future and reserve trees), "2" (to avoid damage to future and
-reserve trees and to position the log relative to the track)}
+\item{directionalfelling}{Directional felling =
+"0": only to direct the foot of the tree towards the trail
+"1": to direct the foot of the tree towards the trail + to avoid damage to
+future and reserve trees
+"2": to avoid damage to future and reserve trees + orientation angle
+to the trail}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}

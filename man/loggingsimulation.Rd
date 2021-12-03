@@ -47,7 +47,7 @@ volume of each tree, depend to its geographic zone if several locations
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 \code{\link{vignette}})}
 
-\item{objective}{Objective volume per hectare (numeric)}
+\item{objective}{Objective volume (m^3/ha) (numeric)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of
@@ -60,9 +60,12 @@ commercial species (2 levels of commercial species in the
 \item{winching}{No cable or grapple = "0", only cable = "1", grapple + cable =
 "2"}
 
-\item{directionalfelling}{Directional felling = "0" (absent), "1" (only to
-avoid damage to future and reserve trees), "2" (avoid damage to future and
-reserve trees + track orientation)}
+\item{directionalfelling}{Directional felling =
+"0": only to direct the foot of the tree towards the trail
+"1": to direct the foot of the tree towards the trail + to avoid damage to
+future and reserve trees
+"2": to avoid damage to future and reserve trees + orientation angle
+to the trail}
 
 \item{specieslax}{Allow diversification if stand is too poor, = FALSE by
 default (logical)}

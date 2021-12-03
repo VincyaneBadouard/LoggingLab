@@ -20,18 +20,30 @@
 #'  default (logical)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
-#'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
+#'  (\code{\link{loggingparameters}}) (list)
 #'
-#'@return Input inventory with the exploitability criteria ("DistCrit", "Slope",
-#'  "SlopeCrit"), and if they are validated for each of the trees
-#'  ("LoggingStatus"). The function returns the harvestable volume too, in the
+#'@return input inventory with new columns:
+#' - The exploitability criteria ("DistCrit", "Slope"(in radians), "SlopeCrit"), and if
+#'        they are validated for each of the trees ("LoggingStatus").
+#' - The probability of a tree having visible defects ("VisibleDefectProba")
+#'         and the visible defect trees ("VisibleDefect").
+#'
+#' The function returns the harvestable volume too, in the
 #'  plot for these criteria.
 #'
-#'@details Trees will be designated as "**harvestable**" if they: - belonging to
-#'  species of 1st economic rank or more if diversification - DBH between the
-#'  MinFD and the MaxFD. - not isolated ( >100m ('IsolateTreeMinDistance') from
-#'  other individuals of the same species) - on slopes < 22% ('TreeMaxSlope') -
-#'  off the main tracks.
+#'@details Trees will be designated as "**harvestable**" if they:
+#'- belonging to species of 1st economic rank or more if diversification
+#'- DBH between the MinFD and the MaxFD.
+#'- not isolated ( >100m ('IsolateTreeMinDistance' in
+#'   \code{\link{loggingparameters}})) from other individuals of the same
+#'   species in the aggregative species case (\code{\link{SpeciesCriteria}},
+#'   'Aggregative' column).
+#'- on slopes < 22% ('TreeMaxSlope'in \code{\link{loggingparameters}})
+#'- off the main trails.
+#'
+#'Trees with visible defects are identified ('VisiblyDefectModel' in
+#''advancedloggingparameters' argument) among the trees with harvestable
+#'criteria and are therefore considered 'non-harvestable'.
 #'
 #'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{DTMParacou}}, \code{\link{PlotSlope}},
@@ -63,6 +75,8 @@
 #' plotslope = PlotSlope, diversification = TRUE, specieslax = FALSE,
 #' advancedloggingparameters = loggingparameters())
 #'
+#' new <- harvestableOutputs$inventory
+#'
 harvestable <- function(
   inventory,
   topography,
@@ -86,8 +100,8 @@ harvestable <- function(
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
   Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- NULL
-  ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
+  DistCrit <- Family <- VisibleDefect <- VisibleDefectProba <- NULL
+  DeathCause <- ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
@@ -114,39 +128,44 @@ harvestable <- function(
   SlopeTmp <- as_tibble(raster::extract(x = plotslope, y = SpatInventory)) # extracts the slope values for the inventory spatialized points
 
   SpatInventory <- st_as_sf(SpatInventory) %>%  # transforming the spatialized inventory into an sf object
-    add_column(DistCrit = FALSE) # Create a default 'DistCrit' = FALSE column
+    add_column(DistCrit = NA) # Create a default 'DistCrit' = FALSE column
 
   # i = 1
   # ProgressBar <- txtProgressBar(min = 0, max = nrow(SpatInventory),style = 3) # Progression bar
 
-  # Calculating distances between trees of the same species
 
-  for (SpecieI in unique(SpatInventory$ScientificName)) {
+  # Calculating distances between trees of the same species, in aggregative species case
+  AggregativeSp <- unique(filter(SpatInventory, Aggregative)$ScientificName)
 
-    SpatInventorytmp <- SpatInventory %>% # SpatInventorytmp stores only result, that of each turn
-      filter(ScientificName == SpecieI)
+  if(length(AggregativeSp)>0){ # if there are any aggregative species
+    for (SpecieI in AggregativeSp) { # for each sp
 
-    # SpatInventorytmp <- as_Spatial(SpatInventorytmp)
-    # distSp <- topoDist(topography = PlotTopo, pts = SpatInventorytmp) # calculates topo distances
-    # distSp <- as_tibble(distSp)
+      SpatInventorytmp <- SpatInventory %>% # SpatInventorytmp stores only result, that of each turn
+        filter(ScientificName == SpecieI) %>%
+        mutate(DistCrit = FALSE)
 
-    distSp <- st_distance(SpatInventorytmp)
-    units(distSp) <- NULL
-    distSp <- suppressMessages(as_tibble(distSp, .name_repair = "universal"))
+      # SpatInventorytmp <- as_Spatial(SpatInventorytmp)
+      # distSp <- topoDist(topography = PlotTopo, pts = SpatInventorytmp) # calculates topo distances
+      # distSp <- as_tibble(distSp)
 
-    distSp[distSp == 0] <- NA # don't take into account the 0's in the matrix, which are the dist from the tree to itself
-    distSp[distSp == Inf] <- NA # don't take into account the Inf which are the trees outside the plot.
+      distSp <- st_distance(SpatInventorytmp)
+      units(distSp) <- NULL
+      distSp <- suppressMessages(as_tibble(distSp, .name_repair = "universal"))
 
-    for (ind in 1:dim(distSp)[2]) { # '2' for column
-      if (all(is.na(distSp[,ind]))) {FALSE # if all the column contains NA it is an Inf so we don't want it
-      }else{
-        # if the minimum distance to its congeners is < 100, it is exploitable:
-        SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < advancedloggingparameters$IsolateTreeMinDistance
+      distSp[distSp == 0] <- NA # don't take into account the 0's in the matrix, which are the dist from the tree to itself
+      distSp[distSp == Inf] <- NA # don't take into account the Inf which are the trees outside the plot.
+
+      for (ind in 1:dim(distSp)[2]) { # '2' for column
+        if (all(is.na(distSp[,ind]))) {FALSE # if all the column contains NA it is an Inf so we don't want it
+        }else{
+          # if the minimum distance to its congeners is < 100, it is harvestable:
+          SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < advancedloggingparameters$IsolateTreeMinDistance
+        }
+        SpatInventory$DistCrit[SpatInventory$idTree == SpatInventorytmp$idTree[ind]] <- SpatInventorytmp$DistCrit[ind]
+        # i = i+1 # and inform the progress bar
+        # setTxtProgressBar(ProgressBar, i)
       }
-      SpatInventory$DistCrit[SpatInventory$idTree == SpatInventorytmp$idTree[ind]] <- SpatInventorytmp$DistCrit[ind]
-      # i = i+1 # and inform the progress bar
-      # setTxtProgressBar(ProgressBar, i)
-    }
+    } # Calculating distances end
   }
 
 
@@ -177,7 +196,9 @@ harvestable <- function(
   HarverstableConditions <- HarverstableConditions & (inventory$DBH >= inventory$MinFD & inventory$DBH <= inventory$MaxFD) # harvestable individuals, accord by their DBH
 
   # Select spatially
-  HarverstableConditions <- HarverstableConditions & (inventory$DistCrit == TRUE & inventory$SlopeCrit == TRUE) # !is.null(ProspectionUnitCode) &
+  HarverstableConditions <- HarverstableConditions & (
+    (!inventory$DistCrit %in% FALSE) & # take the TRUE and NA values
+      inventory$SlopeCrit %in% TRUE) # !is.null(ProspectionUnitCode) &
   ## in a PU
   ## slope
   ## isolement
@@ -196,9 +217,30 @@ harvestable <- function(
         Commercial == "2",
       "harvestable2nd", LoggingStatus))
 
+
+  # Visible defect trees detection:
+  inventory <- inventory %>%
+    mutate(LogDBH = log(DBH)) %>% # DBH is logged in the model
+
+    mutate(VisibleDefectProba = ifelse(LoggingStatus == "harvestable" | LoggingStatus == "harvestable2nd",
+                                       advancedloggingparameters$VisiblyDefectModel(LogDBH), NA)) %>%  # Proba to have defects for each tree
+
+
+    # generate either "1" or "0" randomly for each line, depending on the proba associated with the line:
+    rowwise() %>%
+    mutate(VisibleDefect = ifelse(!is.na(VisibleDefectProba),
+                                  sample(c(1,0), size = 1, replace = F,
+                                         prob = c(VisibleDefectProba, 1-VisibleDefectProba)), NA)) %>% # 1 = visible defects tree, 0 = no visible defects
+    ungroup() %>%
+    mutate(VisibleDefect = as.factor(VisibleDefect)) %>%
+    mutate(LoggingStatus = ifelse(VisibleDefect %in% "1", "non-harvestable", #& !is.na(VisibleDefect)
+                                  LoggingStatus))
+
+
+  #compute the harvestable volume in the plot for these criteria
   HarvestableTable <- inventory %>%
     filter(LoggingStatus == "harvestable")
-  HVinit <- sum(HarvestableTable$TreeHarvestableVolume) #compute the harvestable volume in the plot for these criteria
+  HVinit <- sum(HarvestableTable$TreeHarvestableVolume)
 
   harvestableOutputs <- list(inventory = inventory, HVinit = HVinit)
 

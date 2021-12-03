@@ -4,7 +4,7 @@
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  \code{\link{vignette}})
 #'
-#'@param objective Objective volume per hectare (numeric)
+#'@param objective Objective volume (m^3/ha) (numeric)
 #'
 #'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
@@ -16,9 +16,13 @@
 #'
 #'@param winching No cable or grapple = "0", cable only = "1", grapple + cable =
 #'  "2"
-#'@param directionalfelling Directional felling = "0" (absent), "1" (only to
-#'  avoid damage to future and reserve trees), "2" (to avoid damage to future and
-#'  reserve trees and to position the log relatively to the track)
+#'
+#'@param directionalfelling Directional felling =
+#' "0": only to direct the foot of the tree towards the trail
+#' "1": to direct the foot of the tree towards the trail + to avoid damage to
+#'         future and reserve trees
+#' "2": to avoid damage to future and reserve trees + orientation angle
+#'       to the trail
 #'
 #'@return A named list of 5 objects.
 #'@export
@@ -98,8 +102,8 @@ scenariosparameters <- function(
   if (is.null(directionalfelling))
     directionalfelling <- switch(scenario,
                                  "RIL1" = "0",
-                                 "RIL2broken" = "1",
-                                 "RIL2" = "1",
+                                 "RIL2broken" = "0",
+                                 "RIL2" = "0",
                                  "RIL3" = "2",
                                  "RIL3fuel" = "2",
                                  "RIL3fuelhollow" = "2"
@@ -118,8 +122,8 @@ scenariosparameters <- function(
 
 # scenario	SpatialDatatype	Winching 	DirectionalFelling 	Objective 	Diversification
 # RIL1	           SRTM	    0	           0	              20-25	         FALSE
-# RIL2broken	    LIDAR	    0	           1	              20-25	         FALSE
-# RIL2	          LIDAR     1	           1	              20-25	         FALSE
+# RIL2broken	    LIDAR	    0	           0	              20-25	         FALSE
+# RIL2	          LIDAR     1	           0	              20-25	         FALSE
 # RIL3	          LIDAR	    2	           2	              25-30	          TRUE
 # RIL3fuel	      LIDAR	    2	           2	              25-30	          TRUE
 # RIL3fuelhollow	LIDAR	    2	           2	              25-30         	TRUE
