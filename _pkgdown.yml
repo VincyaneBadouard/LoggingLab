@@ -1,3 +1,6 @@
-URL: https://github.com/VincyaneBadouard/Maria.git
+URL: https://github.com/VincyaneBadouard/Maria.git # final location of the site
 development:
 mode: auto
+template:
+  bootstrap: 5
+  bootswatch: cerulean # appearance of your site

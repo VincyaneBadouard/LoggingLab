@@ -34,8 +34,8 @@ test_that("directionalfellingsuccessdef", {
 
 
 
-  Random <- directionalfellingsuccessdef(inventory, fuel = "0",directionalfelling = "0", advancedloggingparameters = loggingparameters()) %>%
-    filter(Selected == "1")
+  # Random <- directionalfellingsuccessdef(inventory, fuel = "0",directionalfelling = "0", advancedloggingparameters = loggingparameters()) %>%
+  #   filter(Selected == "1") # For a totally random direction felling
 
   Accessible <- directionalfellingsuccessdef(inventory, fuel = "0",directionalfelling = "2", advancedloggingparameters = loggingparameters()) %>%
     filter(Selected == "1") # Accessible == "1" !!
@@ -47,7 +47,7 @@ test_that("directionalfellingsuccessdef", {
     filter(Selected == "1" | (Selected == "1" & ProbedHollow == "1"))
 
 
-  expect_true(all(Random$TreeFellingOrientationSuccess == "0"))
+  # expect_true(all(Random$TreeFellingOrientationSuccess == "0")) # For a totally random direction felling
 
   TestList <- list(Accessible$TreeFellingOrientationSuccess,
        Damage$TreeFellingOrientationSuccess,

@@ -62,6 +62,8 @@ ONFGuyafortaxojoin <- function(
   VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
+  Aggregative.species <- Aggregative.genus <- NULL
+
 
   # Function
   genuscriteria <- speciescriteria %>% # for economic names that relate to entire genus
