@@ -1,0 +1,341 @@
+---
+title: "AvoidFutRessimpletest"
+author: "Vincyane Badouard"
+date: "10/12/2021"
+output: html_document
+---
+```{r}
+library(Maria)
+library(sf)
+library(dplyr)
+library(nngeo)
+library(ggplot2)
+```
+
+# Steps before the treefeling function
+```{r}
+MainTrail <- sf::st_linestring(matrix(c(286400, 582945,
+                                        286400, 583250,
+                                        286700, 583250,
+                                        286700, 582945,
+                                        286400, 582945) # the return
+                                      ,ncol=2, byrow=TRUE))
+
+pol1 <- list(matrix(c(286503, 583134,
+                      286503, 583240,
+                      286507, 583240,
+                      286507, 583134,
+                      286503, 583134) # the return
+                    ,ncol=2, byrow=TRUE))
+pol2 <- list(matrix(c(286650, 583134,
+                      286650, 583240,
+                      286654, 583240,
+                      286654, 583134,
+                      286650, 583134) # the return
+                    ,ncol=2, byrow=TRUE))
+
+PolList = list(pol1,pol2) #list of lists of numeric matrices
+ScndTrail <- sf::st_multipolygon(PolList)
+
+inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+                        volumeparameters = ForestZoneVolumeParametersTable)
+
+inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
+                                            fuel = "2", diversification = TRUE, specieslax = FALSE,
+                                            objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
+                                            speciescriteria = SpeciesCriteria,
+                                            advancedloggingparameters = loggingparameters())$inventory)
+
+FutureReserveCrowns <- inventory %>% # create an object with future/reserve crowns only
+  dplyr::filter(LoggingStatus == "future" | LoggingStatus == "reserve") %>%
+  createcanopy() %>% # create all inventory crowns in the 'Crowns' column
+  getgeometry(Crowns)
+
+
+inventory <- inventory %>%
+  dplyr::filter(Selected == "1") %>%
+  dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
+                CrownDiameter,Selected, Xutm, Yutm)
+
+dat <- inventory[2,] %>% # just 1 row (1 tree)
+  # force the orientation success for the exemple
+  tibble::add_column(TreeFellingOrientationSuccess = "1")
+```
+
+Our tree to be felled
+```{r}
+dat$Xutm <- 286546.1
+dat$Yutm <- 583029.1
+```
+# A buffer around the Foot
+```{r}
+FootBuffer <- dat %>% 
+  mutate(Points = st_point(c(Xutm, Yutm)) %>% 
+           st_buffer(dist = CrownDiameter/2) %>% 
+           st_cast("MULTIPOINT") %>% 
+           st_sfc())
+
+# Multipoints to points
+FootBuffer <- st_cast(st_sfc(FootBuffer$Points), "POINT", group_or_split = TRUE)
+
+```
+
+2 av/res trees
+```{r}
+FutureReserveCrowns <- FutureReserveCrowns[1:2,]
+
+# at the same y than the tree to be felled
+# 1 on the right side
+FutureReserveCrowns[1,]$Xutm <- dat$Xutm + 30
+FutureReserveCrowns[1,]$Yutm <- dat$Yutm + 10
+
+# 1 on the left side
+FutureReserveCrowns[2,]$Xutm <- dat$Xutm - 30 
+FutureReserveCrowns[2,]$Yutm <- dat$Yutm + 10
+
+# # Re-compute the crown
+st_geometry(FutureReserveCrowns) <- NULL
+
+FutureReserveCrowns <- FutureReserveCrowns %>%
+  createcanopy() %>% # create all inventory crowns in the 'Crowns' column
+  getgeometry(Crowns)
+
+```
+
+# Preliminary steps
+```{r}
+# Function
+Trail <- st_union(MainTrail, ScndTrail) # Our trail will be MainTrail or ScndTrail
+
+# The crown
+Crown <- dat %>%
+  mutate(xCrown = Xutm,
+         yCrown = Yutm + TrunkHeight + CrownHeight/2,
+         exCrown = CrownDiameter/2,
+         eyCrown = CrownHeight/2) %>%
+  st_as_sf(coords = c("xCrown", "yCrown")) # ellipse centroid coordinates
+Crown <- st_ellipse(Crown, Crown$exCrown, Crown$eyCrown) # create the ellipse
+
+# The trunk
+Trunk <- with(dat,
+              st_polygon(list(matrix(c(Xutm-(DBH/100)/2, Yutm,
+                                       Xutm-(DBH/100)/2, Yutm + TrunkHeight,
+                                       Xutm+(DBH/100)/2, Yutm + TrunkHeight,
+                                       Xutm+(DBH/100)/2, Yutm,
+                                       Xutm-(DBH/100)/2, Yutm) # the return
+                                     ,ncol=2, byrow=TRUE))))
+
+# Find the point (TrailPt) on the Trail closest to the location of the tree (Foot)
+Foot <- st_point(c(dat$Xutm,dat$Yutm)) # tree foot point
+
+NearestPoints <- st_nearest_points(Foot, Trail) # from the Foot of the tree to the Trail (linestring)
+
+NearestPoint <- st_cast(NearestPoints, "POINT") # to have start (Foot) and end (TrailPt) points
+TrailPt <- NearestPoint[[2]] # the point (TrailPt) on the Trail closest to the location of the tree (Foot)
+
+# Compute the angle between the tree default position and the shortest way from the foot to the trail
+## Right-hand trail
+if(TrailPt[1] >= Foot[1]){ # x trail > x foot
+  
+  theta <- as.numeric(matlib::angle(c(Foot[1] - Foot[1], dat$TreeHeight),
+                                    c(TrailPt[1] - Foot[1], TrailPt[2] - Foot[2]), degree = TRUE))
+  
+  ## Left-hand trail
+}else if(TrailPt[1] < Foot[1]){ # x trail < x foot
+  
+  theta <- 360 - numeric(matlib::angle(c(Foot[1] - Foot[1], dat$TreeHeight),
+                                       c(TrailPt[1] - Foot[1], TrailPt[2] - Foot[2]), degree = TRUE))
+}
+
+
+## when the tree is on the trail (no angle)
+if(is.na(theta)) theta <- 0
+
+```
+
+# Compute points
+```{r}
+# if (directionalfelling != "0")
+
+### Compute points
+FutResCrownsPoints <- NULL # to start
+FutResDBHPoints <- NULL # to start 
+
+# if the fut/res tree is smaller or of the same height than the tree to be felled: we have to avoid the crown too
+if(any(FutureReserveCrowns$TreeHeight <= dat$TreeHeight)){
+  
+  FutResCrownsPoints <- FutureReserveCrowns %>% 
+    filter(TreeHeight <= dat$TreeHeight) %>% 
+    mutate(Crowns = st_cast(Crowns, "MULTIPOINT")) %>% # polygon to multipoint
+    summarise(Points = st_combine(Crowns)) # several multipoints to 1
+}
+
+# if the fut/res tree is taller than the tree to be felled: we will only avoid it on its DBH
+if(any(FutureReserveCrowns$TreeHeight > dat$TreeHeight)){
+  
+  FutResDBHPoints <- FutureReserveCrowns %>% 
+    filter(TreeHeight > dat$TreeHeight) %>% 
+    rowwise() %>% 
+    mutate(Points = st_point(c(Xutm, Yutm)) %>% 
+             st_buffer(dist = DBH/2) %>% 
+             st_cast("MULTIPOINT") %>% 
+             st_sfc()) %>% 
+    ungroup() %>% 
+    summarise(Points = st_combine(Points)) # several multipoints to 1
+}
+
+# Get all these points back
+if(!is.null(FutResCrownsPoints) & !is.null(FutResDBHPoints)){ # # if smaller and taller trees
+  FutResAllPoints <- bind_rows(FutResCrownsPoints, FutResDBHPoints) %>%
+    summarise(Points = st_combine(Points)) # 2 multipoints to 1
+}
+
+if(!is.null(FutResCrownsPoints) & is.null(FutResDBHPoints)){ # if smaller trees but no tallers
+  FutResAllPoints <- FutResCrownsPoints
+}
+
+if(!is.null(FutResDBHPoints) & is.null(FutResCrownsPoints)){ # if taller trees but no smallers
+  FutResAllPoints <- FutResDBHPoints
+}
+
+# Multipoints to points
+FutResAllPoints <- st_cast(st_sfc(FutResAllPoints$Points), "POINT", group_or_split = TRUE)
+
+```
+
+# Distances and angles
+```{r}
+
+# Only Foots 
+# FutResAllPoints <- FutureReserveCrowns %>% 
+#    select(Xutm, Yutm)
+# 
+# FutResFoots <- st_multipoint(x = as.matrix(FutResAllPoints)) # all the future/reserve trees foot
+# FutResAllPoints <- st_cast(st_sfc(FutResFoots), "POINT", group_or_split = TRUE) # multiple points
+
+# Distances between each of these points and Foot
+FutResDists <- rep(NA, length(FutResAllPoints)) # empty list for distances
+RotationAngle <- rep(NA, length(FutResDists)) # empty list for rotation angles
+OppAngToAvoid <- rep(NA, length(RotationAngle)) # empty list for angles to avoid
+TrailAnglesToAvoid <- rep(NA, length(RotationAngle)) # empty list for angles to avoid
+AnglesToAvoid <- rep(NA, length(RotationAngle)) # empty list for angles to avoid
+
+
+for (FRP in 1:length(FutResAllPoints)) { # for each point
+  FutResDists[[FRP]] <- st_distance(Foot, FutResAllPoints[[FRP]]) # compute the distance for each point
+  
+  # If distances < TreeHeight of the tree to be felled
+  if(FutResDists[[FRP]] < dat$TreeHeight){
+    # sum(FutResDists < dat$TreeHeight) # check av/res trees close to the tree to be felled
+    
+    # Compute the angles to the trail of this points
+    ## 1st: the rotation angle (between the default position of the tree to cut down, and the position to avoid)
+    for (P in 1:length(FootBuffer)) { # for each point of the Foot buffer
+      
+      ### Right-hand fut/res point
+      if(FutResAllPoints[[FRP]][1] >= FootBuffer[[P]][1]){ # x FRP > x foot
+        
+        RotationAngle[[FRP]] <- as.numeric(matlib::angle(
+          c(FootBuffer[[P]][1] - FootBuffer[[P]][1], dat$TreeHeight), # default position
+          c(FutResAllPoints[[FRP]][1] - FootBuffer[[P]][1], FutResAllPoints[[FRP]][2] - FootBuffer[[P]][2]), # position to avoid
+          degree = TRUE))
+        
+        ### Left-hand fut/res point
+      }else if(FutResAllPoints[[FRP]][1] < FootBuffer[[P]][1]){ # x FRP < x foot
+        
+        RotationAngle[[FRP]] <- 360 - as.numeric(matlib::angle(
+          c(FootBuffer[[P]][1] - FootBuffer[[P]][1], dat$TreeHeight), # default position
+          c(FutResAllPoints[[FRP]][1] - FootBuffer[[P]][1], FutResAllPoints[[FRP]][2] - FootBuffer[[P]][2]), # position to avoid
+          degree = TRUE))
+      }
+    }
+    
+    # sum(!is.na(RotationAngle)) # check for how many av/res trees the angle has been computed
+    
+    ## Then the angle to the trail: the angle to avoid
+    OppAngToAvoid[[FRP]] <- RotationAngle[[FRP]] - 180 - theta # valeurs négatives c'est là le prblm
+    TrailAnglesToAvoid[[FRP]] <- 180-(90 + OppAngToAvoid[[FRP]])
+    
+    TrailAnglesToAvoid[[FRP]] <- round(TrailAnglesToAvoid[[FRP]], digits = 0)
+    
+    if(TrailAnglesToAvoid[[FRP]] >= 360) TrailAnglesToAvoid[[FRP]] <- TrailAnglesToAvoid[[FRP]] - 360
+    
+    # Record their angles if there are in the fall zone ([1; 179°])
+    if(TrailAnglesToAvoid[[FRP]] > 1 & TrailAnglesToAvoid[[FRP]] < 179){
+      # any(!is.na(TrailAnglesToAvoid) < 179)
+      
+      AnglesToAvoid[[FRP]] <- TrailAnglesToAvoid[[FRP]]
+      # Plus1 <- AnglesToAvoid + 1
+      # Moins1 <- AnglesToAvoid - 1
+      # Plus2 <- AnglesToAvoid + 2
+      # Moins2 <- AnglesToAvoid - 2 # to add a 2° buffer
+      # AnglesToAvoid <- c(AnglesToAvoid, Plus1, Moins1) #, Plus2, Moins2
+      # sum(!is.na(Plus1)) to check
+      
+    }else{AnglesToAvoid <- NULL} # No angles to avoid
+    
+    # sum(!is.na(AnglesToAvoid)) # check for how many av/res trees the angle has been computed
+  }else{AnglesToAvoid <- NULL} # No angles to avoid
+}
+
+```
+
+
+# Tree felling
+```{r}
+# Drop the tree between [1; 179°] avoiding the angles of the futures/reserves
+if(dat$TreeFellingOrientationSuccess == "1"){
+  
+  TreefallOrientation <- c(1:179) # the a priori fall zone (angles to the trail)
+  TreefallOrientation <- TreefallOrientation[!TreefallOrientation %in% unique(AnglesToAvoid)] # Remove angles (the fut/res trees) to avoid
+  
+  
+  TreefallOrientation <- as.numeric(sample(TreefallOrientation, size = 1)) # only those angles that avoid the fut/res trees
+  
+  
+  OppAng <- 180-(90 + TreefallOrientation) # the angle between the closest position to the trail (90°) and the desired position (desired angle to the trail)
+  
+  ## Right-hand trail
+  if(TrailPt[1] >= Foot[1]){ # x trail > x foot
+    
+    Aangle <- round(as.numeric(180 + OppAng + theta), digits = 0) # Foot oriented
+    
+    ## Left-hand trail
+  }else if(TrailPt[1] < Foot[1]){ # x trail < x foot
+    
+    Aangle <- round(as.numeric(360 - OppAng + theta), digits = 0) # Foot oriented
+  }
+  
+  # Calculate the crown and trunk position
+  FallenTree <- st_difference(st_union( # A configuration (90° to the trail (shortest))
+    rotatepolygon(Trunk, angle = Aangle, fixed = Foot), # turned trunk
+    rotatepolygon(Crown, angle = Aangle, fixed = Foot) # turned crown
+  ))
+  
+}else{ # else random felling
+  RandomAngle <- as.numeric(sample(c(0:359.9), size = 1))
+  
+  FallenTree <- st_difference(st_union(
+    rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk
+    rotatepolygon(Crown, angle = RandomAngle, fixed = Foot) # turned crown
+    ))
+}
+```
+
+# Plot
+```{r}
+ggplot() +
+  geom_sf(data = Foot) +
+  geom_sf(data = Trail) +
+  geom_sf(data = NearestPoints) +
+  geom_sf(data = TrailPt) +
+  geom_sf(data = FallenTree) +
+  geom_sf(data = FutResAllPoints) + # FutureReserveCrowns
+  geom_sf(data = FutResCrownsPoints, col = "green") + # smaller trees
+  geom_sf(data = FutResDBHPoints, col = "pink") +
+  geom_sf(data = FootBuffer)
+
+
+# geom_sf(data = FutResAllPoints, col = "green")
+```
+
