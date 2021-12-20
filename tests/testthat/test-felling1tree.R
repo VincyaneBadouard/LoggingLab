@@ -60,7 +60,7 @@ test_that("felling1tree", {
   dat$Yutm <- 582950
 
   Rslt2grapple <- felling1tree(dat,
-                               fuel = "2", directionalfelling = "2",
+                               fuel = "2", winching = "0", directionalfelling = "2",
                                MainTrail = MainTrail, ScndTrail = ScndTrail,
                                FutureReserveCrowns = FutureReserveCrowns,
                                advancedloggingparameters = loggingparameters())
@@ -70,7 +70,7 @@ test_that("felling1tree", {
   dat$Yutm <- 582960
 
   Rslt2cable <- felling1tree(dat,
-                             fuel = "2", directionalfelling = "2",
+                             fuel = "2", winching = "0", directionalfelling = "2",
                              MainTrail = MainTrail, ScndTrail = ScndTrail,
                              FutureReserveCrowns = FutureReserveCrowns,
                              advancedloggingparameters = loggingparameters())
@@ -78,7 +78,7 @@ test_that("felling1tree", {
 
   # Other cases
   Rslt <- felling1tree(dat,
-                       fuel = "0", directionalfelling = "1",
+                       fuel = "0", winching = "0", directionalfelling = "1",
                        MainTrail = MainTrail, ScndTrail = ScndTrail,
                        FutureReserveCrowns = FutureReserveCrowns,
                        advancedloggingparameters = loggingparameters())
@@ -86,7 +86,7 @@ test_that("felling1tree", {
   RsltList <- list(
 
     Rslt1 <- felling1tree(dat,
-                          fuel = "0", directionalfelling = "2",
+                          fuel = "0", winching = "1", directionalfelling = "2",
                           MainTrail = MainTrail, ScndTrail = ScndTrail,
                           FutureReserveCrowns = FutureReserveCrowns,
                           advancedloggingparameters = loggingparameters()),
@@ -97,7 +97,7 @@ test_that("felling1tree", {
 
   # Check the function arguments
   expect_error(felling1tree(MatrixInventory,
-                            fuel = "0", directionalfelling = "2",
+                            fuel = "0", winching = "0", directionalfelling = "2",
                             advancedloggingparameters = loggingparameters()),
                regexp = "The 'dat' argument of the 'felling1tree' function must be data.frame")
 
@@ -105,24 +105,24 @@ test_that("felling1tree", {
                regexp = "the data.frame given in the 'dat' argument
          of the 'felling1tree' function must contain only 1 row")
 
-  expect_error(felling1tree(dat, directionalfelling = "2",
+  expect_error(felling1tree(dat, winching = "0", directionalfelling = "2",
                             advancedloggingparameters = loggingparameters(),
                             fuel = TRUE),
                regexp = "The 'fuel' argument of the 'felling1tree' function must be '0', '1', '2' or NULL")
 
-  expect_error(felling1tree(dat, fuel = "2",
+  expect_error(felling1tree(dat, fuel = "2", winching = "0",
                             advancedloggingparameters = loggingparameters(),
                             directionalfelling = TRUE),
                regexp = "The 'directionalfelling' argument of the 'felling1tree' function must be '0', '1', '2' or NULL")
 
   expect_error(felling1tree(dat,
-                            fuel = "2", directionalfelling = "2",
+                            fuel = "2", winching = "0", directionalfelling = "2",
                             advancedloggingparameters = loggingparameters(),
                             MainTrail = sf::st_as_text(MainTrail), ScndTrail = sf::st_as_text(ScndTrail)),
                regexp = "The 'MainTrail' and 'ScndTrail' arguments of the 'felling1tree' function must be sfg")
 
 
-  expect_error(felling1tree(dat, fuel = "2",
+  expect_error(felling1tree(dat, fuel = "2", winching = "0",
                             directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
                             advancedloggingparameters = as.matrix(loggingparameters())),
                regexp = "The 'advancedloggingparameters' argument of the 'felling1tree' function must be a list")

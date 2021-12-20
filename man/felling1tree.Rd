@@ -7,6 +7,7 @@
 felling1tree(
   dat,
   fuel,
+  winching,
   directionalfelling,
   MainTrail,
   ScndTrail,
@@ -22,9 +23,15 @@ CrownHeight, DBH, TrunkHeight, TreeHeight, TreeFellingOrientationSuccess}
 damage and unused part of logged trees for fuel = "1", exploitation of
 hollow trees, damage and and unused part of the log for fuel = "2"}
 
-\item{directionalfelling}{Directional felling = "0" (absent), "1" (only to
-avoid damage to future and reserve trees), "2" (to avoid damage to future and
-reserve trees and to position the log relative to the track)}
+\item{winching}{No cable or grapple = "0", only cable = "1", grapple + cable =
+"2"}
+
+\item{directionalfelling}{Directional felling =
+"0": only to direct the foot of the tree towards the trail
+"1": to direct the foot of the tree towards the trail + to avoid damage to
+future and reserve trees if possible
+"2": to avoid damage to future and reserve trees if possible
++ orientation angle to the trail}
 
 \item{MainTrail}{(sfg)}
 
@@ -105,7 +112,7 @@ dat <- inventory[1,] \%>\% # just 1 row (1 tree)
 tibble::add_column(TreeFellingOrientationSuccess = "1")
 
 rslt <- felling1tree(dat,
- fuel = "0", directionalfelling = "2",
+ fuel = "0", winching = "0", directionalfelling = "0",
  MainTrail = MainTrail, ScndTrail = ScndTrail,
  FutureReserveCrowns = FutureReserveCrowns,
  advancedloggingparameters = loggingparameters())

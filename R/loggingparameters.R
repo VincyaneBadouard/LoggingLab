@@ -2,8 +2,8 @@
 #'
 #'@param MinDBHValue Minimum DBH for inclusion in the forest inventory. Default = 10, in cm
 #'  (double)
-#'@param MaxAreaSlope Maximum area slope for inclusion in a logging unit.
-#'  Default = 27, in % (double)
+#'@param MaxAreaSlope Maximum area slope for inclusion in a logging unit
+#'  (harvestable area). Default = 27, in % (double)
 #'@param MaxTrailCenterlineSlope Maximum main & 2nd trail centerline slope.
 #'  Default = 22, in % (double)
 #'@param MaxTrailCrossSlope Maximum main & 2nd trail cross slope. Default = 4,
@@ -14,8 +14,8 @@
 #'  in % (double)
 #'@param PlateauMaxSlope Maximum slope to define an area as a plateau. Default = 5,
 #'  in % (double)
-#'@param SlopeDistance Distance over which the slope is calculated. Default = 6, in m (3m each
-#'  side) (double)
+#'@param SlopeDistance Distance over which the slope is calculated.
+#'  Default = 6, in m (3m each side) (double)
 #'@param WaterSourcesBufferZone Buffer zone around the water sources. Default =
 #'  30, in m (double)
 #'@param MinMainTrailWidth Minimum main trail width. Default = 5, in m (double)
@@ -30,17 +30,17 @@
 #'  (\code{\link{SpeciesCriteria}}, 'Aggregative' column).
 #'  Default = 100, in m (double)
 #'@param FutureTreesMinDiameter Future trees minimum diameter. Default = 35, in
-#'  cm (double)
+#'  cm (future trees are only commercial species of the 1st economic level) (double)
 #'@param TreefallSuccessProportion Proportion of successful directional felling
 #'  events. Default = 0.6 (double)
 #'@param MinTreefallOrientation Minimum orientation of the tree fall to the
 #'  trail. Default = 30, in degree (double)
 #'@param MaxTreefallOrientation Maximum orientation of the tree fall to the
 #'  trail. Default = 45, in degree (double)
-#'@param TreeHollowPartForFuel Proportion of hollow trees used as fuel wood
-#'  . Default = 1/3 (double)
-#'@param Purge Part of the log no used for timber, can be used for fuel wood. Default = 0.14, in m^3 of purge/m^3 of
-#'  volume of timber harvested. (double)
+#'@param TreeHollowPartForFuel Proportion of hollow trees used as fuel wood.
+#'  Default = 1/3 (double)
+#'@param Purge Part of the log no used for timber, can be used for fuel wood.
+#'  Default = 0.14, in m3 of purge/m3 of volume of timber harvested. (double)
 #'@param MaxTrailDensity Maximum trail density. Default = 200, in m/ha (double)
 #'  (has no impact on the simulation. A message will be sent to inform if
 #'  this threshold has been exceeded)
@@ -69,7 +69,7 @@
 #'@param RottenModel Estimates the tree probability of being probed hollow
 #'  (default: 1 / (1 + exp(-(-5.151 + 0.042  DBH))) with DBH in cm) (function)
 #'
-#'@param VisiblyDefectModel Estimates the tree probability to have visible
+#'@param VisiblyDefectModel Estimates the commercial tree probability to have visible
 #'  defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 #'  (function)
 #'

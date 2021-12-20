@@ -8,6 +8,7 @@ treefelling(
   inventory,
   scenario,
   fuel = NULL,
+  winching = NULL,
   directionalfelling = NULL,
   MainTrail,
   ScndTrail,
@@ -26,9 +27,16 @@ treefelling(
 damage and unused part of logged trees for fuel = "1", exploitation of
 hollow trees, damage and and unused part of the log for fuel = "2"}
 
-\item{directionalfelling}{Directional felling = "0" (absent), "1" (only to
-avoid damage to future and reserve trees), "2" (to avoid damage to future and
-reserve trees and to position the log relative to the track)}
+
+\item{winching}{No cable or grapple = "0", only cable = "1", grapple + cable =
+"2"}
+  
+\item{directionalfelling}{Directional felling =
+"0": only to direct the foot of the tree towards the trail
+"1": to direct the foot of the tree towards the trail + to avoid damage to
+future and reserve trees if possible
+"2": to avoid damage to future and reserve trees if possible
++ orientation angle to the trail}
 
 \item{MainTrail}{Main trail (sfg)}
 
@@ -70,27 +78,28 @@ RIL3/RIL3 timber + fuel wood:
 \item at 40\%: random fall
 \item at 60\% ('TreefallSuccessProportion'):
 \itemize{
-\item if RIL3 + fuel & trees < 6 m from the trail and slope <20\% (grapple use):
+\item if trees < 6 m from the trail and slope <20\% (grapple use):
 \itemize{
 \item no particular angle to orientate to the trail,
-only to orient the tree \emph{crown} as close as possible to the trail
+only to orient the tree \emph{base}(\emph{crown} if fuel wood exploitation)
+as close as possible to the trail
 \item priority 1: avoid futures and reserves,
 \item priority 2: conformation allowing skidding back to the main trail
 }
-\item otherwise (RIL3, RIL3 + fuel &
-trees > 6 m from the trail and/or slope >20\%)(cable use):
+\item otherwise (trees > 6 m from the trail and/or slope >20\%)(cable use):
 \itemize{
-\item 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
+\item 30-45◦ (default) orientation
+('MinTreefallOrientation'; 'MaxTreefallOrientation')
 \item \emph{base} to nearest trail
-\item priority 1: avoid futures and reserves
-\item priority 2: conformation allowing skidding back to the main trail
+\item conformation allowing skidding back to the main trail
+\item avoid futures and reserves if possible
 }
 }
 }
 
 Damage:
-Secondary windfall: \emph{all trees under the felled tree (timber or energy)
-will be considered dead}.
+Secondary windfall: all trees under the felled tree (timber or energy)
+will be considered dead.
 }
 \examples{
 \dontrun{
@@ -127,7 +136,8 @@ inventory <- suppressMessages(treeselection(inventory, objective = 20,
  advancedloggingparameters = loggingparameters())$inventory)
 
 NewInventory <- treefelling(inventory, scenario = "manual", fuel = "0",
-directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
+winching = "0", directionalfelling = "0",
+MainTrail = MainTrail, ScndTrail = ScndTrail,
 advancedloggingparameters = loggingparameters())
 
 Treefall <- NewInventory \%>\%

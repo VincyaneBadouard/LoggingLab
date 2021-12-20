@@ -28,15 +28,15 @@
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  \code{\link{vignette}})
 #'
-#'@param objective Objective volume (m^3/ha) (numeric)
+#'@param objective Objective volume (m3/ha) (numeric)
 #'
 #'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
 #'   hollow trees, damage and and unused part of the log for fuel = "2"
 #'
-#'@param diversification Taking of other species in addition to the main
-#'  commercial species (2 levels of commercial species in the
-#'  \code{\link{SpeciesCriteria}} table) (logical)
+#'@param diversification Possibility to log other species in addition to the
+#' main commercial species (species with a value of 2 for commercial in the
+#' \code{\link{SpeciesCriteria}} table) (logical)
 #'
 #'@param winching No cable or grapple = "0", only cable = "1", grapple + cable =
 #'  "2"
@@ -52,7 +52,8 @@
 #'
 #'@param maintrails Main trails defined at the entire harvestable area (sf polylines)
 #'
-#'@param specieslax Allow diversification if stand is too poor, = FALSE by
+#'@param specieslax Allow diversification if stand is too poor to reach the
+#' objective volume without diversification, = FALSE by
 #'  default (logical)
 #'
 #'@param objectivelax Allow exploitation in case of non-achievement of the

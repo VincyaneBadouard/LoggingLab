@@ -54,14 +54,14 @@ volume of each tree, depend to its geographic zone if several locations
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 \code{\link{vignette}})}
 
-\item{objective}{Objective volume (m^3/ha) (numeric)}
+\item{objective}{Objective volume (m3/ha) (numeric)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of
 hollow trees, damage and and unused part of the log for fuel = "2"}
 
-\item{diversification}{Taking of other species in addition to the main
-commercial species (2 levels of commercial species in the
+\item{diversification}{Possibility to log other species in addition to the
+main commercial species (species with a value of 2 for commercial in the
 \code{\link{SpeciesCriteria}} table) (logical)}
 
 \item{winching}{No cable or grapple = "0", only cable = "1", grapple + cable =
@@ -70,11 +70,12 @@ commercial species (2 levels of commercial species in the
 \item{directionalfelling}{Directional felling =
 "0": only to direct the foot of the tree towards the trail
 "1": to direct the foot of the tree towards the trail + to avoid damage to
-future and reserve trees
-"2": to avoid damage to future and reserve trees + orientation angle
-to the trail}
+future and reserve trees if possible
+"2": to avoid damage to future and reserve trees if possible
++ orientation angle to the trail}
 
-\item{specieslax}{Allow diversification if stand is too poor, = FALSE by
+\item{specieslax}{Allow diversification if stand is too poor to reach the
+objective volume without diversification, = FALSE by
 default (logical)}
 
 \item{objectivelax}{Allow exploitation in case of non-achievement of the
