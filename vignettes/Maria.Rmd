@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 4) Selection of trees by the logger
 5) The layout of secondary skidding trails
 6) Felling of the tree
-7) Adjustment of secondary skidding trails in the case of Wood Fuel exploitation (WFE)
+7) Adjustment of secondary skidding trails in the case of Fuel Wood Exploitation (FWE)
 8) Moving the bole
 
 
@@ -143,14 +143,15 @@ volume of each tree, depend to its geographic zone if several locations
 + **scenario** : Logging scenario: "**RIL1**", "**RIL2broken**", "**RIL2**", "**RIL3**",
 "**RIL3fuel**", "**RIL3fuelhollow**" or "**manual**"(character)
 
-+ **objective** : Objective volume per hectare (numeric)
++ **objective** : Objective volume (m3/ha) (numeric)
 
-+ **fuel** : Fuel wood exploitation: **no exploitation** = "**0**", **damages and purge**
-exploitation in fuel = "**1**", exploitation of **hollow trees, damages and purge** in
++ **fuel** : Fuel wood exploitation: **no exploitation** = "**0**",
+**damages and unused part of logged trees** exploitation in fuel = "**1**",
+exploitation of **hollow trees, damages and unused part of logged trees** in
 fuel = "**2**"
 
-+ **diversification** : Taking of other species in addition to the main
-commercial species (2 levels of commercial species in the
++ **diversification** : Possibility to log other species in addition to the
+main commercial species (species with a value of 2 for commercial in the
 \code{\link{SpeciesCriteria}} table) (logical)
 
 + **winching** : No cable or grapple = "**0**", only **cable** = "**1**", **grapple + cable**
@@ -162,7 +163,8 @@ commercial species (2 levels of commercial species in the
  "2": to avoid damage to future and reserve trees + orientation angle to the trail
 
 
-+ **specieslax** : Allow diversification if stand is too poor, = FALSE by
++ **specieslax** : Allow diversification if stand is too poor to reach the
+objective volume without diversification, = FALSE by
 default (logical)
 
 + **objectivelax** : Allow exploitation in case of non-achievement of the
@@ -194,11 +196,11 @@ kable(ScenariosTable)
 
 *Numeric values*
 
-+ **Minimum DBH value** = 10 cm 
-+ **Maximum area slope** = 27 % 
++ **Minimum DBH for inclusion in the forest inventory** = 10 cm 
++ **Maximum harvestable area slope** = 27 % 
 + **Maximum main & 2nd trail centerline slope** = 22 % 
 + **Maximum main & 2nd trail cross slope** = 4 % 
-+ **Grapple maximum slope** = 20 % 
++ **Maximum slope accessible by the grapple** = 20 % 
 + **Maximum tree slope** = 22 % 
 + **Plateau maximum slope** = 5 % 
 + **Distance to compute slope** = 6 m (3m for each side) 
@@ -206,22 +208,21 @@ kable(ScenariosTable)
 + **Minimum main trail width** = 5 m 
 + **Maximum main trail width** = 6 m 
 + **2nd trail width** = 4 m 
-+ **DBH of trees to be avoided at trail construction** = 50 cm 
-+ **Objective bonus** = 30 % (20;30%) 
++ **Minimum DBH of trees to be avoided by trails** = 50 cm 
 + **Cable length** = 40 m 
 + **Grapple length** = 6 m 
 + **Minimum distance to consider a tree "isolated"** from other trees of its species, in the aggregative species case
 (\code{\link{SpeciesCriteria}}, 'Aggregative' column) = 100 m 
-+ **Future trees minimum diameter** = 35 cm 
-+ **Proportion of successful directional felling events** = 0.6 %
++ **Future trees minimum diameter** = 35 cm (future trees are only commercial species of the 1st economic level)
++ **Proportion of successful directional felling events** = 60 %
 + **Minimum orientation of the tree fall to the trail** = 30 degree 
 + **Maximum orientation of the tree fall to the trail** = 45 degree 
 + **Part taken from hollow trees for fuel exploitation** = 1/3 
 + **Purge (unused part of the log)** = 0.14 m^3 of fuel wood/m^3 of logged trees
 + **Maximum trail density** = 200 m/ha (has no impact on the simulation.
-A message will only be sent to inform you of its validation or not)
+A message will be sent to inform if this threshold has been exceeded)
 + **Maximum landing area** = 1500 square meters (has no impact on the simulation.
-A message will only be sent to inform you of its validation or not)
+A message will be sent to inform if this threshold has been exceeded)
 
 *Models*   
 
@@ -244,7 +245,7 @@ with the crown diameter (CD) and the tree height (H) in m, and the DBH (D) in cm
 + **Rotten model**, estimates the tree probability of being probed hollow:
 1 / (1 + exp(-(-5.151 + 0.042 DBH))), with DBH in cm 
 
-+ **Visibly defect model**, estimates the tree probability
++ **Visibly defect model**, estimates the commercial tree probability
 to have visible defects: 1 / (1 + exp(-(-3.392 + 0.357 * Log(DBH))))
 with DBH in cm
 

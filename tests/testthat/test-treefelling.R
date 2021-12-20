@@ -39,7 +39,7 @@ test_that("treefelling", {
                                               speciescriteria = SpeciesCriteria,
                                               advancedloggingparameters = loggingparameters())$inventory)
 
-  testinventory <- treefelling(inventory, scenario = "manual", fuel = "2",
+  testinventory <- treefelling(inventory, scenario = "manual", fuel = "2", winching = "2",
                                directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
                                advancedloggingparameters = loggingparameters())
 
@@ -47,40 +47,40 @@ test_that("treefelling", {
 
   # Check the function arguments
   expect_error(treefelling(MatrixInventory,
-                           scenario ="manual", fuel = "0", directionalfelling = "2",
+                           scenario ="manual", fuel = "0", winching = "0", directionalfelling = "2",
                            advancedloggingparameters = loggingparameters()),
                regexp = "The 'inventory'argument of the 'treefelling' function must be data.frame")
 
 
-  expect_error(treefelling(Paracou6_2016, fuel = "0", directionalfelling = "2",
+  expect_error(treefelling(Paracou6_2016, fuel = "0", winching = "0", directionalfelling = "2",
                            advancedloggingparameters = loggingparameters(),
                            scenario = "CL"),
                regexp = "The 'scenario' argument of the 'treefelling' function must be
          'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
-  expect_error(treefelling(Paracou6_2016, scenario ="manual", directionalfelling = "2",
+  expect_error(treefelling(Paracou6_2016, scenario ="manual", winching = "0", directionalfelling = "2",
                            advancedloggingparameters = loggingparameters(),
                            fuel = TRUE),
                regexp = "The 'fuel' argument of the 'treefelling' function must be '0', '1', '2' or NULL")
 
-  expect_error(treefelling(Paracou6_2016, scenario ="manual", fuel = "2",
+  expect_error(treefelling(Paracou6_2016, scenario ="manual", winching = "0", fuel = "2",
                            advancedloggingparameters = loggingparameters(),
                            directionalfelling = TRUE),
                regexp = "The 'directionalfelling' argument of the 'treefelling' function must be '0', '1', '2' or NULL")
 
   expect_error(treefelling(Paracou6_2016,
-                           scenario = "manual", fuel = "2", directionalfelling = "2",
+                           scenario = "manual", fuel = "2", winching = "0", directionalfelling = "2",
                            advancedloggingparameters = loggingparameters(),
                            MainTrail = st_as_text(MainTrail), ScndTrail = st_as_text(ScndTrail)),
                regexp = "The 'MainTrail' and 'ScndTrail' arguments of the 'treefelling' function must be sfg")
 
 
-  expect_error(treefelling(Paracou6_2016, scenario = "manual", fuel = "2",
+  expect_error(treefelling(Paracou6_2016, scenario = "manual", winching = "0", fuel = "2",
                            directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
                            advancedloggingparameters = as.matrix(loggingparameters())),
                regexp = "The 'advancedloggingparameters' argument of the 'treefelling' function must be a list")
 
-  expect_error(treefelling(Paracou6_2016, scenario = "manual",
+  expect_error(treefelling(Paracou6_2016, scenario = "manual", winching = "0",
                            MainTrail = MainTrail, ScndTrail = ScndTrail,
                            fuel = NULL, directionalfelling = NULL),
                regexp = "If you choose the 'manual' mode,

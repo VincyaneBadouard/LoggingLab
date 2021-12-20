@@ -11,12 +11,15 @@
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
 #'   hollow trees, damage and and unused part of the log for fuel = "2"
 #'
+#'@param winching No cable or grapple = "0", only cable = "1", grapple + cable =
+#'  "2"
+#'
 #'@param directionalfelling Directional felling =
 #' "0": only to direct the foot of the tree towards the trail
 #' "1": to direct the foot of the tree towards the trail + to avoid damage to
-#'         future and reserve trees
-#' "2": to avoid damage to future and reserve trees + orientation angle
-#'       to the trail
+#'         future and reserve trees if possible
+#' "2": to avoid damage to future and reserve trees if possible
+#'       + orientation angle to the trail
 #'
 #'@param MainTrail Main trail (sfg)
 #'@param ScndTrail Secondary trails (sfg)
@@ -44,22 +47,23 @@
 #'RIL3/RIL3 timber + fuel wood:
 #' - at 40%: random fall
 #' - at 60% ('TreefallSuccessProportion'):
-#'   * if RIL3 + fuel & trees < 6 m from the trail and slope <20% (grapple use):
+#'   * if trees < 6 m from the trail and slope <20% (grapple use):
 #'     - no particular angle to orientate to the trail,
-#'     only to orient the tree *crown* as close as possible to the trail
+#'        only to orient the tree *base*(*crown* if fuel wood exploitation)
+#'        as close as possible to the trail
 #'     - priority 1: avoid futures and reserves,
 #'     - priority 2: conformation allowing skidding back to the main trail
 #'
-#'   * otherwise (RIL3, RIL3 + fuel &
-#'      trees > 6 m from the trail and/or slope >20%)(cable use):
-#'     - 30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')
+#'   * otherwise (trees > 6 m from the trail and/or slope >20%)(cable use):
+#'     - 30-45◦ (default) orientation
+#'        ('MinTreefallOrientation'; 'MaxTreefallOrientation')
 #'     - *base* to nearest trail
-#'     - priority 1: avoid futures and reserves
-#'     - priority 2: conformation allowing skidding back to the main trail
+#'     - conformation allowing skidding back to the main trail
+#'     - avoid futures and reserves if possible
 #'
 #'Damage:
-#'Secondary windfall: *all trees under the felled tree (timber or energy)
-#'will be considered dead*.
+#'Secondary windfall: all trees under the felled tree (timber or energy)
+#'will be considered dead.
 #'
 #'@export
 #'
@@ -103,7 +107,8 @@
 #'  advancedloggingparameters = loggingparameters())$inventory)
 #'
 #' NewInventory <- treefelling(inventory, scenario = "manual", fuel = "0",
-#' directionalfelling = "0", MainTrail = MainTrail, ScndTrail = ScndTrail,
+#' winching = "0", directionalfelling = "0",
+#' MainTrail = MainTrail, ScndTrail = ScndTrail,
 #' advancedloggingparameters = loggingparameters())
 #'
 #' Treefall <- NewInventory %>%
@@ -182,6 +187,7 @@ treefelling <- function(
   inventory,
   scenario,
   fuel = NULL,
+  winching = NULL,
   directionalfelling = NULL,
   MainTrail,
   ScndTrail,
@@ -259,7 +265,7 @@ treefelling <- function(
     group_by(idTree) %>% # for each tree
     do(TreePolygon = # inform geometry. # Filling a column from a function whose input is a table
          felling1tree(.,
-                      fuel = fuel, directionalfelling = directionalfelling,
+                      fuel = fuel, winching = winching, directionalfelling = directionalfelling,
                       MainTrail = MainTrail, ScndTrail = ScndTrail,
                       FutureReserveCrowns = FutureReserveCrowns,
                       advancedloggingparameters = advancedloggingparameters)$FallenTree %>%
@@ -549,12 +555,15 @@ rotatepolygon <- function(
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
 #'   hollow trees, damage and and unused part of the log for fuel = "2"
 #'
+#'@param winching No cable or grapple = "0", only cable = "1", grapple + cable =
+#'  "2"
+#'
 #'@param directionalfelling Directional felling =
 #' "0": only to direct the foot of the tree towards the trail
 #' "1": to direct the foot of the tree towards the trail + to avoid damage to
-#'         future and reserve trees
-#' "2": to avoid damage to future and reserve trees + orientation angle
-#'       to the trail
+#'         future and reserve trees if possible
+#' "2": to avoid damage to future and reserve trees if possible
+#'       + orientation angle to the trail
 #'
 #'@param MainTrail (sfg)
 #'@param ScndTrail (sfg)
@@ -628,7 +637,7 @@ rotatepolygon <- function(
 #'   tibble::add_column(TreeFellingOrientationSuccess = "1")
 #'
 #' rslt <- felling1tree(dat,
-#'  fuel = "0", directionalfelling = "0",
+#'  fuel = "0", winching = "0", directionalfelling = "0",
 #'  MainTrail = MainTrail, ScndTrail = ScndTrail,
 #'  FutureReserveCrowns = FutureReserveCrowns,
 #'  advancedloggingparameters = loggingparameters())
@@ -644,6 +653,7 @@ rotatepolygon <- function(
 felling1tree <- function(
   dat,
   fuel,
+  winching,
   directionalfelling,
   MainTrail,
   ScndTrail,
@@ -746,7 +756,7 @@ felling1tree <- function(
   OppAng <- 180-(90 + TreefallOrientation) # Compute the third angle of the right-angled triangle (see vignette figure)
 
   # For cable (default = [30;45°]) if directionalfelling == "2" or fuel != "0"
-  if(directionalfelling == "2" || fuel != "0"){
+  if(directionalfelling == "2" || winching == "2" || fuel != "0"){
     CableTreefallOrientation <- as.numeric(c(advancedloggingparameters$MinTreefallOrientation:
                                                advancedloggingparameters$MaxTreefallOrientation))
 
@@ -756,7 +766,7 @@ felling1tree <- function(
   ## Angle to the trail
 
   # if no angle to the trail or fuel wood exploitation
-  if (directionalfelling != "2" && fuel =="0") {
+  if (directionalfelling != "2" && fuel == "0") {
 
     ### Right-hand trail
     if(TrailPt[1] >= Foot[1]){ # x trail > x foot
@@ -767,8 +777,30 @@ felling1tree <- function(
     }
   }
 
+  # if winching by grapple and cable without fuel wood exploitation
+  if(winching == "2" && fuel == "0"){
+
+    # Angle depending on whether the trail is to the right/left of the default position of the tree
+    ## Right-hand trail
+    if(TrailPt[1] >= Foot[1]){ # x trail > x foot
+      # CABLE
+      CableAangle <- round(as.numeric(180 + CableOppAng + theta), digits = 0)
+      CableBangle <- round(as.numeric(180 - CableOppAng + theta), digits = 0)
+      # GRAPPLE
+      Aangle <- round(as.numeric(180 + OppAng + theta), digits = 0) # Foot oriented
+
+      ## Left-hand trail
+    }else if(TrailPt[1] < Foot[1]){ # x trail < x foot
+      # CABLE
+      CableAangle <- round(as.numeric(360 - CableOppAng + theta), digits = 0)
+      CableBangle <- round(as.numeric(theta + CableOppAng), digits = 0)
+      # GRAPPLE
+      Aangle <- round(as.numeric(360 - OppAng + theta), digits = 0) # Foot oriented
+    }
+  }
+
   # if angle to the trail or fuel wood exploitation
-  if (directionalfelling == "2" || (fuel =="1" || fuel =="2")) {
+  if ((directionalfelling == "2" && winching != "2") || (fuel =="1" || fuel =="2")) {
 
     # Angle depending on whether the trail is to the right/left of the default position of the tree
     ## Right-hand trail
@@ -808,8 +840,8 @@ felling1tree <- function(
   #   FallenTree <- felling0angle(RandomAngle)
   # }
 
-  #### No other orientation than to direct the foot of the tree towards the trail (0-180°)
-  if (directionalfelling == "0" && fuel == "0") {
+  #### No other orientation than to direct the foot of the tree towards the trail (0-180°) ####
+  if (directionalfelling == "0" && fuel == "0" && winching != "2") {
     if(dat$TreeFellingOrientationSuccess == "1"){
 
       Aangle <- as.numeric(sample(Aangle, size = 1))
@@ -824,7 +856,7 @@ felling1tree <- function(
   }
 
   #### To direct to !avoid damage to future and reserve trees!, and foot directed to the trail
-  if (directionalfelling == "1" && fuel == "0") {
+  if (directionalfelling == "1" && fuel == "0" && winching != "2") {
     if(dat$TreeFellingOrientationSuccess == "1"){
 
       # Available felling positions
@@ -864,7 +896,7 @@ felling1tree <- function(
   #### Scenarios with orientation angle to the trail or fuel wood exploitation ####
 
   #### To direct to avoid damage to future and reserve trees + orientation angle to the trail (no fuel wood exploitation) ####
-  if(directionalfelling == "2" && fuel == "0"){ # = CABLE only
+  if(winching == "1" && directionalfelling == "2" && fuel == "0"){ # = CABLE only
     if(dat$TreeFellingOrientationSuccess == "1"){
 
       # Calculate the two possible crown configurations
@@ -908,6 +940,107 @@ felling1tree <- function(
     }else if(dat$TreeFellingOrientationSuccess == "0"){ # else random felling
       RandomAngle <- as.numeric(sample(c(0:359), size = 1))
 
+      FallenTree <- felling0angle(RandomAngle)
+    }
+  }
+
+  #### Grapple + cable without fuel wood exploitation (always foot towards the trail) ####
+  if(winching == "2" & fuel == "0"){
+
+    TrailDist <- st_distance(Foot, TrailPt) # distance between the tree foot and the Trail closest point
+
+    # ADD SLOPE CRITERIA !!!
+
+    if(dat$TreeFellingOrientationSuccess == "1"){
+
+      if(TrailDist <= advancedloggingparameters$GrappleLength){ # <= 6m (= GRAPPLE length) -> winching by grapple
+
+        if(directionalfelling == "0"){
+          Aangle <- as.numeric(sample(Aangle, size = 1))
+          FallenTree <- felling0angle(Aangle)
+
+          # Fut/res tree avoidance
+        }else{
+          # Available felling positions
+          AvailableFellingPositions <- lapply(as.list(Aangle), felling0angle) %>%
+            lapply(function(x) data.frame(Tree = x)) %>%
+            bind_rows()
+
+          # Overlaps with future/reserve trees
+          overlaps <- st_intersects(AvailableFellingPositions$geometry,
+                                    summarise(FutureReserveCrowns, Crowns = st_combine(Crowns))$Crowns) %>%
+            lengths()
+
+          ## if there are any position without intersection
+          if(any(overlaps == 0)){
+            EmptyFellingPositions <- AvailableFellingPositions %>%
+              mutate(overlaps = overlaps) %>%
+              filter(overlaps == 0) # only positions without intesection
+
+            ## if there are no position without intersection
+          }else{
+            EmptyFellingPositions <- AvailableFellingPositions # take all the positions
+            message("It was not possible to avoid future/reserve trees in the felling of a tree")
+
+          }
+
+          # Sample only one position
+          FallenTree <- sample_n(EmptyFellingPositions, 1)$geometry
+        } # end Fut/res tree avoidance
+
+
+      }else{ # > 6m -> winching by CABLE
+
+        # Calculate the two possible crown configurations
+        ACrown <- lapply(as.list(CableAangle), function(element) rotatepolygon(Crown, angle = element, fixed = Foot)) # turned crowns
+        BCrown <- lapply(as.list(CableBangle), function(element) rotatepolygon(Crown, angle = element, fixed = Foot)) # turned crowns
+
+        # Test the best to pull the tree back to the main trail (farthest crown from the main trail)
+        ADist <- unlist(lapply(as.list(ACrown), function(element) st_distance(element, MainTrail)[1,1])) #matrix to value
+        BDist <- unlist(lapply(as.list(BCrown), function(element) st_distance(element, MainTrail)[1,1])) #matrix to value
+
+        if(max(ADist, BDist) == max(BDist)){
+          CableAangle <- CableBangle # B configuration
+        }
+
+        # No fut/res tree avoidance
+        if(directionalfelling == "0"){
+
+          CableAangle <- as.numeric(sample(CableAangle, size = 1))
+          FallenTree <- felling0angle(CableAangle)
+
+          # Fut/res tree avoidance
+        }else{
+          # Available felling positions
+          AvailableFellingPositions <- lapply(as.list(CableAangle), felling0angle) %>%
+            lapply(function(x) data.frame(Tree = x)) %>%
+            bind_rows()
+
+          # Overlaps with future/reserve trees
+          overlaps <- st_intersects(AvailableFellingPositions$geometry,
+                                    summarise(FutureReserveCrowns, Crowns = st_combine(Crowns))$Crowns) %>%
+            lengths()
+
+          ## if there are any position without intersection
+          if(any(overlaps == 0)){
+            EmptyFellingPositions <- AvailableFellingPositions %>%
+              mutate(overlaps = overlaps) %>%
+              filter(overlaps == 0) # only positions without intesection
+
+            ## if there are no position without intersection
+          }else{
+            EmptyFellingPositions <- AvailableFellingPositions # take all the positions
+            message("It was not possible to avoid future/reserve trees in the felling of a tree")
+
+          }
+
+          # Sample only one position
+          FallenTree <- sample_n(EmptyFellingPositions, 1)$geometry
+        }
+      }
+
+    }else if(dat$TreeFellingOrientationSuccess == "0"){ # else random felling
+      RandomAngle <- as.numeric(sample(c(0:359), size = 1))
       FallenTree <- felling0angle(RandomAngle)
     }
   }
