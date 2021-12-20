@@ -1,5 +1,6 @@
 test_that("loggingsummary", {
-
+data(MainTrails)
+data("HarvestablePolygons")
   expect_error(loggingsummary(x = TRUE),
                regexp = "The argument of the 'loggingsummary' function must be a list")
 
@@ -8,8 +9,8 @@ test_that("loggingsummary", {
                         relativeelevation  = DTMParacou, speciescriteria = SpeciesCriteria,
                         volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
                         objective = 20, fuel = "2", diversification = TRUE, winching = "2",
-                        directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
-                        crowndiameterparameters = ParamCrownDiameterAllometry,
+                        directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE, harvestablepolygons = HarvestablePolygons,
+                        crowndiameterparameters = ParamCrownDiameterAllometry, maintrails = MainTrails,
                         advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
     )
 

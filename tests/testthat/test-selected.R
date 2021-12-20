@@ -4,6 +4,8 @@ test_that("selected", {
   # Test data preparation
   data(Paracou6_2016)
   data(SpeciesCriteria)
+  data("MainTrails")
+  data("HarvestablePolygons")
 
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
 
@@ -16,7 +18,8 @@ test_that("selected", {
 
   harvestableOutputs <- harvestable(inventory0, diversification = TRUE, specieslax = FALSE,
                                     topography = DTMParacou, plotslope = PlotSlope,
-                                    advancedloggingparameters = loggingparameters())
+                                    advancedloggingparameters = loggingparameters(),
+                                    maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)
 
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
@@ -84,7 +87,7 @@ test_that("selected", {
   ## if (!diversification && specieslax)
   harvestableOutputs <- harvestable(inventory0,
                                     diversification = FALSE, specieslax = TRUE, topography = DTMParacou,
-                                    plotslope = PlotSlope)
+                                    plotslope = PlotSlope, maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
@@ -109,7 +112,8 @@ test_that("selected", {
   # if (!diversification && !specieslax && objectivelax)
   harvestableOutputs <- harvestable(inventory0,
                                     diversification = FALSE,  specieslax = FALSE,
-                                    topography = DTMParacou, plotslope = PlotSlope)
+                                    topography = DTMParacou, plotslope = PlotSlope, maintrails = MainTrails,
+                                    harvestablepolygons = HarvestablePolygons)
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
@@ -124,7 +128,9 @@ test_that("selected", {
 
   # if (diversification && objectivelax)
   harvestableOutputs <- harvestable(inventory0,
-                                    diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope)
+                                    diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope,
+                                    maintrails = MainTrails,
+                                    harvestablepolygons = HarvestablePolygons)
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
@@ -149,7 +155,9 @@ test_that("selected", {
   # if HVinit > VO
 
   harvestableOutputs <- harvestable(inventory0,
-                                    diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope)
+                                    diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope,
+                                    maintrails = MainTrails,
+                                    harvestablepolygons = HarvestablePolygons)
 
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit

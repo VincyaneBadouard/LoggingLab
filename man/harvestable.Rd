@@ -7,6 +7,8 @@
 harvestable(
   inventory,
   topography,
+  harvestablepolygons,
+  maintrails,
   plotslope,
   diversification,
   specieslax = FALSE,
@@ -19,6 +21,11 @@ harvestable(
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
+
+\item{harvestablepolygons}{Accessible area of the inventoried plot
+(default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
+
+\item{maintrails}{Main trails defined at the entire harvestable area (sf polylines)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
@@ -72,6 +79,8 @@ data(Paracou6_2016)
 data(DTMParacou)
 data(PlotSlope)
 data(SpeciesCriteria)
+data(HarvestablePolygons)
+data(MainTrails)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -79,6 +88,7 @@ volumeparameters = ForestZoneVolumeParametersTable)
 inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
+harvestablepolygons = HarvestablePolygons, maintrails = MainTrails,
 plotslope = PlotSlope, diversification = TRUE, specieslax = FALSE,
 advancedloggingparameters = loggingparameters())
 

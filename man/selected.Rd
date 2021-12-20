@@ -91,6 +91,8 @@ an unreached objective volume, or be abandoned ('objectivelax')
 data(Paracou6_2016)
 data(DTMParacou)
 data(PlotSlope)
+data(HarvestablePolygons)
+data(Maintrails)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -99,6 +101,7 @@ inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
+harvestablepolygons = HarvestablePolygons, maintrails = MainTrails,
 advancedloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory

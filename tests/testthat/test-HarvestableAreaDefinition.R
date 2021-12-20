@@ -1,13 +1,12 @@
 test_that("HarvestableAreaDefinition", {
-  data(Plots)
+
   data(DTMParacou)
   data(VerticalCreekHeight)
 
-  test_exploitPolygones <- HarvestableAreaDefinition(plot = Plots,
-                                                     dtm = DTMParacou,
-                                                     verticalcreekheight = VerticalCreekHeight,
-                                                     advancedloggingparameters = loggingparameters())
+  test_Harvestable <- HarvestableAreaDefinition(topography = DTMParacou,
+                                                verticalcreekheight = VerticalCreekHeight)
+test_HarvestablePolygons <- test_Harvestable[[1]]
 
-  expect_s3_class(test_exploitPolygones, class = 'data.frame')
-  expect_true((all(0 <= test_exploitPolygones$Exploit &  test_exploitPolygones$Exploit <= 1)))
+  expect_s3_class(test_HarvestablePolygons, class = 'data.frame')
+  expect_true((all(0 <= test_HarvestablePolygons$Harvestable &  test_HarvestablePolygons$Harvestable <= 1)))
 })

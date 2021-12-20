@@ -9,6 +9,11 @@
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
+#'@param harvestablepolygons Accessible area of the inventoried plot
+#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
+#'
+#'@param maintrails Main trails defined at the entire harvestable area (sf polylines)
+#'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
 #'
@@ -54,7 +59,7 @@
 #'@importFrom dplyr filter mutate select left_join if_else
 #'@importFrom tibble as_tibble add_column
 #'@importFrom sp coordinates proj4string
-#'@importFrom sf st_as_sf st_distance
+#'@importFrom sf st_as_sf st_distance st_contains
 #'@importFrom raster crs extract
 #'@importFrom utils setTxtProgressBar txtProgressBar
 #'
@@ -65,6 +70,8 @@
 #' data(DTMParacou)
 #' data(PlotSlope)
 #' data(SpeciesCriteria)
+#' data(HarvestablePolygons)
+#' data(MainTrails)
 #'
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -72,6 +79,7 @@
 #' inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 #'
 #' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
+#' harvestablepolygons = HarvestablePolygons, maintrails = MainTrails,
 #' plotslope = PlotSlope, diversification = TRUE, specieslax = FALSE,
 #' advancedloggingparameters = loggingparameters())
 #'
@@ -80,6 +88,8 @@
 harvestable <- function(
   inventory,
   topography,
+  harvestablepolygons,
+  maintrails,
   plotslope,
   diversification,
   specieslax = FALSE,
@@ -113,7 +123,7 @@ harvestable <- function(
   UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
   VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
-  beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
+  beta.family <- beta.genus <- beta.species <- geometry <- idTree <- PU <- NULL
 
 
   # Calculation of spatial information (distance and slope)
@@ -183,6 +193,18 @@ harvestable <- function(
     left_join(SlopeCritInventory, by = "idTree") %>%
     dplyr::select(-geometry)
 
+  # Check that the trees are contained in a accessible area (PU)
+
+   AccessPolygons <- FilterAccesExplArea(harvestablepolygons = harvestablepolygons, # define accessible areas (PU) from harvestablepolygons
+                                         maintrails = maintrails,
+                                         advancedloggingparameters = loggingparameters())
+
+   PUSpatInventory<- SpatInventory %>% mutate(PU = as.vector(sf::st_contains(AccessPolygons, SpatInventory,sparse = F))) %>% # check if trees are contained in PUs
+     dplyr::select(idTree , PU)
+
+   inventory<- inventory %>% left_join(PUSpatInventory, by = "idTree")%>%
+     dplyr::select(-geometry)
+
   # Essences selection
   HarverstableConditions <- # = 1 boolean vector
     if (diversification || (!diversification && specieslax)) {
@@ -198,7 +220,8 @@ harvestable <- function(
   # Select spatially
   HarverstableConditions <- HarverstableConditions & (
     (!inventory$DistCrit %in% FALSE) & # take the TRUE and NA values
-      inventory$SlopeCrit %in% TRUE) # !is.null(ProspectionUnitCode) &
+      inventory$SlopeCrit %in% TRUE &
+      inventory$PU %in% TRUE ) # !is.null(ProspectionUnitCode) &
   ## in a PU
   ## slope
   ## isolement
