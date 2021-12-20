@@ -2,6 +2,8 @@ test_that("harvestable", {
 
   # Check the function arguments
   data("Paracou6_2016")
+  data("MainTrails")
+  data("HarvestablePolygons")
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
 
   data(DTMParacou)
@@ -22,11 +24,14 @@ test_that("harvestable", {
   inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
   Outputs1 <- harvestable(inventory,
-                          diversification = T, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)
+                          diversification = T, specieslax = F, topography = DTMParacou, plotslope = PlotSlope,
+                          maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)
   Outputs2 <- harvestable(inventory,
-                          diversification = F, specieslax = T, topography = DTMParacou, plotslope = PlotSlope)
+                          diversification = F, specieslax = T, topography = DTMParacou, plotslope = PlotSlope,
+                          maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)
   Outputs3 <- harvestable(inventory,
-                          diversification = F, specieslax = F, topography = DTMParacou, plotslope = PlotSlope)
+                          diversification = F, specieslax = F, topography = DTMParacou, plotslope = PlotSlope,
+                          maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)
 
   testinventory1 <- Outputs1$inventory
   testinventory2 <- Outputs2$inventory

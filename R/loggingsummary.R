@@ -12,18 +12,22 @@
 #' @examples
 #' data(Paracou6_2016) # inventory
 #' data(DTMParacou) # topography
-#' # data() relative elevation
+#' data(VerticalCreekHeight) # relative elevation
 #' data(SpeciesCriteria) # species exploitability criteria
 #' data(ForestZoneVolumeParametersTable) # volume parameters
 #' data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
+#' data(HarvestablePolygons)
+#' data(MainTrails)
 #'
 #' Rslt <- suppressMessages(
 #'   loggingsimulation(Paracou6_2016, topography = DTMParacou,
-#'                     relativeelevation  = DTMParacou, speciescriteria = SpeciesCriteria,
+#'                     relativeelevation  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
 #'                     volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'                     objective = 20, fuel = "2", diversification = TRUE, winching = "2",
 #'                     directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
+#'                     maintrails = MainTrails,
 #'                     crowndiameterparameters = ParamCrownDiameterAllometry,
+#'                     harvestablepolygons = HarvestablePolygons,
 #'                     advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
 #' )
 #'

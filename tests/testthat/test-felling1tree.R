@@ -2,6 +2,8 @@ test_that("felling1tree", {
 
   # Test data
   data(Paracou6_2016)
+  data(MainTrails)
+  data("HarvestablePolygons")
   # Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
   MatrixInventory <- as.matrix(Paracou6_2016)
 
@@ -34,6 +36,7 @@ test_that("felling1tree", {
   inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
                                               fuel = "0", diversification = TRUE, specieslax = FALSE,
                                               objectivelax = TRUE, topography = DTMParacou,
+                                              maintrails = MainTrails, harvestablepolygons = HarvestablePolygons,
                                               plotslope = PlotSlope,
                                               speciescriteria = SpeciesCriteria,
                                               advancedloggingparameters = loggingparameters())$inventory)

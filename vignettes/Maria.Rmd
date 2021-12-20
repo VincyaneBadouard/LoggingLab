@@ -418,6 +418,7 @@ inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 ```{r}
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
                                   diversification = TRUE, plotslope = PlotSlope, specieslax = FALSE,
+                                  maintrails = MainTrails, harvestablepolygons = HarvestablePolygons,
                                   advancedloggingparameters = loggingparameters())
 inventory <- harvestableOutputs$inventory
 HVinit <- harvestableOutputs$HVinit

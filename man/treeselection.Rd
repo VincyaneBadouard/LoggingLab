@@ -8,6 +8,8 @@ treeselection(
   inventory,
   topography,
   plotslope,
+  harvestablepolygons,
+  maintrails,
   speciescriteria,
   scenario,
   objective = NULL,
@@ -27,6 +29,11 @@ or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
+
+\item{harvestablepolygons}{Accessible area of the inventoried plot
+(default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
+
+\item{maintrails}{Main trails defined at the entire harvestable area (sf polylines)}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the
@@ -131,15 +138,20 @@ or UpMinFD if it has been raised for its species.
 the number of reserve trees is equal to the number of harvested trees.
 }
 \examples{
+\dontrun{
 data(Paracou6_2016)
 data(DTMParacou)
 data(PlotSlope)
+data(MainTrails)
+data(HarvestablePolygons)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
 
 treeselectionoutputs <- treeselection(inventory,
+maintrails = MainTrails,
 topography = DTMParacou, plotslope = PlotSlope,
+harvestablepolygons = HarvestablePolygons,
 speciescriteria = SpeciesCriteria, objective = 20,
 scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
 objectivelax = TRUE,
@@ -200,7 +212,7 @@ ggplot() +
   "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
   "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
   labs(color = "Logging status")
-
+}
 }
 \seealso{
 \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},

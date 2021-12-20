@@ -6,6 +6,8 @@ test_that("treeselection", {
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
 
   data(DTMParacou)
+  data("HarvestablePolygons")
+  data("MainTrails")
 
   MatrixInventory <- as.matrix(Paracou6_2016)
   Matrixspeciescriteria <- as.matrix(SpeciesCriteria)
@@ -68,7 +70,8 @@ test_that("treeselection", {
                                                   specieslax = FALSE, objectivelax = TRUE,
                                                   topography = DTMParacou, plotslope = PlotSlope,
                                                   speciescriteria = SpeciesCriteria,
-                                                  advancedloggingparameters = loggingparameters())$inventory) # , MainTrail
+                                                  advancedloggingparameters = loggingparameters(),
+                                                  maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory) # , MainTrail
 
 
   advancedloggingparameters = loggingparameters()
@@ -82,7 +85,8 @@ test_that("treeselection", {
   VO <- suppressMessages(treeselection(inventory, speciescriteria = SpeciesCriteria,
                                        scenario ="manual", fuel = "2", objective = objective,
                                        diversification = TRUE, specieslax = FALSE,
-                                       objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope))$VO
+                                       objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
+                                       maintrails = MainTrails, harvestablepolygons = HarvestablePolygons))$VO
 
 
   expect_true(VO == expected)

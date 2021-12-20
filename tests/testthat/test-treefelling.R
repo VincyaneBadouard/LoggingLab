@@ -4,6 +4,8 @@ test_that("treefelling", {
   data(Paracou6_2016)
   data(DTMParacou)
   data(PlotSlope)
+  data("MainTrails")
+  data("HarvestablePolygons")
 
   MatrixInventory <- as.matrix(Paracou6_2016)
 
@@ -37,7 +39,8 @@ test_that("treefelling", {
                                               objectivelax = TRUE, topography = DTMParacou,
                                               plotslope = PlotSlope,
                                               speciescriteria = SpeciesCriteria,
-                                              advancedloggingparameters = loggingparameters())$inventory)
+                                              advancedloggingparameters = loggingparameters(),
+                                              maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory)
 
   testinventory <- treefelling(inventory, scenario = "manual", fuel = "2", winching = "2",
                                directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,

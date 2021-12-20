@@ -8,6 +8,8 @@ loggingsimulation(
   inventory,
   topography,
   relativeelevation,
+  maintrails,
+  harvestablepolygons,
   speciescriteria,
   volumeparameters,
   scenario,
@@ -32,6 +34,11 @@ loggingsimulation(
 or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{relativeelevation}{(RasterLayer)}
+
+\item{maintrails}{Main trails defined at the entire harvestable area (sf polylines)}
+
+\item{harvestablepolygons}{Accessible area of the inventoried plot
+(default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the
@@ -101,13 +108,16 @@ volume and damages quantification.
 \dontrun{
 data(Paracou6_2016) # inventory
 data(DTMParacou) # topography
-# data() relative elevation
+data(MainTrails)  # MainTrails
+data(HarvestablePolygons) # HarvestablePolygons
+data(VerticalCreekHeight) # relative elevation
 data(SpeciesCriteria) # species exploitability criteria
 data(ForestZoneVolumeParametersTable) # volume parameters
 data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 
 Rslt <- loggingsimulation(Paracou6_2016, topography = DTMParacou,
- relativeelevation  = DTMParacou, speciescriteria = SpeciesCriteria,
+ relativeelevation  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
+ harvestablepolygons = HarvestablePolygons, maintrails = MainTrails,
  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,

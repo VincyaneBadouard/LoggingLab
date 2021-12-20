@@ -27,9 +27,10 @@ treefelling(
 damage and unused part of logged trees for fuel = "1", exploitation of
 hollow trees, damage and and unused part of the log for fuel = "2"}
 
+
 \item{winching}{No cable or grapple = "0", only cable = "1", grapple + cable =
 "2"}
-
+  
 \item{directionalfelling}{Directional felling =
 "0": only to direct the foot of the tree towards the trail
 "1": to direct the foot of the tree towards the trail + to avoid damage to
@@ -62,11 +63,14 @@ The felling of the tree creates a tree (including crown) on the
 ground, with dimensions calculated with specific allometries
 ('advancedloggingparameters').
 
-RIL1/RIL2broken/RIL2:
+RIL1: random fall
+
+RIL2broken/RIL2:
 \itemize{
 \item at 40\%: random fall
 \item at 60\% ('TreefallSuccessProportion'):
-\emph{base of the tree towards the nearest trail} (main or 2ndary)
+priority 1: \emph{base of the tree towards the nearest trail} (main or 2ndary),
+priority 2: avoid futures and reserves.
 }
 
 RIL3/RIL3 timber + fuel wood:
@@ -99,24 +103,24 @@ will be considered dead.
 }
 \examples{
 \dontrun{
-MainTrail <- sf::st_linestring(matrix(c(286400, 582925,
+MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
                                         286400, 583250,
-                                        286700, 583250,
-                                        286700, 582925,
-                                        286400, 582925) # the return
+                                        286655, 583250,
+                                        286655, 583130,
+                                        286400, 583130) # the return
                                      ,ncol=2, byrow=TRUE))
 
-pol1 <- list(matrix(c(286503, 582925,
+pol1 <- list(matrix(c(286503, 583134,
                       286503, 583240,
                       286507, 583240,
-                      286507, 582925,
-                      286503, 582925) # the return
+                      286507, 583134,
+                      286503, 583134) # the return
                    ,ncol=2, byrow=TRUE))
-pol2 <- list(matrix(c(286650, 582925,
+pol2 <- list(matrix(c(286650, 583134,
                       286650, 583240,
                       286654, 583240,
-                      286654, 582925,
-                      286650, 582925) # the return
+                      286654, 583134,
+                      286650, 583134) # the return
                    ,ncol=2, byrow=TRUE))
 
 PolList = list(pol1,pol2) #list of lists of numeric matrices
@@ -125,8 +129,8 @@ ScndTrail <- sf::st_multipolygon(PolList)
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
 
-inventory <- suppressMessages(treeselection(inventory, objective = 4,
- scenario ="manual", fuel = "0", diversification = TRUE, specieslax = FALSE,
+inventory <- suppressMessages(treeselection(inventory, objective = 20,
+ scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
  speciescriteria = SpeciesCriteria,
  advancedloggingparameters = loggingparameters())$inventory)
@@ -188,10 +192,6 @@ ggplot() +
   geom_sf(data = Selected, aes(colour = "Selected"), show.legend = "point") +
   geom_sf(data = ProbedHollow,
   aes(colour = "Probed hollow"), show.legend = "point") +
-  geom_sf(data = MainTrail,
-  alpha = 0.5, fill = "black") +
-  geom_sf(data = ScndTrail,
-  alpha = 0.5, fill = "black") +
 
   scale_colour_manual(values = c("Non-harvestable" = "grey",
   "Visible defect" = "pink", "Harvestable" = "skyblue",
@@ -201,8 +201,8 @@ ggplot() +
 
 
 sf::st_intersection( # trees under the fallen trees
-  getgeometry (NewInventory, TreePolygon),
-  sf::st_as_sf(NewInventory, coords = c("Xutm", "Yutm"))
+  getgeometry (inventory, TreePolygon),
+  sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))
 ) \%>\%
   ggplot() +
   geom_sf()

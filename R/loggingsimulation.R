@@ -44,9 +44,13 @@
 #'@param directionalfelling Directional felling =
 #' "0": only to direct the foot of the tree towards the trail
 #' "1": to direct the foot of the tree towards the trail + to avoid damage to
-#'         future and reserve trees if possible
-#' "2": to avoid damage to future and reserve trees if possible
-#'       + orientation angle to the trail
+#'         future and reserve trees
+#' "2": to avoid damage to future and reserve trees + orientation angle
+#'       to the trail
+#'@param harvestablepolygons Accessible area of the inventoried plot
+#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
+#'
+#'@param maintrails Main trails defined at the entire harvestable area (sf polylines)
 #'
 #'@param specieslax Allow diversification if stand is too poor to reach the
 #' objective volume without diversification, = FALSE by
@@ -92,13 +96,16 @@
 #' \dontrun{
 #' data(Paracou6_2016) # inventory
 #' data(DTMParacou) # topography
-#' # data() relative elevation
+#' data(MainTrails)  # MainTrails
+#' data(HarvestablePolygons) # HarvestablePolygons
+#' data(VerticalCreekHeight) # relative elevation
 #' data(SpeciesCriteria) # species exploitability criteria
 #' data(ForestZoneVolumeParametersTable) # volume parameters
 #' data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 #'
 #' Rslt <- loggingsimulation(Paracou6_2016, topography = DTMParacou,
-#'  relativeelevation  = DTMParacou, speciescriteria = SpeciesCriteria,
+#'  relativeelevation  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
+#'  harvestablepolygons = HarvestablePolygons, maintrails = MainTrails,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
@@ -108,10 +115,10 @@
 #'
 loggingsimulation <- function(
   inventory,
-
   topography, # = NULL perspective
   relativeelevation, # = NULL perspective
-
+  maintrails,
+  harvestablepolygons,
   speciescriteria,
   volumeparameters,
 
@@ -228,6 +235,7 @@ loggingsimulation <- function(
   treeselectionoutputs <- treeselection(inventory, topography = topography, plotslope = plotslope,
                                         scenario = scenario, objective = objective, fuel = fuel,
                                         diversification = diversification, specieslax = specieslax,
+                                        harvestablepolygons = harvestablepolygons, maintrails = maintrails,
                                         objectivelax = objectivelax, speciescriteria = speciescriteria,
                                         advancedloggingparameters = advancedloggingparameters)
 

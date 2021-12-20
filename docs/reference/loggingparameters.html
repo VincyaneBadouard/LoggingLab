@@ -402,32 +402,32 @@ defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 #&gt; $TreeHarvestableVolumeAllometry
 #&gt; function (DBH, aCoef, bCoef) 
 #&gt; aCoef + bCoef * (DBH/100)^2
-#&gt; &lt;environment: 0x000000008283e6c0&gt;
+#&gt; &lt;environment: 0x000000008610c440&gt;
 #&gt; 
 #&gt; $TrunkHeightAllometry
 #&gt; function (DBH, TreeHarvestableVolume) 
 #&gt; TreeHarvestableVolume/(pi * (((DBH/100)/2)^2))
-#&gt; &lt;environment: 0x000000008283e6c0&gt;
+#&gt; &lt;environment: 0x000000008610c440&gt;
 #&gt; 
 #&gt; $TreeHeightAllometry
 #&gt; function (DBH) 
 #&gt; exp(0.07359191 + 1.34241216 * log(DBH) + -0.12282344 * log(DBH)^2)
-#&gt; &lt;environment: 0x000000008283e6c0&gt;
+#&gt; &lt;environment: 0x000000008610c440&gt;
 #&gt; 
 #&gt; $CrownDiameterAllometry
 #&gt; function (DBH, TreeHeight, alpha, beta) 
 #&gt; exp(((log(DBH) - alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight
-#&gt; &lt;environment: 0x000000008283e6c0&gt;
+#&gt; &lt;environment: 0x000000008610c440&gt;
 #&gt; 
 #&gt; $RottenModel
 #&gt; function (DBH) 
 #&gt; 1/(1 + exp(-(-5.151 + 0.042 * DBH)))
-#&gt; &lt;environment: 0x000000008283e6c0&gt;
+#&gt; &lt;environment: 0x000000008610c440&gt;
 #&gt; 
 #&gt; $VisiblyDefectModel
 #&gt; function (LogDBH) 
 #&gt; 1/(1 + exp(-(-3.392 + 0.357 * LogDBH)))
-#&gt; &lt;environment: 0x000000008283e6c0&gt;
+#&gt; &lt;environment: 0x000000008610c440&gt;
 #&gt; </div><div class='input'>
 </div></pre>
   </div>

@@ -47,6 +47,8 @@ data(ForestZoneVolumeParametersTable) # The volume parameters data in the global
 data(SpeciesCriteria)
 data(DTMParacou)
 data(PlotSlope)
+data(MainTrails)
+data(HarvestablePolygons)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -56,6 +58,8 @@ inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 harvestableOutputs <- harvestable(inventory, diversification = TRUE,
  specieslax = FALSE,
 topography = DTMParacou, plotslope = PlotSlope,
+harvestablepolygons = HarvestablePolygons,
+maintrails = MainTrails,
 advancedloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory

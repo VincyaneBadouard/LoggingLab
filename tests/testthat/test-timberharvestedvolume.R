@@ -2,6 +2,8 @@ test_that("timberharvestedvolume", {
 
   # Data loading
   data(Paracou6_2016)
+  data("MainTrails")
+  data("HarvestablePolygons")
 
   inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
                           volumeparameters = ForestZoneVolumeParametersTable)
@@ -10,7 +12,8 @@ test_that("timberharvestedvolume", {
                                               fuel = "2", diversification = TRUE, specieslax = FALSE,
                                               objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
                                               speciescriteria = SpeciesCriteria,
-                                              advancedloggingparameters = loggingparameters())$inventory)
+                                              advancedloggingparameters = loggingparameters(),
+                                              maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory)
 
 
 

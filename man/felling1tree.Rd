@@ -62,6 +62,8 @@ success is by default 60\%, and can be changed with the
 \code{advancedloggingparameters} argument.
 }
 \examples{
+data(HarvestablePolygons)
+data(MainTrails)
 MainTrail <- sf::st_linestring(matrix(c(286400, 582945,
                                         286400, 583250,
                                         286700, 583250,
@@ -92,20 +94,22 @@ inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario 
  fuel = "2", diversification = TRUE, specieslax = FALSE,
  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
  speciescriteria = SpeciesCriteria,
- advancedloggingparameters = loggingparameters())$inventory)
+ advancedloggingparameters = loggingparameters(),
+ maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory)
 
 FutureReserveCrowns <- inventory \%>\% # create an object with future/reserve crowns only
  dplyr::filter(LoggingStatus == "future" | LoggingStatus == "reserve") \%>\%
  createcanopy() \%>\% # create all inventory crowns in the 'Crowns' column
  getgeometry(Crowns)
 
-dat <- inventory \%>\%
-  dplyr::filter(Selected == "1") \%>\%
-  dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
-                CrownDiameter,Selected, Xutm, Yutm) \%>\%
-  dplyr::sample_n(1) \%>\% # just 1 row (1 tree)
-  # force the orientation success for the exemple
-  tibble::add_column(TreeFellingOrientationSuccess = "1")
+inventory <- inventory \%>\%
+     dplyr::filter(Selected == "1") \%>\%
+     dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
+     CrownDiameter,Selected, Xutm, Yutm)
+
+dat <- inventory[1,] \%>\% # just 1 row (1 tree)
+# force the orientation success for the exemple
+tibble::add_column(TreeFellingOrientationSuccess = "1")
 
 rslt <- felling1tree(dat,
  fuel = "0", winching = "0", directionalfelling = "0",
@@ -120,7 +124,7 @@ ggplot() +
   geom_sf(data = rslt$NearestPoints) +
   geom_sf(data = rslt$TrailPt) +
   geom_sf(data = rslt$FallenTree) +
-  geom_sf(data = FutureReserveCrowns$Crowns)
+  geom_sf(data = FutureReserveCrowns)
 }
 \seealso{
 \code{\link{loggingparameters}}

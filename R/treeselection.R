@@ -9,6 +9,11 @@
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
 #'
+#'@param harvestablepolygons Accessible area of the inventoried plot
+#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
+#'
+#'@param maintrails Main trails defined at the entire harvestable area (sf polylines)
+#'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the
 #'  same format as \code{\link{SpeciesCriteria}} (data.frame)
@@ -36,6 +41,7 @@
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
+#'
 #'
 #'@return A list with:
 #'  - input inventory with new columns:
@@ -112,15 +118,20 @@
 #'
 #'
 #' @examples
+#' \dontrun{
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(PlotSlope)
+#' data(MainTrails)
+#' data(HarvestablePolygons)
 #'
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
 #' treeselectionoutputs <- treeselection(inventory,
+#' maintrails = MainTrails,
 #' topography = DTMParacou, plotslope = PlotSlope,
+#' harvestablepolygons = HarvestablePolygons,
 #' speciescriteria = SpeciesCriteria, objective = 20,
 #' scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
 #' objectivelax = TRUE,
@@ -181,11 +192,13 @@
 #'   "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
 #'   "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
 #'   labs(color = "Logging status")
-#'
+#'}
 treeselection <- function(
   inventory,
   topography,
   plotslope,
+  harvestablepolygons,
+  maintrails,
   speciescriteria,
   scenario,
   objective = NULL,
@@ -194,7 +207,7 @@ treeselection <- function(
   specieslax = FALSE,
   objectivelax = FALSE,
   advancedloggingparameters = loggingparameters()
-  # MainTrail
+
 
 ){
 
@@ -270,6 +283,8 @@ treeselection <- function(
   # Harvestable trees identification
   harvestableOutputs <- harvestable(inventory,
                                     topography = topography, plotslope = plotslope,
+                                    harvestablepolygons = harvestablepolygons,
+                                    maintrails = maintrails,
                                     diversification = diversification, specieslax = specieslax,
                                     advancedloggingparameters = advancedloggingparameters)
 
@@ -314,7 +329,7 @@ treeselection <- function(
 
   if (dim(SelectedTreesPoints)[1] != 0) {
 
-    st_as_sf(SelectedTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(SelectedTreesPoints) <- ~ Xutm + Yutm
+    SelectedTreesPoints <- st_as_sf(SelectedTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(SelectedTreesPoints) <- ~ Xutm + Yutm
 
     # sp::proj4string(SelectedTreesPoints) <- raster::crs(topography)
 
@@ -344,6 +359,22 @@ treeselection <- function(
 
   } else {ReserveTreesPoints = st_point(x = c(NA_real_, NA_real_))} # empty
 
+  # Points vector with coordinates of the big trees (DBH >= 50 cm):
+
+  BigTreesPoints <- inventory %>%
+    filter(DBH >= advancedloggingparameters$BigTrees & ( Selected != "1"& LoggingStatus != "harvestable" & LoggingStatus != "harvestableUp" & LoggingStatus != "harvestable2nd" ))
+
+  if (dim(BigTreesPoints)[1] != 0) {
+
+
+    sp::coordinates(BigTreesPoints) <- ~ Xutm + Yutm
+
+    sp::proj4string(BigTreesPoints) <- crs(topography)
+
+    BigTreesPoints <- BigTreesPoints %>% st_as_sf()
+
+  } else {BigTreesPoints = st_point(x = c(NA_real_, NA_real_))}
+
   # where specieslax was not necessary, consider eco2s as non-exploitable:
   inventory <- inventory %>%
     mutate(LoggingStatus = ifelse(HVinit > VO & LoggingStatus == "harvestable2nd", "non-harvestable",
@@ -358,7 +389,8 @@ treeselection <- function(
                                FutureTreesPoints = FutureTreesPoints,
                                ReserveTreesPoints = ReserveTreesPoints,
                                HollowTreesPoints = HollowTreesPoints,
-                               EnergywoodTreesPoints = EnergywoodTreesPoints)
+                               EnergywoodTreesPoints = EnergywoodTreesPoints,
+                               BigTreesPoints = BigTreesPoints)
 
 
 
