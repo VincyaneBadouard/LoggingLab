@@ -85,7 +85,7 @@
 <li>Selection of trees by the logger</li>
 <li>The layout of secondary skidding trails</li>
 <li>Felling of the tree</li>
-<li>Adjustment of secondary skidding trails in the case of Wood Fuel exploitation (WFE)</li>
+<li>Adjustment of secondary skidding trails in the case of Fuel Wood Exploitation (FWE)</li>
 <li>Moving the bole</li>
 </ol>
 </div>
@@ -102,7 +102,7 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/" class="external-link">kableExtra</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></code></pre></div>
-<p><strong>Load the two datasets stored in the package</strong></p>
+<p><strong>Load the data stored in the package</strong></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># 2016 inventory of Paracou (French Guiana) plot 6</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span>
@@ -113,9 +113,7 @@
 <span class="co"># Crown diameter allometry parameters table</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ParamCrownDiameterAllometry</span><span class="op">)</span>
 <span class="co"># Digital terrain model (DTM) of the plot 6 of Paracou (1m resolution, LiDAR campaign of 2016)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span>
-<span class="co"># Slopes (in radians) of the plot 6 of Paracou (with a neighbourhood of 8 cells)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotSlope</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level1">
 <h1 id="required-format-of-the-inventory">Required format of the inventory<a class="anchor" aria-label="anchor" href="#required-format-of-the-inventory"></a>
@@ -3922,275 +3920,22 @@ Family
 <tbody>
 <tr>
 <td style="text-align:right;">
-0.4452438
+0.6765656
 </td>
 <td style="text-align:right;">
-0.5835384
+0.5668744
 </td>
 <td style="text-align:left;">
 sp
 </td>
 <td style="text-align:left;">
-Pseudopiptadenia_suaveolens
-</td>
-<td style="text-align:left;">
-Pseudopiptadenia
-</td>
-<td style="text-align:left;">
-suaveolens
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4301593
-</td>
-<td style="text-align:right;">
-0.5520431
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Byrsonima
-</td>
-<td style="text-align:left;">
-Byrsonima
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.5095341
-</td>
-<td style="text-align:right;">
-0.5824272
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Couma
-</td>
-<td style="text-align:left;">
-Couma
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4395081
-</td>
-<td style="text-align:right;">
-0.5808555
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Vataireopsis
-</td>
-<td style="text-align:left;">
-Vataireopsis
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4485476
-</td>
-<td style="text-align:right;">
-0.5963019
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Vochysia_guianensis
-</td>
-<td style="text-align:left;">
-Vochysia
-</td>
-<td style="text-align:left;">
-guianensis
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.5855902
-</td>
-<td style="text-align:right;">
-0.5621507
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Couratari
-</td>
-<td style="text-align:left;">
-Couratari
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4296304
-</td>
-<td style="text-align:right;">
-0.5648335
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Annona
-</td>
-<td style="text-align:left;">
-Annona
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4761254
-</td>
-<td style="text-align:right;">
-0.5728836
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Ficus_nymphaeifolia
-</td>
-<td style="text-align:left;">
-Ficus
-</td>
-<td style="text-align:left;">
-nymphaeifolia
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4586269
-</td>
-<td style="text-align:right;">
-0.5681926
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Parinari
-</td>
-<td style="text-align:left;">
-Parinari
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.5562710
-</td>
-<td style="text-align:right;">
-0.5599447
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Chrysophyllum_argenteum
-</td>
-<td style="text-align:left;">
-Chrysophyllum
-</td>
-<td style="text-align:left;">
-argenteum
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.5759479
-</td>
-<td style="text-align:right;">
-0.5670960
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Micropholis
-</td>
-<td style="text-align:left;">
-Micropholis
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.6545042
-</td>
-<td style="text-align:right;">
-0.5686145
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Eschweilera_decolorans
+Eschweilera_sagotiana
 </td>
 <td style="text-align:left;">
 Eschweilera
 </td>
 <td style="text-align:left;">
-decolorans
+sagotiana
 </td>
 <td style="text-align:left;">
 NA
@@ -4198,22 +3943,22 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4490404
+0.4961956
 </td>
 <td style="text-align:right;">
-0.5872514
+0.5762861
 </td>
 <td style="text-align:left;">
-sp
+gen
 </td>
 <td style="text-align:left;">
-Ormosia_paraensis
+Aspidosperma
 </td>
 <td style="text-align:left;">
-Ormosia
+Aspidosperma
 </td>
 <td style="text-align:left;">
-paraensis
+NA
 </td>
 <td style="text-align:left;">
 NA
@@ -4221,19 +3966,42 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4827810
+0.5446967
 </td>
 <td style="text-align:right;">
-0.5790088
+0.5927876
 </td>
 <td style="text-align:left;">
 sp
 </td>
 <td style="text-align:left;">
-Couepia_guianensis
+Moronobea_coccinea
 </td>
 <td style="text-align:left;">
-Couepia
+Moronobea
+</td>
+<td style="text-align:left;">
+coccinea
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.4629392
+</td>
+<td style="text-align:right;">
+0.5698263
+</td>
+<td style="text-align:left;">
+sp
+</td>
+<td style="text-align:left;">
+Sacoglottis_guianensis
+</td>
+<td style="text-align:left;">
+Sacoglottis
 </td>
 <td style="text-align:left;">
 guianensis
@@ -4244,22 +4012,252 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4775962
+0.4927202
 </td>
 <td style="text-align:right;">
-0.5738132
+0.5935720
 </td>
 <td style="text-align:left;">
 sp
 </td>
 <td style="text-align:left;">
-Perebea_rubra
+Licaria_chrysophylla
 </td>
 <td style="text-align:left;">
-Perebea
+Licaria
 </td>
 <td style="text-align:left;">
-rubra
+chrysophylla
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.4707812
+</td>
+<td style="text-align:right;">
+0.5703485
+</td>
+<td style="text-align:left;">
+gen
+</td>
+<td style="text-align:left;">
+Hirtella
+</td>
+<td style="text-align:left;">
+Hirtella
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5642710
+</td>
+<td style="text-align:right;">
+0.5561839
+</td>
+<td style="text-align:left;">
+sp
+</td>
+<td style="text-align:left;">
+Pouteria_guianensis
+</td>
+<td style="text-align:left;">
+Pouteria
+</td>
+<td style="text-align:left;">
+guianensis
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5614542
+</td>
+<td style="text-align:right;">
+0.5520891
+</td>
+<td style="text-align:left;">
+sp
+</td>
+<td style="text-align:left;">
+Pouteria_singularis
+</td>
+<td style="text-align:left;">
+Pouteria
+</td>
+<td style="text-align:left;">
+singularis
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5068352
+</td>
+<td style="text-align:right;">
+0.5914779
+</td>
+<td style="text-align:left;">
+gen
+</td>
+<td style="text-align:left;">
+Sterculia
+</td>
+<td style="text-align:left;">
+Sterculia
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.4308677
+</td>
+<td style="text-align:right;">
+0.5479766
+</td>
+<td style="text-align:left;">
+sp
+</td>
+<td style="text-align:left;">
+Talisia_simaboides
+</td>
+<td style="text-align:left;">
+Talisia
+</td>
+<td style="text-align:left;">
+simaboides
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.4415063
+</td>
+<td style="text-align:right;">
+0.5590196
+</td>
+<td style="text-align:left;">
+sp
+</td>
+<td style="text-align:left;">
+Byrsonima_laevigata
+</td>
+<td style="text-align:left;">
+Byrsonima
+</td>
+<td style="text-align:left;">
+laevigata
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.4253551
+</td>
+<td style="text-align:right;">
+0.5736574
+</td>
+<td style="text-align:left;">
+gen
+</td>
+<td style="text-align:left;">
+Dipteryx
+</td>
+<td style="text-align:left;">
+Dipteryx
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5356360
+</td>
+<td style="text-align:right;">
+0.5926933
+</td>
+<td style="text-align:left;">
+fam
+</td>
+<td style="text-align:left;">
+Simaroubaceae
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Simaroubaceae
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.4904035
+</td>
+<td style="text-align:right;">
+0.5765369
+</td>
+<td style="text-align:left;">
+gen
+</td>
+<td style="text-align:left;">
+Caraipa
+</td>
+<td style="text-align:left;">
+Caraipa
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.4336225
+</td>
+<td style="text-align:right;">
+0.5913331
+</td>
+<td style="text-align:left;">
+gen
+</td>
+<td style="text-align:left;">
+Ruizterania
+</td>
+<td style="text-align:left;">
+Ruizterania
+</td>
+<td style="text-align:left;">
+NA
 </td>
 <td style="text-align:left;">
 NA
@@ -4283,12 +4281,12 @@ NA
 <li><p><strong>speciescriteria</strong> : Table of species exploitability criteria : species names, economic interest level, minimum and maximum felling diameter, in the same format of  (2 levels of commercial species) (data.frame)</p></li>
 <li><p><strong>volumeparameters</strong> : Volume parameters table (in the same format of ) to compute the harvestable volume of each tree, depend to its geographic zone if several locations (data.frame)</p></li>
 <li><p><strong>scenario</strong> : Logging scenario: “<strong>RIL1</strong>”, “<strong>RIL2broken</strong>”, “<strong>RIL2</strong>”, “<strong>RIL3</strong>”, “<strong>RIL3fuel</strong>”, “<strong>RIL3fuelhollow</strong>” or “<strong>manual</strong>”(character)</p></li>
-<li><p><strong>objective</strong> : Objective volume per hectare (numeric)</p></li>
-<li><p><strong>fuel</strong> : Fuel wood exploitation: <strong>no exploitation</strong> = “<strong>0</strong>”, <strong>damages and purge</strong> exploitation in fuel = “<strong>1</strong>”, exploitation of <strong>hollow trees, damages and purge</strong> in fuel = “<strong>2</strong>”</p></li>
-<li><p><strong>diversification</strong> : Taking of other species in addition to the main commercial species (2 levels of commercial species in the  table) (logical)</p></li>
+<li><p><strong>objective</strong> : Objective volume (m3/ha) (numeric)</p></li>
+<li><p><strong>fuel</strong> : Fuel wood exploitation: <strong>no exploitation</strong> = “<strong>0</strong>”, <strong>damages and unused part of logged trees</strong> exploitation in fuel = “<strong>1</strong>”, exploitation of <strong>hollow trees, damages and unused part of logged trees</strong> in fuel = “<strong>2</strong>”</p></li>
+<li><p><strong>diversification</strong> : Possibility to log other species in addition to the main commercial species (species with a value of 2 for commercial in the  table) (logical)</p></li>
 <li><p><strong>winching</strong> : No cable or grapple = “<strong>0</strong>”, only <strong>cable</strong> = “<strong>1</strong>”, <strong>grapple + cable</strong> = “<strong>2</strong>”</p></li>
 <li><p><strong>directionalfelling</strong> : Directional felling = “0”: only to direct the foot of the tree towards the trail “1”: to direct the foot of the tree towards the trail + to avoid damage to future and reserve trees “2”: to avoid damage to future and reserve trees + orientation angle to the trail</p></li>
-<li><p><strong>specieslax</strong> : Allow diversification if stand is too poor, = FALSE by default (logical)</p></li>
+<li><p><strong>specieslax</strong> : Allow diversification if stand is too poor to reach the objective volume without diversification, = FALSE by default (logical)</p></li>
 <li><p><strong>objectivelax</strong> : Allow exploitation in case of non-achievement of the objective volume (if stand too poor), = FALSE by default (logical)</p></li>
 <li><p><strong>crowndiameterparameters</strong> : Crown diameter allometry parameters table (in the same format of ) to compute the crown diameter of each tree, depend to its DBH (Diameter at Breast Height) and its species, genus or family (Aubry-Kientz et al.2019). (data.frame)</p></li>
 <li><p><strong>advancedloggingparameters</strong> : Other parameters of the logging simulator  (list)</p></li>
@@ -4456,15 +4454,15 @@ TRUE
 <p><em>Numeric values</em></p>
 <ul>
 <li>
-<strong>Minimum DBH value</strong> = 10 cm</li>
+<strong>Minimum DBH for inclusion in the forest inventory</strong> = 10 cm</li>
 <li>
-<strong>Maximum area slope</strong> = 27 %</li>
+<strong>Maximum harvestable area slope</strong> = 27 %</li>
 <li>
 <strong>Maximum main &amp; 2nd trail centerline slope</strong> = 22 %</li>
 <li>
 <strong>Maximum main &amp; 2nd trail cross slope</strong> = 4 %</li>
 <li>
-<strong>Grapple maximum slope</strong> = 20 %</li>
+<strong>Maximum slope accessible by the grapple</strong> = 20 %</li>
 <li>
 <strong>Maximum tree slope</strong> = 22 %</li>
 <li>
@@ -4480,9 +4478,7 @@ TRUE
 <li>
 <strong>2nd trail width</strong> = 4 m</li>
 <li>
-<strong>DBH of trees to be avoided at trail construction</strong> = 50 cm</li>
-<li>
-<strong>Objective bonus</strong> = 30 % (20;30%)</li>
+<strong>Minimum DBH of trees to be avoided by trails</strong> = 50 cm</li>
 <li>
 <strong>Cable length</strong> = 40 m</li>
 <li>
@@ -4490,9 +4486,9 @@ TRUE
 <li>
 <strong>Minimum distance to consider a tree “isolated”</strong> from other trees of its species, in the aggregative species case (, ‘Aggregative’ column) = 100 m</li>
 <li>
-<strong>Future trees minimum diameter</strong> = 35 cm</li>
+<strong>Future trees minimum diameter</strong> = 35 cm (future trees are only commercial species of the 1st economic level)</li>
 <li>
-<strong>Proportion of successful directional felling events</strong> = 0.6 %</li>
+<strong>Proportion of successful directional felling events</strong> = 60 %</li>
 <li>
 <strong>Minimum orientation of the tree fall to the trail</strong> = 30 degree</li>
 <li>
@@ -4502,9 +4498,9 @@ TRUE
 <li>
 <strong>Purge (unused part of the log)</strong> = 0.14 m^3 of fuel wood/m^3 of logged trees</li>
 <li>
-<strong>Maximum trail density</strong> = 200 m/ha (has no impact on the simulation. A message will only be sent to inform you of its validation or not)</li>
+<strong>Maximum trail density</strong> = 200 m/ha (has no impact on the simulation. A message will be sent to inform if this threshold has been exceeded)</li>
 <li>
-<strong>Maximum landing area</strong> = 1500 square meters (has no impact on the simulation. A message will only be sent to inform you of its validation or not)</li>
+<strong>Maximum landing area</strong> = 1500 square meters (has no impact on the simulation. A message will be sent to inform if this threshold has been exceeded)</li>
 </ul>
 <p><em>Models</em></p>
 <ul>
@@ -4513,7 +4509,7 @@ TRUE
 <li><p><strong>Tree height</strong> allometry parameters estimated from Guyanese data with the BIOMASS package: log(H) = 0.07359191 + 1.34241216 log(DBH) + (-0.12282344)*log(DBH)^2, height (H) in m, DBH in cm</p></li>
 <li><p><strong>Crown diameter allometry</strong> (<em>ref</em>): ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2) and mean σ^2 = 0.0295966977 with the crown diameter (CD) and the tree height (H) in m, and the DBH (D) in cm (Aubry-Kientz et al.2019).</p></li>
 <li><p><strong>Rotten model</strong>, estimates the tree probability of being probed hollow: 1 / (1 + exp(-(-5.151 + 0.042 DBH))), with DBH in cm</p></li>
-<li><p><strong>Visibly defect model</strong>, estimates the tree probability to have visible defects: 1 / (1 + exp(-(-3.392 + 0.357 * Log(DBH)))) with DBH in cm</p></li>
+<li><p><strong>Visibly defect model</strong>, estimates the commercial tree probability to have visible defects: 1 / (1 + exp(-(-3.392 + 0.357 * Log(DBH)))) with DBH in cm</p></li>
 </ul>
 </div>
 <div class="section level1">
@@ -4641,13 +4637,18 @@ TRUE
 </h3>
 <p><strong>Trees to be exploited, future and reserve trees</strong></p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># treeselectionoutputs &lt;- treeselection(inventory,</span>
-<span class="co">#                                       topography = DTMParacou, plotslope = PlotSlope,</span>
-<span class="co">#                                       speciescriteria = SpeciesCriteria,</span>
-<span class="co">#                                       objective = 20, scenario ="manual", fuel = "2",</span>
-<span class="co">#                                       diversification = FALSE, specieslax = FALSE,</span>
-<span class="co">#                                       objectivelax = TRUE,</span>
-<span class="co">#                                       advancedloggingparameters = loggingparameters())</span></code></pre></div>
+<code class="sourceCode R"><span class="va">treeselectionoutputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>,
+                                      topography <span class="op">=</span> <span class="va">DTMParacou</span>,
+                                      speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,
+                                      objective <span class="op">=</span> <span class="fl">20</span>, scenario <span class="op">=</span><span class="st">"manual"</span>, fuel <span class="op">=</span> <span class="st">"2"</span>,
+                                      diversification <span class="op">=</span> <span class="cn">FALSE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,
+                                      objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,
+                                      MainTrails <span class="op">=</span> <span class="va">MainTrails</span>, plotslope <span class="op">=</span> <span class="va">PlotSlope</span>,
+                                      harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,
+                                      advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; The harvestable volume (= 21.4m^3) was lower</span>
+<span class="co">#&gt;               (by 103.6m^3) than your objective volume.</span>
+<span class="co">#&gt;               You have chosen to continue logging without diversifying in this case.</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="decomposed-tree-selection">Decomposed tree selection<a class="anchor" aria-label="anchor" href="#decomposed-tree-selection"></a>
@@ -4663,7 +4664,9 @@ TRUE
 </h4>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">harvestableOutputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/harvestable.html">harvestable</a></span><span class="op">(</span><span class="va">inventory</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,
-                                  diversification <span class="op">=</span> <span class="cn">TRUE</span>, plotslope <span class="op">=</span> <span class="va">PlotSlope</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,
+                                  diversification <span class="op">=</span> <span class="cn">TRUE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,
+                                  MainTrails <span class="op">=</span> <span class="va">MainTrails</span>, plotslope <span class="op">=</span> <span class="va">PlotSlope</span>,
+                                  harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,
                                   advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="va">inventory</span> <span class="op">&lt;-</span> <span class="va">harvestableOutputs</span><span class="op">$</span><span class="va">inventory</span>
 <span class="va">HVinit</span> <span class="op">&lt;-</span> <span class="va">harvestableOutputs</span><span class="op">$</span><span class="va">HVinit</span></code></pre></div>
@@ -4676,10 +4679,9 @@ TRUE
                       diversification <span class="op">=</span> <span class="cn">TRUE</span>, VO <span class="op">=</span> <span class="fl">125</span>, HVinit <span class="op">=</span> <span class="va">HVinit</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,
                       objectivelax <span class="op">=</span> <span class="cn">TRUE</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,
                       advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span>
-<span class="co">#&gt; As the harvestable volume (= 212.1m^3)</span>
-<span class="co">#&gt;                 was higher (by 87.1m^3)</span>
-<span class="co">#&gt;                 than the objective volume, it was necessary to increase the Minimum Falling Diameter (MinFD)</span>
-<span class="co">#&gt;                 of all species. The objective volume has now been reached.</span></code></pre></div>
+<span class="co">#&gt; The harvestable volume (= 96m^3) was lower</span>
+<span class="co">#&gt;               (by 29m^3) than your objective volume.</span>
+<span class="co">#&gt;               You have chosen to continue logging in this case.</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="future-reserve-trees-designation">Future &amp; reserve trees designation<a class="anchor" aria-label="anchor" href="#future-reserve-trees-designation"></a>
@@ -4698,12 +4700,12 @@ TRUE
 <p>If the number of trees connected to a secondary trail exceeds 20 (’’), the secondary trail will take the characteristics (width) of a main trail.</p>
 <p>Damage : - on the trail - on the edge of the trail: neglected.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">MainTrail</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_linestring</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">286400</span>, <span class="fl">583130</span>,
-                                        <span class="fl">286400</span>, <span class="fl">583250</span>,
-                                        <span class="fl">286655</span>, <span class="fl">583250</span>,
-                                        <span class="fl">286655</span>, <span class="fl">583130</span>,
-                                        <span class="fl">286400</span>, <span class="fl">583130</span><span class="op">)</span> <span class="co"># the return</span>
-                                      ,ncol<span class="op">=</span><span class="fl">2</span>, byrow<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">MainTrails</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_linestring</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">286400</span>, <span class="fl">583130</span>,
+                                         <span class="fl">286400</span>, <span class="fl">583250</span>,
+                                         <span class="fl">286655</span>, <span class="fl">583250</span>,
+                                         <span class="fl">286655</span>, <span class="fl">583130</span>,
+                                         <span class="fl">286400</span>, <span class="fl">583130</span><span class="op">)</span> <span class="co"># the return</span>
+                                       ,ncol<span class="op">=</span><span class="fl">2</span>, byrow<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">pol1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">286503</span>, <span class="fl">583134</span>,
                       <span class="fl">286503</span>, <span class="fl">583240</span>,
@@ -4741,8 +4743,17 @@ TRUE
 </h3>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/treefelling.html">treefelling</a></span><span class="op">(</span><span class="va">inventory</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>, fuel <span class="op">=</span> <span class="st">"0"</span>,
-                         directionalfelling <span class="op">=</span> <span class="st">"2"</span>, MainTrail <span class="op">=</span> <span class="va">MainTrail</span>, ScndTrail <span class="op">=</span> <span class="va">ScndTrail</span>,
+                         winching <span class="op">=</span> <span class="st">"1"</span>, directionalfelling <span class="op">=</span> <span class="st">"2"</span>,
+                         MainTrails <span class="op">=</span> <span class="va">MainTrails</span>, ScndTrail <span class="op">=</span> <span class="va">ScndTrail</span>,
                          advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
+<span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
+<span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
+<span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
+<span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
+<span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
+<span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
+<span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
 <span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
 <span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
 <span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>

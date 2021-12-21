@@ -71,61 +71,28 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span> <span class="co"># inventory</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span> <span class="co"># inventory</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span> <span class="co"># topography</span></span>
-<span class="r-in"><span class="co"># data() relative elevation</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">VerticalCreekHeight</span><span class="op">)</span> <span class="co"># relative elevation</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span> <span class="co"># species exploitability criteria</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span> <span class="co"># volume parameters</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ParamCrownDiameterAllometry</span><span class="op">)</span> <span class="co"># parameters values of the crown diameter allometry</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">Rslt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="loggingsimulation.html">loggingsimulation</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
-<span class="r-in">                    relativeelevation  <span class="op">=</span> <span class="va">DTMParacou</span>, speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span>
-<span class="r-in">                    volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>,</span>
-<span class="r-in">                    objective <span class="op">=</span> <span class="fl">20</span>, fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>, winching <span class="op">=</span> <span class="st">"2"</span>,</span>
-<span class="r-in">                    directionalfelling <span class="op">=</span> <span class="st">"2"</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">                    crowndiameterparameters <span class="op">=</span> <span class="va">ParamCrownDiameterAllometry</span>,</span>
-<span class="r-in">                    advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>, iter <span class="op">=</span> <span class="fl">1</span>, cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span class="r-in">  <span class="fu"><a href="loggingsimulation.html">loggingsimulation</a></span><span class="op">(</span></span>
+<span class="r-in">    <span class="va">Paracou6_2016</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
+<span class="r-in">    relativeelevation  <span class="op">=</span> <span class="va">VerticalCreekHeight</span>,</span>
+<span class="r-in">    speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span>
+<span class="r-in">    volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>,</span>
+<span class="r-in">    objective <span class="op">=</span> <span class="fl">20</span>, fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>, winching <span class="op">=</span> <span class="st">"2"</span>,</span>
+<span class="r-in">    directionalfelling <span class="op">=</span> <span class="st">"2"</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span class="r-in">    crowndiameterparameters <span class="op">=</span> <span class="va">ParamCrownDiameterAllometry</span>,</span>
+<span class="r-in">    advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>, iter <span class="op">=</span> <span class="fl">1</span>, cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">loggingsummary</span><span class="op">(</span><span class="va">Rslt</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> inventory : Paracou6_2016 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plot area : 6.25 ha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> scenario : manual </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> objective : 20 m3/ha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> fuel : 2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> diversification : TRUE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> winching : 2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> directionalfelling : 2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> specieslax : FALSE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> objectivelax : TRUE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Objective volume : 125 m3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial harvestable volume : 194.6 m3,  31.1 m3/ha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Timber logged volume : 119.4 m3,  19.1 m3/ha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> No hollow timber logged volume : 110 m3,  17.6 m3/ha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fuel wood volume : 254.5 m3,  40.7 m3/ha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Damages volume : 234.4 m3,  37.5 m3/ha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3,539 × 57</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Rowwise: </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Forest  Plot  PlotArea SubPlot idTree Protocole Xfield Yfield    Xutm    Yutm</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Paracou 6         6.25       4 <span style="text-decoration: underline;">104</span>455 Guyafor    215     69.5 <span style="text-decoration: underline;">286</span>645. <span style="text-decoration: underline;">583</span>055.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Paracou 6         6.25       4 <span style="text-decoration: underline;">103</span>939 Guyafor    128.    34   <span style="text-decoration: underline;">286</span>570. <span style="text-decoration: underline;">582</span>999.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Paracou 6         6.25       2 <span style="text-decoration: underline;">102</span>249 Guyafor    202    134.  <span style="text-decoration: underline;">286</span>617  <span style="text-decoration: underline;">583</span>114.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Paracou 6         6.25       2 <span style="text-decoration: underline;">102</span>086 Guyafor    176.   182.  <span style="text-decoration: underline;">286</span>580. <span style="text-decoration: underline;">583</span>155.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">100</span>904 Guyafor     36    170   <span style="text-decoration: underline;">286</span>449. <span style="text-decoration: underline;">583</span>110.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Paracou 6         6.25       3 <span style="text-decoration: underline;">103</span>694 Guyafor    122    116.  <span style="text-decoration: underline;">286</span>545. <span style="text-decoration: underline;">583</span>078.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">101</span>090 Guyafor     67.5  138   <span style="text-decoration: underline;">286</span>487. <span style="text-decoration: underline;">583</span>087.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">101</span>193 Guyafor     75.5  208.  <span style="text-decoration: underline;">286</span>478. <span style="text-decoration: underline;">583</span>156.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">100</span>833 Guyafor     25    238.  <span style="text-decoration: underline;">286</span>422. <span style="text-decoration: underline;">583</span>175.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">101</span>474 Guyafor    106.   238.  <span style="text-decoration: underline;">286</span>500. <span style="text-decoration: underline;">583</span>194.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 3,529 more rows, and 47 more variables: UTMZone &lt;int&gt;, Lat &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Lon &lt;dbl&gt;, Family &lt;chr&gt;, ScientificName &lt;chr&gt;, Genus &lt;chr&gt;, Species &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   BotaSource &lt;chr&gt;, BotaCertainty &lt;dbl&gt;, VernName &lt;chr&gt;, CensusYear &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   CensusDateCertainty &lt;lgl&gt;, CodeAlive &lt;lgl&gt;, MeasCode &lt;int&gt;, Circ &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   CircCorr &lt;dbl&gt;, CorrCode &lt;chr&gt;, DBH &lt;dbl&gt;, TreeHarvestableVolume &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   TrunkHeight &lt;dbl&gt;, TreeHeight &lt;dbl&gt;, CrownHeight &lt;dbl&gt;, Taxo &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   CrownDiameter &lt;dbl&gt;, WoodDensity &lt;dbl&gt;, levelWD &lt;chr&gt;, AGB &lt;dbl&gt;, …</span></span>
+<span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

@@ -58,8 +58,9 @@
   <span class="va">inventory</span>,
   <span class="va">scenario</span>,
   fuel <span class="op">=</span> <span class="cn">NULL</span>,
+  winching <span class="op">=</span> <span class="cn">NULL</span>,
   directionalfelling <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">MainTrail</span>,
+  <span class="va">MainTrails</span>,
   <span class="va">ScndTrail</span>,
   advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
@@ -78,14 +79,17 @@
 <dd><p>Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of
 hollow trees, damage and and unused part of the log for fuel = "2"</p></dd>
+<dt>winching</dt>
+<dd><p>No cable or grapple = "0", only cable = "1", grapple + cable =
+"2"</p></dd>
 <dt>directionalfelling</dt>
 <dd><p>Directional felling =
 "0": only to direct the foot of the tree towards the trail
 "1": to direct the foot of the tree towards the trail + to avoid damage to
-future and reserve trees
-"2": to avoid damage to future and reserve trees + orientation angle
-to the trail</p></dd>
-<dt>MainTrail</dt>
+future and reserve trees if possible
+"2": to avoid damage to future and reserve trees if possible
++ orientation angle to the trail</p></dd>
+<dt>MainTrails</dt>
 <dd><p>Main trail (sfg)</p></dd>
 <dt>ScndTrail</dt>
 <dd><p>Secondary trails (sfg)</p></dd>
@@ -110,33 +114,39 @@ ground, with dimensions calculated with specific allometries
 <li><p>at 60% ('TreefallSuccessProportion'):
 <em>base of the tree towards the nearest trail</em> (main or 2ndary)</p></li>
 </ul><p>RIL3/RIL3 timber + fuel wood:</p><ul><li><p>at 40%: random fall</p></li>
-<li><p>at 60% ('TreefallSuccessProportion'):</p><ul><li><p>if RIL3 + fuel &amp; trees &lt; 6 m from the trail and slope &lt;20% (grapple use):</p><ul><li><p>no particular angle to orientate to the trail,
-only to orient the tree <em>crown</em> as close as possible to the trail</p></li>
+<li><p>at 60% ('TreefallSuccessProportion'):</p><ul><li><p>if trees &lt; 6 m from the trail and slope &lt;20% (grapple use):</p><ul><li><p>no particular angle to orientate to the trail,
+only to orient the tree <em>base</em>(<em>crown</em> if fuel wood exploitation)
+as close as possible to the trail</p></li>
 <li><p>priority 1: avoid futures and reserves,</p></li>
 <li><p>priority 2: conformation allowing skidding back to the main trail</p></li>
 </ul></li>
-<li><p>otherwise (RIL3, RIL3 + fuel &amp;
-trees &gt; 6 m from the trail and/or slope &gt;20%)(cable use):</p><ul><li><p>30-45◦ orientation ('MinTreefallOrientation'; 'MaxTreefallOrientation')</p></li>
+<li><p>otherwise (trees &gt; 6 m from the trail and/or slope &gt;20%)(cable use):</p><ul><li><p>30-45◦ (default) orientation
+('MinTreefallOrientation'; 'MaxTreefallOrientation')</p></li>
 <li><p><em>base</em> to nearest trail</p></li>
-<li><p>priority 1: avoid futures and reserves</p></li>
-<li><p>priority 2: conformation allowing skidding back to the main trail</p></li>
+<li><p>conformation allowing skidding back to the main trail</p></li>
+<li><p>avoid futures and reserves if possible</p></li>
 </ul></li>
 </ul></li>
 </ul><p>Damage:
-Secondary windfall: <em>all trees under the felled tree (timber or energy)
-will be considered dead</em>.</p>
+Secondary windfall: all trees under the felled tree (timber or energy)
+will be considered dead.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">MainTrail</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_linestring</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">286400</span>, <span class="fl">582925</span>,</span>
-<span class="r-in">                                        <span class="fl">286400</span>, <span class="fl">583250</span>,</span>
-<span class="r-in">                                        <span class="fl">286700</span>, <span class="fl">583250</span>,</span>
-<span class="r-in">                                        <span class="fl">286700</span>, <span class="fl">582925</span>,</span>
-<span class="r-in">                                        <span class="fl">286400</span>, <span class="fl">582925</span><span class="op">)</span> <span class="co"># the return</span></span>
-<span class="r-in">                                     ,ncol<span class="op">=</span><span class="fl">2</span>, byrow<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotSlope</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestablePolygons</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># data(MainTrails)</span></span>
 <span class="r-in"></span>
+<span class="r-in"><span class="va">MainTrails</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_linestring</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">286400</span>, <span class="fl">583130</span>,</span>
+<span class="r-in">                                        <span class="fl">286400</span>, <span class="fl">583250</span>,</span>
+<span class="r-in">                                        <span class="fl">286655</span>, <span class="fl">583250</span>,</span>
+<span class="r-in">                                        <span class="fl">286655</span>, <span class="fl">583130</span>,</span>
+<span class="r-in">                                        <span class="fl">286400</span>, <span class="fl">583130</span><span class="op">)</span> <span class="co"># the return</span></span>
+<span class="r-in">                                     ,ncol<span class="op">=</span><span class="fl">2</span>, byrow<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">pol1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">286503</span>, <span class="fl">582925</span>,</span>
 <span class="r-in">                      <span class="fl">286503</span>, <span class="fl">583240</span>,</span>
 <span class="r-in">                      <span class="fl">286507</span>, <span class="fl">583240</span>,</span>
@@ -159,11 +169,13 @@ will be considered dead</em>.</p>
 <span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>, objective <span class="op">=</span> <span class="fl">4</span>,</span>
 <span class="r-in"> scenario <span class="op">=</span><span class="st">"manual"</span>, fuel <span class="op">=</span> <span class="st">"0"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span class="r-in"> objectivelax <span class="op">=</span> <span class="cn">TRUE</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>, plotslope <span class="op">=</span> <span class="va">PlotSlope</span>,</span>
-<span class="r-in"> speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span>
+<span class="r-in"> speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>, MainTrails <span class="op">=</span> <span class="va">MainTrails</span>,</span>
+<span class="r-in"> harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,</span>
 <span class="r-in"> advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">NewInventory</span> <span class="op">&lt;-</span> <span class="fu">treefelling</span><span class="op">(</span><span class="va">inventory</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>, fuel <span class="op">=</span> <span class="st">"0"</span>,</span>
-<span class="r-in">directionalfelling <span class="op">=</span> <span class="st">"0"</span>, MainTrail <span class="op">=</span> <span class="va">MainTrail</span>, ScndTrail <span class="op">=</span> <span class="va">ScndTrail</span>,</span>
+<span class="r-in">winching <span class="op">=</span> <span class="st">"0"</span>, directionalfelling <span class="op">=</span> <span class="st">"0"</span>,</span>
+<span class="r-in">MainTrails <span class="op">=</span> <span class="va">MainTrails</span>, ScndTrail <span class="op">=</span> <span class="va">ScndTrail</span>,</span>
 <span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">Treefall</span> <span class="op">&lt;-</span> <span class="va">NewInventory</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
@@ -194,6 +206,10 @@ will be considered dead</em>.</p>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">ProbedHollow</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span>
 <span class="r-in"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">ProbedHollow</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to min; returning Inf</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to min; returning Inf</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to max; returning -Inf</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to max; returning -Inf</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">VisibleDefect</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span>
 <span class="r-in"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">VisibleDefect</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span></span>
@@ -218,7 +234,7 @@ will be considered dead</em>.</p>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Selected</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Selected"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ProbedHollow</span>,</span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Probed hollow"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">MainTrail</span>,</span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">MainTrails</span>,</span>
 <span class="r-in">  alpha <span class="op">=</span> <span class="fl">0.5</span>, fill <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ScndTrail</span>,</span>
 <span class="r-in">  alpha <span class="op">=</span> <span class="fl">0.5</span>, fill <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -228,6 +244,7 @@ will be considered dead</em>.</p>
 <span class="r-in">  <span class="st">"HarvestableUp"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"Selected"</span> <span class="op">=</span> <span class="st">"red"</span>, <span class="st">"Future"</span> <span class="op">=</span> <span class="st">"orange"</span>,</span>
 <span class="r-in">  <span class="st">"Reserve"</span> <span class="op">=</span> <span class="st">"purple"</span>, <span class="st">"Probed hollow"</span> <span class="op">=</span> <span class="st">"forestgreen"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Logging status"</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Aesthetics must be either length 1 or the same as the data (1): geometry</span>
 <span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html" class="external-link">st_intersection</a></span><span class="op">(</span> <span class="co"># trees under the fallen trees</span></span>
@@ -236,7 +253,8 @@ will be considered dead</em>.</p>
 <span class="r-in"><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>attribute variables are assumed to be spatially constant throughout all geometries</span>
+<span class="r-plt img"><img src="treefelling-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

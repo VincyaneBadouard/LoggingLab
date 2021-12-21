@@ -60,9 +60,11 @@ which trees are harvestable according to your harvestability criteria</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">harvestable</span><span class="op">(</span>
   <span class="va">inventory</span>,
   <span class="va">topography</span>,
-  <span class="va">plotslope</span>,
   <span class="va">diversification</span>,
   specieslax <span class="op">=</span> <span class="cn">FALSE</span>,
+  <span class="va">MainTrails</span>,
+  <span class="va">harvestablepolygons</span>,
+  <span class="va">plotslope</span>,
   advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -74,10 +76,8 @@ which trees are harvestable according to your harvestability criteria</p>
 <code><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></code>) (data.frame)</p></dd>
 <dt>topography</dt>
 <dd><p>Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer)</p></dd>
-<dt>plotslope</dt>
-<dd><p>Slopes (in radians) of the inventoried plot (with a
-neighbourhood of 8 cells) (default: <code><a href="PlotSlope.html">PlotSlope</a></code>) (RasterLayer)</p></dd>
+or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer)
+#'</p></dd>
 <dt>diversification</dt>
 <dd><p>Taking of other species in addition to the main
 commercial species (2 levels of commercial species in the
@@ -85,6 +85,14 @@ commercial species (2 levels of commercial species in the
 <dt>specieslax</dt>
 <dd><p>Allow diversification if stand is too poor, = FALSE by
 default (logical)</p></dd>
+<dt>MainTrails</dt>
+<dd><p>Main trails defined at the entire harvestable area (sf polylines)</p></dd>
+<dt>harvestablepolygons</dt>
+<dd><p>Accessible area of the inventoried plot
+(default: <code><a href="HarvestableAreaDefinition.html">HarvestableAreaDefinition</a></code>) (sf polygons data.frame)</p></dd>
+<dt>plotslope</dt>
+<dd><p>Slopes (in radians) of the inventoried plot (with a
+neighbourhood of 8 cells) (default: <code><a href="PlotSlope.html">PlotSlope</a></code>) (RasterLayer)</p></dd>
 <dt>advancedloggingparameters</dt>
 <dd><p>Other parameters of the logging simulator
 (<code><a href="loggingparameters.html">loggingparameters</a></code>) (list)</p></dd>
@@ -121,11 +129,12 @@ criteria and are therefore considered 'non-harvestable'.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotSlope</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestablePolygons</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="inventorycheckformat.html">inventorycheckformat</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span>,</span>
 <span class="r-in">volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span>
@@ -133,7 +142,8 @@ criteria and are therefore considered 'non-harvestable'.</p>
 <span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="ONFGuyafortaxojoin.html">ONFGuyafortaxojoin</a></span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">harvestableOutputs</span> <span class="op">&lt;-</span> <span class="fu">harvestable</span><span class="op">(</span><span class="va">inventory</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
-<span class="r-in">plotslope <span class="op">=</span> <span class="va">PlotSlope</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span class="r-in">diversification <span class="op">=</span> <span class="cn">TRUE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, MainTrails <span class="op">=</span> <span class="va">MainTrails</span>,</span>
+<span class="r-in">plotslope <span class="op">=</span> <span class="va">PlotSlope</span>, harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,</span>
 <span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">new</span> <span class="op">&lt;-</span> <span class="va">harvestableOutputs</span><span class="op">$</span><span class="va">inventory</span></span>

@@ -22,13 +22,25 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/AdjTopoLCP.html</loc>
+  </url>
+  <url>
     <loc>/reference/DTMParacou.html</loc>
+  </url>
+  <url>
+    <loc>/reference/FilterAccesExplArea.html</loc>
   </url>
   <url>
     <loc>/reference/ForestZoneVolumeParametersTable.html</loc>
   </url>
   <url>
     <loc>/reference/HarvestableAreaDefinition.html</loc>
+  </url>
+  <url>
+    <loc>/reference/HarvestablePolygons.html</loc>
+  </url>
+  <url>
+    <loc>/reference/MainTrails.html</loc>
   </url>
   <url>
     <loc>/reference/Maria.html</loc>
@@ -53,6 +65,9 @@
   </url>
   <url>
     <loc>/reference/ScenariosTable.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SlopeRdCond.html</loc>
   </url>
   <url>
     <loc>/reference/SpeciesCriteria.html</loc>
@@ -112,7 +127,13 @@
     <loc>/reference/scenariosparameters.html</loc>
   </url>
   <url>
+    <loc>/reference/secondtrailsopening.html</loc>
+  </url>
+  <url>
     <loc>/reference/selected.html</loc>
+  </url>
+  <url>
+    <loc>/reference/smoothtrails.html</loc>
   </url>
   <url>
     <loc>/reference/timberharvestedvolume.html</loc>

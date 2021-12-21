@@ -99,20 +99,27 @@ the outputs metadata in the <code><a href="https://rdrr.io/r/utils/vignette.html
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="inventorycheckformat.html">inventorycheckformat</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span>,</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotSlope</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestablePolygons</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="inventorycheckformat.html">inventorycheckformat</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span>,</span>
 <span class="r-in">volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>, objective <span class="op">=</span> <span class="fl">20</span>, scenario <span class="op">=</span><span class="st">"manual"</span>,</span>
 <span class="r-in"> fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span class="r-in"> objectivelax <span class="op">=</span> <span class="cn">TRUE</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>, plotslope <span class="op">=</span> <span class="va">PlotSlope</span>,</span>
-<span class="r-in"> speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span>
+<span class="r-in"> speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>, MainTrails <span class="op">=</span> <span class="va">MainTrails</span>,</span>
+<span class="r-in"> harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,</span>
 <span class="r-in"> advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> As the harvestable volume (= 207.1m^3)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>                 was higher (by 82.1m^3)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>                 than the objective volume, it was necessary to increase the Minimum Falling Diameter (MinFD)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>                 of all species. The objective volume has now been reached.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The harvestable volume (= 94.1m^3) was lower</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>               (by 30.9m^3) than your objective volume.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>               You have chosen to continue logging in this case.</span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">new</span> <span class="op">&lt;-</span> <span class="fu">directionalfellingsuccessdef</span><span class="op">(</span><span class="va">inventory</span>,fuel <span class="op">=</span> <span class="st">"2"</span>, directionalfelling <span class="op">=</span> <span class="st">"2"</span>,</span>
+<span class="r-in"><span class="va">new</span> <span class="op">&lt;-</span> <span class="fu">directionalfellingsuccessdef</span><span class="op">(</span><span class="va">inventory</span>, fuel <span class="op">=</span> <span class="st">"2"</span>,</span>
+<span class="r-in">directionalfelling <span class="op">=</span> <span class="st">"2"</span>,</span>
 <span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 </code></pre></div>

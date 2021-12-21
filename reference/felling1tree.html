@@ -81,8 +81,9 @@ success is by default 60%, and can be changed with the
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">felling1tree</span><span class="op">(</span>
   <span class="va">dat</span>,
   <span class="va">fuel</span>,
+  <span class="va">winching</span>,
   <span class="va">directionalfelling</span>,
-  <span class="va">MainTrail</span>,
+  <span class="va">MainTrails</span>,
   <span class="va">ScndTrail</span>,
   <span class="va">FutureReserveCrowns</span>,
   advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>
@@ -98,14 +99,17 @@ CrownHeight, DBH, TrunkHeight, TreeHeight, TreeFellingOrientationSuccess</p></dd
 <dd><p>Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of
 hollow trees, damage and and unused part of the log for fuel = "2"</p></dd>
+<dt>winching</dt>
+<dd><p>No cable or grapple = "0", only cable = "1", grapple + cable =
+"2"</p></dd>
 <dt>directionalfelling</dt>
 <dd><p>Directional felling =
 "0": only to direct the foot of the tree towards the trail
 "1": to direct the foot of the tree towards the trail + to avoid damage to
-future and reserve trees
-"2": to avoid damage to future and reserve trees + orientation angle
-to the trail</p></dd>
-<dt>MainTrail</dt>
+future and reserve trees if possible
+"2": to avoid damage to future and reserve trees if possible
++ orientation angle to the trail</p></dd>
+<dt>MainTrails</dt>
 <dd><p>(sfg)</p></dd>
 <dt>ScndTrail</dt>
 <dd><p>(sfg)</p></dd>
@@ -131,13 +135,19 @@ the tree.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">MainTrail</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_linestring</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">286400</span>, <span class="fl">582945</span>,</span>
-<span class="r-in">                                        <span class="fl">286400</span>, <span class="fl">583250</span>,</span>
-<span class="r-in">                                        <span class="fl">286700</span>, <span class="fl">583250</span>,</span>
-<span class="r-in">                                        <span class="fl">286700</span>, <span class="fl">582945</span>,</span>
-<span class="r-in">                                        <span class="fl">286400</span>, <span class="fl">582945</span><span class="op">)</span> <span class="co"># the return</span></span>
-<span class="r-in">                                     ,ncol<span class="op">=</span><span class="fl">2</span>, byrow<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotSlope</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestablePolygons</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># data(MainTrails)</span></span>
 <span class="r-in"></span>
+<span class="r-in"><span class="va">MainTrails</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_linestring</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">286400</span>, <span class="fl">583130</span>,</span>
+<span class="r-in">                                        <span class="fl">286400</span>, <span class="fl">583250</span>,</span>
+<span class="r-in">                                        <span class="fl">286655</span>, <span class="fl">583250</span>,</span>
+<span class="r-in">                                        <span class="fl">286655</span>, <span class="fl">583130</span>,</span>
+<span class="r-in">                                        <span class="fl">286400</span>, <span class="fl">583130</span><span class="op">)</span> <span class="co"># the return</span></span>
+<span class="r-in">                                     ,ncol<span class="op">=</span><span class="fl">2</span>, byrow<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">pol1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">286503</span>, <span class="fl">583134</span>,</span>
 <span class="r-in">                      <span class="fl">286503</span>, <span class="fl">583240</span>,</span>
 <span class="r-in">                      <span class="fl">286507</span>, <span class="fl">583240</span>,</span>
@@ -160,7 +170,8 @@ the tree.</p>
 <span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>, objective <span class="op">=</span> <span class="fl">20</span>, scenario <span class="op">=</span><span class="st">"manual"</span>,</span>
 <span class="r-in"> fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span class="r-in"> objectivelax <span class="op">=</span> <span class="cn">TRUE</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>, plotslope <span class="op">=</span> <span class="va">PlotSlope</span>,</span>
-<span class="r-in"> speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span>
+<span class="r-in"> speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,  MainTrails <span class="op">=</span> <span class="va">MainTrails</span>,</span>
+<span class="r-in"> harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,</span>
 <span class="r-in"> advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">FutureReserveCrowns</span> <span class="op">&lt;-</span> <span class="va">inventory</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="co"># create an object with future/reserve crowns only</span></span>
@@ -177,8 +188,8 @@ the tree.</p>
 <span class="r-in">  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_column.html" class="external-link">add_column</a></span><span class="op">(</span>TreeFellingOrientationSuccess <span class="op">=</span> <span class="st">"1"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">rslt</span> <span class="op">&lt;-</span> <span class="fu">felling1tree</span><span class="op">(</span><span class="va">dat</span>,</span>
-<span class="r-in"> fuel <span class="op">=</span> <span class="st">"0"</span>, directionalfelling <span class="op">=</span> <span class="st">"0"</span>,</span>
-<span class="r-in"> MainTrail <span class="op">=</span> <span class="va">MainTrail</span>, ScndTrail <span class="op">=</span> <span class="va">ScndTrail</span>,</span>
+<span class="r-in"> fuel <span class="op">=</span> <span class="st">"0"</span>, winching <span class="op">=</span> <span class="st">"0"</span>, directionalfelling <span class="op">=</span> <span class="st">"0"</span>,</span>
+<span class="r-in"> MainTrails <span class="op">=</span> <span class="va">MainTrails</span>, ScndTrail <span class="op">=</span> <span class="va">ScndTrail</span>,</span>
 <span class="r-in"> FutureReserveCrowns <span class="op">=</span> <span class="va">FutureReserveCrowns</span>,</span>
 <span class="r-in"> advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>

@@ -98,8 +98,8 @@
 <dd><p>Minimum DBH for inclusion in the forest inventory. Default = 10, in cm
 (double)</p></dd>
 <dt>MaxAreaSlope</dt>
-<dd><p>Maximum area slope for inclusion in a logging unit.
-Default = 27, in % (double)</p></dd>
+<dd><p>Maximum area slope for inclusion in a logging unit
+(harvestable area). Default = 27, in % (double)</p></dd>
 <dt>MaxTrailCenterlineSlope</dt>
 <dd><p>Maximum main &amp; 2nd trail centerline slope.
 Default = 22, in % (double)</p></dd>
@@ -116,8 +116,8 @@ in % (double)</p></dd>
 <dd><p>Maximum slope to define an area as a plateau. Default = 5,
 in % (double)</p></dd>
 <dt>SlopeDistance</dt>
-<dd><p>Distance over which the slope is calculated. Default = 6, in m (3m each
-side) (double)</p></dd>
+<dd><p>Distance over which the slope is calculated.
+Default = 6, in m (3m each side) (double)</p></dd>
 <dt>WaterSourcesBufferZone</dt>
 <dd><p>Buffer zone around the water sources. Default =
 30, in m (double)</p></dd>
@@ -141,7 +141,7 @@ from other trees of its species, in the aggregative species case
 Default = 100, in m (double)</p></dd>
 <dt>FutureTreesMinDiameter</dt>
 <dd><p>Future trees minimum diameter. Default = 35, in
-cm (double)</p></dd>
+cm (future trees are only commercial species of the 1st economic level) (double)</p></dd>
 <dt>TreefallSuccessProportion</dt>
 <dd><p>Proportion of successful directional felling
 events. Default = 0.6 (double)</p></dd>
@@ -152,11 +152,11 @@ trail. Default = 30, in degree (double)</p></dd>
 <dd><p>Maximum orientation of the tree fall to the
 trail. Default = 45, in degree (double)</p></dd>
 <dt>TreeHollowPartForFuel</dt>
-<dd><p>Proportion of hollow trees used as fuel wood
-. Default = 1/3 (double)</p></dd>
+<dd><p>Proportion of hollow trees used as fuel wood.
+Default = 1/3 (double)</p></dd>
 <dt>Purge</dt>
-<dd><p>Part of the log no used for timber, can be used for fuel wood. Default = 0.14, in m^3 of purge/m^3 of
-volume of timber harvested. (double)</p></dd>
+<dd><p>Part of the log no used for timber, can be used for fuel wood.
+Default = 0.14, in m3 of purge/m3 of volume of timber harvested. (double)</p></dd>
 <dt>MaxTrailDensity</dt>
 <dd><p>Maximum trail density. Default = 200, in m/ha (double)
 (has no impact on the simulation. A message will be sent to inform if
@@ -187,7 +187,7 @@ and mean σ^2 = 0.0295966977 with the crown diameter (CD), the tree height
 <dd><p>Estimates the tree probability of being probed hollow
 (default: 1 / (1 + exp(-(-5.151 + 0.042  DBH))) with DBH in cm) (function)</p></dd>
 <dt>VisiblyDefectModel</dt>
-<dd><p>Estimates the tree probability to have visible
+<dd><p>Estimates the commercial tree probability to have visible
 defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 (function)</p></dd>
 </dl></div>
@@ -274,32 +274,32 @@ defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TreeHarvestableVolumeAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, aCoef, bCoef) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> aCoef + bCoef * (DBH/100)^2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56143be8f368&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56300a76afb8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TrunkHeightAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, TreeHarvestableVolume) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TreeHarvestableVolume/(pi * (((DBH/100)/2)^2))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56143be8f368&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56300a76afb8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TreeHeightAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> exp(0.07359191 + 1.34241216 * log(DBH) + -0.12282344 * log(DBH)^2)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56143be8f368&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56300a76afb8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $CrownDiameterAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, TreeHeight, alpha, beta) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> exp(((log(DBH) - alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56143be8f368&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56300a76afb8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $RottenModel</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1/(1 + exp(-(-5.151 + 0.042 * DBH)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56143be8f368&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56300a76afb8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $VisiblyDefectModel</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (LogDBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1/(1 + exp(-(-3.392 + 0.357 * LogDBH)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56143be8f368&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56300a76afb8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 </code></pre></div>
