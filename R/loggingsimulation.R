@@ -1,4 +1,4 @@
-#'loggingsimulation
+#' Logging simulation
 #'
 #'@description This function allows to simulate a timber and wood energy logging
 #'  on a forest plot. It covers: harvestable area definition, tree selection,
@@ -10,9 +10,12 @@
 #'  \code{\link{vignette}}) (data.frame)
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
+#'  or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
-#'@param relativeelevation (RasterLayer)
+#'@param relativeelevation Relative elevation (Default:
+#' \code{\link{VerticalCreekHeight}}) (Large RasterLayer)
+#' To generate vertical creek height:
+#'  \code{\link{VerticalCreekHeight}} in 'docs' folder of the package
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the
@@ -47,10 +50,6 @@
 #'         future and reserve trees
 #' "2": to avoid damage to future and reserve trees + orientation angle
 #'       to the trail
-#'@param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
-#'
-#'@param maintrails Main trails defined at the entire harvestable area (sf polylines)
 #'
 #'@param specieslax Allow diversification if stand is too poor to reach the
 #' objective volume without diversification, = FALSE by
@@ -96,8 +95,6 @@
 #' \dontrun{
 #' data(Paracou6_2016) # inventory
 #' data(DTMParacou) # topography
-#' data(MainTrails)  # MainTrails
-#' data(HarvestablePolygons) # HarvestablePolygons
 #' data(VerticalCreekHeight) # relative elevation
 #' data(SpeciesCriteria) # species exploitability criteria
 #' data(ForestZoneVolumeParametersTable) # volume parameters
@@ -105,7 +102,6 @@
 #'
 #' Rslt <- loggingsimulation(Paracou6_2016, topography = DTMParacou,
 #'  relativeelevation  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
-#'  harvestablepolygons = HarvestablePolygons, maintrails = MainTrails,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
@@ -117,8 +113,6 @@ loggingsimulation <- function(
   inventory,
   topography, # = NULL perspective
   relativeelevation, # = NULL perspective
-  maintrails,
-  harvestablepolygons,
   speciescriteria,
   volumeparameters,
 
@@ -144,7 +138,8 @@ loggingsimulation <- function(
   # Arguments check
 
   # inventory, speciescriteria, volumeparameters, crowndiameterparameters
-  if(!all(unlist(lapply(list(inventory, speciescriteria, volumeparameters, crowndiameterparameters), inherits, "data.frame"))))
+  if(!all(unlist(lapply(list(inventory, speciescriteria, volumeparameters, crowndiameterparameters),
+                        inherits, "data.frame"))))
     stop("The 'inventory', 'speciescriteria', 'volumeparameters' and 'crowndiameterparameters' arguments
          of the 'loggingsimulation' function must be data.frames")
 
@@ -218,41 +213,24 @@ loggingsimulation <- function(
   # Function
 
 
-  # Check & format the inventory + add the tree dimensions:
+  #### Check & format the inventory + add the tree dimensions: ####
   inventory <- addtreedim(inventorycheckformat(inventory),
                           volumeparameters = volumeparameters,
                           crowndiameterparameters = crowndiameterparameters,
                           advancedloggingparameters = advancedloggingparameters)
 
-  # # Harvestable area definition: A FAIRE
-  #
-  #
-  # # Main trails layout: (only for ONF plots)
-  #
-  #
-  # Tree selection (harvestable, future and reserve trees + defects trees):
-  plotslope <- PlotSlope # A SUPPRIMER
-  treeselectionoutputs <- treeselection(inventory, topography = topography, plotslope = plotslope,
-                                        scenario = scenario, objective = objective, fuel = fuel,
-                                        diversification = diversification, specieslax = specieslax,
-                                        harvestablepolygons = harvestablepolygons, maintrails = maintrails,
-                                        objectivelax = objectivelax, speciescriteria = speciescriteria,
-                                        advancedloggingparameters = advancedloggingparameters)
 
-  inventory <- treeselectionoutputs$inventory
-  VO <- treeselectionoutputs$VO
-  HVinit <- treeselectionoutputs$HVinit
-  HarvestableTreesPoints <- treeselectionoutputs$HarvestableTreesPoints
-  SelectedTreesPoints <- treeselectionoutputs$SelectedTreesPoints
-  FutureTreesPoints <- treeselectionoutputs$FutureTreesPoints
-  ReserveTreesPoints <- treeselectionoutputs$ReserveTreesPoints
-  HollowTreesPoints <- treeselectionoutputs$HollowTreesPoints
-  EnergywoodTreesPoints <- treeselectionoutputs$EnergywoodTreesPoints
+  #### Main trails layout: (only for ONF plots) ####
 
-  # # Secondary trails layout (preliminaries for fuel wood harvesting): A FAIRE
+  ##### Harvestable area definition: A FAIRE ####
+  # HarvestableAreaOutputs <- HarvestableAreaDefinition(topography = topography,
+  #                                                     verticalcreekheight = verticalcreekheight,
+  #                                                     advancedloggingparameters = advancedloggingparameters)
   #
-#
-  MainTrail <- sf::st_linestring(matrix(c(286400, 583130, # A SUPPRIMER
+  # HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
+  # PlotSlope <- HarvestableAreaOutputs$PlotSlope
+
+  MainTrails <- sf::st_linestring(matrix(c(286400, 583130, # A SUPPRIMER
                                           286400, 583250,
                                           286655, 583250,
                                           286655, 583130,
@@ -275,18 +253,48 @@ loggingsimulation <- function(
   PolList = list(pol1,pol2) #list of lists of numeric matrices
   ScndTrail <- sf::st_multipolygon(PolList) # A SUPPRIMER
 
-  # Tree felling:
+  #### Tree selection (harvestable, future and reserve trees + defects trees): ####
+  plotslope <- PlotSlope # A SUPPRIMER
+  treeselectionoutputs <- treeselection(inventory, topography = topography, plotslope = PlotSlope,
+                                        scenario = scenario, objective = objective, fuel = fuel,
+                                        diversification = diversification, specieslax = specieslax,
+                                        harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails,
+                                        objectivelax = objectivelax, speciescriteria = speciescriteria,
+                                        advancedloggingparameters = advancedloggingparameters)
+
+  inventory <- treeselectionoutputs$inventory
+  VO <- treeselectionoutputs$VO
+  HVinit <- treeselectionoutputs$HVinit
+  HarvestableTreesPoints <- treeselectionoutputs$HarvestableTreesPoints
+  SelectedTreesPoints <- treeselectionoutputs$SelectedTreesPoints
+  FutureTreesPoints <- treeselectionoutputs$FutureTreesPoints
+  ReserveTreesPoints <- treeselectionoutputs$ReserveTreesPoints
+  HollowTreesPoints <- treeselectionoutputs$HollowTreesPoints
+  EnergywoodTreesPoints <- treeselectionoutputs$EnergywoodTreesPoints
+
+  #### Secondary trails layout (preliminaries for fuel wood harvesting): A FAIRE ####
+  # ScndTrail <- secondtrailsopening(
+  #   topography = topography,
+  #   plots = Plots,
+  #   treeselectionoutputs = treeselectionoutputs,
+  #   verticalcreekheight = verticalcreekheight,
+  #   CostMatrix = CostMatrix,
+  #   scenarios = scenarios,
+  #   fact = 3,
+  #   advancedloggingparameters = advancedloggingparameters)
+
+  #### Tree felling: ####
   inventory <- treefelling(inventory, scenario = scenario, fuel = fuel,
-                           directionalfelling = directionalfelling,
-                           MainTrail = MainTrail, ScndTrail = ScndTrail,
+                           winching = winching, directionalfelling = directionalfelling,
+                           MainTrails = MainTrails, ScndTrail = ScndTrail,
                            advancedloggingparameters = advancedloggingparameters)
 
 
-  # Adjusted secondary trails layout (for fuel wood harvesting only) A FAIRE
+  #### Adjusted secondary trails layout (for fuel wood harvesting only) A FAIRE ####
 
-  # Landings implementation: (only for ONF plots)
+  #### Landings implementation: (only for ONF plots) ####
 
-  # Timber harvested volume quantification
+  #### Timber harvested volume quantification ####
   Timberoutputs <- timberharvestedvolume(inventory,
                                          scenario = scenario, fuel = fuel,
                                          advancedloggingparameters = advancedloggingparameters)
@@ -295,7 +303,7 @@ loggingsimulation <- function(
   NoHollowTimberLoggedVolume <- Timberoutputs$NoHollowTimberLoggedVolume
 
 
-  # Exploitable fuel wood volume quantification
+  #### Exploitable fuel wood volume quantification ####
   Fueloutputs <- exploitablefuelwoodvolume(inventory,
                                            scenario = scenario, fuel = fuel,
                                            TimberLoggedVolume = TimberLoggedVolume,
@@ -307,7 +315,7 @@ loggingsimulation <- function(
 
 
 
-
+  #### Outputs ####
   Outputs <- list(inventory = inventory,
 
                   # Numeric values
@@ -342,6 +350,5 @@ loggingsimulation <- function(
   )
 
   return(Outputs)
-
 
 }

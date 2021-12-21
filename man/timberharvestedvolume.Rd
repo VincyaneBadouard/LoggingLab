@@ -44,16 +44,19 @@ trees from the operation (trails, secondary windfall) are never exploited
 as timber, but as fuel wood if chosen.
 }
 \examples{
-data(Paracou6_2016)
-data(MainTrails)
-data(HarvestablePolygons)
+data(Paracou6_2016) # inventory
+data(DTMParacou) # topography
+data(MainTrails)  # MainTrails
+data(HarvestablePolygons) # HarvestablePolygons
+data(SpeciesCriteria) # species exploitability criteria
+data(ForestZoneVolumeParametersTable) # volume parameters
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
 
 inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
  fuel = "2", diversification = TRUE, specieslax = FALSE,
- harvestablepolygons = HarvestablePolygons, maintrails = MainTrails,
+ harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails,
  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
  speciescriteria = SpeciesCriteria,
  advancedloggingparameters = loggingparameters())$inventory)

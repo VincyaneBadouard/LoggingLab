@@ -3,14 +3,15 @@
 \docType{data}
 \name{PlotSlope}
 \alias{PlotSlope}
-\title{PlotSlope}
+\title{Slopes of Paracou plot 6}
 \format{
-SpatialPolygonsDataFrame
+RasterLayer
 }
 \usage{
 PlotSlope
 }
 \description{
-Slopes (in radians) of plot 6 of Paracou (French Guiana) (calculated with a neighbourhood of 8 cells)
+Slopes (in radians) of plot 6 of Paracou (French Guiana) (calculated with a
+neighbourhood of 8 cells)
 }
 \keyword{datasets}

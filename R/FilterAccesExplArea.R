@@ -1,15 +1,16 @@
-#' FilterAccesExplArea
+#' Filter access to harvestable zone
 #'
-#' @param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
+#' @param harvestablepolygons Accessible area of the inventoried plot (default:
+#'   \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
 #'
-#' @param maintrails Main trails defined at the entire harvestable area (sf polylines)
-#'
+#' @param MainTrails Main trails defined at the entire harvestable area (sf
+#'   polylines)
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
-#' \code{\link{loggingparameters}} (list) MainTrail (multiline)
+#'   \code{\link{loggingparameters}} (list)
 #'
-#' @return Accessible area  of the inventoried plot according to selected logging scenario (sf polygons data.frame)
+#' @return Accessible area of the inventoried plot according to selected
+#'   logging scenario (sf polygons data.frame)
 #'
 #' @export
 #'
@@ -17,14 +18,21 @@
 #' @importFrom dplyr mutate filter
 #'
 #' @examples
+#' \dontrun{
+#' data(MainTrails)
+#' data(HarvestablePolygons)
 #'
-#'  AccessPolygones <-  FilterAccesExplArea (harvestablepolygons = HarvestablePolygons,
-#'  maintrails = MainTrails,
+#' AccessPolygones <- FilterAccesExplArea(
+#'  harvestablepolygons = HarvestablePolygons,
+#'  MainTrails = MainTrails,
 #'  advancedloggingparameters = loggingparameters())
+#'  }
 #'
-FilterAccesExplArea <- function (harvestablepolygons ,
-                                 maintrails ,
-                                 advancedloggingparameters = loggingparameters()) {
+FilterAccesExplArea <- function(
+  harvestablepolygons,
+  MainTrails,
+  advancedloggingparameters = loggingparameters()
+){
 
   # Global Variables
   Harvestable <- Access <- NULL
@@ -34,7 +42,7 @@ FilterAccesExplArea <- function (harvestablepolygons ,
 
   #function
 
-  maintrails <- maintrails %>%
+  MainTrails <- MainTrails %>%
     sf::st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth)
 
   accesspolygones <- harvestablepolygons %>% filter(Harvestable == 1) %>%
@@ -42,7 +50,7 @@ FilterAccesExplArea <- function (harvestablepolygons ,
     sf::st_union() %>% sf::st_cast("POLYGON") %>% sf::st_as_sf()
 
   accesspolygones <- accesspolygones %>%
-    mutate("Access" = sf::st_intersects(accesspolygones,maintrails, sparse = FALSE))
+    mutate("Access" = sf::st_intersects(accesspolygones, MainTrails, sparse = FALSE))
 
   accesspolygonesMain <- accesspolygones %>% filter(Access == TRUE)  %>%
     sf::st_buffer(dist = advancedloggingparameters$ScndTrailWidth) %>%

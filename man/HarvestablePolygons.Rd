@@ -3,15 +3,19 @@
 \docType{data}
 \name{HarvestablePolygons}
 \alias{HarvestablePolygons}
-\title{HarvestablePolygons}
+\title{Harvestable zones (polygons) of Paracou plot 6}
 \format{
-A data.frame (sfc_POLYGON)
+sf (sfc_POLYGON)
 }
 \usage{
 HarvestablePolygons
 }
 \description{
-A collection of polygons defined as 1 : harvestable area / 0 : non-harvestable area
-of plot 6 of Paracou (French Guiana)
+Harvestable and non-harvestable zones of Paracou plot 6 (French Guiana)
+}
+\details{
+A collection of polygons defined as:
+1: harvestable zone
+0: non-harvestable zone
 }
 \keyword{datasets}

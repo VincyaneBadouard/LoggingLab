@@ -59,7 +59,7 @@ harvestableOutputs <- harvestable(inventory, diversification = TRUE,
  specieslax = FALSE,
 topography = DTMParacou, plotslope = PlotSlope,
 harvestablepolygons = HarvestablePolygons,
-maintrails = MainTrails,
+MainTrails = MainTrails,
 advancedloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory

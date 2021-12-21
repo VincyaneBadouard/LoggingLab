@@ -9,7 +9,7 @@ felling1tree(
   fuel,
   winching,
   directionalfelling,
-  MainTrail,
+  MainTrails,
   ScndTrail,
   FutureReserveCrowns,
   advancedloggingparameters = loggingparameters()
@@ -33,7 +33,7 @@ future and reserve trees if possible
 "2": to avoid damage to future and reserve trees if possible
 + orientation angle to the trail}
 
-\item{MainTrail}{(sfg)}
+\item{MainTrails}{(sfg)}
 
 \item{ScndTrail}{(sfg)}
 
@@ -62,15 +62,19 @@ success is by default 60\%, and can be changed with the
 \code{advancedloggingparameters} argument.
 }
 \examples{
+data(Paracou6_2016)
+data(DTMParacou)
+data(PlotSlope)
+data(SpeciesCriteria)
 data(HarvestablePolygons)
-data(MainTrails)
-MainTrail <- sf::st_linestring(matrix(c(286400, 582945,
-                                        286400, 583250,
-                                        286700, 583250,
-                                        286700, 582945,
-                                        286400, 582945) # the return
-                                     ,ncol=2, byrow=TRUE))
+# data(MainTrails)
 
+MainTrails <- sf::st_linestring(matrix(c(286400, 583130,
+                                        286400, 583250,
+                                        286655, 583250,
+                                        286655, 583130,
+                                        286400, 583130) # the return
+                                     ,ncol=2, byrow=TRUE))
 pol1 <- list(matrix(c(286503, 583134,
                       286503, 583240,
                       286507, 583240,
@@ -93,27 +97,26 @@ volumeparameters = ForestZoneVolumeParametersTable)
 inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
  fuel = "2", diversification = TRUE, specieslax = FALSE,
  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
- speciescriteria = SpeciesCriteria,
- advancedloggingparameters = loggingparameters(),
- maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory)
+ speciescriteria = SpeciesCriteria,  MainTrails = MainTrails,
+ harvestablepolygons = HarvestablePolygons,
+ advancedloggingparameters = loggingparameters())$inventory)
 
 FutureReserveCrowns <- inventory \%>\% # create an object with future/reserve crowns only
  dplyr::filter(LoggingStatus == "future" | LoggingStatus == "reserve") \%>\%
  createcanopy() \%>\% # create all inventory crowns in the 'Crowns' column
  getgeometry(Crowns)
 
-inventory <- inventory \%>\%
-     dplyr::filter(Selected == "1") \%>\%
-     dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
-     CrownDiameter,Selected, Xutm, Yutm)
-
-dat <- inventory[1,] \%>\% # just 1 row (1 tree)
-# force the orientation success for the exemple
-tibble::add_column(TreeFellingOrientationSuccess = "1")
+dat <- inventory \%>\%
+  dplyr::filter(Selected == "1") \%>\%
+  dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
+                CrownDiameter,Selected, Xutm, Yutm) \%>\%
+  dplyr::sample_n(1) \%>\% # just 1 row (1 tree)
+  # force the orientation success for the exemple
+  tibble::add_column(TreeFellingOrientationSuccess = "1")
 
 rslt <- felling1tree(dat,
  fuel = "0", winching = "0", directionalfelling = "0",
- MainTrail = MainTrail, ScndTrail = ScndTrail,
+ MainTrails = MainTrails, ScndTrail = ScndTrail,
  FutureReserveCrowns = FutureReserveCrowns,
  advancedloggingparameters = loggingparameters())
 
@@ -124,7 +127,7 @@ ggplot() +
   geom_sf(data = rslt$NearestPoints) +
   geom_sf(data = rslt$TrailPt) +
   geom_sf(data = rslt$FallenTree) +
-  geom_sf(data = FutureReserveCrowns)
+  geom_sf(data = FutureReserveCrowns$Crowns)
 }
 \seealso{
 \code{\link{loggingparameters}}

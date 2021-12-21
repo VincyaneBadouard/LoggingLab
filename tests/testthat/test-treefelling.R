@@ -4,12 +4,11 @@ test_that("treefelling", {
   data(Paracou6_2016)
   data(DTMParacou)
   data(PlotSlope)
-  data("MainTrails")
   data("HarvestablePolygons")
 
   MatrixInventory <- as.matrix(Paracou6_2016)
 
-  MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
+  MainTrails <- sf::st_linestring(matrix(c(286400, 583130,
                                           286400, 583250,
                                           286655, 583250,
                                           286655, 583130,
@@ -40,10 +39,10 @@ test_that("treefelling", {
                                               plotslope = PlotSlope,
                                               speciescriteria = SpeciesCriteria,
                                               advancedloggingparameters = loggingparameters(),
-                                              maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory)
+                                              MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory)
 
   testinventory <- treefelling(inventory, scenario = "manual", fuel = "2", winching = "2",
-                               directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
+                               directionalfelling = "2", MainTrails = MainTrails, ScndTrail = ScndTrail,
                                advancedloggingparameters = loggingparameters())
 
 
@@ -74,17 +73,17 @@ test_that("treefelling", {
   expect_error(treefelling(Paracou6_2016,
                            scenario = "manual", fuel = "2", winching = "0", directionalfelling = "2",
                            advancedloggingparameters = loggingparameters(),
-                           MainTrail = st_as_text(MainTrail), ScndTrail = st_as_text(ScndTrail)),
-               regexp = "The 'MainTrail' and 'ScndTrail' arguments of the 'treefelling' function must be sfg")
+                           MainTrails =  st_as_text(MainTrails), ScndTrail = st_as_text(ScndTrail)),
+               regexp = "The 'MainTrails' and 'ScndTrail' arguments of the 'treefelling' function must be sfg")
 
 
   expect_error(treefelling(Paracou6_2016, scenario = "manual", winching = "0", fuel = "2",
-                           directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
+                           directionalfelling = "2", MainTrails = MainTrails, ScndTrail = ScndTrail,
                            advancedloggingparameters = as.matrix(loggingparameters())),
                regexp = "The 'advancedloggingparameters' argument of the 'treefelling' function must be a list")
 
   expect_error(treefelling(Paracou6_2016, scenario = "manual", winching = "0",
-                           MainTrail = MainTrail, ScndTrail = ScndTrail,
+                           MainTrails = MainTrails, ScndTrail = ScndTrail,
                            fuel = NULL, directionalfelling = NULL),
                regexp = "If you choose the 'manual' mode,
          you must fill in the arguments 'fuel' and 'directionalfelling'")

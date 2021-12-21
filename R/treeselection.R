@@ -6,14 +6,6 @@
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
-#'@param plotslope Slopes (in radians) of the inventoried plot (with a
-#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
-#'
-#'@param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
-#'
-#'@param maintrails Main trails defined at the entire harvestable area (sf polylines)
-#'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the
 #'  same format as \code{\link{SpeciesCriteria}} (data.frame)
@@ -38,6 +30,14 @@
 #'
 #'@param objectivelax Allow exploitation in case of non-achievement of the
 #'  objective volume (if stand too poor), = FALSE by default (logical)
+#'
+#'@param MainTrails Main trails defined at the entire harvestable area (sf polylines)
+#'
+#'@param plotslope Slopes (in radians) of the inventoried plot (with a
+#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
+#'
+#'@param harvestablepolygons Accessible area of the inventoried plot
+#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
@@ -118,7 +118,6 @@
 #'
 #'
 #' @examples
-#' \dontrun{
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(PlotSlope)
@@ -128,13 +127,13 @@
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
+#' set.seed(2)
 #' treeselectionoutputs <- treeselection(inventory,
-#' maintrails = MainTrails,
-#' topography = DTMParacou, plotslope = PlotSlope,
+#' topography = DTMParacou,
+#' speciescriteria = SpeciesCriteria, objective = 10,
+#' scenario = "manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
+#' objectivelax = TRUE, MainTrails = MainTrails, plotslope = PlotSlope,
 #' harvestablepolygons = HarvestablePolygons,
-#' speciescriteria = SpeciesCriteria, objective = 20,
-#' scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
-#' objectivelax = TRUE,
 #' advancedloggingparameters = loggingparameters())
 #'
 #' NewInventory <- treeselectionoutputs$inventory
@@ -192,13 +191,10 @@
 #'   "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
 #'   "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
 #'   labs(color = "Logging status")
-#'}
+#'
 treeselection <- function(
   inventory,
   topography,
-  plotslope,
-  harvestablepolygons,
-  maintrails,
   speciescriteria,
   scenario,
   objective = NULL,
@@ -206,6 +202,9 @@ treeselection <- function(
   diversification = NULL,
   specieslax = FALSE,
   objectivelax = FALSE,
+  MainTrails,
+  harvestablepolygons,
+  plotslope,
   advancedloggingparameters = loggingparameters()
 
 
@@ -252,7 +251,7 @@ treeselection <- function(
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
-  PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
+  ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
@@ -282,9 +281,9 @@ treeselection <- function(
 
   # Harvestable trees identification
   harvestableOutputs <- harvestable(inventory,
-                                    topography = topography, plotslope = plotslope,
+                                    topography = topography,
                                     harvestablepolygons = harvestablepolygons,
-                                    maintrails = maintrails,
+                                    MainTrails = MainTrails, plotslope = plotslope,
                                     diversification = diversification, specieslax = specieslax,
                                     advancedloggingparameters = advancedloggingparameters)
 

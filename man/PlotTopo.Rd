@@ -3,7 +3,7 @@
 \docType{data}
 \name{PlotTopo}
 \alias{PlotTopo}
-\title{PlotTopo}
+\title{Topography of Paracou plot 6}
 \format{
 RasterLayer
 }
@@ -11,6 +11,7 @@ RasterLayer
 PlotTopo
 }
 \description{
-Cutting out the topography by the plot's boundaries (plot 6 of Paracou (1m resolution, LiDAR campaign of 2016) (French Guiana)
+Cutting out the topography by the plot's boundaries (plot 6 of Paracou (1m
+resolution, LiDAR campaign of 2016) (French Guiana)
 }
 \keyword{datasets}

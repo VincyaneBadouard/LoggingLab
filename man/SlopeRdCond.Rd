@@ -11,14 +11,16 @@ SlopeRdCond(
 )
 }
 \arguments{
-\item{DTM}{A RasterLayer for digital terrain model (DTM) data.}
+\item{DTM}{A RasterLayer for digital terrain model (DTM) data}
 
-\item{advancedloggingparameters}{Other parameters of the logging simulator.}
+\item{advancedloggingparameters}{Other parameters of the logging simulator
+\code{\link{loggingparameters}} (list)}
 
-\item{grapple}{boolean (default = FALSE).Use grapple in harvest.}
+\item{grapple}{Use grapple in harvest. Default = FALSE (boolean)}
 }
 \value{
-A transition layer object with weighted adjacent graph according to longitudinal / transversal slope condition
+A transition layer object with weighted adjacent graph according to
+longitudinal / transversal slope condition
 }
 \description{
 SlopeRdCond
@@ -29,4 +31,5 @@ data(DTMParacou)
 
 SlopeCond <- SlopeRdCond(DTM = DTMParacou)
 }
+
 }

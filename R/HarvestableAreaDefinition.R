@@ -1,18 +1,20 @@
-#' HarvestableAreaDefinition
+#' Harvestable area definition
 #'
-
-#' @param topography Digital terrain model (Large RasterLayer)
+#' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
+#'
 #' @param verticalcreekheight Relative elevation from nearest channel network
 #'   (Large RasterLayer)
+#'
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
 #'
-
 #' @return A list with:
-#' - A collection of polygons defined as 1 : harvestable area, 0 :
-#'   non-harvestable area (sf polygon)
-#' - A raster with slope (in radians) characteristic of the studied plot
-#' (Large RasterLayer)
+#' - 'HarvestablePolygons': a collection of polygons (sf polygon) defined as:
+#'    1 : harvestable area,
+#'    0 : non-harvestable area
+#' - 'PlotSlope': a raster with slope (in radians) characteristic of the studied
+#'    plot (Large RasterLayer)
 #'
 #'
 #' @export
@@ -20,22 +22,23 @@
 #' @importFrom sf st_as_sf st_cast
 #' @importFrom raster mask terrain rasterFromXYZ rasterToPolygons
 #'   rasterToPoints
-
-#' @importFrom  dplyr as_tibble left_join rename mutate if_else
-#' @importFrom  magrittr %>%
+#' @importFrom dplyr as_tibble left_join rename mutate if_else
+#' @importFrom magrittr %>%
 #'
 #' @examples
+#' \dontrun{
 #' data(Plots)
 #' data(DTMParacou)
 #' data(VerticalCreekHeight)
 #'
+#' HarvestableAreaOutputs <- HarvestableAreaDefinition(
+#'   topography = DTMParacou,
+#'   verticalcreekheight = VerticalCreekHeight,
+#'   advancedloggingparameters = loggingparameters()
+#'   )
 #'
-
-#' HarvestableArea <- HarvestableAreaDefinition(topography = DTMParacou,
-#'                                              verticalcreekheight = VerticalCreekHeight,
-#'                                              advancedloggingparameters = loggingparameters())
-#'
-#' plot(HarvestableArea[[1]])
+#' plot(HarvestableAreaOutputs[[1]])
+#' }
 #'
 HarvestableAreaDefinition <- function(
   topography,
@@ -102,8 +105,10 @@ HarvestableAreaDefinition <- function(
     st_cast(x = sf_PolygonHarvestable, to = "POLYGON", warn = FALSE)
 
 
-  return(list(HarvestablePolygons=HarvestablePolygons,
-              PlotSlope=PlotSlope))
+  return(list(
+    HarvestablePolygons = HarvestablePolygons,
+    PlotSlope = PlotSlope
+  ))
 
 }
 

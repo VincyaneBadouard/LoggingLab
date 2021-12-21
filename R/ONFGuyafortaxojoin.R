@@ -53,7 +53,7 @@ ONFGuyafortaxojoin <- function(
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
-  PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
+  ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
@@ -62,7 +62,7 @@ ONFGuyafortaxojoin <- function(
   VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
-  Aggregative.species <- Aggregative.genus <- NULL
+  Aggregative <- Aggregative.species <- Aggregative.genus <- NULL
 
 
   # Function

@@ -3,14 +3,15 @@
 \docType{data}
 \name{MainTrails}
 \alias{MainTrails}
-\title{Maintrails}
+\title{Main trails of Paracou plot 6}
 \format{
-A data.frame (sfc_LINESTRING)
+sf (sfc_LINESTRING)
 }
 \usage{
 MainTrails
 }
 \description{
-Maintrails lines defined at the extent of plot 6 of Paracou (French Guiana)
+The main trails are defined as lines at the edge and outside of the plot
+(plot 6 of Paracou, French Guiana)
 }
 \keyword{datasets}

@@ -1,9 +1,8 @@
-#' Maintrails
+#' Main trails of Paracou plot 6
 #'
+#' The main trails are defined as lines at the edge and outside of the plot
+#' (plot 6 of Paracou, French Guiana)
 #'
-#' Maintrails lines defined at the extent of plot 6 of Paracou (French Guiana)
-#'
-#' @format A data.frame (sfc_LINESTRING)
-#'
+#' @format sf (sfc_LINESTRING)
 #'
 "MainTrails"

@@ -41,7 +41,7 @@ library(knitr)
 library(kableExtra)
 library(ggplot2)
 ```
-**Load the two datasets stored in the package**
+**Load the data stored in the package**
 ```{r}
 # 2016 inventory of Paracou (French Guiana) plot 6
 data(Paracou6_2016)
@@ -53,8 +53,6 @@ data(ForestZoneVolumeParametersTable)
 data(ParamCrownDiameterAllometry)
 # Digital terrain model (DTM) of the plot 6 of Paracou (1m resolution, LiDAR campaign of 2016)
 data(DTMParacou)
-# Slopes (in radians) of the plot 6 of Paracou (with a neighbourhood of 8 cells)
-data(PlotSlope)
 ```
 
 # Required format of the inventory
@@ -158,9 +156,9 @@ main commercial species (species with a value of 2 for commercial in the
 = "**2**"
 
 + **directionalfelling** : Directional felling =
- "0": only to direct the foot of the tree towards the trail
- "1": to direct the foot of the tree towards the trail + to avoid damage to future and reserve trees
- "2": to avoid damage to future and reserve trees + orientation angle to the trail
+"0": only to direct the foot of the tree towards the trail
+"1": to direct the foot of the tree towards the trail + to avoid damage to future and reserve trees
+"2": to avoid damage to future and reserve trees + orientation angle to the trail
 
 
 + **specieslax** : Allow diversification if stand is too poor to reach the
@@ -380,7 +378,7 @@ Trees will be designated as "**harvestable**" if they:
 - belonging to species of 1st economic rank or more if diversification
 - DBH between the MinFD and the MaxFD.
 - not isolated ( >100m ('IsolateTreeMinDistance' in \code{\link{loggingparameters}})) from other individuals of the same
-   species in the aggregative species case (\code{\link{SpeciesCriteria}}, 'Aggregative' column).
+species in the aggregative species case (\code{\link{SpeciesCriteria}}, 'Aggregative' column).
 - on slopes < 22% ('TreeMaxSlope'in \code{\link{loggingparameters}})
 - off the main trails.
 
@@ -399,13 +397,15 @@ If the harvestable volume is too low, diversification can be applied if it was n
 ### In 1 function
 **Trees to be exploited, future and reserve trees**
 ```{r}
-# treeselectionoutputs <- treeselection(inventory,
-#                                       topography = DTMParacou, plotslope = PlotSlope,
-#                                       speciescriteria = SpeciesCriteria,
-#                                       objective = 20, scenario ="manual", fuel = "2",
-#                                       diversification = FALSE, specieslax = FALSE,
-#                                       objectivelax = TRUE,
-#                                       advancedloggingparameters = loggingparameters())
+treeselectionoutputs <- treeselection(inventory,
+                                      topography = DTMParacou,
+                                      speciescriteria = SpeciesCriteria,
+                                      objective = 20, scenario ="manual", fuel = "2",
+                                      diversification = FALSE, specieslax = FALSE,
+                                      objectivelax = TRUE,
+                                      MainTrails = MainTrails, plotslope = PlotSlope,
+                                      harvestablepolygons = HarvestablePolygons,
+                                      advancedloggingparameters = loggingparameters())
 ```
 
 ### Decomposed tree selection
@@ -417,8 +417,9 @@ inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 #### Harvestable trees identification
 ```{r}
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
-                                  diversification = TRUE, plotslope = PlotSlope, specieslax = FALSE,
-                                  maintrails = MainTrails, harvestablepolygons = HarvestablePolygons,
+                                  diversification = TRUE, specieslax = FALSE,
+                                  MainTrails = MainTrails, plotslope = PlotSlope,
+                                  harvestablepolygons = HarvestablePolygons,
                                   advancedloggingparameters = loggingparameters())
 inventory <- harvestableOutputs$inventory
 HVinit <- harvestableOutputs$HVinit
@@ -472,12 +473,12 @@ Damage :
 - on the edge of the trail: neglected.
 
 ```{r}
-MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
-                                        286400, 583250,
-                                        286655, 583250,
-                                        286655, 583130,
-                                        286400, 583130) # the return
-                                      ,ncol=2, byrow=TRUE))
+MainTrails <- sf::st_linestring(matrix(c(286400, 583130,
+                                         286400, 583250,
+                                         286655, 583250,
+                                         286655, 583130,
+                                         286400, 583130) # the return
+                                       ,ncol=2, byrow=TRUE))
 
 pol1 <- list(matrix(c(286503, 583134,
                       286503, 583240,
@@ -527,7 +528,8 @@ Secondary windfall: *all trees under the felled tree (timber or energy) will be 
 ### In 1 function
 ```{r}
 inventory <- treefelling(inventory, scenario = "manual", fuel = "0",
-                         directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
+                         winching = "1", directionalfelling = "2",
+                         MainTrails = MainTrails, ScndTrail = ScndTrail,
                          advancedloggingparameters = loggingparameters())
 
 Treefall <- inventory %>%

@@ -2,33 +2,40 @@
 % Please edit documentation in R/FilterAccesExplArea.R
 \name{FilterAccesExplArea}
 \alias{FilterAccesExplArea}
-\title{FilterAccesExplArea}
+\title{Filter access to harvestable zone}
 \usage{
 FilterAccesExplArea(
   harvestablepolygons,
-  maintrails,
+  MainTrails,
   advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
-\item{harvestablepolygons}{Accessible area of the inventoried plot
-(default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
+\item{harvestablepolygons}{Accessible area of the inventoried plot (default:
+\code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
 
-\item{maintrails}{Main trails defined at the entire harvestable area (sf polylines)}
+\item{MainTrails}{Main trails defined at the entire harvestable area (sf
+polylines)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
-\code{\link{loggingparameters}} (list) MainTrail (multiline)}
+\code{\link{loggingparameters}} (list)}
 }
 \value{
-Accessible area  of the inventoried plot according to selected logging scenario (sf polygons data.frame)
+Accessible area of the inventoried plot according to selected
+logging scenario (sf polygons data.frame)
 }
 \description{
-FilterAccesExplArea
+Filter access to harvestable zone
 }
 \examples{
+\dontrun{
+data(MainTrails)
+data(HarvestablePolygons)
 
- AccessPolygones <-  FilterAccesExplArea (harvestablepolygons = HarvestablePolygons,
- maintrails = MainTrails,
+AccessPolygones <- FilterAccesExplArea(
+ harvestablepolygons = HarvestablePolygons,
+ MainTrails = MainTrails,
  advancedloggingparameters = loggingparameters())
+ }
 
 }

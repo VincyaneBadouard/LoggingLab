@@ -2,14 +2,12 @@
 % Please edit documentation in R/loggingsimulation.R
 \name{loggingsimulation}
 \alias{loggingsimulation}
-\title{loggingsimulation}
+\title{Logging simulation}
 \usage{
 loggingsimulation(
   inventory,
   topography,
   relativeelevation,
-  maintrails,
-  harvestablepolygons,
   speciescriteria,
   volumeparameters,
   scenario,
@@ -31,14 +29,12 @@ loggingsimulation(
 \code{\link{vignette}}) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
+or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer)}
 
-\item{relativeelevation}{(RasterLayer)}
-
-\item{maintrails}{Main trails defined at the entire harvestable area (sf polylines)}
-
-\item{harvestablepolygons}{Accessible area of the inventoried plot
-(default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
+\item{relativeelevation}{Relative elevation (Default:
+\code{\link{VerticalCreekHeight}}) (Large RasterLayer)
+To generate vertical creek height:
+\code{\link{VerticalCreekHeight}} in 'docs' folder of the package}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the
@@ -70,9 +66,9 @@ main commercial species (species with a value of 2 for commercial in the
 \item{directionalfelling}{Directional felling =
 "0": only to direct the foot of the tree towards the trail
 "1": to direct the foot of the tree towards the trail + to avoid damage to
-future and reserve trees if possible
-"2": to avoid damage to future and reserve trees if possible
-+ orientation angle to the trail}
+future and reserve trees
+"2": to avoid damage to future and reserve trees + orientation angle
+to the trail}
 
 \item{specieslax}{Allow diversification if stand is too poor to reach the
 objective volume without diversification, = FALSE by
@@ -108,8 +104,6 @@ volume and damages quantification.
 \dontrun{
 data(Paracou6_2016) # inventory
 data(DTMParacou) # topography
-data(MainTrails)  # MainTrails
-data(HarvestablePolygons) # HarvestablePolygons
 data(VerticalCreekHeight) # relative elevation
 data(SpeciesCriteria) # species exploitability criteria
 data(ForestZoneVolumeParametersTable) # volume parameters
@@ -117,7 +111,6 @@ data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allo
 
 Rslt <- loggingsimulation(Paracou6_2016, topography = DTMParacou,
  relativeelevation  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
- harvestablepolygons = HarvestablePolygons, maintrails = MainTrails,
  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,

@@ -2,12 +2,11 @@ test_that("felling1tree", {
 
   # Test data
   data(Paracou6_2016)
-  data(MainTrails)
   data("HarvestablePolygons")
   # Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
   MatrixInventory <- as.matrix(Paracou6_2016)
 
-  MainTrail <- sf::st_linestring(matrix(c(286400, 582945,
+  MainTrails <- sf::st_linestring(matrix(c(286400, 582945,
                                           286400, 583250,
                                           286655, 583250,
                                           286655, 582945,
@@ -36,7 +35,7 @@ test_that("felling1tree", {
   inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
                                               fuel = "0", diversification = TRUE, specieslax = FALSE,
                                               objectivelax = TRUE, topography = DTMParacou,
-                                              maintrails = MainTrails, harvestablepolygons = HarvestablePolygons,
+                                              MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons,
                                               plotslope = PlotSlope,
                                               speciescriteria = SpeciesCriteria,
                                               advancedloggingparameters = loggingparameters())$inventory)
@@ -61,7 +60,7 @@ test_that("felling1tree", {
 
   Rslt2grapple <- felling1tree(dat,
                                fuel = "2", winching = "0", directionalfelling = "2",
-                               MainTrail = MainTrail, ScndTrail = ScndTrail,
+                               MainTrails = MainTrails, ScndTrail = ScndTrail,
                                FutureReserveCrowns = FutureReserveCrowns,
                                advancedloggingparameters = loggingparameters())
 
@@ -71,7 +70,7 @@ test_that("felling1tree", {
 
   Rslt2cable <- felling1tree(dat,
                              fuel = "2", winching = "0", directionalfelling = "2",
-                             MainTrail = MainTrail, ScndTrail = ScndTrail,
+                             MainTrails = MainTrails, ScndTrail = ScndTrail,
                              FutureReserveCrowns = FutureReserveCrowns,
                              advancedloggingparameters = loggingparameters())
 
@@ -79,7 +78,7 @@ test_that("felling1tree", {
   # Other cases
   Rslt <- felling1tree(dat,
                        fuel = "0", winching = "0", directionalfelling = "1",
-                       MainTrail = MainTrail, ScndTrail = ScndTrail,
+                       MainTrails = MainTrails, ScndTrail = ScndTrail,
                        FutureReserveCrowns = FutureReserveCrowns,
                        advancedloggingparameters = loggingparameters())
 
@@ -87,7 +86,7 @@ test_that("felling1tree", {
 
     Rslt1 <- felling1tree(dat,
                           fuel = "0", winching = "1", directionalfelling = "2",
-                          MainTrail = MainTrail, ScndTrail = ScndTrail,
+                          MainTrails = MainTrails, ScndTrail = ScndTrail,
                           FutureReserveCrowns = FutureReserveCrowns,
                           advancedloggingparameters = loggingparameters()),
 
@@ -118,12 +117,12 @@ test_that("felling1tree", {
   expect_error(felling1tree(dat,
                             fuel = "2", winching = "0", directionalfelling = "2",
                             advancedloggingparameters = loggingparameters(),
-                            MainTrail = sf::st_as_text(MainTrail), ScndTrail = sf::st_as_text(ScndTrail)),
-               regexp = "The 'MainTrail' and 'ScndTrail' arguments of the 'felling1tree' function must be sfg")
+                            MainTrails =  sf::st_as_text(MainTrails), ScndTrail = sf::st_as_text(ScndTrail)),
+               regexp = "The 'MainTrails' and 'ScndTrail' arguments of the 'felling1tree' function must be sfg")
 
 
   expect_error(felling1tree(dat, fuel = "2", winching = "0",
-                            directionalfelling = "2", MainTrail = MainTrail, ScndTrail = ScndTrail,
+                            directionalfelling = "2", MainTrails = MainTrails, ScndTrail = ScndTrail,
                             advancedloggingparameters = as.matrix(loggingparameters())),
                regexp = "The 'advancedloggingparameters' argument of the 'felling1tree' function must be a list")
 

@@ -7,9 +7,6 @@
 treeselection(
   inventory,
   topography,
-  plotslope,
-  harvestablepolygons,
-  maintrails,
   speciescriteria,
   scenario,
   objective = NULL,
@@ -17,6 +14,9 @@ treeselection(
   diversification = NULL,
   specieslax = FALSE,
   objectivelax = FALSE,
+  MainTrails,
+  harvestablepolygons,
+  plotslope,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -26,14 +26,6 @@ treeselection(
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
-
-\item{plotslope}{Slopes (in radians) of the inventoried plot (with a
-neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
-
-\item{harvestablepolygons}{Accessible area of the inventoried plot
-(default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
-
-\item{maintrails}{Main trails defined at the entire harvestable area (sf polylines)}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the
@@ -59,6 +51,14 @@ default (logical)}
 
 \item{objectivelax}{Allow exploitation in case of non-achievement of the
 objective volume (if stand too poor), = FALSE by default (logical)}
+
+\item{MainTrails}{Main trails defined at the entire harvestable area (sf polylines)}
+
+\item{harvestablepolygons}{Accessible area of the inventoried plot
+(default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
+
+\item{plotslope}{Slopes (in radians) of the inventoried plot (with a
+neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -138,7 +138,6 @@ or UpMinFD if it has been raised for its species.
 the number of reserve trees is equal to the number of harvested trees.
 }
 \examples{
-\dontrun{
 data(Paracou6_2016)
 data(DTMParacou)
 data(PlotSlope)
@@ -148,13 +147,13 @@ data(HarvestablePolygons)
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
 
+set.seed(2)
 treeselectionoutputs <- treeselection(inventory,
-maintrails = MainTrails,
-topography = DTMParacou, plotslope = PlotSlope,
+topography = DTMParacou,
+speciescriteria = SpeciesCriteria, objective = 10,
+scenario = "manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
+objectivelax = TRUE, MainTrails = MainTrails, plotslope = PlotSlope,
 harvestablepolygons = HarvestablePolygons,
-speciescriteria = SpeciesCriteria, objective = 20,
-scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
-objectivelax = TRUE,
 advancedloggingparameters = loggingparameters())
 
 NewInventory <- treeselectionoutputs$inventory
@@ -212,7 +211,7 @@ ggplot() +
   "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
   "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
   labs(color = "Logging status")
-}
+
 }
 \seealso{
 \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},

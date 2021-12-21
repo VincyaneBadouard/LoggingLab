@@ -48,7 +48,7 @@ objective volume without diversification, = FALSE by default (logical)}
 objective volume (if stand too poor), = FALSE by default (logical)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
-\code{\link{loggingparameters}} (list) MainTrail (multiline)}
+\code{\link{loggingparameters}} (list) MainTrails (multiline)}
 }
 \value{
 Input inventory with
@@ -92,7 +92,7 @@ data(Paracou6_2016)
 data(DTMParacou)
 data(PlotSlope)
 data(HarvestablePolygons)
-data(Maintrails)
+data(MainTrails)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -101,7 +101,7 @@ inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
-harvestablepolygons = HarvestablePolygons, maintrails = MainTrails,
+harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails,
 advancedloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory

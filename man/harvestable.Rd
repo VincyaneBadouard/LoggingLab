@@ -7,11 +7,11 @@
 harvestable(
   inventory,
   topography,
-  harvestablepolygons,
-  maintrails,
-  plotslope,
   diversification,
   specieslax = FALSE,
+  MainTrails,
+  harvestablepolygons,
+  plotslope,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -20,15 +20,8 @@ harvestable(
 \code{\link{vignette}}) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
-
-\item{harvestablepolygons}{Accessible area of the inventoried plot
-(default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
-
-\item{maintrails}{Main trails defined at the entire harvestable area (sf polylines)}
-
-\item{plotslope}{Slopes (in radians) of the inventoried plot (with a
-neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
+#'}
 
 \item{diversification}{Taking of other species in addition to the main
 commercial species (2 levels of commercial species in the
@@ -36,6 +29,14 @@ commercial species (2 levels of commercial species in the
 
 \item{specieslax}{Allow diversification if stand is too poor, = FALSE by
 default (logical)}
+
+\item{MainTrails}{Main trails defined at the entire harvestable area (sf polylines)}
+
+\item{harvestablepolygons}{Accessible area of the inventoried plot
+(default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
+
+\item{plotslope}{Slopes (in radians) of the inventoried plot (with a
+neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 (\code{\link{loggingparameters}}) (list)}
@@ -74,7 +75,6 @@ Trees with visible defects are identified ('VisiblyDefectModel' in
 criteria and are therefore considered 'non-harvestable'.
 }
 \examples{
-
 data(Paracou6_2016)
 data(DTMParacou)
 data(PlotSlope)
@@ -88,8 +88,8 @@ volumeparameters = ForestZoneVolumeParametersTable)
 inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
-harvestablepolygons = HarvestablePolygons, maintrails = MainTrails,
-plotslope = PlotSlope, diversification = TRUE, specieslax = FALSE,
+diversification = TRUE, specieslax = FALSE, MainTrails = MainTrails,
+plotslope = PlotSlope, harvestablepolygons = HarvestablePolygons,
 advancedloggingparameters = loggingparameters())
 
 new <- harvestableOutputs$inventory

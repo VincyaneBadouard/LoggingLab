@@ -71,7 +71,7 @@ test_that("treeselection", {
                                                   topography = DTMParacou, plotslope = PlotSlope,
                                                   speciescriteria = SpeciesCriteria,
                                                   advancedloggingparameters = loggingparameters(),
-                                                  maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory) # , MainTrail
+                                                  MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory) # , MainTrail
 
 
   advancedloggingparameters = loggingparameters()
@@ -86,7 +86,7 @@ test_that("treeselection", {
                                        scenario ="manual", fuel = "2", objective = objective,
                                        diversification = TRUE, specieslax = FALSE,
                                        objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
-                                       maintrails = MainTrails, harvestablepolygons = HarvestablePolygons))$VO
+                                       MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons))$VO
 
 
   expect_true(VO == expected)

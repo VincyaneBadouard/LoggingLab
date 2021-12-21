@@ -8,21 +8,21 @@
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
-#'
-#'@param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
-#'
-#'@param maintrails Main trails defined at the entire harvestable area (sf polylines)
-#'
-#'@param plotslope Slopes (in radians) of the inventoried plot (with a
-#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
-#'
+#'#'
 #'@param diversification Taking of other species in addition to the main
 #'  commercial species (2 levels of commercial species in the
 #'  \code{\link{SpeciesCriteria}} table) (logical)
 #'
 #'@param specieslax Allow diversification if stand is too poor, = FALSE by
 #'  default (logical)
+#'
+#'@param MainTrails Main trails defined at the entire harvestable area (sf polylines)
+#'
+#'@param harvestablepolygons Accessible area of the inventoried plot
+#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
+#'
+#'@param plotslope Slopes (in radians) of the inventoried plot (with a
+#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  (\code{\link{loggingparameters}}) (list)
@@ -65,7 +65,6 @@
 #'
 #'
 #'@examples
-#'
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(PlotSlope)
@@ -79,8 +78,8 @@
 #' inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 #'
 #' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
-#' harvestablepolygons = HarvestablePolygons, maintrails = MainTrails,
-#' plotslope = PlotSlope, diversification = TRUE, specieslax = FALSE,
+#' diversification = TRUE, specieslax = FALSE, MainTrails = MainTrails,
+#' plotslope = PlotSlope, harvestablepolygons = HarvestablePolygons,
 #' advancedloggingparameters = loggingparameters())
 #'
 #' new <- harvestableOutputs$inventory
@@ -88,11 +87,11 @@
 harvestable <- function(
   inventory,
   topography,
-  harvestablepolygons,
-  maintrails,
-  plotslope,
   diversification,
   specieslax = FALSE,
+  MainTrails,
+  harvestablepolygons,
+  plotslope,
   advancedloggingparameters = loggingparameters()
 ){
 
@@ -158,7 +157,7 @@ harvestable <- function(
       # distSp <- topoDist(topography = PlotTopo, pts = SpatInventorytmp) # calculates topo distances
       # distSp <- as_tibble(distSp)
 
-      distSp <- st_distance(SpatInventorytmp)
+      distSp <- st_distance(SpatInventorytmp) # calculates distances without topo
       units(distSp) <- NULL
       distSp <- suppressMessages(as_tibble(distSp, .name_repair = "universal"))
 
@@ -196,7 +195,7 @@ harvestable <- function(
   # Check that the trees are contained in a accessible area (PU)
 
    AccessPolygons <- FilterAccesExplArea(harvestablepolygons = harvestablepolygons, # define accessible areas (PU) from harvestablepolygons
-                                         maintrails = maintrails,
+                                         MainTrails = MainTrails,
                                          advancedloggingparameters = loggingparameters())
 
    PUSpatInventory<- SpatInventory %>% mutate(PU = as.vector(sf::st_contains(AccessPolygons, SpatInventory,sparse = F))) %>% # check if trees are contained in PUs

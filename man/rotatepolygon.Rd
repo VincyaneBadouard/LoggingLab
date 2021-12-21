@@ -18,6 +18,8 @@ The polygon (sfc_POLYGON) rotated.
 }
 \description{
 Rotate the input polygon with a given angle and around a fix point.
+Function adapted from Jeffrey Evans' 'rotate.polygon' function:
+https://github.com/jeffreyevans/spatialEco/blob/master/R/rotate.polygon.R
 }
 \examples{
 data(Paracou6_2016)
@@ -25,15 +27,17 @@ data(DTMParacou)
 data(PlotSlope)
 data(SpeciesCriteria)
 data(MainTrails)
-data(HarvestablePolygons)
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
 
-inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
- fuel = "2", diversification = TRUE, specieslax = FALSE, maintrails = MainTrails,
- objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
- speciescriteria = SpeciesCriteria, harvestablepolygons = HarvestablePolygons,
+inventory <- suppressMessages(treeselection(inventory,
+ topography = DTMParacou,
+ objective = 20, scenario ="manual", fuel = "2", diversification = TRUE,
+ specieslax = FALSE, objectivelax = TRUE,
+ speciescriteria = SpeciesCriteria,
+ MainTrails = MainTrails, plotslope = PlotSlope,
+ harvestablepolygons = HarvestablePolygons,
  advancedloggingparameters = loggingparameters())$inventory)
 
 inventory <- inventory \%>\%
@@ -60,7 +64,7 @@ Trunk <- with(dat, # and the trunk
                                       Xutm+(DBH/100)/2, Yutm,
                                       Xutm-(DBH/100)/2, Yutm) # the return
                                     ,ncol=2, byrow=TRUE))))
- RandomAngle <- as.numeric(sample(c(0:359.9), size = 1))
+ RandomAngle <- as.numeric(sample(c(0:359), size = 1))
 
  TreeP <- st_difference(st_union(
  rotatepolygon(Trunk, angle = RandomAngle, fixed = Foot), # turned trunk

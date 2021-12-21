@@ -2,7 +2,7 @@
 % Please edit documentation in R/SecondTrailsOpening.R
 \name{secondtrailsopening}
 \alias{secondtrailsopening}
-\title{secondtrailsopening}
+\title{Second trails opening}
 \usage{
 secondtrailsopening(
   DTM,
@@ -14,7 +14,7 @@ secondtrailsopening(
     600), list(Slope = Inf, Cost = 1000)), list(list(CostType = "Initial", CostValue =
     1000), list(CostType = "Access", CostValue = 1000), list(CostType = "BigTrees",
     CostValue = 500), list(CostType = "Reserves", CostValue = 500), list(CostType =
-    "Futures", CostValue = 50), list(CostType = "maintrails", CostValue = 1e-04),
+    "Futures", CostValue = 50), list(CostType = "MainTrails", CostValue = 1e-04),
     list(CostType = "SecondTrails", CostValue = 0.1))),
   scenarios = NULL,
   fact = 3,
@@ -31,30 +31,32 @@ secondtrailsopening(
 
 \item{treeselectionoutputs}{A list with:
 \itemize{
-\item your inventory with: "DistCrit", "Slope", "SlopeCrit",
-"LoggingStatus", "Selected", "Up", "VolumeCumSum", "ProbedHollowProba",
-"ProbedHollow" new columns (see the outputs metadata in the \code{\link{vignette}}).
-\item the objective volume with or without a bonus (if hollow trees
-exploitation)
-\item 6 sets of spatial points: harvestable, selected, future and
-reserve, hollow and energy wood trees
+\item your inventory with: "DistCrit", "Slope", "SlopeCrit", "LoggingStatus",
+"Selected", "Up", "VolumeCumSum", "ProbedHollowProba", "ProbedHollow"
+new columns (see the outputs metadata in the \code{\link{vignette}}).
+\item the objective volume with or without a bonus (if hollow trees exploitation)
+\item 6 sets of spatial points:
+harvestable, selected, future and reserve, hollow and fuel wood trees
 }}
 
-\item{CostMatrix}{List of list defining conditional weight over binned slopes values}
+\item{CostMatrix}{List of list defining conditional weight over binned slopes
+values}
 
 \item{scenarios}{The chosen scenario from scenariosparameters function}
 
 \item{fact}{Aggregation factor of cost raster resolution to initial DTM}
 
-\item{advancedloggingparameters}{Advanced parameters of the logging simulator}
+\item{advancedloggingparameters}{Other parameters of the logging simulator
+\code{\link{loggingparameters}} (list)}
 }
 \value{
 Secondary trails polygons according to scenario conditions.
 }
 \description{
-secondtrailsopening
+Second trails opening
 }
 \examples{
+\dontrun{
 data(DTMParacou)
 data(Paracou6_2016)
 data(HarvestablePolygons)
@@ -70,37 +72,38 @@ inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
 AccessPolygons <- FilterAccesExplArea(harvestablepolygons = HarvestablePolygons,
-maintrails = MainTrails,
+MainTrails = MainTrails,
 advancedloggingparameters = loggingparameters())
 
 treeselectionoutputs <- treeselection(inventory,
-topography = DTMParacou, plotslope = PlotSlope, maintrails = MainTrails,
+topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
 harvestablepolygons = HarvestablePolygons,
 speciescriteria = SpeciesCriteria, objective = scenarios$objective,
 scenario = "RIL3",
 objectivelax = TRUE,
 advancedloggingparameters = loggingparameters())
 
-secondtrails <- secondtrailsopening(DTM = DTMParacou,
-   plots = Plots,
-
-   treeselectionoutputs = treeselectionoutputs,
-   verticalcreekheight = VerticalCreekHeight,
-   CostMatrix = list(list(list(Slope = 3, Cost = 3),
-                           list(Slope = 5, Cost = 5),
-                           list(Slope = 12, Cost = 20),
-                           list(Slope = 22, Cost = 60),
-                           list(Slope = 27, Cost = 600),
-                           list(Slope = Inf, Cost = 1000)),
-                      list(list(CostType = "Initial", CostValue = 1000),
-                           list(CostType = "Access", CostValue = 10000),
-                           list(CostType = "BigTrees", CostValue = 500),
-                           list(CostType = "Reserves", CostValue = 500),
-                           list(CostType = "Futures", CostValue = 50),
-                           list(CostType = "maintrails", CostValue = 1E-4),
-                           list(CostType = "SecondTrails", CostValue = 0.1))),
- scenarios = scenarios,
- fact = 3,
- advancedloggingparameters = loggingparameters())
+secondtrails <- secondtrailsopening(
+  DTM = DTMParacou,
+  plots = Plots,
+  treeselectionoutputs = treeselectionoutputs,
+  verticalcreekheight = VerticalCreekHeight,
+  CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 22, Cost = 60),
+                         list(Slope = 27, Cost = 600),
+                         list(Slope = Inf, Cost = 1000)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = 10000),
+                         list(CostType = "BigTrees", CostValue = 500),
+                         list(CostType = "Reserves", CostValue = 500),
+                         list(CostType = "Futures", CostValue = 50),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = 0.1))),
+  scenarios = scenarios,
+  fact = 3,
+  advancedloggingparameters = loggingparameters())
+  }
 
 }

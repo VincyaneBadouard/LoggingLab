@@ -30,7 +30,7 @@
 #'  objective volume (if stand too poor), = FALSE by default (logical)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
-#'  \code{\link{loggingparameters}} (list) MainTrail (multiline)
+#'  \code{\link{loggingparameters}} (list) MainTrails (multiline)
 #'
 #'@return Input inventory with
 #'- The trees selected for harvesting ("Selected")
@@ -79,7 +79,7 @@
 #' data(DTMParacou)
 #' data(PlotSlope)
 #' data(HarvestablePolygons)
-#' data(Maintrails)
+#' data(MainTrails)
 #'
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -88,7 +88,7 @@
 #'
 #' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 #' diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
-#' harvestablepolygons = HarvestablePolygons, maintrails = MainTrails,
+#' harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails,
 #' advancedloggingparameters = loggingparameters())
 #'
 #' inventory <- harvestableOutputs$inventory
@@ -155,7 +155,7 @@ selected <- function(
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
-  PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
+  ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL

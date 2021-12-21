@@ -25,13 +25,13 @@ test_that("harvestable", {
 
   Outputs1 <- harvestable(inventory,
                           diversification = T, specieslax = F, topography = DTMParacou, plotslope = PlotSlope,
-                          maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)
+                          MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)
   Outputs2 <- harvestable(inventory,
                           diversification = F, specieslax = T, topography = DTMParacou, plotslope = PlotSlope,
-                          maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)
+                          MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)
   Outputs3 <- harvestable(inventory,
                           diversification = F, specieslax = F, topography = DTMParacou, plotslope = PlotSlope,
-                          maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)
+                          MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)
 
   testinventory1 <- Outputs1$inventory
   testinventory2 <- Outputs2$inventory
@@ -139,6 +139,6 @@ test_that("harvestable", {
 #   Distribution spatiale:
 #     - Arbres sur <22% de pente et arbres sur pente >22% si à 40 m maximum d’une zone <22%.
 #   - arbre non isolé : élimination des arbres à >100m des autres individus de la même espèce.
-#   - hors des pistes principales : dont les coordonnées n'appartiennent pas aux multilignes "MainTrail".
+#   - hors des pistes principales : dont les coordonnées n'appartiennent pas aux multilignes "MainTrails".
 # + Si diversification=F & specieslax=T, étiqueter "harvestable2nd" à la place d’"harvestable", les "Commercial"= "2" dans la colonne "LoggingStatus".
 # + HVinit= somme des valeurs de "TreeHarvestableVolume " des arbres dont "LoggingStatus" = "harvestable".

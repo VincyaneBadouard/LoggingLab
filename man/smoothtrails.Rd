@@ -2,35 +2,38 @@
 % Please edit documentation in R/smoothtrails.R
 \name{smoothtrails}
 \alias{smoothtrails}
-\title{smoothtrails}
+\title{Trails smoothing}
 \usage{
 smoothtrails(
   paths,
   pts,
   plots,
-  partmaintrails,
+  partMainTrails,
   smthfact = 5,
   advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
-\item{paths}{Raw secondary trails polygons (sp polylines).}
+\item{paths}{Raw secondary trails polygons (sp polylines)}
 
-\item{pts}{Harvested tree locations (sf points).}
+\item{pts}{Harvested tree locations (sf points)}
 
-\item{plots}{Studied plots (sf data.frame)}
+\item{plots}{Studied plots (sf)}
 
-\item{partmaintrails}{Intersections between accessible area and Maintrails (sf polygon)}
+\item{partMainTrails}{Intersections between accessible area and MainTrails (sf
+polygon)}
 
-\item{smthfact}{A positive number controlling the smoothness and level of generalization (numeric).}
+\item{smthfact}{A positive number controlling the smoothness and level of
+generalization (numeric)}
 
-\item{advancedloggingparameters}{Advanced parameters of the logging simulator.}
+\item{advancedloggingparameters}{Other parameters of the logging simulator
+\code{\link{loggingparameters}} (list)}
 }
 \value{
 Smoothed secondary trails polygons.
 }
 \description{
-smoothtrails
+Trails smoothing
 }
 \examples{
 \dontrun{
@@ -48,19 +51,20 @@ inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
 AccessPolygons <- FilterAccesExplArea(harvestablepolygons = HarvestablePolygons,
-maintrails = MainTrails,
+MainTrails = MainTrails,
 winching = scenarios$winching,
 advancedloggingparameters = loggingparameters())
 
 treeselectionoutputs <- treeselection(inventory,
-topography = DTMParacou, accesspolygons= AccessPolygons, plotslope = PlotSlope,
+topography = DTMParacou,
 speciescriteria = SpeciesCriteria, objective = scenarios$objective,
 scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
-objectivelax = TRUE,
+objectivelax = TRUE, MainTrails = MainTrails, plotslope = PlotSlope,
+harvestablepolygons = AccessPolygons,
 advancedloggingparameters = loggingparameters())
 
 SecondTrailsRaw <- secondtrailsopening(DTM = DTMParacou, plotslope =  PlotSlope,plots = Plots,
-  harvestablepolygons = HarvestablePolygons, maintrails = MainTrails, treeselectionoutputs,
+  harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails, treeselectionoutputs,
   CostMatrix = list(list(list(Slope = 3, Cost = 3),
                            list(Slope = 5, Cost = 5),
                            list(Slope = 12, Cost = 20),
@@ -72,7 +76,7 @@ SecondTrailsRaw <- secondtrailsopening(DTM = DTMParacou, plotslope =  PlotSlope,
                            list(CostType = "BigTrees", CostValue = 500),
                            list(CostType = "Reserves", CostValue = 500),
                            list(CostType = "Futures", CostValue = 50),
-                           list(CostType = "maintrails", CostValue = 1E-4),
+                           list(CostType = "MainTrails", CostValue = 1E-4),
                            list(CostType = "SecondTrails", CostValue = 0.1))),
  scenarios = scenarios,
  fact = 3,

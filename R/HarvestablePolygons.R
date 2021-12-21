@@ -1,9 +1,12 @@
-#' HarvestablePolygons
+#' Harvestable zones (polygons) of Paracou plot 6
 #'
-#' A collection of polygons defined as 1 : harvestable area / 0 : non-harvestable area
-#' of plot 6 of Paracou (French Guiana)
 #'
-#' @format A data.frame (sfc_POLYGON)
+#' Harvestable and non-harvestable zones of Paracou plot 6 (French Guiana)
 #'
+#' A collection of polygons defined as:
+#' 1: harvestable zone
+#' 0: non-harvestable zone
+#'
+#' @format sf (sfc_POLYGON)
 #'
 "HarvestablePolygons"

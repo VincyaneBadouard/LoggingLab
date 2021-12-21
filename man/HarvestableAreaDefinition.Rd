@@ -2,7 +2,7 @@
 % Please edit documentation in R/HarvestableAreaDefinition.R
 \name{HarvestableAreaDefinition}
 \alias{HarvestableAreaDefinition}
-\title{HarvestableAreaDefinition}
+\title{Harvestable area definition}
 \usage{
 HarvestableAreaDefinition(
   topography,
@@ -11,7 +11,8 @@ HarvestableAreaDefinition(
 )
 }
 \arguments{
-\item{topography}{Digital terrain model (Large RasterLayer)}
+\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{verticalcreekheight}{Relative elevation from nearest channel network
 (Large RasterLayer)}
@@ -22,25 +23,29 @@ HarvestableAreaDefinition(
 \value{
 A list with:
 \itemize{
-\item A collection of polygons defined as 1 : harvestable area, 0 :
-non-harvestable area (sf polygon)
-\item A raster with slope (in radians) characteristic of the studied plot
-(Large RasterLayer)
+\item 'HarvestablePolygons': a collection of polygons (sf polygon) defined as:
+1 : harvestable area,
+0 : non-harvestable area
+\item 'PlotSlope': a raster with slope (in radians) characteristic of the studied
+plot (Large RasterLayer)
 }
 }
 \description{
-HarvestableAreaDefinition
+Harvestable area definition
 }
 \examples{
+\dontrun{
 data(Plots)
 data(DTMParacou)
 data(VerticalCreekHeight)
 
+HarvestableAreaOutputs <- HarvestableAreaDefinition(
+  topography = DTMParacou,
+  verticalcreekheight = VerticalCreekHeight,
+  advancedloggingparameters = loggingparameters()
+  )
 
-HarvestableArea <- HarvestableAreaDefinition(topography = DTMParacou,
-                                             verticalcreekheight = VerticalCreekHeight,
-                                             advancedloggingparameters = loggingparameters())
-
-plot(HarvestableArea[[1]])
+plot(HarvestableAreaOutputs[[1]])
+}
 
 }

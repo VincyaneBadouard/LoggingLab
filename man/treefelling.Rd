@@ -10,7 +10,7 @@ treefelling(
   fuel = NULL,
   winching = NULL,
   directionalfelling = NULL,
-  MainTrail,
+  MainTrails,
   ScndTrail,
   advancedloggingparameters = loggingparameters()
 )
@@ -27,10 +27,9 @@ treefelling(
 damage and unused part of logged trees for fuel = "1", exploitation of
 hollow trees, damage and and unused part of the log for fuel = "2"}
 
-
 \item{winching}{No cable or grapple = "0", only cable = "1", grapple + cable =
 "2"}
-  
+
 \item{directionalfelling}{Directional felling =
 "0": only to direct the foot of the tree towards the trail
 "1": to direct the foot of the tree towards the trail + to avoid damage to
@@ -38,7 +37,7 @@ future and reserve trees if possible
 "2": to avoid damage to future and reserve trees if possible
 + orientation angle to the trail}
 
-\item{MainTrail}{Main trail (sfg)}
+\item{MainTrails}{Main trail (sfg)}
 
 \item{ScndTrail}{Secondary trails (sfg)}
 
@@ -63,14 +62,11 @@ The felling of the tree creates a tree (including crown) on the
 ground, with dimensions calculated with specific allometries
 ('advancedloggingparameters').
 
-RIL1: random fall
-
-RIL2broken/RIL2:
+RIL1/RIL2broken/RIL2:
 \itemize{
 \item at 40\%: random fall
 \item at 60\% ('TreefallSuccessProportion'):
-priority 1: \emph{base of the tree towards the nearest trail} (main or 2ndary),
-priority 2: avoid futures and reserves.
+\emph{base of the tree towards the nearest trail} (main or 2ndary)
 }
 
 RIL3/RIL3 timber + fuel wood:
@@ -102,25 +98,30 @@ Secondary windfall: all trees under the felled tree (timber or energy)
 will be considered dead.
 }
 \examples{
-\dontrun{
-MainTrail <- sf::st_linestring(matrix(c(286400, 583130,
+data(Paracou6_2016)
+data(DTMParacou)
+data(PlotSlope)
+data(SpeciesCriteria)
+data(HarvestablePolygons)
+# data(MainTrails)
+
+MainTrails <- sf::st_linestring(matrix(c(286400, 583130,
                                         286400, 583250,
                                         286655, 583250,
                                         286655, 583130,
                                         286400, 583130) # the return
                                      ,ncol=2, byrow=TRUE))
-
-pol1 <- list(matrix(c(286503, 583134,
+pol1 <- list(matrix(c(286503, 582925,
                       286503, 583240,
                       286507, 583240,
-                      286507, 583134,
-                      286503, 583134) # the return
+                      286507, 582925,
+                      286503, 582925) # the return
                    ,ncol=2, byrow=TRUE))
-pol2 <- list(matrix(c(286650, 583134,
+pol2 <- list(matrix(c(286650, 582925,
                       286650, 583240,
                       286654, 583240,
-                      286654, 583134,
-                      286650, 583134) # the return
+                      286654, 582925,
+                      286650, 582925) # the return
                    ,ncol=2, byrow=TRUE))
 
 PolList = list(pol1,pol2) #list of lists of numeric matrices
@@ -129,15 +130,16 @@ ScndTrail <- sf::st_multipolygon(PolList)
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
 
-inventory <- suppressMessages(treeselection(inventory, objective = 20,
- scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
+inventory <- suppressMessages(treeselection(inventory, objective = 4,
+ scenario ="manual", fuel = "0", diversification = TRUE, specieslax = FALSE,
  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
- speciescriteria = SpeciesCriteria,
+ speciescriteria = SpeciesCriteria, MainTrails = MainTrails,
+ harvestablepolygons = HarvestablePolygons,
  advancedloggingparameters = loggingparameters())$inventory)
 
 NewInventory <- treefelling(inventory, scenario = "manual", fuel = "0",
 winching = "0", directionalfelling = "0",
-MainTrail = MainTrail, ScndTrail = ScndTrail,
+MainTrails = MainTrails, ScndTrail = ScndTrail,
 advancedloggingparameters = loggingparameters())
 
 Treefall <- NewInventory \%>\%
@@ -192,6 +194,10 @@ ggplot() +
   geom_sf(data = Selected, aes(colour = "Selected"), show.legend = "point") +
   geom_sf(data = ProbedHollow,
   aes(colour = "Probed hollow"), show.legend = "point") +
+  geom_sf(data = MainTrails,
+  alpha = 0.5, fill = "black") +
+  geom_sf(data = ScndTrail,
+  alpha = 0.5, fill = "black") +
 
   scale_colour_manual(values = c("Non-harvestable" = "grey",
   "Visible defect" = "pink", "Harvestable" = "skyblue",
@@ -201,11 +207,10 @@ ggplot() +
 
 
 sf::st_intersection( # trees under the fallen trees
-  getgeometry (inventory, TreePolygon),
-  sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))
+  getgeometry (NewInventory, TreePolygon),
+  sf::st_as_sf(NewInventory, coords = c("Xutm", "Yutm"))
 ) \%>\%
   ggplot() +
   geom_sf()
-}
 
 }

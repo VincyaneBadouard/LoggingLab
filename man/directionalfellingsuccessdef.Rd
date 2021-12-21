@@ -19,9 +19,12 @@ directionalfellingsuccessdef(
 damage and unused part of logged trees for fuel = "1", exploitation of
 hollow trees, damage and and unused part of the log for fuel = "2"}
 
-\item{directionalfelling}{Directional felling = "0" (absent), "1" (only to
-avoid damage to future and reserve trees), "2" (to avoid damage to future and
-reserve trees and to position the log relative to the track)}
+\item{directionalfelling}{Directional felling =
+"0": only to direct the foot of the tree towards the trail
+"1": to direct the foot of the tree towards the trail + to avoid damage to
+future and reserve trees
+"2": to avoid damage to future and reserve trees + orientation angle
+to the trail}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -37,6 +40,9 @@ is by default 60\%, and can be changed with the
 \code{advancedloggingparameters} argument.
 }
 \examples{
+data(Paracou6_2016)
+data(DTMParacou)
+data(PlotSlope)
 data(MainTrails)
 data(HarvestablePolygons)
 
@@ -44,13 +50,14 @@ inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
 
 inventory <- treeselection(inventory, objective = 20, scenario ="manual",
- fuel = "2", diversification = TRUE, specieslax = FALSE, maintrails = MainTrails,
- harvestablepolygons = HarvestablePolygons,
+ fuel = "2", diversification = TRUE, specieslax = FALSE,
  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
- speciescriteria = SpeciesCriteria,
+ speciescriteria = SpeciesCriteria, MainTrails = MainTrails,
+ harvestablepolygons = HarvestablePolygons,
  advancedloggingparameters = loggingparameters())$inventory
 
-new <- directionalfellingsuccessdef(inventory,fuel = "2", directionalfelling = "2",
+new <- directionalfellingsuccessdef(inventory, fuel = "2",
+directionalfelling = "2",
 advancedloggingparameters = loggingparameters())
 
 }

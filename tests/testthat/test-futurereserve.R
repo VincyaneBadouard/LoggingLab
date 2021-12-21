@@ -11,7 +11,7 @@ test_that("futurereserve", {
   harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
                                     topography = DTMParacou, plotslope = PlotSlope,
                                     advancedloggingparameters = loggingparameters(),
-                                    maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)
+                                    MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)
 
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit

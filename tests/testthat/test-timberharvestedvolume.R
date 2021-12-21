@@ -13,7 +13,7 @@ test_that("timberharvestedvolume", {
                                               objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
                                               speciescriteria = SpeciesCriteria,
                                               advancedloggingparameters = loggingparameters(),
-                                              maintrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory)
+                                              MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory)
 
 
 
