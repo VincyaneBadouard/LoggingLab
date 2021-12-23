@@ -12,9 +12,9 @@
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
-#'@param relativeelevation Relative elevation (Default:
-#' \code{\link{VerticalCreekHeight}}) (Large RasterLayer)
-#' To generate vertical creek height:
+#'@param verticalcreekheight Vertical creek height (in m) of the inventoried
+#' plot (1 m resolution) (Default: \code{\link{VerticalCreekHeight}})
+#' (Large RasterLayer). To generate vertical creek height:
 #'  \code{\link{VerticalCreekHeight}} in 'docs' folder of the package
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
@@ -101,7 +101,7 @@
 #' data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 #'
 #' Rslt <- loggingsimulation(Paracou6_2016, topography = DTMParacou,
-#'  relativeelevation  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
+#'  verticalcreekheight  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
@@ -111,8 +111,8 @@
 #'
 loggingsimulation <- function(
   inventory,
-  topography, # = NULL perspective
-  relativeelevation, # = NULL perspective
+  topography,
+  verticalcreekheight,
   speciescriteria,
   volumeparameters,
 
@@ -143,9 +143,9 @@ loggingsimulation <- function(
     stop("The 'inventory', 'speciescriteria', 'volumeparameters' and 'crowndiameterparameters' arguments
          of the 'loggingsimulation' function must be data.frames")
 
-  # topography, relativeelevation
-  if(!all(unlist(lapply(list(topography, relativeelevation), inherits, "RasterLayer"))))
-    stop("The 'topography' and 'relativeelevation' arguments of the 'loggingsimulation' function must be RasterLayers")
+  # topography, verticalcreekheight
+  if(!all(unlist(lapply(list(topography, verticalcreekheight), inherits, "RasterLayer"))))
+    stop("The 'topography' and 'verticalcreekheight' arguments of the 'loggingsimulation' function must be RasterLayers")
 
   # scenario
   if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"|| scenario == "RIL3"||
@@ -223,38 +223,33 @@ loggingsimulation <- function(
   #### Main trails layout: (only for ONF plots) ####
 
   ##### Harvestable area definition: A FAIRE ####
-  # HarvestableAreaOutputs <- HarvestableAreaDefinition(topography = topography,
-  #                                                     verticalcreekheight = verticalcreekheight,
-  #                                                     advancedloggingparameters = advancedloggingparameters)
-  #
-  # HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
-  # PlotSlope <- HarvestableAreaOutputs$PlotSlope
+  HarvestableAreaOutputs <- HarvestableAreaDefinition(topography = topography,
+                                                      verticalcreekheight = verticalcreekheight,
+                                                      advancedloggingparameters = advancedloggingparameters)
 
-  MainTrails <- sf::st_linestring(matrix(c(286400, 583130, # A SUPPRIMER
-                                          286400, 583250,
-                                          286655, 583250,
-                                          286655, 583130,
-                                          286400, 583130) # the return
-                                        ,ncol=2, byrow=TRUE))
+  HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
+  PlotSlope <- HarvestableAreaOutputs$PlotSlope
 
-  pol1 <- list(matrix(c(286503, 583134,
+  data(MainTrails) # A SUPPRIMER
+
+  pol1 <- list(matrix(c(286503, 582925,
                         286503, 583240,
                         286507, 583240,
-                        286507, 583134,
-                        286503, 583134) # the return
-                      ,ncol=2, byrow=TRUE))
-  pol2 <- list(matrix(c(286650, 583134,
+                        286507, 582925,
+                        286503, 582925) # the return
+                     ,ncol=2, byrow=TRUE))
+  pol2 <- list(matrix(c(286650, 582925,
                         286650, 583240,
                         286654, 583240,
-                        286654, 583134,
-                        286650, 583134) # the return
-                      ,ncol=2, byrow=TRUE))
+                        286654, 582925,
+                        286650, 582925) # the return
+                     ,ncol=2, byrow=TRUE))
 
   PolList = list(pol1,pol2) #list of lists of numeric matrices
-  ScndTrail <- sf::st_multipolygon(PolList) # A SUPPRIMER
+  ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
+  ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails)) # A SUPPRIMER
 
   #### Tree selection (harvestable, future and reserve trees + defects trees): ####
-  plotslope <- PlotSlope # A SUPPRIMER
   treeselectionoutputs <- treeselection(inventory, topography = topography, plotslope = PlotSlope,
                                         scenario = scenario, objective = objective, fuel = fuel,
                                         diversification = diversification, specieslax = specieslax,

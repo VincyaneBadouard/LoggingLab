@@ -7,7 +7,7 @@
 loggingsimulation(
   inventory,
   topography,
-  relativeelevation,
+  verticalcreekheight,
   speciescriteria,
   volumeparameters,
   scenario,
@@ -31,9 +31,9 @@ loggingsimulation(
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer)}
 
-\item{relativeelevation}{Relative elevation (Default:
-\code{\link{VerticalCreekHeight}}) (Large RasterLayer)
-To generate vertical creek height:
+\item{verticalcreekheight}{Vertical creek height (in m) of the inventoried
+plot (1 m resolution) (Default: \code{\link{VerticalCreekHeight}})
+(Large RasterLayer). To generate vertical creek height:
 \code{\link{VerticalCreekHeight}} in 'docs' folder of the package}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
@@ -110,7 +110,7 @@ data(ForestZoneVolumeParametersTable) # volume parameters
 data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 
 Rslt <- loggingsimulation(Paracou6_2016, topography = DTMParacou,
- relativeelevation  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
+ verticalcreekheight  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,

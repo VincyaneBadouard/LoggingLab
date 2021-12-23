@@ -126,7 +126,7 @@ exploitablefuelwoodvolume
 + **topography** : Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (RasterLayer)
 
-+ **relativeelevation** : (RasterLayer)
++ **verticalcreekheight** : (RasterLayer)
 
 + **speciescriteria** : Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in
@@ -251,7 +251,7 @@ with DBH in cm
 # Harvest in 1 function
 ```{r}
 # Rslt <- loggingsimulation(Paracou6_2016,
-#                           topography = DTMParacou, relativeelevation  = DTMParacou,
+#                           topography = DTMParacou, verticalcreekheight  = DTMParacou,
 #                           speciescriteria = SpeciesCriteria,
 #                           volumeparameters = ForestZoneVolumeParametersTable,
 #                           scenario = "manual", objective = 20,
@@ -263,7 +263,7 @@ with DBH in cm
 The harvestable volume may change from one simulation to another because the identification of defect trees contains a random component.
 ```{r}
 # RIL1_Rslt <- loggingsimulation(Paracou6_2016,
-#                                topography = DTMParacou, relativeelevation  = DTMParacou,
+#                                topography = DTMParacou, verticalcreekheight  = DTMParacou,
 #                                speciescriteria = SpeciesCriteria,
 #                                volumeparameters = ForestZoneVolumeParametersTable,
 #                                scenario = "RIL1", specieslax = FALSE, objectivelax = TRUE,
@@ -275,7 +275,7 @@ The harvestable volume may change from one simulation to another because the ide
 
 ```{r}
 # RIL2broken_Rslt <- loggingsimulation(Paracou6_2016,
-#                                      topography = DTMParacou, relativeelevation  = DTMParacou,
+#                                      topography = DTMParacou, verticalcreekheight  = DTMParacou,
 #                                      speciescriteria = SpeciesCriteria,
 #                                      volumeparameters = ForestZoneVolumeParametersTable,
 #                                      scenario = "RIL2broken", specieslax = FALSE, objectivelax = TRUE,
@@ -289,7 +289,7 @@ The harvestable volume may change from one simulation to another because the ide
 
 ```{r}
 # RIL2_Rslt <- loggingsimulation(Paracou6_2016,
-#                                topography = DTMParacou, relativeelevation  = DTMParacou,
+#                                topography = DTMParacou, verticalcreekheight  = DTMParacou,
 #                                speciescriteria = SpeciesCriteria,
 #                                volumeparameters = ForestZoneVolumeParametersTable,
 #                                scenario = "RIL2", specieslax = FALSE, objectivelax = TRUE,
@@ -301,7 +301,7 @@ The harvestable volume may change from one simulation to another because the ide
 
 ```{r}
 # RIL3_Rslt <- loggingsimulation(Paracou6_2016,
-#                                topography = DTMParacou, relativeelevation  = DTMParacou,
+#                                topography = DTMParacou, verticalcreekheight  = DTMParacou,
 #                                speciescriteria = SpeciesCriteria,
 #                                volumeparameters = ForestZoneVolumeParametersTable,
 #                                scenario = "RIL3", specieslax = FALSE, objectivelax = TRUE,
@@ -317,7 +317,7 @@ The harvestable volume may change from one simulation to another because the ide
 
 ```{r}
 # RIL3fuel_Rslt <- loggingsimulation(Paracou6_2016,
-#                                    topography = DTMParacou, relativeelevation  = DTMParacou,
+#                                    topography = DTMParacou, verticalcreekheight  = DTMParacou,
 #                                    speciescriteria = SpeciesCriteria,
 #                                    volumeparameters = ForestZoneVolumeParametersTable,
 #                                    scenario = "RIL3fuel", specieslax = FALSE, objectivelax = TRUE,
@@ -329,7 +329,7 @@ The harvestable volume may change from one simulation to another because the ide
 
 ```{r}
 # RIL3fuelhollow_Rslt <- loggingsimulation(Paracou6_2016,
-#                                          topography = DTMParacou, relativeelevation  = DTMParacou,
+#                                          topography = DTMParacou, verticalcreekheight  = DTMParacou,
 #                                          speciescriteria = SpeciesCriteria,
 #                                          volumeparameters = ForestZoneVolumeParametersTable,
 #                                          scenario = "RIL3fuelhollow",
@@ -473,28 +473,24 @@ Damage :
 - on the edge of the trail: neglected.
 
 ```{r}
-MainTrails <- sf::st_linestring(matrix(c(286400, 583130,
-                                         286400, 583250,
-                                         286655, 583250,
-                                         286655, 583130,
-                                         286400, 583130) # the return
-                                       ,ncol=2, byrow=TRUE))
+data(MainTrails)
 
-pol1 <- list(matrix(c(286503, 583134,
+pol1 <- list(matrix(c(286503, 582925,
                       286503, 583240,
                       286507, 583240,
-                      286507, 583134,
-                      286503, 583134) # the return
+                      286507, 582925,
+                      286503, 582925) # the return
                     ,ncol=2, byrow=TRUE))
-pol2 <- list(matrix(c(286650, 583134,
+pol2 <- list(matrix(c(286650, 582925,
                       286650, 583240,
                       286654, 583240,
-                      286654, 583134,
-                      286650, 583134) # the return
+                      286654, 582925,
+                      286650, 582925) # the return
                     ,ncol=2, byrow=TRUE))
 
 PolList = list(pol1,pol2) #list of lists of numeric matrices
-ScndTrail <- sf::st_multipolygon(PolList)
+ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
+ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails))
 ```
 
 
