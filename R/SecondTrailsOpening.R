@@ -57,9 +57,6 @@
 #' inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016),
 #'  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 #'
-#' AccessPolygons <- FilterAccesExplArea(harvestablepolygons = HarvestablePolygons,
-#' MainTrails = MainTrails,
-#' advancedloggingparameters = loggingparameters())
 #'
 #' treeselectionoutputs <- treeselection(inventory,
 #' topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
@@ -123,9 +120,6 @@ secondtrailsopening <- function(
 
   if(!any(unlist(lapply(list(plots), inherits, "SpatialPolygonsDataFrame"))))
     stop("The 'plots' argument of the 'secondtrailsopening' function must be SpatialPolygonsDataFrame")
-
-  # if(!any(unlist(lapply(list(MainTrails), inherits, "sf" ))))
-  #   stop("The 'MainTrails' argument of the 'secondtrailsopening' function must be sf polygon")
 
   if(!any(unlist(lapply(list(DTM), inherits, "RasterLayer"))))
     stop("The 'DTM' argument of the 'secondtrailsopening' function must be raster")
@@ -200,10 +194,10 @@ secondtrailsopening <- function(
 
 
   # Generate intersections between accessible area and MainTrails (ID = accessible area index)
-  PartMainTrails <- st_intersection(st_geometry(MainTrails)  ,
+  PartMainTrails <- st_intersection(st_geometry(MainTrails),
                                     st_geometry(AccessMainTrails %>%
-                                                  st_buffer(dist = raster::res(DTM)))) %>%
-    st_buffer(dist = raster::res(DTM)) %>%
+                                                  st_buffer(dist = raster::res(DTM)+1))) %>%
+    st_buffer(dist = raster::res(DTM)+1) %>%
     st_union(by_feature = T) %>%
     st_intersection(st_as_sf(plots) %>% st_union()) %>%
     st_cast("MULTIPOLYGON")  %>%

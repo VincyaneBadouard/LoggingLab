@@ -71,9 +71,6 @@ scenarios <- scenariosparameters(scenario = "RIL3")
 inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
-AccessPolygons <- FilterAccesExplArea(harvestablepolygons = HarvestablePolygons,
-MainTrails = MainTrails,
-advancedloggingparameters = loggingparameters())
 
 treeselectionoutputs <- treeselection(inventory,
 topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
