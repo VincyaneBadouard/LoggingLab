@@ -136,7 +136,7 @@ criteria and are therefore considered 'non-harvestable'.</p>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestablePolygons</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="inventorycheckformat.html">inventorycheckformat</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span>,</span>
+<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
 <span class="r-in">volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="ONFGuyafortaxojoin.html">ONFGuyafortaxojoin</a></span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></span>

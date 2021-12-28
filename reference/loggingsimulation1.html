@@ -3,7 +3,7 @@
 on a forest plot. It covers: harvestable area definition, tree selection,
 main (only for ONF plots) and secondary trails layout, tree felling,
 landings implementation (only for ONF plots), timber harvested, fuel wood
-volume and damages quantification."><title>Logging simulation — loggingsimulation • Maria</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Logging simulation — loggingsimulation"><meta property="og:description" content="This function allows to simulate a timber and wood energy logging
+volume and damages quantification."><title>Logging simulation without iteration or parallelization — loggingsimulation1 • Maria</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Logging simulation without iteration or parallelization — loggingsimulation1"><meta property="og:description" content="This function allows to simulate a timber and wood energy logging
 on a forest plot. It covers: harvestable area definition, tree selection,
 main (only for ONF plots) and secondary trails layout, tree felling,
 landings implementation (only for ONF plots), timber harvested, fuel wood
@@ -51,9 +51,9 @@ volume and damages quantification."><!-- mathjax --><script src="https://cdnjs.c
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Logging simulation</h1>
-      <small class="dont-index">Source: <a href="https://github.com/VincyaneBadouard/Maria/blob/HEAD/R/loggingsimulation.R" class="external-link"><code>R/loggingsimulation.R</code></a></small>
-      <div class="d-none name"><code>loggingsimulation.Rd</code></div>
+      <img src="" class="logo" alt=""><h1>Logging simulation without iteration or parallelization</h1>
+      <small class="dont-index">Source: <a href="https://github.com/VincyaneBadouard/Maria/blob/HEAD/R/loggingsimulation1.R" class="external-link"><code>R/loggingsimulation1.R</code></a></small>
+      <div class="d-none name"><code>loggingsimulation1.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
@@ -66,7 +66,7 @@ volume and damages quantification.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">loggingsimulation</span><span class="op">(</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">loggingsimulation1</span><span class="op">(</span>
   <span class="va">inventory</span>,
   <span class="va">plotmask</span>,
   <span class="va">topography</span>,
@@ -82,9 +82,7 @@ volume and damages quantification.</p>
   specieslax <span class="op">=</span> <span class="cn">FALSE</span>,
   objectivelax <span class="op">=</span> <span class="cn">FALSE</span>,
   crowndiameterparameters <span class="op">=</span> <span class="va">ParamCrownDiameterAllometry</span>,
-  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>,
-  iter <span class="op">=</span> <span class="fl">1</span>,
-  cores <span class="op">=</span> <span class="fl">1</span>
+  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -152,10 +150,6 @@ and its species, genus or family. (data.frame)</p></dd>
 <dt>advancedloggingparameters</dt>
 <dd><p>Other parameters of the logging simulator
 <code><a href="loggingparameters.html">loggingparameters</a></code> (list)</p></dd>
-<dt>iter</dt>
-<dd><p>Number of iterations (numeric). Default = 1.</p></dd>
-<dt>cores</dt>
-<dd><p>Number of cores for parallelization (numeric). Default = 1.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -167,7 +161,8 @@ and its species, genus or family. (data.frame)</p></dd>
     <div class="dont-index"><p><code><a href="Paracou6_2016.html">Paracou6_2016</a></code>, <code><a href="SpeciesCriteria.html">SpeciesCriteria</a></code>,
 <code><a href="ForestZoneVolumeParametersTable.html">ForestZoneVolumeParametersTable</a></code>,
 <code><a href="ParamCrownDiameterAllometry.html">ParamCrownDiameterAllometry</a></code>, <code><a href="loggingparameters.html">loggingparameters</a></code>,</p>
-<p><code><a href="addtreedim.html">addtreedim</a></code>, <code><a href="treeselection.html">treeselection</a></code>,
+<p><code><a href="inventorycheckformat.html">inventorycheckformat</a></code>, <code><a href="cleaninventory.html">cleaninventory</a></code>
+<code><a href="addtreedim.html">addtreedim</a></code>, <code><a href="treeselection.html">treeselection</a></code>,
 <code><a href="harvestable.html">harvestable</a></code>, <code><a href="selected.html">selected</a></code>,
 <code><a href="futurereserve.html">futurereserve</a></code>, <code><a href="treefelling.html">treefelling</a></code>,
 <code><a href="createcanopy.html">createcanopy</a></code>, <code><a href="treefromthesky.html">treefromthesky</a></code>,
@@ -180,20 +175,21 @@ and its species, genus or family. (data.frame)</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span> <span class="co"># inventory</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotMask</span><span class="op">)</span> <span class="co"># inventoried plot mask</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span> <span class="co"># topography</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">VerticalCreekHeight</span><span class="op">)</span> <span class="co"># relative elevation</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span> <span class="co"># species exploitability criteria</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span> <span class="co"># volume parameters</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ParamCrownDiameterAllometry</span><span class="op">)</span> <span class="co"># parameters values of the crown diameter allometry</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">Rslt</span> <span class="op">&lt;-</span> <span class="fu">loggingsimulation</span><span class="op">(</span></span>
+<span class="r-in"><span class="va">Rslt</span> <span class="op">&lt;-</span> <span class="fu">loggingsimulation1</span><span class="op">(</span></span>
 <span class="r-in"> <span class="va">Paracou6_2016</span>, plotmask <span class="op">=</span> <span class="va">PlotMask</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
 <span class="r-in"> verticalcreekheight  <span class="op">=</span> <span class="va">VerticalCreekHeight</span>, speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span>
 <span class="r-in"> volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>,</span>
 <span class="r-in"> objective <span class="op">=</span> <span class="fl">20</span>, fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>, winching <span class="op">=</span> <span class="st">"2"</span>,</span>
 <span class="r-in"> directionalfelling <span class="op">=</span> <span class="st">"2"</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span class="r-in"> crowndiameterparameters <span class="op">=</span> <span class="va">ParamCrownDiameterAllometry</span>,</span>
-<span class="r-in"> advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>, iter <span class="op">=</span> <span class="fl">2</span>, cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span class="r-in"> advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"> <span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>

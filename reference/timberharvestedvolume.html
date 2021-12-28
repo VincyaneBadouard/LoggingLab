@@ -105,7 +105,7 @@ as timber, but as fuel wood if chosen.</p>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span> <span class="co"># species exploitability criteria</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span> <span class="co"># volume parameters</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="inventorycheckformat.html">inventorycheckformat</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span>,</span>
+<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
 <span class="r-in">volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>, objective <span class="op">=</span> <span class="fl">20</span>, scenario <span class="op">=</span><span class="st">"manual"</span>,</span>
@@ -118,10 +118,10 @@ as timber, but as fuel wood if chosen.</p>
 <span class="r-in"><span class="fu">timberharvestedvolume</span><span class="op">(</span><span class="va">inventory</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>, fuel <span class="op">=</span> <span class="st">"2"</span>,</span>
 <span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TimberLoggedVolume</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 86.52112</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 87.05354</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $NoHollowTimberLoggedVolume</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 86.52112</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 79.01115</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 </code></pre></div>

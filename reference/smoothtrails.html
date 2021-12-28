@@ -57,7 +57,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">smoothtrails</span><span class="op">(</span>
   <span class="va">paths</span>,
   <span class="va">pts</span>,
-  <span class="va">plots</span>,
+  <span class="va">plotmask</span>,
   <span class="va">partMainTrails</span>,
   smthfact <span class="op">=</span> <span class="fl">5</span>,
   advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>
@@ -70,8 +70,8 @@
 <dd><p>Raw secondary trails polygons (sp polylines)</p></dd>
 <dt>pts</dt>
 <dd><p>Harvested tree locations (sf points)</p></dd>
-<dt>plots</dt>
-<dd><p>Studied plots (sf)</p></dd>
+<dt>plotmask</dt>
+<dd><p>Inventoried plot mask (SpatialPolygonsDataFrame)</p></dd>
 <dt>partMainTrails</dt>
 <dd><p>Intersections between accessible area and MainTrails (sf
 polygon)</p></dd>
@@ -94,13 +94,13 @@ generalization (numeric)</p></dd>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestablePolygons</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Plots</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotMask</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotSlope</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpeciesCriteria"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">scenarios</span> <span class="op">&lt;-</span> <span class="fu"><a href="scenariosparameters.html">scenariosparameters</a></span><span class="op">(</span>scenario <span class="op">=</span> <span class="st">"RIL3"</span>, objective <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="ONFGuyafortaxojoin.html">ONFGuyafortaxojoin</a></span><span class="op">(</span><span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="inventorycheckformat.html">inventorycheckformat</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span>,</span>
+<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="ONFGuyafortaxojoin.html">ONFGuyafortaxojoin</a></span><span class="op">(</span><span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
 <span class="r-in"> volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span>,<span class="va">SpeciesCriteria</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">AccessPolygons</span> <span class="op">&lt;-</span> <span class="fu"><a href="FilterAccesExplArea.html">FilterAccesExplArea</a></span><span class="op">(</span>harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,</span>
@@ -116,7 +116,7 @@ generalization (numeric)</p></dd>
 <span class="r-in">harvestablepolygons <span class="op">=</span> <span class="va">AccessPolygons</span>,</span>
 <span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">SecondTrailsRaw</span> <span class="op">&lt;-</span> <span class="fu"><a href="secondtrailsopening.html">secondtrailsopening</a></span><span class="op">(</span>DTM <span class="op">=</span> <span class="va">DTMParacou</span>, plotslope <span class="op">=</span>  <span class="va">PlotSlope</span>,plots <span class="op">=</span> <span class="va">Plots</span>,</span>
+<span class="r-in"><span class="va">SecondTrailsRaw</span> <span class="op">&lt;-</span> <span class="fu"><a href="secondtrailsopening.html">secondtrailsopening</a></span><span class="op">(</span>DTM <span class="op">=</span> <span class="va">DTMParacou</span>, plotslope <span class="op">=</span>  <span class="va">PlotSlope</span>,plotmask <span class="op">=</span> <span class="va">PlotMask</span>,</span>
 <span class="r-in">  harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>, MainTrails <span class="op">=</span> <span class="va">MainTrails</span>, <span class="va">treeselectionoutputs</span>,</span>
 <span class="r-in">  CostMatrix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">3</span>, Cost <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
 <span class="r-in">                           <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">5</span>, Cost <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
@@ -136,7 +136,7 @@ generalization (numeric)</p></dd>
 <span class="r-in"> advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"> <span class="va">SecondTrailsSmth</span> <span class="op">&lt;-</span> <span class="fu">smoothtrails</span><span class="op">(</span>paths <span class="op">=</span> <span class="va">SecondTrailsRaw</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span>
-<span class="r-in">                                 plots <span class="op">=</span> <span class="va">Plots</span>,</span>
+<span class="r-in">                                 plotmask <span class="op">=</span> <span class="va">PlotMask</span>,</span>
 <span class="r-in">                                   <span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>

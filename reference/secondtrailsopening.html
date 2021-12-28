@@ -56,7 +56,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">secondtrailsopening</span><span class="op">(</span>
   <span class="va">DTM</span>,
-  <span class="va">plots</span>,
+  <span class="va">plotmask</span>,
   <span class="va">verticalcreekheight</span>,
   <span class="va">treeselectionoutputs</span>,
   CostMatrix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">3</span>, Cost <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">5</span>, Cost <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,
@@ -76,8 +76,8 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>DTM</dt>
 <dd><p>Digital terrain model (raster)</p></dd>
-<dt>plots</dt>
-<dd><p>Studied plots (SpatialPolygonsDataFrame)</p></dd>
+<dt>plotmask</dt>
+<dd><p>Inventoried plot mask (SpatialPolygonsDataFrame)</p></dd>
 <dt>verticalcreekheight</dt>
 <dd><p>Relative elevation from nearest channel network
 (Large RasterLayer)</p></dd>
@@ -112,14 +112,14 @@ values</p></dd>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestablePolygons</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Plots</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotMask</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotSlope</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpeciesCriteria"</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">VerticalCreekHeight</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">scenarios</span> <span class="op">&lt;-</span> <span class="fu"><a href="scenariosparameters.html">scenariosparameters</a></span><span class="op">(</span>scenario <span class="op">=</span> <span class="st">"RIL3"</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="ONFGuyafortaxojoin.html">ONFGuyafortaxojoin</a></span><span class="op">(</span><span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="inventorycheckformat.html">inventorycheckformat</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span>,</span>
+<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="ONFGuyafortaxojoin.html">ONFGuyafortaxojoin</a></span><span class="op">(</span><span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
 <span class="r-in"> volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span>,<span class="va">SpeciesCriteria</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">AccessPolygons</span> <span class="op">&lt;-</span> <span class="fu"><a href="FilterAccesExplArea.html">FilterAccesExplArea</a></span><span class="op">(</span>harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,</span>
@@ -136,7 +136,7 @@ values</p></dd>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">secondtrails</span> <span class="op">&lt;-</span> <span class="fu">secondtrailsopening</span><span class="op">(</span></span>
 <span class="r-in">  DTM <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
-<span class="r-in">  plots <span class="op">=</span> <span class="va">Plots</span>,</span>
+<span class="r-in">  plotmask <span class="op">=</span> <span class="va">PlotMask</span>,</span>
 <span class="r-in">  treeselectionoutputs <span class="op">=</span> <span class="va">treeselectionoutputs</span>,</span>
 <span class="r-in">  verticalcreekheight <span class="op">=</span> <span class="va">VerticalCreekHeight</span>,</span>
 <span class="r-in">  CostMatrix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">3</span>, Cost <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>

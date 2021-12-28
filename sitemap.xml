@@ -55,10 +55,10 @@
     <loc>/reference/ParamCrownDiameterAllometry.html</loc>
   </url>
   <url>
-    <loc>/reference/PlotSlope.html</loc>
+    <loc>/reference/PlotMask.html</loc>
   </url>
   <url>
-    <loc>/reference/Plots.html</loc>
+    <loc>/reference/PlotSlope.html</loc>
   </url>
   <url>
     <loc>/reference/ScenariosTable.html</loc>
@@ -77,6 +77,9 @@
   </url>
   <url>
     <loc>/reference/addtreedim.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cleaninventory.html</loc>
   </url>
   <url>
     <loc>/reference/createcanopy.html</loc>
@@ -110,6 +113,9 @@
   </url>
   <url>
     <loc>/reference/loggingsimulation.html</loc>
+  </url>
+  <url>
+    <loc>/reference/loggingsimulation1.html</loc>
   </url>
   <url>
     <loc>/reference/loggingsummary.html</loc>
