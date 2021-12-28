@@ -21,7 +21,7 @@
 #' Rslt <- suppressMessages(
 #'   loggingsimulation(
 #'     Paracou6_2016, topography = DTMParacou,
-#'     relativeelevation  = VerticalCreekHeight,
+#'     verticalcreekheight  = VerticalCreekHeight,
 #'     speciescriteria = SpeciesCriteria,
 #'     volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'     objective = 20, fuel = "2", diversification = TRUE, winching = "2",

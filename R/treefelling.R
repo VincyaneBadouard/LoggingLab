@@ -78,14 +78,8 @@
 #' data(PlotSlope)
 #' data(SpeciesCriteria)
 #' data(HarvestablePolygons)
-#' # data(MainTrails)
+#' data(MainTrails)
 #'
-#' MainTrails <- sf::st_linestring(matrix(c(286400, 583130,
-#'                                         286400, 583250,
-#'                                         286655, 583250,
-#'                                         286655, 583130,
-#'                                         286400, 583130) # the return
-#'                                      ,ncol=2, byrow=TRUE))
 #' pol1 <- list(matrix(c(286503, 582925,
 #'                       286503, 583240,
 #'                       286507, 583240,
@@ -100,7 +94,8 @@
 #'                    ,ncol=2, byrow=TRUE))
 #'
 #' PolList = list(pol1,pol2) #list of lists of numeric matrices
-#' ScndTrail <- sf::st_multipolygon(PolList)
+#' ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
+#' ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails))
 #'
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -117,41 +112,50 @@
 #' MainTrails = MainTrails, ScndTrail = ScndTrail,
 #' advancedloggingparameters = loggingparameters())
 #'
-#' Treefall <- NewInventory %>%
-#'    dplyr::filter(DeathCause == "treefall2nd")
+#' NewInventory_crs <- NewInventory %>%
+#' getgeometry(TreePolygon) %>%
+#' sf::st_set_crs(sf::st_crs(MainTrails)) # set a crs
+#'
+#' Inventory_crs <- sf::st_as_sf(inventory, coords = c("Xutm", "Yutm")) # as sf
+#' Inventory_crs <- sf::st_set_crs(Inventory_crs, sf::st_crs(MainTrails)) # set a crs
+#'
+#' Treefall <- sf::st_as_sf(
+#' dplyr::filter(NewInventory, DeathCause == "treefall2nd"),
+#' coords = c("Xutm", "Yutm")) %>%
+#' sf::st_set_crs(sf::st_crs(MainTrails)) # set a crs
 #'
 #' NonHarvestable <- sf::st_as_sf(
-#' dplyr::filter(NewInventory, LoggingStatus == "non-harvestable"),
+#' dplyr::filter(Inventory_crs, LoggingStatus == "non-harvestable"),
 #' coords = c("Xutm", "Yutm"))
 #'
 #' Harvestable <- sf::st_as_sf(
-#' dplyr::filter(NewInventory, LoggingStatus == "harvestable"),
+#' dplyr::filter(Inventory_crs, LoggingStatus == "harvestable"),
 #' coords = c("Xutm", "Yutm"))
 #'
 #' HarvestableUp <- sf::st_as_sf(
-#' dplyr::filter(NewInventory, LoggingStatus == "harvestableUp"),
+#' dplyr::filter(Inventory_crs, LoggingStatus == "harvestableUp"),
 #' coords = c("Xutm", "Yutm"))
 #'
 #' Selected <- sf::st_as_sf(
-#' dplyr::filter(NewInventory, Selected == "1"), coords = c("Xutm", "Yutm"))
+#' dplyr::filter(Inventory_crs, Selected == "1"), coords = c("Xutm", "Yutm"))
 #'
 #' Reserve <- sf::st_as_sf(
-#' dplyr::filter(NewInventory, LoggingStatus == "reserve"),
+#' dplyr::filter(Inventory_crs, LoggingStatus == "reserve"),
 #' coords = c("Xutm", "Yutm"))
 #'
 #' Future <- sf::st_as_sf(
-#' dplyr::filter(NewInventory, LoggingStatus == "future"),
+#' dplyr::filter(Inventory_crs, LoggingStatus == "future"),
 #' coords = c("Xutm", "Yutm"))
 #'
 #' ProbedHollow <- sf::st_as_sf(
-#' dplyr::filter(NewInventory, ProbedHollow == "1"), coords = c("Xutm", "Yutm"))
+#' dplyr::filter(Inventory_crs, ProbedHollow == "1"), coords = c("Xutm", "Yutm"))
 #'
 #' VisibleDefect <- sf::st_as_sf(
-#' dplyr::filter(NewInventory, VisibleDefect == "1"), coords = c("Xutm", "Yutm"))
+#' dplyr::filter(Inventory_crs, VisibleDefect == "1"), coords = c("Xutm", "Yutm"))
 #'
 #' library(ggplot2)
 #' ggplot() +
-#'   geom_sf(data = sf::st_as_sf(NewInventory, coords = c("Xutm", "Yutm"))) +
+#'   geom_sf(data = Inventory_crs) +
 #'   geom_sf(data = NonHarvestable,
 #'   aes(colour = "Non-harvestable"), show.legend = "point") +
 #'   geom_sf(data = VisibleDefect,
@@ -164,7 +168,7 @@
 #'   aes(colour = "Harvestable"), show.legend = "point", size = 4) +
 #'   geom_sf(data = HarvestableUp,
 #'   aes(colour = "HarvestableUp"), show.legend = "point", size = 4) +
-#'   geom_sf(data = getgeometry (NewInventory, TreePolygon), # cuted trees
+#'   geom_sf(data = NewInventory_crs, # cuted trees
 #'   alpha = 0.5, fill = "red") +
 #'   geom_sf(data = Selected, aes(colour = "Selected"), show.legend = "point") +
 #'   geom_sf(data = ProbedHollow,
@@ -181,10 +185,10 @@
 #'   labs(color = "Logging status")
 #'
 #'
-#' sf::st_intersection( # trees under the fallen trees
+#' suppressWarnings(sf::st_intersection( # trees under the fallen trees
 #'   getgeometry (NewInventory, TreePolygon),
 #'   sf::st_as_sf(NewInventory, coords = c("Xutm", "Yutm"))
-#' ) %>%
+#' )) %>%
 #'   ggplot() +
 #'   geom_sf()
 #'
@@ -216,8 +220,8 @@ treefelling <- function(
   if (!any(directionalfelling == "0" || directionalfelling == "1" || directionalfelling == "2" || is.null(directionalfelling)))
     stop("The 'directionalfelling' argument of the 'treefelling' function must be '0', '1', '2' or NULL")
 
-  if(!all(unlist(lapply(list(MainTrails, ScndTrail), inherits, "sfg"))))
-    stop("The 'MainTrails' and 'ScndTrail' arguments of the 'treefelling' function must be sfg")
+  if(!all(unlist(lapply(list(MainTrails, ScndTrail), inherits, "sf"))))
+    stop("The 'MainTrails' and 'ScndTrail' arguments of the 'treefelling' function must be sf")
 
 
   if(!inherits(advancedloggingparameters, "list"))
@@ -578,9 +582,9 @@ rotatepolygon <- function(
 #'@param directionalfelling Directional felling =
 #' "0": only to direct the foot of the tree towards the trail
 #' "1": to direct the foot of the tree towards the trail + to avoid damage to
-#'         future and reserve trees if possible
-#' "2": to avoid damage to future and reserve trees if possible
-#'       + orientation angle to the trail
+#'        future and reserve trees if possible
+#' "2": to direct the foot of the tree towards the trail + to avoid damage to
+#'        future and reserve trees if possible + orientation angle to the trail
 #'
 #'@param MainTrails (sfg)
 #'@param ScndTrail (sfg)
@@ -590,12 +594,12 @@ rotatepolygon <- function(
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
-#'@return A list with: FallenTree: a MULTIPOLYGON of the tree oriented according
-#'  to the chosen scenario. Foot: a point for the base of the tree (the rotation
-#'  fixed point). NearestPoints: a linestring for the shortest path from the
-#'  base of the tree to the nearest trail, Trail: the union of the main and the
-#'  secondary trails. TrailPt: the point on the Trail closest to the location of
-#'  the tree.
+#'@return A list with: FallenTree: a sfc_MULTIPOLYGON of the tree oriented
+#'  according to the chosen scenario. Foot: a POINT for the base of the tree
+#'  (the rotation fixed point). NearestPoints: a sfc_LINESTRING for the shortest
+#'  path from the base of the tree to the nearest trail, Trail: the union of the
+#'  main and the secondary trails. TrailPt: the POINT on the Trail closest
+#'  to the location of the tree.
 #'
 #'@seealso \code{\link{loggingparameters}}
 #'
@@ -603,7 +607,7 @@ rotatepolygon <- function(
 #'
 #'@importFrom dplyr mutate filter rowwise ungroup bind_rows summarise sample_n
 #'@importFrom sf st_point st_multipolygon st_as_sf st_nearest_points st_distance
-#'  st_cast st_intersects st_buffer st_sfc st_combine
+#'  st_cast st_intersects st_buffer st_sfc st_combine st_set_crs st_crs
 #'@importFrom nngeo st_ellipse
 #'@importFrom matlib angle
 #'
@@ -613,29 +617,24 @@ rotatepolygon <- function(
 #' data(PlotSlope)
 #' data(SpeciesCriteria)
 #' data(HarvestablePolygons)
-#' # data(MainTrails)
+#' data(MainTrails)
 #'
-#' MainTrails <- sf::st_linestring(matrix(c(286400, 583130,
-#'                                         286400, 583250,
-#'                                         286655, 583250,
-#'                                         286655, 583130,
-#'                                         286400, 583130) # the return
-#'                                      ,ncol=2, byrow=TRUE))
-#' pol1 <- list(matrix(c(286503, 583134,
+#' pol1 <- list(matrix(c(286503, 582925,
 #'                       286503, 583240,
 #'                       286507, 583240,
-#'                       286507, 583134,
-#'                       286503, 583134) # the return
+#'                       286507, 582925,
+#'                       286503, 582925) # the return
 #'                    ,ncol=2, byrow=TRUE))
-#' pol2 <- list(matrix(c(286650, 583134,
+#' pol2 <- list(matrix(c(286650, 582925,
 #'                       286650, 583240,
 #'                       286654, 583240,
-#'                       286654, 583134,
-#'                       286650, 583134) # the return
+#'                       286654, 582925,
+#'                       286650, 582925) # the return
 #'                    ,ncol=2, byrow=TRUE))
 #'
 #' PolList = list(pol1,pol2) #list of lists of numeric matrices
-#' ScndTrail <- sf::st_multipolygon(PolList)
+#' ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
+#' ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails))
 #'
 #' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -668,12 +667,12 @@ rotatepolygon <- function(
 #'
 #' library(ggplot2)
 #' ggplot() +
-#'   geom_sf(data = rslt$Foot) +
-#'   geom_sf(data = rslt$Trail) +
+#'   geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$Foot), sf::st_crs(MainTrails))) +
+#'   geom_sf(data = sf::st_set_crs(sf::st_as_sf(rslt$Trail), sf::st_crs(MainTrails))) +
 #'   geom_sf(data = rslt$NearestPoints) +
-#'   geom_sf(data = rslt$TrailPt) +
-#'   geom_sf(data = rslt$FallenTree) +
-#'   geom_sf(data = FutureReserveCrowns$Crowns)
+#'   geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$TrailPt), sf::st_crs(MainTrails))) +
+#'   geom_sf(data = sf::st_set_crs(rslt$FallenTree, sf::st_crs(MainTrails))) +
+#'   geom_sf(data = sf::st_set_crs(FutureReserveCrowns, sf::st_crs(MainTrails))) # set a crs
 felling1tree <- function(
   dat,
   fuel,
@@ -701,8 +700,8 @@ felling1tree <- function(
            || directionalfelling == "2" || is.null(directionalfelling)))
     stop("The 'directionalfelling' argument of the 'felling1tree' function must be '0', '1', '2' or NULL")
 
-  if(!all(unlist(lapply(list(MainTrails, ScndTrail), inherits, "sfg"))))
-    stop("The 'MainTrails' and 'ScndTrail' arguments of the 'felling1tree' function must be sfg")
+  if(!all(unlist(lapply(list(MainTrails, ScndTrail), inherits, "sf"))))
+    stop("The 'MainTrails' and 'ScndTrail' arguments of the 'felling1tree' function must be sf")
 
   if(!inherits(advancedloggingparameters, "list"))
     stop("The 'advancedloggingparameters' argument of the 'felling1tree' function must be a list")
@@ -727,6 +726,8 @@ felling1tree <- function(
   #### Individual geometry ####
   # The foot
   Foot <- st_point(c(dat$Xutm,dat$Yutm))
+  Foot_crs <- st_sfc(Foot) # as sfc
+  Foot_crs <- st_set_crs(Foot_crs, st_crs(MainTrails)) # set a crs
 
   # The crown
   Crown <- dat %>%
@@ -736,6 +737,7 @@ felling1tree <- function(
            eyCrown = CrownHeight/2) %>%
     st_as_sf(coords = c("xCrown", "yCrown")) # ellipse centroid coordinates
   Crown <- st_ellipse(Crown, Crown$exCrown, Crown$eyCrown) # create the ellipse
+  Crown <- st_set_crs(Crown, st_crs(MainTrails)) # set a crs
 
   # The trunk
   Trunk <- with(dat,
@@ -751,7 +753,7 @@ felling1tree <- function(
 
   Trail <- st_union(MainTrails, ScndTrail) # Our trail will be MainTrails or ScndTrail
 
-  NearestPoints <- st_nearest_points(Foot, Trail) # from the Foot of the tree to the Trail (linestring)
+  NearestPoints <- st_nearest_points(Foot_crs, Trail) # from the Foot of the tree to the Trail (linestring)
 
   NearestPoint <- st_cast(NearestPoints, "POINT") # to have start (Foot) and end (TrailPt) points
   TrailPt <- NearestPoint[[2]] # the point (TrailPt) on the Trail closest to the location of the tree (Foot)
@@ -927,6 +929,9 @@ felling1tree <- function(
       ACrown <- lapply(as.list(Aangle), function(element) rotatepolygon(Crown, angle = element, fixed = Foot)) # turned crowns
       BCrown <- lapply(as.list(Bangle), function(element) rotatepolygon(Crown, angle = element, fixed = Foot)) # turned crowns
 
+      ACrown <- lapply(ACrown, function(element) st_set_crs(element, st_crs(MainTrails))) # set a crs
+      BCrown <- lapply(BCrown, function(element) st_set_crs(element, st_crs(MainTrails))) # set a crs
+
       # Test the best to pull the tree back to the main trail (farthest crown from the main trail)
       ADist <- unlist(lapply(as.list(ACrown), function(element) st_distance(element, MainTrails)[1,1])) #matrix to value
       BDist <- unlist(lapply(as.list(BCrown), function(element) st_distance(element, MainTrails)[1,1])) #matrix to value
@@ -1018,6 +1023,9 @@ felling1tree <- function(
         # Calculate the two possible crown configurations
         ACrown <- lapply(as.list(CableAangle), function(element) rotatepolygon(Crown, angle = element, fixed = Foot)) # turned crowns
         BCrown <- lapply(as.list(CableBangle), function(element) rotatepolygon(Crown, angle = element, fixed = Foot)) # turned crowns
+
+        ACrown <- lapply(ACrown, function(element) st_set_crs(element, st_crs(MainTrails))) # set a crs
+        BCrown <- lapply(BCrown, function(element) st_set_crs(element, st_crs(MainTrails))) # set a crs
 
         # Test the best to pull the tree back to the main trail (farthest crown from the main trail)
         ADist <- unlist(lapply(as.list(ACrown), function(element) st_distance(element, MainTrails)[1,1])) #matrix to value
@@ -1120,6 +1128,9 @@ felling1tree <- function(
         ACrown <- lapply(as.list(Aangle), function(element) rotatepolygon(Crown, angle = element, fixed = Foot)) # turned crowns
         BCrown <- lapply(as.list(Bangle), function(element) rotatepolygon(Crown, angle = element, fixed = Foot)) # turned crowns
 
+        ACrown <- lapply(ACrown, function(element) st_set_crs(element, st_crs(MainTrails))) # set a crs
+        BCrown <- lapply(BCrown, function(element) st_set_crs(element, st_crs(MainTrails))) # set a crs
+
         # Test the best to pull the tree back to the main trail (farthest crown from the main trail)
         ADist <- unlist(lapply(as.list(ACrown), function(element) st_distance(element, MainTrails)[1,1])) #matrix to value
         BDist <- unlist(lapply(as.list(BCrown), function(element) st_distance(element, MainTrails)[1,1])) #matrix to value
@@ -1170,11 +1181,12 @@ felling1tree <- function(
     }
   }
 
-  FellingOuputs <- list(Foot = Foot,
+  FellingOuputs <- list(Foot = Foot, # Foot_crs
                         NearestPoints = NearestPoints,
-                        TrailPt = TrailPt,
-                        Trail = Trail,
-                        FallenTree = FallenTree)
+                        TrailPt = TrailPt, # set a crs : st_set_crs(st_sfc(TrailPt), st_crs(MainTrails))
+                        Trail = Trail, # set a crs : st_set_crs(st_as_sf(Trail), st_crs(MainTrails))
+                        FallenTree = FallenTree # set a crs : st_set_crs(st_sfc(FallenTree), st_crs(MainTrails))
+  )
 
 
   return(FellingOuputs)

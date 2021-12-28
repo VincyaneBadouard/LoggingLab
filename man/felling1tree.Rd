@@ -30,8 +30,8 @@ hollow trees, damage and and unused part of the log for fuel = "2"}
 "0": only to direct the foot of the tree towards the trail
 "1": to direct the foot of the tree towards the trail + to avoid damage to
 future and reserve trees if possible
-"2": to avoid damage to future and reserve trees if possible
-+ orientation angle to the trail}
+"2": to direct the foot of the tree towards the trail + to avoid damage to
+future and reserve trees if possible + orientation angle to the trail}
 
 \item{MainTrails}{(sfg)}
 
@@ -43,12 +43,12 @@ future and reserve trees if possible
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-A list with: FallenTree: a MULTIPOLYGON of the tree oriented according
-to the chosen scenario. Foot: a point for the base of the tree (the rotation
-fixed point). NearestPoints: a linestring for the shortest path from the
-base of the tree to the nearest trail, Trail: the union of the main and the
-secondary trails. TrailPt: the point on the Trail closest to the location of
-the tree.
+A list with: FallenTree: a sfc_MULTIPOLYGON of the tree oriented
+according to the chosen scenario. Foot: a POINT for the base of the tree
+(the rotation fixed point). NearestPoints: a sfc_LINESTRING for the shortest
+path from the base of the tree to the nearest trail, Trail: the union of the
+main and the secondary trails. TrailPt: the POINT on the Trail closest
+to the location of the tree.
 }
 \description{
 Simulates the tree (multipolygon) falling towards the trail or
@@ -67,29 +67,24 @@ data(DTMParacou)
 data(PlotSlope)
 data(SpeciesCriteria)
 data(HarvestablePolygons)
-# data(MainTrails)
+data(MainTrails)
 
-MainTrails <- sf::st_linestring(matrix(c(286400, 583130,
-                                        286400, 583250,
-                                        286655, 583250,
-                                        286655, 583130,
-                                        286400, 583130) # the return
-                                     ,ncol=2, byrow=TRUE))
-pol1 <- list(matrix(c(286503, 583134,
+pol1 <- list(matrix(c(286503, 582925,
                       286503, 583240,
                       286507, 583240,
-                      286507, 583134,
-                      286503, 583134) # the return
+                      286507, 582925,
+                      286503, 582925) # the return
                    ,ncol=2, byrow=TRUE))
-pol2 <- list(matrix(c(286650, 583134,
+pol2 <- list(matrix(c(286650, 582925,
                       286650, 583240,
                       286654, 583240,
-                      286654, 583134,
-                      286650, 583134) # the return
+                      286654, 582925,
+                      286650, 582925) # the return
                    ,ncol=2, byrow=TRUE))
 
 PolList = list(pol1,pol2) #list of lists of numeric matrices
-ScndTrail <- sf::st_multipolygon(PolList)
+ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
+ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails))
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -122,12 +117,12 @@ rslt <- felling1tree(dat,
 
 library(ggplot2)
 ggplot() +
-  geom_sf(data = rslt$Foot) +
-  geom_sf(data = rslt$Trail) +
+  geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$Foot), sf::st_crs(MainTrails))) +
+  geom_sf(data = sf::st_set_crs(sf::st_as_sf(rslt$Trail), sf::st_crs(MainTrails))) +
   geom_sf(data = rslt$NearestPoints) +
-  geom_sf(data = rslt$TrailPt) +
-  geom_sf(data = rslt$FallenTree) +
-  geom_sf(data = FutureReserveCrowns$Crowns)
+  geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$TrailPt), sf::st_crs(MainTrails))) +
+  geom_sf(data = sf::st_set_crs(rslt$FallenTree, sf::st_crs(MainTrails))) +
+  geom_sf(data = sf::st_set_crs(FutureReserveCrowns, sf::st_crs(MainTrails))) # set a crs
 }
 \seealso{
 \code{\link{loggingparameters}}

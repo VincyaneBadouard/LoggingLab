@@ -103,14 +103,8 @@ data(DTMParacou)
 data(PlotSlope)
 data(SpeciesCriteria)
 data(HarvestablePolygons)
-# data(MainTrails)
+data(MainTrails)
 
-MainTrails <- sf::st_linestring(matrix(c(286400, 583130,
-                                        286400, 583250,
-                                        286655, 583250,
-                                        286655, 583130,
-                                        286400, 583130) # the return
-                                     ,ncol=2, byrow=TRUE))
 pol1 <- list(matrix(c(286503, 582925,
                       286503, 583240,
                       286507, 583240,
@@ -125,7 +119,8 @@ pol2 <- list(matrix(c(286650, 582925,
                    ,ncol=2, byrow=TRUE))
 
 PolList = list(pol1,pol2) #list of lists of numeric matrices
-ScndTrail <- sf::st_multipolygon(PolList)
+ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
+ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails))
 
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -142,41 +137,50 @@ winching = "0", directionalfelling = "0",
 MainTrails = MainTrails, ScndTrail = ScndTrail,
 advancedloggingparameters = loggingparameters())
 
-Treefall <- NewInventory \%>\%
-   dplyr::filter(DeathCause == "treefall2nd")
+NewInventory_crs <- NewInventory \%>\%
+getgeometry(TreePolygon) \%>\%
+sf::st_set_crs(sf::st_crs(MainTrails)) # set a crs
+
+Inventory_crs <- sf::st_as_sf(inventory, coords = c("Xutm", "Yutm")) # as sf
+Inventory_crs <- sf::st_set_crs(Inventory_crs, sf::st_crs(MainTrails)) # set a crs
+
+Treefall <- sf::st_as_sf(
+dplyr::filter(NewInventory, DeathCause == "treefall2nd"),
+coords = c("Xutm", "Yutm")) \%>\%
+sf::st_set_crs(sf::st_crs(MainTrails)) # set a crs
 
 NonHarvestable <- sf::st_as_sf(
-dplyr::filter(NewInventory, LoggingStatus == "non-harvestable"),
+dplyr::filter(Inventory_crs, LoggingStatus == "non-harvestable"),
 coords = c("Xutm", "Yutm"))
 
 Harvestable <- sf::st_as_sf(
-dplyr::filter(NewInventory, LoggingStatus == "harvestable"),
+dplyr::filter(Inventory_crs, LoggingStatus == "harvestable"),
 coords = c("Xutm", "Yutm"))
 
 HarvestableUp <- sf::st_as_sf(
-dplyr::filter(NewInventory, LoggingStatus == "harvestableUp"),
+dplyr::filter(Inventory_crs, LoggingStatus == "harvestableUp"),
 coords = c("Xutm", "Yutm"))
 
 Selected <- sf::st_as_sf(
-dplyr::filter(NewInventory, Selected == "1"), coords = c("Xutm", "Yutm"))
+dplyr::filter(Inventory_crs, Selected == "1"), coords = c("Xutm", "Yutm"))
 
 Reserve <- sf::st_as_sf(
-dplyr::filter(NewInventory, LoggingStatus == "reserve"),
+dplyr::filter(Inventory_crs, LoggingStatus == "reserve"),
 coords = c("Xutm", "Yutm"))
 
 Future <- sf::st_as_sf(
-dplyr::filter(NewInventory, LoggingStatus == "future"),
+dplyr::filter(Inventory_crs, LoggingStatus == "future"),
 coords = c("Xutm", "Yutm"))
 
 ProbedHollow <- sf::st_as_sf(
-dplyr::filter(NewInventory, ProbedHollow == "1"), coords = c("Xutm", "Yutm"))
+dplyr::filter(Inventory_crs, ProbedHollow == "1"), coords = c("Xutm", "Yutm"))
 
 VisibleDefect <- sf::st_as_sf(
-dplyr::filter(NewInventory, VisibleDefect == "1"), coords = c("Xutm", "Yutm"))
+dplyr::filter(Inventory_crs, VisibleDefect == "1"), coords = c("Xutm", "Yutm"))
 
 library(ggplot2)
 ggplot() +
-  geom_sf(data = sf::st_as_sf(NewInventory, coords = c("Xutm", "Yutm"))) +
+  geom_sf(data = Inventory_crs) +
   geom_sf(data = NonHarvestable,
   aes(colour = "Non-harvestable"), show.legend = "point") +
   geom_sf(data = VisibleDefect,
@@ -189,7 +193,7 @@ ggplot() +
   aes(colour = "Harvestable"), show.legend = "point", size = 4) +
   geom_sf(data = HarvestableUp,
   aes(colour = "HarvestableUp"), show.legend = "point", size = 4) +
-  geom_sf(data = getgeometry (NewInventory, TreePolygon), # cuted trees
+  geom_sf(data = NewInventory_crs, # cuted trees
   alpha = 0.5, fill = "red") +
   geom_sf(data = Selected, aes(colour = "Selected"), show.legend = "point") +
   geom_sf(data = ProbedHollow,
@@ -206,10 +210,10 @@ ggplot() +
   labs(color = "Logging status")
 
 
-sf::st_intersection( # trees under the fallen trees
+suppressWarnings(sf::st_intersection( # trees under the fallen trees
   getgeometry (NewInventory, TreePolygon),
   sf::st_as_sf(NewInventory, coords = c("Xutm", "Yutm"))
-) \%>\%
+)) \%>\%
   ggplot() +
   geom_sf()
 

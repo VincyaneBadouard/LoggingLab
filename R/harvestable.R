@@ -114,7 +114,7 @@ harvestable <- function(
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- LogDBH <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
-  PlotTopo <- ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
+  ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- Aggregative <- NULL
@@ -154,7 +154,7 @@ harvestable <- function(
         mutate(DistCrit = FALSE)
 
       # SpatInventorytmp <- as_Spatial(SpatInventorytmp)
-      # distSp <- topoDist(topography = PlotTopo, pts = SpatInventorytmp) # calculates topo distances
+      # distSp <- topoDist(topography = topography, pts = SpatInventorytmp) # calculates topo distances
       # distSp <- as_tibble(distSp)
 
       distSp <- st_distance(SpatInventorytmp) # calculates distances without topo
@@ -196,7 +196,7 @@ harvestable <- function(
 
    AccessPolygons <- FilterAccesExplArea(harvestablepolygons = harvestablepolygons, # define accessible areas (PU) from harvestablepolygons
                                          MainTrails = MainTrails,
-                                         advancedloggingparameters = loggingparameters())
+                                         advancedloggingparameters = advancedloggingparameters)
 
    PUSpatInventory<- SpatInventory %>% mutate(PU = as.vector(sf::st_contains(AccessPolygons, SpatInventory,sparse = F))) %>% # check if trees are contained in PUs
      dplyr::select(idTree , PU)

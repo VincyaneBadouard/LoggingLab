@@ -6,7 +6,7 @@ data("HarvestablePolygons")
 
   # x <- suppressMessages(
   #     loggingsimulation(Paracou6_2016, topography = DTMParacou,
-  #                       relativeelevation  = DTMParacou, speciescriteria = SpeciesCriteria,
+  #                       verticalcreekheight  = DTMParacou, speciescriteria = SpeciesCriteria,
   #                       volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
   #                       objective = 20, fuel = "2", diversification = TRUE, winching = "2",
   #                       directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE, harvestablepolygons = HarvestablePolygons,
