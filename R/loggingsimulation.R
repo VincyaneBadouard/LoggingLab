@@ -9,6 +9,8 @@
 #'@param inventory Input inventory (see the inputs formats and metadata in the
 #'  \code{\link{vignette}}) (data.frame)
 #'
+#'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame)
+#'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
@@ -100,17 +102,19 @@
 #' data(ForestZoneVolumeParametersTable) # volume parameters
 #' data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 #'
-#' Rslt <- loggingsimulation(Paracou6_2016, topography = DTMParacou,
+#' Rslt <- loggingsimulation(
+#'  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
 #'  verticalcreekheight  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
 #'  crowndiameterparameters = ParamCrownDiameterAllometry,
-#'  advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+#'  advancedloggingparameters = loggingparameters(), iter = 2, cores = 1)
 #'  }
 #'
 loggingsimulation <- function(
   inventory,
+  plotmask,
   topography,
   verticalcreekheight,
   speciescriteria,
@@ -135,215 +139,105 @@ loggingsimulation <- function(
 
 ){
 
-  # Arguments check
-
-  # inventory, speciescriteria, volumeparameters, crowndiameterparameters
-  if(!all(unlist(lapply(list(inventory, speciescriteria, volumeparameters, crowndiameterparameters),
-                        inherits, "data.frame"))))
-    stop("The 'inventory', 'speciescriteria', 'volumeparameters' and 'crowndiameterparameters' arguments
-         of the 'loggingsimulation' function must be data.frames")
-
-  # topography, verticalcreekheight
-  if(!all(unlist(lapply(list(topography, verticalcreekheight), inherits, "RasterLayer"))))
-    stop("The 'topography' and 'verticalcreekheight' arguments of the 'loggingsimulation' function must be RasterLayers")
-
-  # scenario
-  if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"|| scenario == "RIL3"||
-           scenario == "RIL3fuel"|| scenario == "RIL3fuelhollow"|| scenario =="manual"))
-    stop("The 'scenario' argument of the 'loggingsimulation' function must be
-         'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
-
-  # objective
-  if(!any(inherits(objective, "numeric") || is.null(objective)))
-    stop("The 'objective' argument of the 'loggingsimulation' function must be numeric or NULL")
-
-  # fuel
-  if (!any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
-    stop("The 'fuel' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
-
-  # diversification
-  if(!any(inherits(diversification, "logical") || is.null(diversification)))
-    stop("The 'diversification' argument of the 'loggingsimulation' function must be logical or NULL")
-
-  # winching
-  if (!any(winching == "0" || winching == "1"|| winching == "2"|| is.null(winching)))
-    stop("The 'winching' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
-
-  # directionalfelling
-  if (!any(directionalfelling == "0" || directionalfelling == "1" || directionalfelling == "2" || is.null(directionalfelling)))
-    stop("The 'directionalfelling' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
-
-  # manual mode
-  if(scenario == "manual" &&
-     (is.null(objective) || is.null(fuel) || is.null(diversification) || is.null(winching) || is.null(directionalfelling)))
-    stop("If you choose the 'manual' mode,
-         you must fill in the arguments 'objective', 'fuel', 'diversification', 'winching' and 'directionalfelling'")
-
-  # specieslax, objectivelax
-  if(!all(unlist(lapply(list(specieslax, objectivelax), inherits, "logical"))))
-    stop("The 'specieslax' and 'objectivelax' arguments of the 'loggingsimulation' function must be logicals") # any() don't take a list
-
-
-  # advancedloggingparameters
-  if(!inherits(advancedloggingparameters, "list"))
-    stop("The 'advancedloggingparameters' argument of the 'loggingsimulation' function must be a list")
-
-  # iter,cores
+  # Check args
   if(!all(unlist(lapply(list(iter, cores), inherits, "numeric"))))
     stop("The 'iter' and 'cores' arguments of the 'loggingsimulation' function must be numeric")
 
 
+  # apply versions
+  # replicate(iter, loggingsimulation1(inventory = inventory,
+  #                                    plotmask = plotmask,
+  #                                    topography = topography,
+  #                                    verticalcreekheight = verticalcreekheight,
+  #                                    speciescriteria = speciescriteria,
+  #                                    volumeparameters = volumeparameters,
+  #                                    scenario = scenario,
+  #                                    objective = objective,
+  #                                    fuel = fuel,
+  #                                    diversification = diversification,
+  #                                    winching = winching,
+  #                                    directionalfelling = directionalfelling,
+  #                                    specieslax = specieslax,
+  #                                    objectivelax = objectivelax,
+  #                                    crowndiameterparameters = crowndiameterparameters,
+  #                                    advancedloggingparameters = advancedloggingparameters),
+  #           simplify = F)
+  #
+  # lapply(seq_along(iter), loggingsimulation1(inventory = inventory,
+  #                                            plotmask = plotmask,
+  #                                            topography = topography,
+  #                                            verticalcreekheight = verticalcreekheight,
+  #                                            speciescriteria = speciescriteria,
+  #                                            volumeparameters = volumeparameters,
+  #                                            scenario = scenario,
+  #                                            objective = objective,
+  #                                            fuel = fuel,
+  #                                            diversification = diversification,
+  #                                            winching = winching,
+  #                                            directionalfelling = directionalfelling,
+  #                                            specieslax = specieslax,
+  #                                            objectivelax = objectivelax,
+  #                                            crowndiameterparameters = crowndiameterparameters,
+  #                                            advancedloggingparameters = advancedloggingparameters)
+  # )
+  #
+  # # purr versions
+  # purr::rerun(iter, loggingsimulation1(inventory = inventory,
+  #                                      plotmask = plotmask,
+  #                                      topography = topography,
+  #                                      verticalcreekheight = verticalcreekheight,
+  #                                      speciescriteria = speciescriteria,
+  #                                      volumeparameters = volumeparameters,
+  #                                      scenario = scenario,
+  #                                      objective = objective,
+  #                                      fuel = fuel,
+  #                                      diversification = diversification,
+  #                                      winching = winching,
+  #                                      directionalfelling = directionalfelling,
+  #                                      specieslax = specieslax,
+  #                                      objectivelax = objectivelax,
+  #                                      crowndiameterparameters = crowndiameterparameters,
+  #                                      advancedloggingparameters = advancedloggingparameters)
+  # )
+  #
+  # purr::map(seq_along(iter), ~ loggingsimulation1(inventory = inventory,
+  #                                                 plotmask = plotmask,
+  #                                                 topography = topography,
+  #                                                 verticalcreekheight = verticalcreekheight,
+  #                                                 speciescriteria = speciescriteria,
+  #                                                 volumeparameters = volumeparameters,
+  #                                                 scenario = scenario,
+  #                                                 objective = objective,
+  #                                                 fuel = fuel,
+  #                                                 diversification = diversification,
+  #                                                 winching = winching,
+  #                                                 directionalfelling = directionalfelling,
+  #                                                 specieslax = specieslax,
+  #                                                 objectivelax = objectivelax,
+  #                                                 crowndiameterparameters = crowndiameterparameters,
+  #                                                 advancedloggingparameters = advancedloggingparameters)
+  # )
+  #
+  #
+  # # Parallelization version
+  # parallel::mclapply(seq_along(iter), loggingsimulation1(inventory = inventory,
+  #                                                        plotmask = plotmask,
+  #                                                        topography = topography,
+  #                                                        verticalcreekheight = verticalcreekheight,
+  #                                                        speciescriteria = speciescriteria,
+  #                                                        volumeparameters = volumeparameters,
+  #                                                        scenario = scenario,
+  #                                                        objective = objective,
+  #                                                        fuel = fuel,
+  #                                                        diversification = diversification,
+  #                                                        winching = winching,
+  #                                                        directionalfelling = directionalfelling,
+  #                                                        specieslax = specieslax,
+  #                                                        objectivelax = objectivelax,
+  #                                                        crowndiameterparameters = crowndiameterparameters,
+  #                                                        advancedloggingparameters = advancedloggingparameters),
+  #                    mc.cores = cores)
 
-  # Global variables
-  ParamCrownDiameterAllometry <- NULL
-
-  # Redefinition of the parameters according to the chosen scenario
-  scenariosparameters <- scenariosparameters(scenario = scenario, objective = objective, fuel = fuel,
-                                             diversification = diversification, winching = winching,
-                                             directionalfelling = directionalfelling)
-
-  objective <- scenariosparameters$objective
-  fuel <- scenariosparameters$fuel
-  diversification <- scenariosparameters$diversification
-  winching <- scenariosparameters$winching
-  directionalfelling <- scenariosparameters$directionalfelling
-
-  INPUTinventory <- deparse(substitute(inventory)) # object name to this name in character
-
-  # Function
-
-
-  #### Check & format the inventory + add the tree dimensions: ####
-  inventory <- addtreedim(inventorycheckformat(inventory),
-                          volumeparameters = volumeparameters,
-                          crowndiameterparameters = crowndiameterparameters,
-                          advancedloggingparameters = advancedloggingparameters)
-
-
-  #### Main trails layout: (only for ONF plots) ####
-
-  ##### Harvestable area definition: A FAIRE ####
-  HarvestableAreaOutputs <- HarvestableAreaDefinition(topography = topography,
-                                                      verticalcreekheight = verticalcreekheight,
-                                                      advancedloggingparameters = advancedloggingparameters)
-
-  HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
-  PlotSlope <- HarvestableAreaOutputs$PlotSlope
-
-  data(MainTrails) # A SUPPRIMER
-
-  pol1 <- list(matrix(c(286503, 582925,
-                        286503, 583240,
-                        286507, 583240,
-                        286507, 582925,
-                        286503, 582925) # the return
-                     ,ncol=2, byrow=TRUE))
-  pol2 <- list(matrix(c(286650, 582925,
-                        286650, 583240,
-                        286654, 583240,
-                        286654, 582925,
-                        286650, 582925) # the return
-                     ,ncol=2, byrow=TRUE))
-
-  PolList = list(pol1,pol2) #list of lists of numeric matrices
-  ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
-  ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails)) # A SUPPRIMER
-
-  #### Tree selection (harvestable, future and reserve trees + defects trees): ####
-  treeselectionoutputs <- treeselection(inventory, topography = topography, plotslope = PlotSlope,
-                                        scenario = scenario, objective = objective, fuel = fuel,
-                                        diversification = diversification, specieslax = specieslax,
-                                        harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails,
-                                        objectivelax = objectivelax, speciescriteria = speciescriteria,
-                                        advancedloggingparameters = advancedloggingparameters)
-
-  inventory <- treeselectionoutputs$inventory
-  VO <- treeselectionoutputs$VO
-  HVinit <- treeselectionoutputs$HVinit
-  HarvestableTreesPoints <- treeselectionoutputs$HarvestableTreesPoints
-  SelectedTreesPoints <- treeselectionoutputs$SelectedTreesPoints
-  FutureTreesPoints <- treeselectionoutputs$FutureTreesPoints
-  ReserveTreesPoints <- treeselectionoutputs$ReserveTreesPoints
-  HollowTreesPoints <- treeselectionoutputs$HollowTreesPoints
-  EnergywoodTreesPoints <- treeselectionoutputs$EnergywoodTreesPoints
-
-  #### Secondary trails layout (preliminaries for fuel wood harvesting): A FAIRE ####
-  # ScndTrail <- secondtrailsopening(
-  #   topography = topography,
-  #   plots = Plots,
-  #   treeselectionoutputs = treeselectionoutputs,
-  #   verticalcreekheight = verticalcreekheight,
-  #   CostMatrix = CostMatrix,
-  #   scenarios = scenarios,
-  #   fact = 3,
-  #   advancedloggingparameters = advancedloggingparameters)
-
-  #### Tree felling: ####
-  inventory <- treefelling(inventory, scenario = scenario, fuel = fuel,
-                           winching = winching, directionalfelling = directionalfelling,
-                           MainTrails = MainTrails, ScndTrail = ScndTrail,
-                           advancedloggingparameters = advancedloggingparameters)
-
-
-  #### Adjusted secondary trails layout (for fuel wood harvesting only) A FAIRE ####
-
-  #### Landings implementation: (only for ONF plots) ####
-
-  #### Timber harvested volume quantification ####
-  Timberoutputs <- timberharvestedvolume(inventory,
-                                         scenario = scenario, fuel = fuel,
-                                         advancedloggingparameters = advancedloggingparameters)
-
-  TimberLoggedVolume <- Timberoutputs$TimberLoggedVolume
-  NoHollowTimberLoggedVolume <- Timberoutputs$NoHollowTimberLoggedVolume
-
-
-  #### Exploitable fuel wood volume quantification ####
-  Fueloutputs <- exploitablefuelwoodvolume(inventory,
-                                           scenario = scenario, fuel = fuel,
-                                           TimberLoggedVolume = TimberLoggedVolume,
-                                           NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
-                                           advancedloggingparameters = advancedloggingparameters)
-
-  DamageVolume <- Fueloutputs$DamageVolume # only damage (without purge and hollow trees)
-  FuelVolume <- Fueloutputs$FuelVolume
-
-
-
-  #### Outputs ####
-  Outputs <- list(inventory = inventory,
-
-                  # Numeric values
-                  # HarvestableArea = HarvestableArea,
-                  VO = VO,
-                  HVinit = HVinit,
-                  TimberLoggedVolume = TimberLoggedVolume,
-                  NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
-                  FuelVolume = FuelVolume,
-                  DamageVolume = DamageVolume, # only damage (without purge and hollow trees)
-                  # LostBiomass = LostBiomass,
-                  # TrailsDensity = TrailsDensity,
-
-                  # POINTS
-                  HarvestableTreesPoints = HarvestableTreesPoints,
-                  SelectedTreesPoints = SelectedTreesPoints,
-                  FutureTreesPoints = FutureTreesPoints,
-                  ReserveTreesPoints = ReserveTreesPoints,
-                  HollowTreesPoints = HollowTreesPoints,
-                  EnergywoodTreesPoints = EnergywoodTreesPoints,
-
-                  # INPUTS reminder
-                  INPUTinventory = INPUTinventory,
-                  scenario = scenario,
-                  objective = objective,
-                  fuel = fuel,
-                  diversification = diversification,
-                  winching = winching,
-                  directionalfelling = directionalfelling,
-                  specieslax = specieslax,
-                  objectivelax = objectivelax
-  )
-
-  return(Outputs)
 
 }
+

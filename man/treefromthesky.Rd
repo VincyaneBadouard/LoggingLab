@@ -21,7 +21,7 @@ treefromthesky
 data(Paracou6_2016)
 data(ForestZoneVolumeParametersTable)
 
-inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
 dat <- inventory[679,]
 

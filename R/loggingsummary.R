@@ -12,6 +12,7 @@
 #' @examples
 #' \dontrun{
 #' data(Paracou6_2016) # inventory
+#' data(PlotMask) # inventoried plot mask
 #' data(DTMParacou) # topography
 #' data(VerticalCreekHeight) # relative elevation
 #' data(SpeciesCriteria) # species exploitability criteria
@@ -20,7 +21,7 @@
 #'
 #' Rslt <- suppressMessages(
 #'   loggingsimulation(
-#'     Paracou6_2016, topography = DTMParacou,
+#'     Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
 #'     verticalcreekheight  = VerticalCreekHeight,
 #'     speciescriteria = SpeciesCriteria,
 #'     volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",

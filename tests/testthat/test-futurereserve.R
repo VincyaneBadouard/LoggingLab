@@ -5,7 +5,7 @@ test_that("futurereserve", {
   data(HarvestablePolygons)
   data(MainTrails)
 
-  inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
+  inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask), volumeparameters = ForestZoneVolumeParametersTable)
   inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
   harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,

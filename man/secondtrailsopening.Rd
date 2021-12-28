@@ -6,7 +6,7 @@
 \usage{
 secondtrailsopening(
   DTM,
-  plots,
+  plotmask,
   verticalcreekheight,
   treeselectionoutputs,
   CostMatrix = list(list(list(Slope = 3, Cost = 3), list(Slope = 5, Cost = 5),
@@ -24,7 +24,7 @@ secondtrailsopening(
 \arguments{
 \item{DTM}{Digital terrain model (raster)}
 
-\item{plots}{Studied plots (SpatialPolygonsDataFrame)}
+\item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame)}
 
 \item{verticalcreekheight}{Relative elevation from nearest channel network
 (Large RasterLayer)}
@@ -61,14 +61,14 @@ data(DTMParacou)
 data(Paracou6_2016)
 data(HarvestablePolygons)
 data(MainTrails)
-data(Plots)
+data(PlotMask)
 data(PlotSlope)
 data("SpeciesCriteria")
 data(VerticalCreekHeight)
 
 scenarios <- scenariosparameters(scenario = "RIL3")
 
-inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016),
+inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
 AccessPolygons <- FilterAccesExplArea(harvestablepolygons = HarvestablePolygons,
@@ -85,7 +85,7 @@ advancedloggingparameters = loggingparameters())
 
 secondtrails <- secondtrailsopening(
   DTM = DTMParacou,
-  plots = Plots,
+  plotmask = PlotMask,
   treeselectionoutputs = treeselectionoutputs,
   verticalcreekheight = VerticalCreekHeight,
   CostMatrix = list(list(list(Slope = 3, Cost = 3),

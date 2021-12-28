@@ -7,7 +7,7 @@
 smoothtrails(
   paths,
   pts,
-  plots,
+  plotmask,
   partMainTrails,
   smthfact = 5,
   advancedloggingparameters = loggingparameters()
@@ -18,7 +18,7 @@ smoothtrails(
 
 \item{pts}{Harvested tree locations (sf points)}
 
-\item{plots}{Studied plots (sf)}
+\item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame)}
 
 \item{partMainTrails}{Intersections between accessible area and MainTrails (sf
 polygon)}
@@ -41,13 +41,13 @@ data(DTMParacou)
 data(Paracou6_2016)
 data(HarvestablePolygons)
 data(MainTrails)
-data(Plots)
+data(PlotMask)
 data(PlotSlope)
 data("SpeciesCriteria")
 
 scenarios <- scenariosparameters(scenario = "RIL3", objective = 15)
 
-inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016),
+inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
 AccessPolygons <- FilterAccesExplArea(harvestablepolygons = HarvestablePolygons,
@@ -63,7 +63,7 @@ objectivelax = TRUE, MainTrails = MainTrails, plotslope = PlotSlope,
 harvestablepolygons = AccessPolygons,
 advancedloggingparameters = loggingparameters())
 
-SecondTrailsRaw <- secondtrailsopening(DTM = DTMParacou, plotslope =  PlotSlope,plots = Plots,
+SecondTrailsRaw <- secondtrailsopening(DTM = DTMParacou, plotslope =  PlotSlope,plotmask = PlotMask,
   harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails, treeselectionoutputs,
   CostMatrix = list(list(list(Slope = 3, Cost = 3),
                            list(Slope = 5, Cost = 5),
@@ -83,7 +83,7 @@ SecondTrailsRaw <- secondtrailsopening(DTM = DTMParacou, plotslope =  PlotSlope,
  advancedloggingparameters = loggingparameters())
 
  SecondTrailsSmth <- smoothtrails(paths = SecondTrailsRaw[[1]],
-                                 plots = Plots,
+                                 plotmask = PlotMask,
                                    )
 }
 

@@ -12,7 +12,7 @@ test_that("selected", {
   data(DTMParacou)
   data(PlotSlope)
 
-  inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+  inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
                           volumeparameters = ForestZoneVolumeParametersTable)
   inventory0 <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
@@ -221,7 +221,7 @@ test_that("selected", {
                                              advancedloggingparameters = loggingparameters(),
                                              VO = VO, HVinit = HVinit))$inventory
 
-  if (any(inventory$ProbedHollow == "1", na.rm = TRUE)) {
+  if (any(testinventory$ProbedHollow == "1", na.rm = TRUE)) {
     expect_true(any(testinventory$DeathCause == "hollowfuel"))
   }
 

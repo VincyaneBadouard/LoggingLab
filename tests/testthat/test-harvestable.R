@@ -20,7 +20,7 @@ test_that("harvestable", {
 
   # LoggingStatus column exist and have no NA
   ## Test data preparation
-  inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
+  inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask), volumeparameters = ForestZoneVolumeParametersTable)
   inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
 
   Outputs1 <- harvestable(inventory,
