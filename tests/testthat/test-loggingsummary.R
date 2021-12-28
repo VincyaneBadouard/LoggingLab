@@ -1,6 +1,14 @@
 test_that("loggingsummary", {
-data(MainTrails)
-data("HarvestablePolygons")
+
+  # Data loading
+  # data(Paracou6_2016) # inventory
+  # data(PlotMask) # inventoried plot mask
+  # data(DTMParacou) # topography
+  # data(VerticalCreekHeight) # relative elevation
+  # data(SpeciesCriteria) # species exploitability criteria
+  # data(ForestZoneVolumeParametersTable) # volume parameters
+  # data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
+
   expect_error(loggingsummary(x = TRUE),
                regexp = "The argument of the 'loggingsummary' function must be a list")
 

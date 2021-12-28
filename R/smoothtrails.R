@@ -4,7 +4,7 @@
 #'
 #'@param pts Harvested tree locations (sf points)
 #'
-#'@param plots Studied plots (sf)
+#'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame)
 #'
 #'@param partMainTrails Intersections between accessible area and MainTrails (sf
 #'  polygon)
@@ -30,13 +30,13 @@
 #' data(Paracou6_2016)
 #' data(HarvestablePolygons)
 #' data(MainTrails)
-#' data(Plots)
+#' data(PlotMask)
 #' data(PlotSlope)
 #' data("SpeciesCriteria")
 #'
 #' scenarios <- scenariosparameters(scenario = "RIL3", objective = 15)
 #'
-#' inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016),
+#' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #'  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 #'
 #' AccessPolygons <- FilterAccesExplArea(harvestablepolygons = HarvestablePolygons,
@@ -52,7 +52,7 @@
 #' harvestablepolygons = AccessPolygons,
 #' advancedloggingparameters = loggingparameters())
 #'
-#' SecondTrailsRaw <- secondtrailsopening(DTM = DTMParacou, plotslope =  PlotSlope,plots = Plots,
+#' SecondTrailsRaw <- secondtrailsopening(DTM = DTMParacou, plotslope =  PlotSlope,plotmask = PlotMask,
 #'   harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails, treeselectionoutputs,
 #'   CostMatrix = list(list(list(Slope = 3, Cost = 3),
 #'                            list(Slope = 5, Cost = 5),
@@ -72,14 +72,14 @@
 #'  advancedloggingparameters = loggingparameters())
 #'
 #'  SecondTrailsSmth <- smoothtrails(paths = SecondTrailsRaw[[1]],
-#'                                  plots = Plots,
+#'                                  plotmask = PlotMask,
 #'                                    )
 #'}
 #'
 smoothtrails <- function(
   paths,
   pts,
-  plots,
+  plotmask,
   partMainTrails,
   smthfact = 5,
   advancedloggingparameters = loggingparameters()
@@ -96,9 +96,9 @@ smoothtrails <- function(
     st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2) %>%
     st_union(ptsBuffered) %>%
     st_union() %>%
-    st_intersection(st_as_sf(plots) %>% st_union())
+    st_intersection(st_as_sf(plotmask) %>% st_union())
 
-  ScndTrailDens <- (secondtrails %>% st_area / advancedloggingparameters$ScndTrailWidth)/(plots %>% st_as_sf() %>% st_area() /10000)
+  ScndTrailDens <- (secondtrails %>% st_area / advancedloggingparameters$ScndTrailWidth)/(plotmask %>% st_as_sf() %>% st_area() /10000)
 
   if (as.numeric(ScndTrailDens) <= 200) {
     message(paste0("The second trails density criteria is validated (", ScndTrailDens," m.ha^-1 <= 200m.ha^-1 )"))

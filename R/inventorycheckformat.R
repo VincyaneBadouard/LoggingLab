@@ -10,7 +10,7 @@
 #' Stop the function if the format is not the one required.
 #' @export
 #'
-#' @importFrom dplyr filter mutate
+#' @importFrom dplyr mutate
 #'
 #' @examples
 #'
@@ -47,7 +47,7 @@ inventorycheckformat <- function(
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
-  # Variables presence check
+  #### Variables presence check ####
   # (Plot, CensusYear, idTree, Family, Genus, Species, CircCorr, CodeAlive,
   # CommercialSp, UTMZone, Lat, Lon, VernName, Xfield, Yfield, Xutm, Yutm)
   if(!("Plot" %in% names(inventory))) {
@@ -118,7 +118,7 @@ inventorycheckformat <- function(
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop, "Yutm variable is not found.")
   }
-  # Variables class check
+  #### Variables class check ####
   if (!inherits(inventory$idTree, "integer")) {
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop, "idTree variable should be an integer.")
@@ -217,24 +217,21 @@ inventorycheckformat <- function(
     inventory <- mutate(inventory, DBH = ifelse(is.na(CircCorr), Circ/pi, CircCorr/pi))
   }
 
-  # Filter
-  inventory <- inventory %>%
-    filter(CodeAlive == "TRUE") %>% #only alive trees
-    filter(DBH >= 10) # DBH >= 10, Circ = perimeter of the circle? =! diameter !
-
+  # Unique trees
   if (any(duplicated(inventory$idTree))) {
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop, "Tree identifiers (idTree) are not unique.")
     # stop function if the tree identifiers (idTree) are not unique
   }
 
-  # length(unique(inventory$Plot)) == 1
+  # Unique plot
   if (!length(unique(inventory$Plot)) == 1){ #all the Plot values are equal?
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop,"Input inventory concerns different plots
                           (Plot). Our function simulates logging at the plot level.")
   }
 
+  # Unique census year
   if (!length(unique(inventory$CensusYear)) == 1) {#all is the same year?
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop,"Input inventory concerns different years

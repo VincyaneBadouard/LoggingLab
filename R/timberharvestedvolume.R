@@ -38,7 +38,7 @@
 #' data(SpeciesCriteria) # species exploitability criteria
 #' data(ForestZoneVolumeParametersTable) # volume parameters
 #'
-#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
 #' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",

@@ -2,7 +2,7 @@
 #'
 #' @param DTM Digital terrain model (raster)
 #'
-#' @param plots Studied plots (SpatialPolygonsDataFrame)
+#' @param plotmask Inventoried plot mask (SpatialPolygonsDataFrame)
 #'
 #' @param treeselectionoutputs A list with:
 #' - your inventory with: "DistCrit", "Slope", "SlopeCrit", "LoggingStatus",
@@ -47,14 +47,14 @@
 #' data(Paracou6_2016)
 #' data(HarvestablePolygons)
 #' data(MainTrails)
-#' data(Plots)
+#' data(PlotMask)
 #' data(PlotSlope)
 #' data("SpeciesCriteria")
 #' data(VerticalCreekHeight)
 #'
 #' scenarios <- scenariosparameters(scenario = "RIL3")
 #'
-#' inventory <- ONFGuyafortaxojoin(addtreedim(inventorycheckformat(Paracou6_2016),
+#' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #'  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 #'
 #'
@@ -68,7 +68,7 @@
 #'
 #' secondtrails <- secondtrailsopening(
 #'   DTM = DTMParacou,
-#'   plots = Plots,
+#'   plotmask = PlotMask,
 #'   treeselectionoutputs = treeselectionoutputs,
 #'   verticalcreekheight = VerticalCreekHeight,
 #'   CostMatrix = list(list(list(Slope = 3, Cost = 3),
@@ -91,7 +91,7 @@
 #'
 secondtrailsopening <- function(
   DTM,
-  plots,
+  plotmask,
   verticalcreekheight,
   treeselectionoutputs,
   #MainTrails,
@@ -118,8 +118,8 @@ secondtrailsopening <- function(
   if(!inherits(treeselectionoutputs, "list"))
     stop("The 'treeselectionoutputs' arguments of the 'secondtrailsopening' function must be list following treeselection output format")
 
-  if(!any(unlist(lapply(list(plots), inherits, "SpatialPolygonsDataFrame"))))
-    stop("The 'plots' argument of the 'secondtrailsopening' function must be SpatialPolygonsDataFrame")
+  if(!any(unlist(lapply(list(plotmask), inherits, "SpatialPolygonsDataFrame"))))
+    stop("The 'plotmask' argument of the 'secondtrailsopening' function must be SpatialPolygonsDataFrame")
 
   if(!any(unlist(lapply(list(DTM), inherits, "RasterLayer"))))
     stop("The 'DTM' argument of the 'secondtrailsopening' function must be raster")
@@ -199,7 +199,7 @@ secondtrailsopening <- function(
                                                   st_buffer(dist = raster::res(DTM)+1))) %>%
     st_buffer(dist = raster::res(DTM)+1) %>%
     st_union(by_feature = T) %>%
-    st_intersection(st_as_sf(plots) %>% st_union()) %>%
+    st_intersection(st_as_sf(plotmask) %>% st_union()) %>%
     st_cast("MULTIPOLYGON")  %>%
     st_as_sf() %>%
     st_set_agr(value = "constant") %>%
@@ -214,8 +214,8 @@ secondtrailsopening <- function(
   # Generate Cost raster --> cf CostMatrix
   CostRaster <- raster(extent(DTMExtended),resolution = res(DTMExtended), crs = crs(DTMExtended))
   values(CostRaster) <- CostMatrix[[2]][[1]]$CostValue
-  CostRaster <- mask(CostRaster, plots)
-  CostRaster <- crop(CostRaster, plots)
+  CostRaster <- mask(CostRaster, plotmask)
+  CostRaster <- crop(CostRaster, plotmask)
 
 
   #Generate weight according to slope conditions
@@ -263,7 +263,7 @@ secondtrailsopening <- function(
                             field = 0,
                             update = TRUE)
   AccessRaster <- crop(AccessRaster,  CostRaster)
-  AccessRaster <- mask(AccessRaster, plots)
+  AccessRaster <- mask(AccessRaster, plotmask)
 
   #Update Cost Raster with accessible weights raster
   CostRaster<- CostRaster + AccessRaster
@@ -347,7 +347,7 @@ secondtrailsopening <- function(
 
     CostRasterMeanGrpl <- aggregate(CostRasterGrpl, fact=fact, fun=mean)
     CostRasterMeanGrpl <- crop(CostRasterMeanGrpl,  CostRaster)
-    CostRasterMeanGrpl <- mask(CostRasterMeanGrpl, plots)
+    CostRasterMeanGrpl <- mask(CostRasterMeanGrpl, plotmask)
 
   }
 
@@ -361,14 +361,14 @@ secondtrailsopening <- function(
   #Aggregation each raster to selected resolution
   CostRasterMean <- aggregate(CostRaster, fact=fact, fun=mean)
   CostRasterMean <- crop(CostRasterMean,  CostRaster)
-  CostRasterMean <- mask(CostRasterMean, plots)
+  CostRasterMean <- mask(CostRasterMean, plotmask)
 
   DTMExtended <- crop(DTMExtended,  CostRasterMean)
-  DTMExtended <- mask(DTMExtended, plots)
+  DTMExtended <- mask(DTMExtended, plotmask)
 
   DTMmean <- aggregate(DTMExtended, fact=fact, fun=mean)
   DTMmean <- crop(DTMmean,  CostRasterMean)
-  DTMmean <- mask(DTMmean, plots)
+  DTMmean <- mask(DTMmean, plotmask)
 
 
   #Compute conductance raster
@@ -608,7 +608,7 @@ secondtrailsopening <- function(
 
       ptsWIP <- ptsWIP %>%  #filter cbl intersection centroid point out plot
         filter(st_intersects(st_geometry(ptsWIP),
-                             st_geometry(plots %>%
+                             st_geometry(plotmask %>%
                                            st_as_sf()),
                              sparse = FALSE)) %>%
         arrange(desc(n.overlaps))
@@ -956,7 +956,7 @@ secondtrailsopening <- function(
 
   secondtrails <- smoothtrails(paths,
                                pts = ptsHarvested,
-                               plots,
+                               plotmask,
                                partMainTrails = PartMainTrails,
                                advancedloggingparameters = loggingparameters())
 

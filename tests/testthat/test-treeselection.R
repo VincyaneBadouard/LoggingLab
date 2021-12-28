@@ -63,7 +63,7 @@ test_that("treeselection", {
          you must fill in the arguments 'objective', 'fuel' and 'diversification'")
 
   # Test data preparation
-  inventory = addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
+  inventory = addtreedim(cleaninventory(Paracou6_2016, PlotMask), volumeparameters = ForestZoneVolumeParametersTable)
 
   testinventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
                                                   fuel = "2", diversification = TRUE,
