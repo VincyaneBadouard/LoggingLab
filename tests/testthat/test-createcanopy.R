@@ -3,7 +3,7 @@ test_that("createcanopy", {
   # Test data
   data(Paracou6_2016)
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:10)
-  inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
+  inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask), volumeparameters = ForestZoneVolumeParametersTable)
 
   MatrixInventory <- as.matrix(Paracou6_2016)
 

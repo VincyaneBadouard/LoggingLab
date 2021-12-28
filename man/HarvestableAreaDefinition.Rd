@@ -35,7 +35,7 @@ Harvestable area definition
 }
 \examples{
 \dontrun{
-data(Plots)
+data(PlotMask)
 data(DTMParacou)
 data(VerticalCreekHeight)
 

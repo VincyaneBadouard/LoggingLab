@@ -44,16 +44,7 @@ test_that("inventorycheckformat", {
 
 
   #Create the test inventory
-  TestInventory <- Paracou6_2016
-  TestInventory[10, "CodeAlive"] <- FALSE # Some FALSE in CodeAlive
-  TestInventory[4, "CircCorr"] <- 6 # DBH < 10
-  CleanedInventory <- inventorycheckformat(TestInventory)
-
-  #check if CodeAlive == TRUE
-  expect_true(all(CleanedInventory$CodeAlive == "TRUE"))
-
-  #check if DBH >= 10 (check if DBH exists in the same way)
-  expect_true(all(CleanedInventory$DBH >= 10 & inventorycheckformat(TestInventory)$DBH < 900))#the largest known tree: 825 cm
+  CleanedInventory <- cleaninventory(Paracou6_2016, PlotMask)
 
   expect_false(any(is.na(CleanedInventory$DBH))) #check that all the DBH are computed
 

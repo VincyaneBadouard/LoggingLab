@@ -72,7 +72,7 @@
 #' data(HarvestablePolygons)
 #' data(MainTrails)
 #'
-#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
 #' inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)

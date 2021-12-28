@@ -86,7 +86,7 @@ PolList = list(pol1,pol2) #list of lists of numeric matrices
 ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
 ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails))
 
-inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
 
 inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",

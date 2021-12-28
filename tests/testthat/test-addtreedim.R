@@ -4,6 +4,7 @@ test_that("addtreedim", {
 
   ## check the database class
   data(Paracou6_2016)
+  data(PlotMask) # the inventoried plot mask
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
 
   MatrixInventory <- as.matrix(Paracou6_2016)
@@ -20,7 +21,9 @@ test_that("addtreedim", {
                regexp = "The 'advancedloggingparameters' argument of the 'addtreedim' function must be a list")
 
   # Test data preparation
-  testinventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
+  inventory <- cleaninventory(Paracou6_2016, PlotMask)
+  inventory <- cleaninventory(inventory, PlotMask)
+  testinventory <- addtreedim(inventory, volumeparameters = ForestZoneVolumeParametersTable)
 
   TestList <- list( # list the variables to check
     testinventory$TreeHeight,
@@ -68,7 +71,7 @@ test_that("addtreedim", {
   expect_true(all(0 < testinventory$CrownHeight & testinventory$CrownHeight < 100))
   expect_true(all(0 < testinventory$CrownDiameter & testinventory$CrownDiameter < 200))
 
-  expect_true(nrow(inventorycheckformat(Paracou6_2016)) == nrow(testinventory))
+  expect_true(nrow(inventory) == nrow(testinventory))
 
 
 })
