@@ -9,6 +9,7 @@
 #'  \code{\link{loggingparameters}} (list)
 #'
 #' @return The inventory (data.frame) with only alive trees within the inventoried plot.
+#'
 #' @export
 #'
 #' @importFrom dplyr filter mutate select left_join
