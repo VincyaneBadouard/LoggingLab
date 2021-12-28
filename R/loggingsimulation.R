@@ -220,6 +220,27 @@ loggingsimulation <- function(
   #
   #
   # # Parallelization version
+  # For Windows
+  # cl <- makePSOCKcluster(cores) # create a cluster
+  # parallel::parLapply(cl, seq_along(iter), loggingsimulation1(inventory = inventory,
+  #                                                             plotmask = plotmask,
+  #                                                             topography = topography,
+  #                                                             verticalcreekheight = verticalcreekheight,
+  #                                                             speciescriteria = speciescriteria,
+  #                                                             volumeparameters = volumeparameters,
+  #                                                             scenario = scenario,
+  #                                                             objective = objective,
+  #                                                             fuel = fuel,
+  #                                                             diversification = diversification,
+  #                                                             winching = winching,
+  #                                                             directionalfelling = directionalfelling,
+  #                                                             specieslax = specieslax,
+  #                                                             objectivelax = objectivelax,
+  #                                                             crowndiameterparameters = crowndiameterparameters,
+  #                                                             advancedloggingparameters = advancedloggingparameters))
+  #
+  #                     stopCluster(cl) # stop the cluster
+  # For other OS
   # parallel::mclapply(seq_along(iter), loggingsimulation1(inventory = inventory,
   #                                                        plotmask = plotmask,
   #                                                        topography = topography,
