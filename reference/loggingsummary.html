@@ -64,36 +64,73 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A summary of the outputs of the loggingsimulation function:</p><ul><li><p>a reminder of the inputs</p></li>
-<li><p>the outgoing figures</p></li>
-<li><p>a print of the output inventory</p></li>
+    <p>A summary of the outputs of the loggingsimulation function
+(console display):</p><ul><li><p>a reminder of the inputs</p></li>
+<li><p>the iterations statistics (mean, standard deviation, quantiles) of the
+outgoing figures</p></li>
 </ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span> <span class="co"># inventory</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotMask</span><span class="op">)</span> <span class="co"># inventoried plot mask</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span> <span class="co"># topography</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">VerticalCreekHeight</span><span class="op">)</span> <span class="co"># relative elevation</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span> <span class="co"># species exploitability criteria</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span> <span class="co"># volume parameters</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ParamCrownDiameterAllometry</span><span class="op">)</span> <span class="co"># parameters values of the crown diameter allometry</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">LoggingSimulationOutputs</span><span class="op">)</span> <span class="co"># Outputs of one logging simulation (2 iterations and 2 cores)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">Rslt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="loggingsimulation.html">loggingsimulation</a></span><span class="op">(</span></span>
-<span class="r-in">    <span class="va">Paracou6_2016</span>, plotmask <span class="op">=</span> <span class="va">PlotMask</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
-<span class="r-in">    verticalcreekheight  <span class="op">=</span> <span class="va">VerticalCreekHeight</span>,</span>
-<span class="r-in">    speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span>
-<span class="r-in">    volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>,</span>
-<span class="r-in">    objective <span class="op">=</span> <span class="fl">20</span>, fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>, winching <span class="op">=</span> <span class="st">"2"</span>,</span>
-<span class="r-in">    directionalfelling <span class="op">=</span> <span class="st">"2"</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">    crowndiameterparameters <span class="op">=</span> <span class="va">ParamCrownDiameterAllometry</span>,</span>
-<span class="r-in">    advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>, iter <span class="op">=</span> <span class="fl">1</span>, cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">loggingsummary</span><span class="op">(</span><span class="va">Rslt</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+<span class="r-in"><span class="fu">loggingsummary</span><span class="op">(</span><span class="va">LoggingSimulationOutputs</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> inventory : inventory </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plot area : 6.25 ha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> scenario : manual </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> objective : 20 m3/ha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> fuel : 2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> diversification : TRUE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> winching : 2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> directionalfelling : 2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> specieslax : FALSE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> objectivelax : TRUE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Harvestable area (ha):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    6.1     NA    6.1    6.0    6.1    6.0    6.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Objective volume (m3):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    125     NA    125    125    125    125    125 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial harvestable volume (m3):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   84.9    1.3   83.4   84.0   84.9   86.0   86.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Units: [m3/ha]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13.584  0.208 13.344 13.440 13.584 13.760 13.824 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Timber logged volume (m3):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   82.7    3.0   78.2   80.0   82.7   85.0   87.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Units: [m3/ha]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13.232  0.480 12.512 12.800 13.232 13.600 13.952 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> No hollow timber logged volume (m3):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   77.1    5.9   67.6   72.0   77.1   82.0   86.6 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Units: [m3/ha]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12.336  0.944 10.816 11.520 12.336 13.120 13.856 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fuel wood volume (m3):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  188.5    1.9  186.0  187.0  188.5  190.0  191.0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Units: [m3/ha]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30.160  0.304 29.760 29.920 30.160 30.400 30.560 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Damages volume (m3):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  174.8    1.3  173.3  174.0  174.8  176.0  176.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Units: [m3/ha]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12.336  0.944 10.816 11.520 12.336 13.120 13.856 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lost biomass (ton):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  345.8    0.7  345.3  346.0  345.8  346.0  346.3 </span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
