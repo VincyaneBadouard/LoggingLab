@@ -24,7 +24,7 @@ Create a vertical projection of the the crown of each tree
 data(Paracou6_2016)
 Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:10) # inventory reduction
 
-inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
 
 inventory <- createcanopy(inventory)

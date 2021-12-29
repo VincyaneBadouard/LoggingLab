@@ -14,7 +14,7 @@ To generate vertical creek height of any plot:
 VerticalCreekHeight
 }
 \description{
-Vertical creek height of plot 6 of Paracou (French Guiana) (1 m resolution,
+Vertical creek height (in m) of plot 6 of Paracou (French Guiana) (1 m resolution,
 2016)
 }
 \keyword{datasets}

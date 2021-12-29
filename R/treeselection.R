@@ -124,7 +124,7 @@
 #' data(MainTrails)
 #' data(HarvestablePolygons)
 #'
-#' inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+#' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
 #' set.seed(2)

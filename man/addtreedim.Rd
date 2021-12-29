@@ -49,7 +49,7 @@ volume, wood density, and AGB)
 \item Crown height (in m)
 \item Crown diameter (in m) ('CrownDiameterAllometry')
 \item Wood density (g/cm^3) (by BIOMASS package)
-\item Tree above-ground biomass (AGB) (in Mg) (by BIOMASS package)
+\item Tree above-ground biomass (AGB) (in ton) (by BIOMASS package)
 }
 }
 \examples{

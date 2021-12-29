@@ -12,6 +12,7 @@
 #' @examples
 #' \dontrun{
 #' data(Paracou6_2016) # inventory
+#' data(PlotMask) # inventoried plot mask
 #' data(DTMParacou) # topography
 #' data(VerticalCreekHeight) # relative elevation
 #' data(SpeciesCriteria) # species exploitability criteria
@@ -20,8 +21,8 @@
 #'
 #' Rslt <- suppressMessages(
 #'   loggingsimulation(
-#'     Paracou6_2016, topography = DTMParacou,
-#'     relativeelevation  = VerticalCreekHeight,
+#'     Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
+#'     verticalcreekheight  = VerticalCreekHeight,
 #'     speciescriteria = SpeciesCriteria,
 #'     volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'     objective = 20, fuel = "2", diversification = TRUE, winching = "2",
@@ -55,7 +56,7 @@ loggingsummary <- function(x
   cat('objectivelax :', x$objectivelax, '\n') # objectivelax
 
   # Numeric values:
-  # cat('Harvestable area :', x$HarvestableArea, 'm^2\n') # harvestable area (m^2)
+  cat('Harvestable area :', round(x$HarvestableArea, digits = 2), 'ha\n') # harvestable area (ha)
 
   cat('Objective volume :', round(x$VO, digits = 1), 'm3\n') # your objective volume (m3)
 
@@ -74,7 +75,7 @@ loggingsummary <- function(x
   cat('Damages volume :', round(x$DamageVolume, digits = 1), 'm3, ',
       round(x$DamageVolume/PlotArea, digits = 1), 'm3/ha\n') # only damages (without purge and hollow trees) (m3)
 
-  # cat('Lost biomass :', x$LostBiomass, 'Mg\n') # Lost biomass (Mg)
+  cat('Lost biomass :', round(x$LostBiomass, digits = 1), 'ton\n') # Lost biomass (ton)
 
   # cat('Trails density :', x$TrailsDensity, 'm/m^2\n') # Trails density (m/m^2)
 

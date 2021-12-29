@@ -10,16 +10,17 @@
 #'   \code{\link{loggingparameters}} (list)
 #'
 #' @return A list with:
-#' - 'HarvestablePolygons': a collection of polygons (sf polygon) defined as:
+#' - 'HarvestablePolygons': a collection of polygons (sf (sfc_POLYGON)) defined as:
 #'    1 : harvestable area,
 #'    0 : non-harvestable area
 #' - 'PlotSlope': a raster with slope (in radians) characteristic of the studied
 #'    plot (Large RasterLayer)
+#' - HarvestableArea : the harvestable area in hectares (double).
 #'
 #'
 #' @export
 #'
-#' @importFrom sf st_as_sf st_cast
+#' @importFrom sf st_as_sf st_cast st_area
 #' @importFrom raster mask terrain rasterFromXYZ rasterToPolygons
 #'   rasterToPoints
 #' @importFrom dplyr as_tibble left_join rename mutate if_else
@@ -27,7 +28,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' data(Plots)
+#' data(PlotMask)
 #' data(DTMParacou)
 #' data(VerticalCreekHeight)
 #'
@@ -104,10 +105,13 @@ HarvestableAreaDefinition <- function(
   HarvestablePolygons <-
     st_cast(x = sf_PolygonHarvestable, to = "POLYGON", warn = FALSE)
 
+  HarvestableArea <- as.numeric(sum(st_area(HarvestablePolygons))/10000) # 1 ha = 10 000 m2 (as numeric to remove unit)
+
 
   return(list(
     HarvestablePolygons = HarvestablePolygons,
-    PlotSlope = PlotSlope
+    PlotSlope = PlotSlope,
+    HarvestableArea = HarvestableArea
   ))
 
 }

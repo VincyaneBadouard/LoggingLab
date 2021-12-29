@@ -1,0 +1,67 @@
+---
+title: "Remove trees out of the plot"
+author: "Vincyane Badouard"
+date: "28/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Libraries
+```{r}
+library(Maria)
+library(ggplot2)
+library(sf)
+library(dplyr)
+library(tibble)
+```
+
+# Necessary data
+```{r}
+data(Paracou6_2016)
+data(PlotMask) # SpatialPolygonsDataFrame (sp)
+
+PlotMask <- st_as_sf(PlotMask) # sp to sf (sfc_POLYGON)
+
+ggplot() +
+  geom_sf(data = PlotMask, col = "red")
+# PlotMask is only the boundaries of the plot
+```
+
+# Remove trees out of the plot
+
+```{r}
+inventory <- st_as_sf(Paracou6_2016, coords = c("Xutm", "Yutm")) %>% 
+  st_set_crs(st_crs(PlotMask)) # set crs
+
+TreesIn <- suppressWarnings(st_intersection(inventory, PlotMask)) %>% 
+  add_column(TreesIn = "1") %>%
+  select(idTree, TreesIn)
+
+st_geometry(TreesIn) <- NULL # sf to data.frame
+TreesIn <- unique(TreesIn)
+
+inventory <- inventory %>%
+  left_join(TreesIn, by = "idTree") %>% 
+   mutate(TreesIn = ifelse(is.na(TreesIn),
+                               "0", TreesIn))
+  # select(-TreesIn)
+
+class(inventory)
+```
+
+# Plot in & out trees
+```{r}
+In <- sf::st_as_sf(
+  filter(inventory, TreesIn == "1"), coords = c("Xutm", "Yutm"))
+
+Out <- sf::st_as_sf(
+  filter(inventory, TreesIn == "0"), coords = c("Xutm", "Yutm"))
+
+ggplot() +
+  geom_sf(data = In, col = "green") +
+  geom_sf(data = Out, col = "red")
+```
+

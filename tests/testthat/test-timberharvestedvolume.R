@@ -5,7 +5,7 @@ test_that("timberharvestedvolume", {
   data("MainTrails")
   data("HarvestablePolygons")
 
-  inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
+  inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
                           volumeparameters = ForestZoneVolumeParametersTable)
 
   inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",

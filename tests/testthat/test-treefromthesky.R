@@ -2,7 +2,7 @@ test_that("treefromthesky", {
 
   # Test data
   data(Paracou6_2016)
-  inventory <- addtreedim(inventorycheckformat(Paracou6_2016), volumeparameters = ForestZoneVolumeParametersTable)
+  inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask), volumeparameters = ForestZoneVolumeParametersTable)
 
   dat <- inventory[1,]
   MatrixInventory <- as.matrix(dat)
