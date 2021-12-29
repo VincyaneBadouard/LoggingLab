@@ -56,7 +56,7 @@ loggingsummary <- function(x
   cat('objectivelax :', x$objectivelax, '\n') # objectivelax
 
   # Numeric values:
-  # cat('Harvestable area :', x$HarvestableArea, 'm^2\n') # harvestable area (m^2)
+  cat('Harvestable area :', round(x$HarvestableArea, digits = 2), 'ha\n') # harvestable area (ha)
 
   cat('Objective volume :', round(x$VO, digits = 1), 'm3\n') # your objective volume (m3)
 
@@ -75,7 +75,7 @@ loggingsummary <- function(x
   cat('Damages volume :', round(x$DamageVolume, digits = 1), 'm3, ',
       round(x$DamageVolume/PlotArea, digits = 1), 'm3/ha\n') # only damages (without purge and hollow trees) (m3)
 
-  # cat('Lost biomass :', x$LostBiomass, 'Mg\n') # Lost biomass (Mg)
+  cat('Lost biomass :', round(x$LostBiomass, digits = 1), 'ton\n') # Lost biomass (ton)
 
   # cat('Trails density :', x$TrailsDensity, 'm/m^2\n') # Trails density (m/m^2)
 

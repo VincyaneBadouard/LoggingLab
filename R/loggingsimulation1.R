@@ -134,7 +134,7 @@ loggingsimulation1 <- function(
   advancedloggingparameters = loggingparameters()
 ){
 
-  # Arguments check
+  #### Arguments check ####
 
   # inventory, speciescriteria, volumeparameters, crowndiameterparameters
   if(!all(unlist(lapply(list(inventory, speciescriteria, volumeparameters, crowndiameterparameters),
@@ -192,7 +192,7 @@ loggingsimulation1 <- function(
     stop("The 'advancedloggingparameters' argument of the 'loggingsimulation' function must be a list")
 
 
-  # Global variables
+  #### Global variables ####
 
   # Redefinition of the parameters according to the chosen scenario
   scenariosparameters <- scenariosparameters(scenario = scenario, objective = objective, fuel = fuel,
@@ -210,7 +210,7 @@ loggingsimulation1 <- function(
   # Function
 
 
-  #### Check and ckean the inventory + add the tree dimensions ####
+  #### Check and clean the inventory + add the tree dimensions ####
   inventory <- inventorycheckformat(inventory)
 
   inventory <- cleaninventory(inventory, plotmask = plotmask, advancedloggingparameters = advancedloggingparameters)
@@ -223,13 +223,14 @@ loggingsimulation1 <- function(
 
   #### Main trails layout: (only for ONF plots) ####
 
-  ##### Harvestable area definition: A FAIRE ####
+  ##### Harvestable area definition: ####
   HarvestableAreaOutputs <- HarvestableAreaDefinition(topography = topography,
                                                       verticalcreekheight = verticalcreekheight,
                                                       advancedloggingparameters = advancedloggingparameters)
 
   HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
   PlotSlope <- HarvestableAreaOutputs$PlotSlope
+  HarvestableArea <- HarvestableAreaOutputs$HarvestableArea
 
   data(MainTrails) # A SUPPRIMER
 
@@ -238,13 +239,13 @@ loggingsimulation1 <- function(
                         286507, 583240,
                         286507, 582925,
                         286503, 582925) # the return
-                     ,ncol=2, byrow=TRUE))
+                      ,ncol=2, byrow=TRUE))
   pol2 <- list(matrix(c(286650, 582925,
                         286650, 583240,
                         286654, 583240,
                         286654, 582925,
                         286650, 582925) # the return
-                     ,ncol=2, byrow=TRUE))
+                      ,ncol=2, byrow=TRUE))
 
   PolList = list(pol1,pol2) #list of lists of numeric matrices
   ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
@@ -269,7 +270,7 @@ loggingsimulation1 <- function(
   EnergywoodTreesPoints <- treeselectionoutputs$EnergywoodTreesPoints
 
   #### Secondary trails layout (preliminaries for fuel wood harvesting): A FAIRE ####
-  # ScndTrail <- secondtrailsopening(
+  # ScndTrailOutputs <- secondtrailsopening(
   #   topography = topography,
   #   plotmask = PlotMask,
   #   treeselectionoutputs = treeselectionoutputs,
@@ -278,6 +279,9 @@ loggingsimulation1 <- function(
   #   scenarios = scenarios,
   #   fact = 3,
   #   advancedloggingparameters = advancedloggingparameters)
+
+  # ScndTrail <- ScndTrailOutputs$ScndTrail
+  # TrailsDensity <- ScndTrailOutputs$TrailsDensity # A AJOUTER A LA FCT
 
   #### Tree felling: ####
   inventory <- treefelling(inventory, scenario = scenario, fuel = fuel,
@@ -309,20 +313,24 @@ loggingsimulation1 <- function(
   DamageVolume <- Fueloutputs$DamageVolume # only damage (without purge and hollow trees)
   FuelVolume <- Fueloutputs$FuelVolume
 
+  DeadTrees <- inventory %>%
+    filter(!is.na(DeathCause))
+
+  LostBiomass <- sum(DeadTrees$AGB) # in Mg
 
 
   #### Outputs ####
   Outputs <- list(inventory = inventory,
 
                   # Numeric values
-                  # HarvestableArea = HarvestableArea,
+                  HarvestableArea = HarvestableArea,
                   VO = VO,
                   HVinit = HVinit,
                   TimberLoggedVolume = TimberLoggedVolume,
                   NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
                   FuelVolume = FuelVolume,
                   DamageVolume = DamageVolume, # only damage (without purge and hollow trees)
-                  # LostBiomass = LostBiomass,
+                  LostBiomass = LostBiomass,
                   # TrailsDensity = TrailsDensity,
 
                   # POINTS

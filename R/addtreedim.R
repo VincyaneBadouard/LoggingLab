@@ -31,7 +31,7 @@
 #'  - Crown height (in m)
 #'  - Crown diameter (in m) ('CrownDiameterAllometry')
 #'  - Wood density (g/cm^3) (by BIOMASS package)
-#'  - Tree above-ground biomass (AGB) (in Mg) (by BIOMASS package)
+#'  - Tree above-ground biomass (AGB) (in ton) (by BIOMASS package)
 #'
 #'@export
 #'
@@ -177,7 +177,7 @@ addtreedim <- function(
   inventory <- inventory %>%
     left_join(WDDetails, by = c("Genus","Species")) %>%
 
-    # Tree Above-Ground Biomass (AGB) (in Mg)
+    # Tree Above-Ground Biomass (AGB) (in ton!) (with DBH in cm, WoodDensity in in g/cm3, TreeHeight in m)
     mutate(AGB = computeAGB(DBH, WoodDensity, TreeHeight))
 
 
