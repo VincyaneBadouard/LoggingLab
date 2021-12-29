@@ -57,11 +57,11 @@ Second trails opening
 }
 \examples{
 \dontrun{
-data(DTMParacou)
 data(Paracou6_2016)
+data(PlotMask)
+data(DTMParacou)
 data(HarvestablePolygons)
 data(MainTrails)
-data(PlotMask)
 data(PlotSlope)
 data("SpeciesCriteria")
 data(VerticalCreekHeight)

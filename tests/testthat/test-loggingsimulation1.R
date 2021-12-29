@@ -121,5 +121,6 @@ test_that("loggingsimulation1", {
                                  advancedloggingparameters = FALSE),
                regexp = "The 'advancedloggingparameters' argument of the 'loggingsimulation' function must be a list")
 
+  # expect_true(class(Rslt) == "list")
 
 })

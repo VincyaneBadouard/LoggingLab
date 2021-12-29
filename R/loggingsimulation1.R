@@ -68,7 +68,7 @@
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
-#'@return Input inventory (data.frame) with logging informations
+#'@return Input inventory (data.frame) with logging informations (list)
 #'(see the outputs metadata in the \code{\link{vignette}}).
 #'
 #'@seealso \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
@@ -143,7 +143,7 @@ loggingsimulation1 <- function(
          of the 'loggingsimulation' function must be data.frames")
 
   # plotmask
-  if (!inherits(plotmask, "SpatialPolygonsDataFrame"))
+  if(!inherits(plotmask, "SpatialPolygonsDataFrame"))
     stop("The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygonsDataFrame")
 
   # topography, verticalcreekheight
@@ -193,8 +193,9 @@ loggingsimulation1 <- function(
 
 
   #### Global variables ####
+  DeathCause <- AGB <- NULL
 
-  # Redefinition of the parameters according to the chosen scenario
+  #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, objective = objective, fuel = fuel,
                                              diversification = diversification, winching = winching,
                                              directionalfelling = directionalfelling)
@@ -221,7 +222,9 @@ loggingsimulation1 <- function(
                           advancedloggingparameters = advancedloggingparameters)
 
 
-  #### Main trails layout: (only for ONF plots) ####
+  #### Main trails layout ####
+
+  data(MainTrails) # A SUPPRIMER
 
   ##### Harvestable area definition: ####
   HarvestableAreaOutputs <- HarvestableAreaDefinition(topography = topography,
@@ -231,25 +234,6 @@ loggingsimulation1 <- function(
   HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
   PlotSlope <- HarvestableAreaOutputs$PlotSlope
   HarvestableArea <- HarvestableAreaOutputs$HarvestableArea
-
-  data(MainTrails) # A SUPPRIMER
-
-  pol1 <- list(matrix(c(286503, 582925,
-                        286503, 583240,
-                        286507, 583240,
-                        286507, 582925,
-                        286503, 582925) # the return
-                      ,ncol=2, byrow=TRUE))
-  pol2 <- list(matrix(c(286650, 582925,
-                        286650, 583240,
-                        286654, 583240,
-                        286654, 582925,
-                        286650, 582925) # the return
-                      ,ncol=2, byrow=TRUE))
-
-  PolList = list(pol1,pol2) #list of lists of numeric matrices
-  ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
-  ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails)) # A SUPPRIMER
 
   #### Tree selection (harvestable, future and reserve trees + defects trees): ####
   treeselectionoutputs <- treeselection(inventory, topography = topography, plotslope = PlotSlope,
@@ -269,7 +253,24 @@ loggingsimulation1 <- function(
   HollowTreesPoints <- treeselectionoutputs$HollowTreesPoints
   EnergywoodTreesPoints <- treeselectionoutputs$EnergywoodTreesPoints
 
-  #### Secondary trails layout (preliminaries for fuel wood harvesting): A FAIRE ####
+  #### Secondary trails layout (preliminaries for fuel wood harvesting) ####
+  pol1 <- list(matrix(c(286503, 582925,
+                        286503, 583240,
+                        286507, 583240,
+                        286507, 582925,
+                        286503, 582925) # the return
+                      ,ncol=2, byrow=TRUE))
+  pol2 <- list(matrix(c(286650, 582925,
+                        286650, 583240,
+                        286654, 583240,
+                        286654, 582925,
+                        286650, 582925) # the return
+                      ,ncol=2, byrow=TRUE))
+
+  PolList = list(pol1,pol2) #list of lists of numeric matrices
+  ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
+  ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails)) # A SUPPRIMER
+
   # ScndTrailOutputs <- secondtrailsopening(
   #   topography = topography,
   #   plotmask = PlotMask,
@@ -283,7 +284,8 @@ loggingsimulation1 <- function(
   # ScndTrail <- ScndTrailOutputs$ScndTrail
   # TrailsDensity <- ScndTrailOutputs$TrailsDensity # A AJOUTER A LA FCT
 
-  #### Tree felling: ####
+
+  #### Tree felling ####
   inventory <- treefelling(inventory, scenario = scenario, fuel = fuel,
                            winching = winching, directionalfelling = directionalfelling,
                            MainTrails = MainTrails, ScndTrail = ScndTrail,
@@ -292,7 +294,7 @@ loggingsimulation1 <- function(
 
   #### Adjusted secondary trails layout (for fuel wood harvesting only) A FAIRE ####
 
-  #### Landings implementation: (only for ONF plots) ####
+  #### Landings implementation (only for ONF plots) ####
 
   #### Timber harvested volume quantification ####
   Timberoutputs <- timberharvestedvolume(inventory,
@@ -316,7 +318,7 @@ loggingsimulation1 <- function(
   DeadTrees <- inventory %>%
     filter(!is.na(DeathCause))
 
-  LostBiomass <- sum(DeadTrees$AGB) # in Mg
+  LostBiomass <- sum(DeadTrees$AGB) # in ton
 
 
   #### Outputs ####

@@ -10,39 +10,20 @@ loggingsummary(x)
 \item{x}{Outputs of the loggingsimulation function (list)}
 }
 \value{
-A summary of the outputs of the loggingsimulation function:
+A summary of the outputs of the loggingsimulation function
+(console display):
 \itemize{
 \item a reminder of the inputs
-\item the outgoing figures
-\item a print of the output inventory
+\item the iterations statistics (mean, standard deviation, quantiles) of the
+outgoing figures
 }
 }
 \description{
 Summary of the outputs of the loggingsimulation function
 }
 \examples{
-\dontrun{
-data(Paracou6_2016) # inventory
-data(PlotMask) # inventoried plot mask
-data(DTMParacou) # topography
-data(VerticalCreekHeight) # relative elevation
-data(SpeciesCriteria) # species exploitability criteria
-data(ForestZoneVolumeParametersTable) # volume parameters
-data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
+data(LoggingSimulationOutputs) # Outputs of one logging simulation (2 iterations and 2 cores)
 
-Rslt <- suppressMessages(
-  loggingsimulation(
-    Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-    verticalcreekheight  = VerticalCreekHeight,
-    speciescriteria = SpeciesCriteria,
-    volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
-    objective = 20, fuel = "2", diversification = TRUE, winching = "2",
-    directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
-    crowndiameterparameters = ParamCrownDiameterAllometry,
-    advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
-)
-
-loggingsummary(Rslt)
-}
+loggingsummary(LoggingSimulationOutputs)
 
 }

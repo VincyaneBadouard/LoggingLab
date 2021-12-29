@@ -87,7 +87,7 @@ and its species, genus or family. (data.frame)}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-Input inventory (data.frame) with logging informations
+Input inventory (data.frame) with logging informations (list)
 (see the outputs metadata in the \code{\link{vignette}}).
 }
 \description{
