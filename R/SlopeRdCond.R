@@ -1,6 +1,7 @@
 #' SlopeRdCond
 #'
-#'@param DTM A RasterLayer for digital terrain model (DTM) data
+#' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
@@ -10,7 +11,6 @@
 #'@return A transition layer object with weighted adjacent graph according to
 #'  longitudinal / transversal slope condition
 #'
-#'@export
 #'
 #'
 #'@importFrom gdistance transition geoCorrection
@@ -22,65 +22,65 @@
 #'\dontrun{
 #' data(DTMParacou)
 #'
-#' SlopeCond <- SlopeRdCond(DTM = DTMParacou)
+#' SlopeCond <- SlopeRdCond(topography = DTMParacou)
 #'}
 #'
 SlopeRdCond <- function(
-  DTM,
+  topography,
   advancedloggingparameters = loggingparameters(),
   grapple = FALSE
 ){
 
   altDiff <- function(x){abs(x[2] - x[1] + 1E-12)} # set absolute elevation difference function
-  s.dist <- gdistance::transition(DTM, altDiff, 8, symm=FALSE) # compute adjacent matrix with absolute elevation difference weights
+  s.dist <- gdistance::transition(topography, altDiff, 8, symm=FALSE) # compute adjacent matrix with absolute elevation difference weights
   s.dist <- gdistance::geoCorrection(s.dist) # divide each link by the absolute distance between centroids
 
   # s.dist : adjacent matrix with abs(delta elevation)/dist = absolute slope weights
 
-  adj <- adjacent(DTM, cells = 1:ncell(DTM), pairs = TRUE, directions = 8, sorted = TRUE) # compute TRUE 8 neighbors
+  adj <- adjacent(topography, cells = 1:ncell(topography), pairs = TRUE, directions = 8, sorted = TRUE) # compute TRUE 8 neighbors
 
   AdjTr <- matrix(c(adj[,1], rep(0,dim(adj)[1])), nrow = dim(adj)[1])
 
-  v4 <- function(DTM, AdjTr){
+  v4 <- function(topography, AdjTr){
     k = 1
-    ProgressBar <- txtProgressBar(min = 0, max = ncell(DTM),style = 3)
+    ProgressBar <- txtProgressBar(min = 0, max = ncell(topography),style = 3)
 
     limits <- c(
-      1:ncol(DTM), # top
-      (1:(nrow(DTM)-1))*ncol(DTM)+1, # left
-      (1:(nrow(DTM)-1))*ncol(DTM), # right
-      ((nrow(DTM)-1)*ncol(DTM)+1):ncell(DTM) # bottom
+      1:ncol(topography), # top
+      (1:(nrow(topography)-1))*ncol(topography)+1, # left
+      (1:(nrow(topography)-1))*ncol(topography), # right
+      ((nrow(topography)-1)*ncol(topography)+1):ncell(topography) # bottom
     ) %>%
       unique()
 
-    others <- 1:ncell(DTM)
+    others <- 1:ncell(topography)
     others <- others[!(others %in% limits)]
 
     for (i in limits) {
-      Adj8 <- c(i -1  - ncol(DTM), #Z1     # compute HYPOTHETICAL 8 neighbors adjacent FOCAL matrix
-                i  - ncol(DTM), #Z2
-                i  + 1  - ncol(DTM),#Z3
+      Adj8 <- c(i -1  - ncol(topography), #Z1     # compute HYPOTHETICAL 8 neighbors adjacent FOCAL matrix
+                i  - ncol(topography), #Z2
+                i  + 1  - ncol(topography),#Z3
                 i - 1,
                 i +1,
-                i -1  + ncol(DTM),
-                i  + ncol(DTM),
-                i  +1   +  ncol(DTM))
-      RotAntiAdj8 <- c(i +1  - ncol(DTM), # compute HYPOTHETICAL antirotated adjacent focal matrix for transversal slope ( - 90 degree)
+                i -1  + ncol(topography),
+                i  + ncol(topography),
+                i  +1   +  ncol(topography))
+      RotAntiAdj8 <- c(i +1  - ncol(topography), # compute HYPOTHETICAL antirotated adjacent focal matrix for transversal slope ( - 90 degree)
                        i  +1,
-                       i  + 1  + ncol(DTM),
-                       i -ncol(DTM),
-                       i + ncol(DTM),
-                       i -1 - ncol(DTM),
+                       i  + 1  + ncol(topography),
+                       i -ncol(topography),
+                       i + ncol(topography),
+                       i -1 - ncol(topography),
                        i -1  ,
-                       i  -1 +  ncol(DTM))
-      RotAdj8 <- c(i -1  + ncol(DTM), # compute HYPOTHETICAL rotated adjacent focal matrix for transversal slope ( + 90 degree)
+                       i  -1 +  ncol(topography))
+      RotAdj8 <- c(i -1  + ncol(topography), # compute HYPOTHETICAL rotated adjacent focal matrix for transversal slope ( + 90 degree)
                    i - 1,
-                   i -1  - ncol(DTM),
-                   i  + ncol(DTM),
-                   i - ncol(DTM),
-                   i  + 1  + ncol(DTM),
+                   i -1  - ncol(topography),
+                   i  + ncol(topography),
+                   i - ncol(topography),
+                   i  + 1  + ncol(topography),
                    i + 1,
-                   i +1 - ncol(DTM))
+                   i +1 - ncol(topography))
       InAdj <- as.numeric(Adj8 %in% adj[adj[,1] == i,2]) * as.numeric(RotAdj8 %in% adj[adj[,1] == i,2]) * RotAdj8 # compute TRUE rotated 8 neighbors adjacent FOCAL matrix
       AntIndAdj <- as.numeric(Adj8 %in% adj[adj[,1] == i,2]) * as.numeric(RotAntiAdj8 %in% adj[adj[,1] == i,2]) * RotAntiAdj8 # compute TRUE antirotated 8 neighbors adjacent FOCAL matrix
       Mat8 <- matrix(c(Adj8,InAdj,AntIndAdj),nrow = 8) # concatenated adjacent links
@@ -92,30 +92,30 @@ SlopeRdCond <- function(
     }
 
     for (i in others) {
-      Adj8 <- c(i -1  - ncol(DTM), #Z1     # compute HYPOTHETICAL 8 neighbors adjacent FOCAL matrix
-                i  - ncol(DTM), #Z2
-                i  + 1  - ncol(DTM),#Z3
+      Adj8 <- c(i -1  - ncol(topography), #Z1     # compute HYPOTHETICAL 8 neighbors adjacent FOCAL matrix
+                i  - ncol(topography), #Z2
+                i  + 1  - ncol(topography),#Z3
                 i - 1,
                 i +1,
-                i -1  + ncol(DTM),
-                i  + ncol(DTM),
-                i  +1   +  ncol(DTM))
-      RotAntiAdj8 <- c(i +1  - ncol(DTM), # compute HYPOTHETICAL antirotated adjacent focal matrix for transversal slope ( - 90 degree)
+                i -1  + ncol(topography),
+                i  + ncol(topography),
+                i  +1   +  ncol(topography))
+      RotAntiAdj8 <- c(i +1  - ncol(topography), # compute HYPOTHETICAL antirotated adjacent focal matrix for transversal slope ( - 90 degree)
                        i  +1,
-                       i  + 1  + ncol(DTM),
-                       i -ncol(DTM),
-                       i + ncol(DTM),
-                       i -1 - ncol(DTM),
+                       i  + 1  + ncol(topography),
+                       i -ncol(topography),
+                       i + ncol(topography),
+                       i -1 - ncol(topography),
                        i -1  ,
-                       i  -1 +  ncol(DTM))
-      RotAdj8 <- c(i -1  + ncol(DTM), # compute HYPOTHETICAL rotated adjacent focal matrix for transversal slope ( + 90 degree)
+                       i  -1 +  ncol(topography))
+      RotAdj8 <- c(i -1  + ncol(topography), # compute HYPOTHETICAL rotated adjacent focal matrix for transversal slope ( + 90 degree)
                    i - 1,
-                   i -1  - ncol(DTM),
-                   i  + ncol(DTM),
-                   i - ncol(DTM),
-                   i  + 1  + ncol(DTM),
+                   i -1  - ncol(topography),
+                   i  + ncol(topography),
+                   i - ncol(topography),
+                   i  + 1  + ncol(topography),
                    i + 1,
-                   i +1 - ncol(DTM))
+                   i +1 - ncol(topography))
       Mat8 <- matrix(c(Adj8,RotAdj8,RotAntiAdj8),nrow = 8) # concatenated adjacent links
       x <- pmax(Mat8[Mat8[,1] %in% adj[adj[,1]==i,2],2], Mat8[Mat8[,1] %in% adj[adj[,1]==i,2],3]) # Select +90 degree link except in boundaries conditions
       AdjTr[AdjTr[,1]==i,2] <- x # replace longitudinal links to rotated links
@@ -127,7 +127,7 @@ SlopeRdCond <- function(
     return(AdjTr)
   }
 
-  AdjTr <- v4(DTM, AdjTr)
+  AdjTr <- v4(topography, AdjTr)
 
   adjCorr <- cbind(adj,AdjTr[,2]) # concatenated longitudinal and transversal links
   adjCorr <- na.exclude(adjCorr) # exclude missing links

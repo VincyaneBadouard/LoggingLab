@@ -18,7 +18,6 @@
 #' @importFrom dplyr mutate filter
 #'
 #' @examples
-#' \dontrun{
 #' data(MainTrails)
 #' data(HarvestablePolygons)
 #'
@@ -26,7 +25,7 @@
 #'  harvestablepolygons = HarvestablePolygons,
 #'  MainTrails = MainTrails,
 #'  advancedloggingparameters = loggingparameters())
-#'  }
+#'
 #'
 FilterAccesExplArea <- function(
   harvestablepolygons,

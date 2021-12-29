@@ -5,7 +5,7 @@
 \title{Asymmetric adjacent matrix - Topographic least cost paths and distances}
 \usage{
 AdjTopoLCP(
-  DTM,
+  topography,
   costSurface,
   slopeRdCond,
   pts,
@@ -16,7 +16,8 @@ AdjTopoLCP(
 )
 }
 \arguments{
-\item{DTM}{A RasterLayer for digital terrain model (DTM) data.}
+\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{costSurface}{A RasterLayer for the conductance (inverse of resistance)
 values for each cell.}

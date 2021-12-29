@@ -56,5 +56,6 @@ Imports:
     matlib (>= 0.9.4),
     ggplot2 (>= 3.3.5),
     gdistance(>= 1.3-6),
-    smoothr (>= 0.2.2)
+    smoothr (>= 0.2.2),
+    lwgeom(>= 0.2-8)
 BugReports: https://github.com/VincyaneBadouard/Maria/issues

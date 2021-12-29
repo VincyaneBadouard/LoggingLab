@@ -28,7 +28,6 @@ logging scenario (sf polygons data.frame)
 Filter access to harvestable zone
 }
 \examples{
-\dontrun{
 data(MainTrails)
 data(HarvestablePolygons)
 
@@ -36,6 +35,6 @@ AccessPolygones <- FilterAccesExplArea(
  harvestablepolygons = HarvestablePolygons,
  MainTrails = MainTrails,
  advancedloggingparameters = loggingparameters())
- }
+
 
 }

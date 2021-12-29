@@ -3,7 +3,8 @@
 #' @description Calculates topographic least cost distances and paths with an asymmetric
 #' adjacent matrix
 #'
-#' @param DTM A RasterLayer for digital terrain model (DTM) data.
+#' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
 #' @param costSurface A RasterLayer for the conductance (inverse of resistance)
 #'   values for each cell.
@@ -40,10 +41,9 @@
 #' @importFrom raster adjacent
 #' @importFrom utils combn
 #'
-#' @export
 #'
 AdjTopoLCP <- function(
-  DTM,
+  topography,
   costSurface,
   slopeRdCond,
   pts,
@@ -55,12 +55,12 @@ AdjTopoLCP <- function(
 
   pts <- SpatialPoints(pts) # Set spatial points in sp format
 
-  h.dist <- transition(DTM, transitionFunction = function(x){1}, directions = directions, symm = TRUE) # Horizontal distance from DTM to transition layer format
+  h.dist <- transition(topography, transitionFunction = function(x){1}, directions = directions, symm = TRUE) # Horizontal distance from DTM to transition layer format
   h.dist <- geoCorrection(h.dist, scl = FALSE) # Divide weights by centroïds distance
-  adj <- adjacent(DTM, cells = 1:ncell(DTM), pairs = TRUE, directions = directions, sorted = TRUE) # Compute adjacent matrix from DTM raster
+  adj <- adjacent(topography, cells = 1:ncell(topography), pairs = TRUE, directions = directions, sorted = TRUE) # Compute adjacent matrix from DTM raster
   h.dist[adj] <- 1/h.dist[adj] # Convert horizontal distance resistance into conductance
   elevDiff <- function(x){zweight * abs(x[2] - x[1])} # Define elevation difference function
-  v.dist <- transition(DTM, elevDiff, 8, symm = TRUE) # Absolute vertical distance from DTM to transition layer format
+  v.dist <- transition(topography, elevDiff, 8, symm = TRUE) # Absolute vertical distance from DTM to transition layer format
   t.dist <- v.dist
   t.dist[adj] <- 1/sqrt((h.dist[adj]^2)+(v.dist[adj]^2)) # Convert tangential distance resistance into conductance
 

@@ -20,9 +20,9 @@
 #'  st_combine
 #'@importFrom smoothr smooth
 #'
-#'@return Smoothed secondary trails polygons.
+#'@return A list with : 1: Smoothed secondary trails polygons.; 2: Second trails density
 #'
-#'@export
+#'
 #'
 #' @examples
 #' \dontrun{
@@ -107,7 +107,8 @@ smoothtrails <- function(
   }
 
 
-
+secondtrails <- list(secondtrails = secondtrails,
+                     ScndTrailDens = ScndTrailDens)
 
   return(secondtrails)
 }

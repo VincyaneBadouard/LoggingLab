@@ -5,7 +5,7 @@
 \title{Second trails opening}
 \usage{
 secondtrailsopening(
-  DTM,
+  topography,
   plots,
   verticalcreekheight,
   treeselectionoutputs,
@@ -22,7 +22,8 @@ secondtrailsopening(
 )
 }
 \arguments{
-\item{DTM}{Digital terrain model (raster)}
+\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{plots}{Studied plots (SpatialPolygonsDataFrame)}
 
@@ -50,7 +51,15 @@ values}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-Secondary trails polygons according to scenario conditions.
+A list with :
+\itemize{
+\item raw second trails
+\item 
+\item Smoothed secondary trails polygons
+\item Second trails density (in m.ha^-1)
+\item Updated inventory
+\item A cost Raster (RasterLayer)
+}
 }
 \description{
 Second trails opening
@@ -81,7 +90,7 @@ objectivelax = TRUE,
 advancedloggingparameters = loggingparameters())
 
 secondtrails <- secondtrailsopening(
-  DTM = DTMParacou,
+  topography = DTMParacou,
   plots = Plots,
   treeselectionoutputs = treeselectionoutputs,
   verticalcreekheight = VerticalCreekHeight,
