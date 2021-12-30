@@ -55,7 +55,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">secondtrailsopening</span><span class="op">(</span>
-  <span class="va">DTM</span>,
+  <span class="va">topography</span>,
   <span class="va">plotmask</span>,
   <span class="va">verticalcreekheight</span>,
   <span class="va">treeselectionoutputs</span>,
@@ -74,8 +74,9 @@
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>DTM</dt>
-<dd><p>Digital terrain model (raster)</p></dd>
+    <dl><dt>topography</dt>
+<dd><p>Digital terrain model (DTM) of the inventoried plot (LiDAR
+or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer)</p></dd>
 <dt>plotmask</dt>
 <dd><p>Inventoried plot mask (SpatialPolygonsDataFrame)</p></dd>
 <dt>verticalcreekheight</dt>
@@ -102,8 +103,13 @@ values</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Secondary trails polygons according to scenario conditions.</p>
-    </div>
+    <p>A list with :</p><ul><li><p>raw second trails</p></li>
+<li><p></p></li>
+<li><p>Smoothed secondary trails polygons</p></li>
+<li><p>Second trails density (in m.ha^-1)</p></li>
+<li><p>Updated inventory</p></li>
+<li><p>A cost Raster (RasterLayer)</p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -122,9 +128,6 @@ values</p></dd>
 <span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="ONFGuyafortaxojoin.html">ONFGuyafortaxojoin</a></span><span class="op">(</span><span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
 <span class="r-in"> volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span>,<span class="va">SpeciesCriteria</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">AccessPolygons</span> <span class="op">&lt;-</span> <span class="fu"><a href="FilterAccesExplArea.html">FilterAccesExplArea</a></span><span class="op">(</span>harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,</span>
-<span class="r-in">MainTrails <span class="op">=</span> <span class="va">MainTrails</span>,</span>
-<span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">treeselectionoutputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>,</span>
 <span class="r-in">topography <span class="op">=</span> <span class="va">DTMParacou</span>, plotslope <span class="op">=</span> <span class="va">PlotSlope</span>, MainTrails <span class="op">=</span> <span class="va">MainTrails</span>,</span>
@@ -135,7 +138,7 @@ values</p></dd>
 <span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">secondtrails</span> <span class="op">&lt;-</span> <span class="fu">secondtrailsopening</span><span class="op">(</span></span>
-<span class="r-in">  DTM <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
+<span class="r-in">  topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
 <span class="r-in">  plotmask <span class="op">=</span> <span class="va">PlotMask</span>,</span>
 <span class="r-in">  treeselectionoutputs <span class="op">=</span> <span class="va">treeselectionoutputs</span>,</span>
 <span class="r-in">  verticalcreekheight <span class="op">=</span> <span class="va">VerticalCreekHeight</span>,</span>
@@ -155,6 +158,8 @@ values</p></dd>
 <span class="r-in">  scenarios <span class="op">=</span> <span class="va">scenarios</span>,</span>
 <span class="r-in">  fact <span class="op">=</span> <span class="fl">3</span>,</span>
 <span class="r-in">  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in">  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">secondtrails</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span class="r-in">  <span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>
