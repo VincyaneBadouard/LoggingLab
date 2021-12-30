@@ -66,7 +66,8 @@
     CostValue <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Reserves"</span>, CostValue <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span>
     <span class="st">"Futures"</span>, CostValue <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"MainTrails"</span>, CostValue <span class="op">=</span> <span class="fl">1e-04</span><span class="op">)</span>,
     <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"SecondTrails"</span>, CostValue <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-  scenarios <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">scenario</span>,
+  winching <span class="op">=</span> <span class="cn">NULL</span>,
   fact <span class="op">=</span> <span class="fl">3</span>,
   advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
@@ -93,8 +94,13 @@ harvestable, selected, future and reserve, hollow and fuel wood trees</p></li>
 <dt>CostMatrix</dt>
 <dd><p>List of list defining conditional weight over binned slopes
 values</p></dd>
-<dt>scenarios</dt>
-<dd><p>The chosen scenario from scenariosparameters function</p></dd>
+<dt>scenario</dt>
+<dd><p>Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+<code><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></code>)</p></dd>
+<dt>winching</dt>
+<dd><p>No cable or grapple = "0", only cable = "1", grapple + cable =
+"2"</p></dd>
 <dt>fact</dt>
 <dd><p>Aggregation factor of cost raster resolution to initial DTM</p></dd>
 <dt>advancedloggingparameters</dt>
@@ -105,10 +111,10 @@ values</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with :</p><ul><li><p>raw second trails</p></li>
 <li><p></p></li>
-<li><p>Smoothed secondary trails polygons</p></li>
-<li><p>Second trails density (in m.ha^-1)</p></li>
-<li><p>Updated inventory</p></li>
-<li><p>A cost Raster (RasterLayer)</p></li>
+<li><p>SmoothedSecondTrails: Smoothed secondary trails polygons (sfc_MULTIPOLYGON)</p></li>
+<li><p>TrailsDensity: Second trails density (in m/ha)</p></li>
+<li><p>inventory: Updated inventory</p></li>
+<li><p>CostRasterMean: A cost Raster (RasterLayer)</p></li>
 </ul></div>
 
     <div class="section level2">
@@ -123,8 +129,6 @@ values</p></dd>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpeciesCriteria"</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">VerticalCreekHeight</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">scenarios</span> <span class="op">&lt;-</span> <span class="fu"><a href="scenariosparameters.html">scenariosparameters</a></span><span class="op">(</span>scenario <span class="op">=</span> <span class="st">"RIL3"</span><span class="op">)</span></span>
-<span class="r-in"></span>
 <span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="ONFGuyafortaxojoin.html">ONFGuyafortaxojoin</a></span><span class="op">(</span><span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
 <span class="r-in"> volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span>,<span class="va">SpeciesCriteria</span><span class="op">)</span></span>
 <span class="r-in"></span>
@@ -132,7 +136,7 @@ values</p></dd>
 <span class="r-in"><span class="va">treeselectionoutputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>,</span>
 <span class="r-in">topography <span class="op">=</span> <span class="va">DTMParacou</span>, plotslope <span class="op">=</span> <span class="va">PlotSlope</span>, MainTrails <span class="op">=</span> <span class="va">MainTrails</span>,</span>
 <span class="r-in">harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,</span>
-<span class="r-in">speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>, objective <span class="op">=</span> <span class="va">scenarios</span><span class="op">$</span><span class="va">objective</span>,</span>
+<span class="r-in">speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span>
 <span class="r-in">scenario <span class="op">=</span> <span class="st">"RIL3"</span>,</span>
 <span class="r-in">objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
@@ -149,17 +153,31 @@ values</p></dd>
 <span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">27</span>, Cost <span class="op">=</span> <span class="fl">600</span><span class="op">)</span>,</span>
 <span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="cn">Inf</span>, Cost <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span>,</span>
 <span class="r-in">                    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Initial"</span>, CostValue <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>,</span>
-<span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Access"</span>, CostValue <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span>,</span>
+<span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Access"</span>, CostValue <span class="op">=</span> <span class="fl">1E5</span><span class="op">)</span>,</span>
 <span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"BigTrees"</span>, CostValue <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>,</span>
 <span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Reserves"</span>, CostValue <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>,</span>
 <span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Futures"</span>, CostValue <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>,</span>
 <span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"MainTrails"</span>, CostValue <span class="op">=</span> <span class="fl">1E-4</span><span class="op">)</span>,</span>
 <span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"SecondTrails"</span>, CostValue <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">  scenarios <span class="op">=</span> <span class="va">scenarios</span>,</span>
+<span class="r-in">  scenario <span class="op">=</span> <span class="st">"RIL3"</span>,</span>
 <span class="r-in">  fact <span class="op">=</span> <span class="fl">3</span>,</span>
 <span class="r-in">  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in">  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">secondtrails</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="co"># Harvestable zones</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">HarvestablePolygons</span>,</span>
+<span class="r-in">        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="va">Harvestable</span><span class="op">)</span>,</span>
+<span class="r-in">        fill <span class="op">=</span> <span class="st">"olivedrab"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="st">"Harvestable"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"P6 zones exploitables"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in"></span>
+<span class="r-in">  <span class="co"># 2ndary trails</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">secondtrails</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"darkgreen"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">secondtrails</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">secondtrails</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span></span>
 <span class="r-in">  <span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>
