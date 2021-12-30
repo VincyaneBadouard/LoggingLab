@@ -30,7 +30,7 @@ generalization (numeric)}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-Smoothed secondary trails polygons.
+A list with : 1: Smoothed secondary trails polygons.; 2: Second trails density
 }
 \description{
 Trails smoothing

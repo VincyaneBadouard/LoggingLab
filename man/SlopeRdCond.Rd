@@ -5,13 +5,14 @@
 \title{SlopeRdCond}
 \usage{
 SlopeRdCond(
-  DTM,
+  topography,
   advancedloggingparameters = loggingparameters(),
   grapple = FALSE
 )
 }
 \arguments{
-\item{DTM}{A RasterLayer for digital terrain model (DTM) data}
+\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -29,7 +30,7 @@ SlopeRdCond
 \dontrun{
 data(DTMParacou)
 
-SlopeCond <- SlopeRdCond(DTM = DTMParacou)
+SlopeCond <- SlopeRdCond(topography = DTMParacou)
 }
 
 }

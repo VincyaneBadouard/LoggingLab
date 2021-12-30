@@ -5,7 +5,7 @@
 \title{Second trails opening}
 \usage{
 secondtrailsopening(
-  DTM,
+  topography,
   plotmask,
   verticalcreekheight,
   treeselectionoutputs,
@@ -22,7 +22,8 @@ secondtrailsopening(
 )
 }
 \arguments{
-\item{DTM}{Digital terrain model (raster)}
+\item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame)}
 
@@ -50,7 +51,15 @@ values}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-Secondary trails polygons according to scenario conditions.
+A list with :
+\itemize{
+\item raw second trails
+\item 
+\item Smoothed secondary trails polygons
+\item Second trails density (in m.ha^-1)
+\item Updated inventory
+\item A cost Raster (RasterLayer)
+}
 }
 \description{
 Second trails opening
@@ -71,9 +80,6 @@ scenarios <- scenariosparameters(scenario = "RIL3")
 inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
-AccessPolygons <- FilterAccesExplArea(harvestablepolygons = HarvestablePolygons,
-MainTrails = MainTrails,
-advancedloggingparameters = loggingparameters())
 
 treeselectionoutputs <- treeselection(inventory,
 topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
@@ -84,7 +90,7 @@ objectivelax = TRUE,
 advancedloggingparameters = loggingparameters())
 
 secondtrails <- secondtrailsopening(
-  DTM = DTMParacou,
+  topography = DTMParacou,
   plotmask = PlotMask,
   treeselectionoutputs = treeselectionoutputs,
   verticalcreekheight = VerticalCreekHeight,
@@ -104,6 +110,8 @@ secondtrails <- secondtrailsopening(
   scenarios = scenarios,
   fact = 3,
   advancedloggingparameters = loggingparameters())
+
+  plot(secondtrails[[3]])
   }
 
 }
