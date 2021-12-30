@@ -1,6 +1,6 @@
 #' SlopeRdCond
 #'
-#' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
+#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
@@ -10,7 +10,6 @@
 #'
 #'@return A transition layer object with weighted adjacent graph according to
 #'  longitudinal / transversal slope condition
-#'
 #'
 #'
 #'@importFrom gdistance transition geoCorrection

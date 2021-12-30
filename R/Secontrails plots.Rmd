@@ -1,0 +1,208 @@
+---
+title: "Secontrails plots"
+author: "Vincyane Badouard"
+date: "30/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Libraries
+```{r}
+library(Maria)
+library(ggplot2)
+library(sf)
+library(dplyr)
+library(tibble)
+```
+
+# Data
+```{r}
+# save(secondtrails, file = "../data/secondtrails.Rdata")
+data("HarvestablePolygons")
+data("MainTrails")
+```
+
+# Outputs
+```{r}
+secondtrails$TrailsDensity
+
+secondtrails[[1]] # 'paths'
+class(secondtrails[[1]]) # SpatialLines (sp)
+
+secondtrails[[2]] # 'lines' Sert à quoi ??
+class(secondtrails[[2]]) # matrix
+
+plot(secondtrails[[3]]) # SmoothedSecondTrails
+class(secondtrails[[3]]) # sfc_MULTIPOLYGON
+
+secondtrails[[4]] # TrailsDensity
+class(secondtrails[[4]]) # "units" ??? A mettre en numeric !
+
+new_inventory <- secondtrails[[5]] # inventory
+class(secondtrails[[5]]) # data.frame
+
+secondtrails[[6]] # CostRasterMean. Sert à quoi ??
+class(secondtrails[[6]]) # RasterLayer
+
+```
+
+# Plots
+```{r}
+ggplot() +
+  # Harvestable zones
+  geom_sf(data = HarvestablePolygons,
+          aes(alpha = Harvestable),
+          fill = "olivedrab") +
+  labs(alpha = "Harvestable") +
+  labs(title = "P6 zones exploitables") +
+  
+  # 2ndary trails
+  geom_sf(data = st_as_sf(secondtrails[[3]]), col = "darkgreen") +
+  geom_sf(data = st_as_sf(secondtrails[[1]]), col = "red")
+
+```
+
+# With tree selection
+```{r}
+NewInventory <- treeselectionoutputs$inventory # scenario = "RIL3", objectivelax = TRUE
+
+
+NonHarvestable <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "non-harvestable"),
+  coords = c("Xutm", "Yutm")) %>% 
+  st_set_crs(st_crs(HarvestablePolygons))
+
+Harvestable <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "harvestable"),
+  coords = c("Xutm", "Yutm")) %>% 
+  st_set_crs(st_crs(HarvestablePolygons))
+
+HarvestableUp <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "harvestableUp"),
+  coords = c("Xutm", "Yutm")) %>% 
+  st_set_crs(st_crs(HarvestablePolygons))
+
+Selected <- sf::st_as_sf(
+  dplyr::filter(NewInventory, Selected == "1"), coords = c("Xutm", "Yutm")) %>% 
+  st_set_crs(st_crs(HarvestablePolygons))
+
+Reserve <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "reserve"),
+  coords = c("Xutm", "Yutm")) %>% 
+  st_set_crs(st_crs(HarvestablePolygons))
+
+Future <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "future"),
+  coords = c("Xutm", "Yutm")) %>% 
+  st_set_crs(st_crs(HarvestablePolygons))
+
+ProbedHollow <- sf::st_as_sf(
+  dplyr::filter(NewInventory, ProbedHollow == "1"), coords = c("Xutm", "Yutm")) %>% 
+  st_set_crs(st_crs(HarvestablePolygons))
+
+
+VisibleDefect <- sf::st_as_sf(
+  dplyr::filter(NewInventory, VisibleDefect == "1"), coords = c("Xutm", "Yutm")) %>% 
+  st_set_crs(st_crs(HarvestablePolygons))
+```
+
+
+# Plot with tree selection
+```{r}
+ggplot() +
+  # Harvestable zones
+  geom_sf(data = HarvestablePolygons,
+          aes(alpha = Harvestable),
+          fill = "olivedrab") +
+  labs(alpha = "Harvestable") +
+  labs(title = "P6 zones exploitables") +
+  
+  # 2ndary trails
+  geom_sf(data = st_as_sf(secondtrails[[3]]), col = "darkgreen") +
+  geom_sf(data = st_as_sf(secondtrails[[1]]), col = "red") +
+  
+  # Tree selection
+  # geom_sf(data = NonHarvestable,
+  #         aes(colour = "Non-harvestable"), show.legend = "point") +
+  geom_sf(data = VisibleDefect,
+          aes(colour = "Visible defect"), show.legend = "point") +
+  geom_sf(data = Future,
+          aes(colour = "Future"), show.legend = "point", size = 4) +
+  geom_sf(data = Reserve,
+          aes(colour = "Reserve"), show.legend = "point", size = 4) +
+  geom_sf(data = Harvestable,
+          aes(colour = "Harvestable"), show.legend = "point", size = 4) +
+  # geom_sf(data = HarvestableUp,
+  #         aes(colour = "HarvestableUp"), show.legend = "point", size = 4) +
+  geom_sf(data = Selected,
+          aes(colour = "Selected"), show.legend = "point") +
+  geom_sf(data = ProbedHollow,
+          aes(colour = "Probed hollow"), show.legend = "point") +
+  geom_sf(data = MainTrails) +
+  
+  scale_colour_manual(values = c("Non-harvestable" = "grey",
+                                 "Visible defect" = "pink", "Harvestable" = "skyblue",
+                                 "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
+                                 "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
+  labs(color = "Logging status") +
+  labs(title = "P16 EFI3")
+```
+
+# Plot with treefelling
+```{r}
+NewInventory <- treefelling(new_inventory, scenario = "RIL3", fuel = "0",
+                            winching = NULL, directionalfelling = NULL,
+                            MainTrails = MainTrails, ScndTrail = st_as_sf(secondtrails[[3]]) ,
+                            advancedloggingparameters = loggingparameters())
+
+NewInventory_crs <- NewInventory %>%
+  getgeometry(TreePolygon) %>%
+  sf::st_set_crs(sf::st_crs(MainTrails)) # set a crs
+```
+
+
+```{r}
+ggplot() +
+  # Harvestable zones
+  geom_sf(data = HarvestablePolygons,
+          aes(alpha = Harvestable),
+          fill = "olivedrab") +
+  labs(alpha = "Harvestable") +
+  labs(title = "P6 zones exploitables") +
+  
+  # 2ndary trails
+  geom_sf(data = st_as_sf(secondtrails[[3]]), col = "darkgreen") +
+  geom_sf(data = st_as_sf(secondtrails[[1]]), col = "red") +
+  
+  # Tree selection
+  # geom_sf(data = NonHarvestable,
+  #         aes(colour = "Non-harvestable"), show.legend = "point") +
+  geom_sf(data = VisibleDefect,
+          aes(colour = "Visible defect"), show.legend = "point") +
+  geom_sf(data = Future,
+          aes(colour = "Future"), show.legend = "point", size = 4) +
+  geom_sf(data = Reserve,
+          aes(colour = "Reserve"), show.legend = "point", size = 4) +
+  geom_sf(data = Harvestable,
+          aes(colour = "Harvestable"), show.legend = "point", size = 4) +
+  # geom_sf(data = HarvestableUp,
+  #         aes(colour = "HarvestableUp"), show.legend = "point", size = 4) +
+  geom_sf(data = NewInventory_crs, # cuted trees
+          alpha = 0.5, fill = "red") +
+  geom_sf(data = Selected,
+          aes(colour = "Selected"), show.legend = "point") +
+  geom_sf(data = ProbedHollow,
+          aes(colour = "Probed hollow"), show.legend = "point") +
+  geom_sf(data = MainTrails) +
+  
+  scale_colour_manual(values = c("Non-harvestable" = "grey",
+                                 "Visible defect" = "pink", "Harvestable" = "skyblue",
+                                 "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
+                                 "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
+  labs(color = "Logging status") +
+  labs(title = "P16 EFI3")
+```
+

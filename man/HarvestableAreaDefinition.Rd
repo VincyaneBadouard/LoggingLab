@@ -46,7 +46,16 @@ HarvestableAreaOutputs <- HarvestableAreaDefinition(
   advancedloggingparameters = loggingparameters()
   )
 
-plot(HarvestableAreaOutputs[[1]])
+library(ggplot2)
+library(sf)
+ggplot() +
+geom_sf(data = HarvestableAreaOutputs[[1]],
+        aes(alpha = Harvestable),
+        fill = "olivedrab") +
+  labs(alpha = "Harvestable") +
+  labs(title = "P6  Harvestable zones")
+
+HarvestableAreaOutputs[[2]]
 }
 
 }

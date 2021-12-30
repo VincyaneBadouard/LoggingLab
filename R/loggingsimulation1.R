@@ -277,7 +277,7 @@ loggingsimulation1 <- function(
   #   treeselectionoutputs = treeselectionoutputs,
   #   verticalcreekheight = verticalcreekheight,
   #   CostMatrix = CostMatrix,
-  #   scenarios = scenarios,
+  #   scenario = scenario, winching = winching,
   #   fact = 3,
   #   advancedloggingparameters = advancedloggingparameters)
 

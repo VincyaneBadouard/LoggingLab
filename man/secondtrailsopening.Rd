@@ -16,7 +16,8 @@ secondtrailsopening(
     CostValue = 500), list(CostType = "Reserves", CostValue = 500), list(CostType =
     "Futures", CostValue = 50), list(CostType = "MainTrails", CostValue = 1e-04),
     list(CostType = "SecondTrails", CostValue = 0.1))),
-  scenarios = NULL,
+  scenario,
+  winching = NULL,
   fact = 3,
   advancedloggingparameters = loggingparameters()
 )
@@ -43,7 +44,12 @@ harvestable, selected, future and reserve, hollow and fuel wood trees
 \item{CostMatrix}{List of list defining conditional weight over binned slopes
 values}
 
-\item{scenarios}{The chosen scenario from scenariosparameters function}
+\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+\code{\link{vignette}})}
+
+\item{winching}{No cable or grapple = "0", only cable = "1", grapple + cable =
+"2"}
 
 \item{fact}{Aggregation factor of cost raster resolution to initial DTM}
 
@@ -55,10 +61,10 @@ A list with :
 \itemize{
 \item raw second trails
 \item 
-\item Smoothed secondary trails polygons
-\item Second trails density (in m.ha^-1)
-\item Updated inventory
-\item A cost Raster (RasterLayer)
+\item SmoothedSecondTrails: Smoothed secondary trails polygons (sfc_MULTIPOLYGON)
+\item TrailsDensity: Second trails density (in m/ha)
+\item inventory: Updated inventory
+\item CostRasterMean: A cost Raster (RasterLayer)
 }
 }
 \description{
@@ -75,8 +81,6 @@ data(PlotSlope)
 data("SpeciesCriteria")
 data(VerticalCreekHeight)
 
-scenarios <- scenariosparameters(scenario = "RIL3")
-
 inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
@@ -84,7 +88,7 @@ inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(Paracou6_2016, PlotMas
 treeselectionoutputs <- treeselection(inventory,
 topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
 harvestablepolygons = HarvestablePolygons,
-speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+speciescriteria = SpeciesCriteria,
 scenario = "RIL3",
 objectivelax = TRUE,
 advancedloggingparameters = loggingparameters())
@@ -101,17 +105,31 @@ secondtrails <- secondtrailsopening(
                          list(Slope = 27, Cost = 600),
                          list(Slope = Inf, Cost = 1000)),
                     list(list(CostType = "Initial", CostValue = 1000),
-                         list(CostType = "Access", CostValue = 10000),
+                         list(CostType = "Access", CostValue = 1E5),
                          list(CostType = "BigTrees", CostValue = 500),
                          list(CostType = "Reserves", CostValue = 500),
                          list(CostType = "Futures", CostValue = 50),
                          list(CostType = "MainTrails", CostValue = 1E-4),
                          list(CostType = "SecondTrails", CostValue = 0.1))),
-  scenarios = scenarios,
+  scenario = "RIL3",
   fact = 3,
   advancedloggingparameters = loggingparameters())
 
-  plot(secondtrails[[3]])
+library(ggplot2)
+library(sf)
+ggplot() +
+  # Harvestable zones
+  geom_sf(data = HarvestablePolygons,
+        aes(alpha = Harvestable),
+        fill = "olivedrab") +
+  labs(alpha = "Harvestable") +
+  labs(title = "P6 zones exploitables") +
+
+  # 2ndary trails
+  geom_sf(data = st_as_sf(secondtrails[[3]]), col = "darkgreen") +
+  geom_sf(data = st_as_sf(secondtrails[[1]]), col = "red")
+
+secondtrails[[4]]
   }
 
 }

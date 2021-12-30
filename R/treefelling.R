@@ -247,11 +247,12 @@ treefelling <- function(
 
 
   # Redefinition of the parameters according to the chosen scenario
-  scenariosparameters <- scenariosparameters(scenario = scenario, fuel = fuel,
+  scenariosparameters <- scenariosparameters(scenario = scenario, fuel = fuel, winching = winching,
                                              directionalfelling = directionalfelling)
 
   directionalfelling <- scenariosparameters$directionalfelling
   fuel <- scenariosparameters$fuel
+  winching <- scenariosparameters$winching
 
   # Compute treefelling success and fails
   inventory <- directionalfellingsuccessdef(
