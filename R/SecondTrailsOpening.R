@@ -52,11 +52,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' data(DTMParacou)
 #' data(Paracou6_2016)
+#' data(PlotMask)
+#' data(DTMParacou)
 #' data(HarvestablePolygons)
 #' data(MainTrails)
-#' data(PlotMask)
 #' data(PlotSlope)
 #' data("SpeciesCriteria")
 #' data(VerticalCreekHeight)
@@ -128,13 +128,16 @@ secondtrailsopening <- function(
   if(!inherits(treeselectionoutputs, "list"))
     stop("The 'treeselectionoutputs' arguments of the 'secondtrailsopening' function must be list following treeselection output format")
 
-  if(!any(unlist(lapply(list(plotmask), inherits, "SpatialPolygonsDataFrame"))))
+  if(!inherits(plotmask, "SpatialPolygonsDataFrame"))
     stop("The 'plotmask' argument of the 'secondtrailsopening' function must be SpatialPolygonsDataFrame")
 
-  if(!any(unlist(lapply(list(topography), inherits, "RasterLayer"))))
-    stop("The 'topography' argument of the 'secondtrailsopening' function must be raster")
+  # if(!any(unlist(lapply(list(MainTrails), inherits, "sf" ))))
+  #   stop("The 'MainTrails' argument of the 'secondtrailsopening' function must be sf polygon")
 
-  if (st_is_empty(treeselectionoutputs$SelectedTreesPoints)[1]) {
+  if(!inherits(topography, "RasterLayer"))
+    stop("The 'topography' argument of the 'secondtrailsopening' function must be RasterLayer")
+
+  if(st_is_empty(treeselectionoutputs$SelectedTreesPoints)[1]) {
     stop("The 'treeselectionoutputs' argument does not contain any selected tree.")
   }
 

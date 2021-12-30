@@ -1,0 +1,60 @@
+---
+title: "Iterations summary"
+author: "Vincyane Badouard"
+date: "29/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+# save(Rslt, file = "../data/Rslt.Rdata")
+load("../data/Rslt.Rdata")
+```
+
+Les stats qu'on veut faire : mean, sd, quantile
+
+Sur les variables : c(HarvestableArea, VO, HVinit, TimberLoggedVolume, NoHollowTimberLoggedVolume, FuelVolume,
+DamageVolume, LostBiomass)
+
+# With 1 var
+```{r}
+HarvestableArea_mean <- mean(c(Rslt[[1]]$HarvestableArea, Rslt[[2]]$HarvestableArea))
+HarvestableArea_sd <- sd(c(Rslt[[1]]$HarvestableArea, Rslt[[2]]$HarvestableArea))
+HarvestableArea_quantile <- quantile(c(Rslt[[1]]$HarvestableArea, Rslt[[2]]$HarvestableArea))
+
+```
+
+# pour toutes les vars pour n iter
+```{r}
+var <- c("HarvestableArea", "VO", "HVinit", "TimberLoggedVolume", "NoHollowTimberLoggedVolume", "FuelVolume",
+         "DamageVolume", "LostBiomass")
+
+quantile(c(as.numeric(Rslt[[1]]["LostBiomass"]) : as.numeric(Rslt[[2]]["LostBiomass"])), probs = c(0.25, 0.75))
+
+statsvars <- function(v, iter){
+  
+  itervalues <- c(as.numeric(Rslt[[1]][v]) : as.numeric(Rslt[[length(Rslt)]][v]))
+  
+  Mean <- round(mean(itervalues), digits = 1)
+  Sd <- round(sd(itervalues), digits = 1)
+  Q1 <- round(quantile(itervalues, probs = 0.25, digits = 1))
+  Median <- round(median(itervalues), digits = 1)
+  Q3 <- round(quantile(itervalues, probs = 0.75, digits = 1))
+  Min <- round(min(itervalues), digits = 1)
+  Max <- round(max(itervalues), digits = 1)
+  
+  output <- list(Mean = Mean, Sd = Sd, Min = Min, Q1 = Q1, Median = Median, Q3 = Q3, Max = Max)
+  
+  return(output)
+}
+
+RsltStats <- lapply(var, statsvars, 2)
+
+unlist(RsltStats[8]) # numeric named vector
+
+```
+

@@ -269,7 +269,7 @@ The harvestable volume may change from one simulation to another because the ide
 #                                scenario = "RIL1", specieslax = FALSE, objectivelax = TRUE,
 #                                crowndiameterparameters = ParamCrownDiameterAllometry,
 #                                advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
-# loggingsummary(RIL1_Rslt)
+# loggingsummary1(RIL1_Rslt)
 # # Without diversification the harvestable volume is too poor
 ```
 
@@ -281,7 +281,7 @@ The harvestable volume may change from one simulation to another because the ide
 #                                      scenario = "RIL2broken", specieslax = FALSE, objectivelax = TRUE,
 #                                      crowndiameterparameters = ParamCrownDiameterAllometry,
 #                                      advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
-# loggingsummary(RIL2broken_Rslt)
+# loggingsummary1(RIL2broken_Rslt)
 # RIL2broken_inventory <- RIL2broken_Rslt$inventory
 # # Without diversification the harvestable volume is too poor
 # # Not all harvestable trees are always harvested because they are eventually probed hollow, and there is not always a harvestable tree to replace them.
@@ -295,7 +295,7 @@ The harvestable volume may change from one simulation to another because the ide
 #                                scenario = "RIL2", specieslax = FALSE, objectivelax = TRUE,
 #                                crowndiameterparameters = ParamCrownDiameterAllometry,
 #                                advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
-# loggingsummary(RIL2_Rslt)
+# loggingsummary1(RIL2_Rslt)
 # # Without diversification the harvestable volume is too poor
 ```
 
@@ -309,7 +309,7 @@ The harvestable volume may change from one simulation to another because the ide
 #                                advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
 # 
 # RIL3_inventory <- RIL3_Rslt$inventory
-# loggingsummary(RIL3_Rslt)
+# loggingsummary1(RIL3_Rslt)
 # # With diversification the harvestable volume is much higher
 # # but 30m3/ha is a too high objective for this plot size
 # # Not all harvestable trees are always harvested because they are eventually probed hollow, and there is not always a harvestable tree to replace them.
@@ -323,7 +323,7 @@ The harvestable volume may change from one simulation to another because the ide
 #                                    scenario = "RIL3fuel", specieslax = FALSE, objectivelax = TRUE,
 #                                    crowndiameterparameters = ParamCrownDiameterAllometry,
 #                                    advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
-# loggingsummary(RIL3fuel_Rslt)
+# loggingsummary1(RIL3fuel_Rslt)
 # # Not all harvestable trees are always harvested because they are eventually probed hollow, and there is not always a harvestable tree to replace them.
 ```
 
@@ -338,12 +338,12 @@ The harvestable volume may change from one simulation to another because the ide
 #                                          advancedloggingparameters = loggingparameters(),
 #                                          iter = 1, cores = 1)
 # RIL3fuelhollow_inventory <- RIL3fuelhollow_Rslt$inventory
-# # loggingsummary(RIL3fuelhollow_Rslt)
+# # loggingsummary1(RIL3fuelhollow_Rslt)
 ```
 
 ## Results summary
 ```{r}
-# loggingsummary(Rslt)
+# loggingsummary1(Rslt)
 ```
 
 # Decomposed harvesting

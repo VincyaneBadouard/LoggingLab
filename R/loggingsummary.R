@@ -2,37 +2,21 @@
 #'
 #' @param x Outputs of the loggingsimulation function (list)
 #'
-#' @return A summary of the outputs of the loggingsimulation function:
+#' @return A summary of the outputs of the loggingsimulation function
+#' (console display):
 #' - a reminder of the inputs
-#' - the outgoing figures
-#' - a print of the output inventory
+#' - the iterations statistics (mean, standard deviation, quantiles) of the
+#'    outgoing figures
 #'
 #' @export
 #'
+#' @importFrom units set_units
+#' @importFrom stats median quantile sd
+#'
 #' @examples
-#' \dontrun{
-#' data(Paracou6_2016) # inventory
-#' data(PlotMask) # inventoried plot mask
-#' data(DTMParacou) # topography
-#' data(VerticalCreekHeight) # relative elevation
-#' data(SpeciesCriteria) # species exploitability criteria
-#' data(ForestZoneVolumeParametersTable) # volume parameters
-#' data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
+#' data(LoggingSimulationOutputs) # Outputs of one logging simulation (2 iterations and 2 cores)
 #'
-#' Rslt <- suppressMessages(
-#'   loggingsimulation(
-#'     Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-#'     verticalcreekheight  = VerticalCreekHeight,
-#'     speciescriteria = SpeciesCriteria,
-#'     volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
-#'     objective = 20, fuel = "2", diversification = TRUE, winching = "2",
-#'     directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
-#'     crowndiameterparameters = ParamCrownDiameterAllometry,
-#'     advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
-#' )
-#'
-#' loggingsummary(Rslt)
-#' }
+#' loggingsummary(LoggingSimulationOutputs)
 #'
 loggingsummary <- function(x
 ){
@@ -41,45 +25,92 @@ loggingsummary <- function(x
   if(!inherits(x, "list"))
     stop("The argument of the 'loggingsummary' function must be a list")
 
-  PlotArea <- unique(x$inventory$PlotArea)
+  PlotArea <- unique(x[[1]]$inventory$PlotArea)
 
   # Reminder of INPUTS:
-  cat('inventory :', x$INPUTinventory, '\n') # input inventory name
+  cat('inventory :', x[[1]]$INPUTinventory, '\n') # input inventory name
   cat('Plot area :', PlotArea, 'ha\n') # Plot area,
-  cat('scenario :', x$scenario, '\n') # scenario,
-  cat('objective :', x$objective, 'm3/ha\n') # objective volume (m3/ha)
-  cat('fuel :', x$fuel, '\n') # fuel
-  cat('diversification :', x$diversification, '\n') # diversification
-  cat('winching :', x$winching, '\n') # winching type
-  cat('directionalfelling :', x$directionalfelling, '\n') # directionalfelling type
-  cat('specieslax :', x$specieslax, '\n') # specieslax
-  cat('objectivelax :', x$objectivelax, '\n') # objectivelax
+  cat('scenario :', x[[1]]$scenario, '\n') # scenario,
+  cat('objective :', x[[1]]$objective, 'm3/ha\n') # objective volume (m3/ha)
+  cat('fuel :', x[[1]]$fuel, '\n') # fuel
+  cat('diversification :', x[[1]]$diversification, '\n') # diversification
+  cat('winching :', x[[1]]$winching, '\n') # winching type
+  cat('directionalfelling :', x[[1]]$directionalfelling, '\n') # directionalfelling type
+  cat('specieslax :', x[[1]]$specieslax, '\n') # specieslax
+  cat('objectivelax :', x[[1]]$objectivelax, '\n') # objectivelax
 
   # Numeric values:
-  cat('Harvestable area :', round(x$HarvestableArea, digits = 2), 'ha\n') # harvestable area (ha)
 
-  cat('Objective volume :', round(x$VO, digits = 1), 'm3\n') # your objective volume (m3)
+  var <- c("HarvestableArea", "VO", "HVinit", "TimberLoggedVolume", "NoHollowTimberLoggedVolume", "FuelVolume",
+           "DamageVolume", "LostBiomass")
 
-  cat('Initial harvestable volume :', round(x$HVinit, digits = 1), 'm3, ',
-      round(x$HVinit/PlotArea, digits = 1), 'm3/ha\n') # the harvestable volume (m3) with your initial criteria
+  statsvars <- function(v, x){
 
-  cat('Timber logged volume :', round(x$TimberLoggedVolume, digits = 1), 'm3, ',
-      round(x$TimberLoggedVolume/PlotArea, digits = 1), 'm3/ha\n') # Logged volume (m3) (only healthy trees if fuel != "2", healthy + hollow trees if fuel = "2")
+    itervalues <- c(as.numeric(x[[1]][v]) : as.numeric(x[[length(x)]][v]))
 
-  cat('No hollow timber logged volume :', round(x$NoHollowTimberLoggedVolume, digits = 1), 'm3, ',
-      round(x$NoHollowTimberLoggedVolume/PlotArea, digits = 1), 'm3/ha\n') # Logged volume (m3) (only healthy trees)
+    Mean <- round(mean(itervalues), digits = 1)
+    Sd <- round(sd(itervalues), digits = 1)
+    Q1 <- round(quantile(itervalues, probs = 0.25, digits = 1))
+    Median <- round(median(itervalues), digits = 1)
+    Q3 <- round(quantile(itervalues, probs = 0.75, digits = 1))
+    Min <- round(min(itervalues), digits = 1)
+    Max <- round(max(itervalues), digits = 1)
 
-  cat('Fuel wood volume :', round(x$FuelVolume, digits = 1), 'm3, ',
-      round(x$FuelVolume/PlotArea, digits = 1), 'm3/ha\n') # Damages + purge (+ hollow trees if fuel = "2") (m3)
+    output <- list(Mean = Mean, Sd = Sd, Min = Min, Q1 = Q1, Median = Median, Q3 = Q3, Max = Max)
 
-  cat('Damages volume :', round(x$DamageVolume, digits = 1), 'm3, ',
-      round(x$DamageVolume/PlotArea, digits = 1), 'm3/ha\n') # only damages (without purge and hollow trees) (m3)
+    return(output)
+  }
 
-  cat('Lost biomass :', round(x$LostBiomass, digits = 1), 'ton\n') # Lost biomass (ton)
+  RsltStats <- lapply(var, statsvars, x)
 
-  # cat('Trails density :', x$TrailsDensity, 'm/m^2\n') # Trails density (m/m^2)
+  cat('Harvestable area (ha):\n')
+  print(unlist(RsltStats[1])) # harvestable area (ha)
+
+  cat('\n') # skip a line
+
+  cat('Objective volume (m3):\n')
+  print(unlist(RsltStats[2])) # your objective volume (m3)
+
+  cat('\n') # skip a line
+
+  cat('Initial harvestable volume (m3):\n')
+  print(unlist(RsltStats[3]))
+  print(set_units(unlist(RsltStats[3])/PlotArea, m3/ha)) # the harvestable volume (m3) with your initial criteria
+
+  cat('\n') # skip a line
+
+  cat('Timber logged volume (m3):\n')
+  print(unlist(RsltStats[4]))
+  print(set_units(unlist(RsltStats[4])/PlotArea, m3/ha)) # Logged volume (m3) (only healthy trees if fuel != "2", healthy + hollow trees if fuel = "2")
+
+  cat('\n') # skip a line
+
+  cat('No hollow timber logged volume (m3):\n')
+  print(unlist(RsltStats[5]))
+  print(set_units(unlist(RsltStats[5])/PlotArea, m3/ha)) # Logged volume (m3) (only healthy trees)
+
+  cat('\n') # skip a line
+
+  cat('Fuel wood volume (m3):\n')
+  print(unlist(RsltStats[6]))
+  print(set_units(unlist(RsltStats[6])/PlotArea, m3/ha)) # Damages + purge (+ hollow trees if fuel = "2") (m3)
+
+  cat('\n') # skip a line
+
+  cat('Damages volume (m3):\n')
+  print(unlist(RsltStats[7]))
+  print(set_units(unlist(RsltStats[5])/PlotArea, m3/ha)) # only damages (without purge and hollow trees) (m3)
+
+  cat('\n') # skip a line
+
+  cat('Lost biomass (ton):\n')
+  print(unlist(RsltStats[8])) # Lost biomass (ton)
+
+  # cat('\n') # skip a line
+
+  # cat('Trails density ():\n'), x$TrailsDensity, 'm/m^2\n') # Trails density (m/m^2)
 
   # The after simulation inventory (data.frame)
-  print(x$inventory)
+  # print(x$inventory)
 
 }

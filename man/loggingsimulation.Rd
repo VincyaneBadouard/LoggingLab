@@ -93,7 +93,7 @@ and its species, genus or family. (data.frame)}
 \item{cores}{Number of cores for parallelization (numeric). Default = 1.}
 }
 \value{
-Input inventory (data.frame) with logging informations
+Input inventory (data.frame) with logging informations (list)
 (see the outputs metadata in the \code{\link{vignette}}).
 }
 \description{
@@ -119,7 +119,7 @@ Rslt <- loggingsimulation(
  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
  crowndiameterparameters = ParamCrownDiameterAllometry,
- advancedloggingparameters = loggingparameters(), iter = 2, cores = 1)
+ advancedloggingparameters = loggingparameters(), iter = 2, cores = 2)
  }
 
 }
