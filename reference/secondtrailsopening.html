@@ -44,7 +44,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Second trails opening</h1>
-      <small class="dont-index">Source: <a href="https://github.com/VincyaneBadouard/Maria/blob/HEAD/R/SecondTrailsOpening.R" class="external-link"><code>R/SecondTrailsOpening.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/VincyaneBadouard/Maria/blob/HEAD/R/secondtrailsopening.R" class="external-link"><code>R/secondtrailsopening.R</code></a></small>
       <div class="d-none name"><code>secondtrailsopening.Rd</code></div>
     </div>
 
@@ -84,7 +84,7 @@ or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer)</
 <dd><p>Relative elevation from nearest channel network
 (Large RasterLayer)</p></dd>
 <dt>treeselectionoutputs</dt>
-<dd><p>A list with:</p><ul><li><p>your inventory with: "DistCrit", "Slope", "SlopeCrit", "LoggingStatus",
+<dd><p>A list with:</p><ul><li><p>your inventory with: "DistCriteria", "Slope", "SlopeCriteria", "LoggingStatus",
 "Selected", "Up", "VolumeCumSum", "ProbedHollowProba", "ProbedHollow"
 new columns (see the outputs metadata in the <code><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></code>).</p></li>
 <li><p>the objective volume with or without a bonus (if hollow trees exploitation)</p></li>
@@ -99,8 +99,13 @@ values</p></dd>
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 <code><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></code>)</p></dd>
 <dt>winching</dt>
-<dd><p>No cable or grapple = "0", only cable = "1", grapple + cable =
-"2"</p></dd>
+<dd><p>"0": no cable or grapple (trail to tree foot)
+"1": only cable (default = 40m)
+"2": grapple (default = 6m) + cable (grapple priority)
+If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+recovery of the tree foot with grapple if possible (respected grapple
+conditions) otherwise with cable with angle to the trail.
+Avoidance of future/reserves if chosen.</p></dd>
 <dt>fact</dt>
 <dd><p>Aggregation factor of cost raster resolution to initial DTM</p></dd>
 <dt>advancedloggingparameters</dt>
@@ -129,7 +134,7 @@ values</p></dd>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpeciesCriteria"</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">VerticalCreekHeight</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="ONFGuyafortaxojoin.html">ONFGuyafortaxojoin</a></span><span class="op">(</span><span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
+<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="commercialcriteriajoin.html">commercialcriteriajoin</a></span><span class="op">(</span><span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
 <span class="r-in"> volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span>,<span class="va">SpeciesCriteria</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"></span>
@@ -153,7 +158,7 @@ values</p></dd>
 <span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">27</span>, Cost <span class="op">=</span> <span class="fl">600</span><span class="op">)</span>,</span>
 <span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="cn">Inf</span>, Cost <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span>,</span>
 <span class="r-in">                    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Initial"</span>, CostValue <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>,</span>
-<span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Access"</span>, CostValue <span class="op">=</span> <span class="fl">1E5</span><span class="op">)</span>,</span>
+<span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Access"</span>, CostValue <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>, <span class="co"># 1E5</span></span>
 <span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"BigTrees"</span>, CostValue <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>,</span>
 <span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Reserves"</span>, CostValue <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>,</span>
 <span class="r-in">                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Futures"</span>, CostValue <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>,</span>

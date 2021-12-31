@@ -1102,7 +1102,7 @@ TRUE
 <span class="co">#&gt; [1] "tbl_df"     "tbl"        "data.frame"</span>
 <span class="co">#The name and class of all the data variables</span>
 <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span>, <span class="va">class</span><span class="op">)</span>
-<span class="co">#&gt; $VernName</span>
+<span class="co">#&gt; $CommercialName</span>
 <span class="co">#&gt; [1] "character"</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $Genus</span>
@@ -1111,8 +1111,8 @@ TRUE
 <span class="co">#&gt; $Species</span>
 <span class="co">#&gt; [1] "character"</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $Commercial</span>
-<span class="co">#&gt; [1] "factor"</span>
+<span class="co">#&gt; $CommercialLevel</span>
+<span class="co">#&gt; [1] "numeric"</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $MinFD</span>
 <span class="co">#&gt; [1] "numeric"</span>
@@ -1129,7 +1129,7 @@ TRUE
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
-VernName
+CommercialName
 </th>
 <th style="text-align:left;">
 Genus
@@ -1137,8 +1137,8 @@ Genus
 <th style="text-align:left;">
 Species
 </th>
-<th style="text-align:left;">
-Commercial
+<th style="text-align:right;">
+CommercialLevel
 </th>
 <th style="text-align:right;">
 MinFD
@@ -1164,7 +1164,7 @@ Andira
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1190,7 +1190,7 @@ Aniba
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1216,7 +1216,7 @@ Bagassa
 <td style="text-align:left;">
 guianensis
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1242,7 +1242,7 @@ Balizia
 <td style="text-align:left;">
 pedicellaris
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1268,7 +1268,7 @@ Brosimum
 <td style="text-align:left;">
 parinarioides
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1294,7 +1294,7 @@ Brosimum
 <td style="text-align:left;">
 rubescens
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1320,7 +1320,7 @@ Brosimum
 <td style="text-align:left;">
 utile
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1346,7 +1346,7 @@ Buchenavia
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1372,7 +1372,7 @@ Carapa
 <td style="text-align:left;">
 guiansensis
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1398,7 +1398,7 @@ Carapa
 <td style="text-align:left;">
 surinamensis
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1424,7 +1424,7 @@ Caryocar
 <td style="text-align:left;">
 glabrum
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1450,7 +1450,7 @@ Caryocar
 <td style="text-align:left;">
 microcarpum
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1476,7 +1476,7 @@ Chrysophyllum
 <td style="text-align:left;">
 pomiferum
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1502,7 +1502,7 @@ Chrysophyllum
 <td style="text-align:left;">
 sanguinolentum
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1528,7 +1528,7 @@ Couma
 <td style="text-align:left;">
 guianensis
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1554,7 +1554,7 @@ Couratari
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1580,7 +1580,7 @@ Dicorynia
 <td style="text-align:left;">
 guianensis
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
@@ -1606,7 +1606,7 @@ Diplotropis
 <td style="text-align:left;">
 purpurea
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1632,7 +1632,7 @@ Dipteryx
 <td style="text-align:left;">
 odorata
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1658,7 +1658,7 @@ Dipteryx
 <td style="text-align:left;">
 punctata
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1684,7 +1684,7 @@ Enterolobium
 <td style="text-align:left;">
 oldemanii
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1710,7 +1710,7 @@ Enterolobium
 <td style="text-align:left;">
 schomburgkii
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1736,7 +1736,7 @@ Eperua
 <td style="text-align:left;">
 falcata
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1762,7 +1762,7 @@ Eperua
 <td style="text-align:left;">
 grandiflora
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1788,7 +1788,7 @@ Eriotheca
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1814,7 +1814,7 @@ Erisma
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1840,7 +1840,7 @@ Eschweilera
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1866,7 +1866,7 @@ Glycydendron
 <td style="text-align:left;">
 amazonicum
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1892,7 +1892,7 @@ Goupia
 <td style="text-align:left;">
 glabra
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
@@ -1918,7 +1918,7 @@ Handroanthus
 <td style="text-align:left;">
 impetiginosus
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1944,7 +1944,7 @@ Handroanthus
 <td style="text-align:left;">
 serratifolius
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1970,7 +1970,7 @@ Hymenaea
 <td style="text-align:left;">
 courbaril
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -1996,7 +1996,7 @@ Hymenaea
 <td style="text-align:left;">
 oblongifolia
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2022,7 +2022,7 @@ Hymenolobium
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2048,7 +2048,7 @@ Inga
 <td style="text-align:left;">
 alba
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2074,7 +2074,7 @@ Inga
 <td style="text-align:left;">
 huberi
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2100,7 +2100,7 @@ Lauraceae
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2126,7 +2126,7 @@ Lecythis
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2152,7 +2152,7 @@ Lecythis
 <td style="text-align:left;">
 zabucajo
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2178,7 +2178,7 @@ Licaria
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2204,7 +2204,7 @@ Manilkara
 <td style="text-align:left;">
 bidentata
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
@@ -2230,7 +2230,7 @@ Manilkara
 <td style="text-align:left;">
 huberi
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
@@ -2256,7 +2256,7 @@ Micropholis
 <td style="text-align:left;">
 egensis
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2282,7 +2282,7 @@ Micropholis
 <td style="text-align:left;">
 melinoniana
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2308,7 +2308,7 @@ Micropholis
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2334,7 +2334,7 @@ Moronobea
 <td style="text-align:left;">
 coccinea
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2360,7 +2360,7 @@ Ocotea
 <td style="text-align:left;">
 argyrophylla
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2386,7 +2386,7 @@ Ocotea
 <td style="text-align:left;">
 canaliculata
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2412,7 +2412,7 @@ Ocotea
 <td style="text-align:left;">
 ceanothifolia
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2438,7 +2438,7 @@ Ocotea
 <td style="text-align:left;">
 glomerata
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2464,7 +2464,7 @@ Ocotea
 <td style="text-align:left;">
 guianensis
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2490,7 +2490,7 @@ Ocotea
 <td style="text-align:left;">
 oblonga
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2516,7 +2516,7 @@ Ocotea
 <td style="text-align:left;">
 schomburgkiana
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2542,7 +2542,7 @@ Ocotea
 <td style="text-align:left;">
 tomentella
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2568,7 +2568,7 @@ Parkia
 <td style="text-align:left;">
 decussata
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2594,7 +2594,7 @@ Parkia
 <td style="text-align:left;">
 gigantocarpa
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2620,7 +2620,7 @@ Parkia
 <td style="text-align:left;">
 nitida
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2646,7 +2646,7 @@ Parkia
 <td style="text-align:left;">
 reticulata
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2672,7 +2672,7 @@ Parkia
 <td style="text-align:left;">
 ulei
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2698,7 +2698,7 @@ Parkia
 <td style="text-align:left;">
 velutina
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2724,7 +2724,7 @@ Peltogyne
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
@@ -2750,7 +2750,7 @@ Platonia
 <td style="text-align:left;">
 insignis
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2776,7 +2776,7 @@ Pradosia
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2802,7 +2802,7 @@ Pseudopiptadenia
 <td style="text-align:left;">
 psilostachya
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2828,7 +2828,7 @@ Pseudopiptadenia
 <td style="text-align:left;">
 suaveolens
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2854,7 +2854,7 @@ Qualea
 <td style="text-align:left;">
 rosea
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
@@ -2880,7 +2880,7 @@ Recordoxylon
 <td style="text-align:left;">
 speciosum
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2906,7 +2906,7 @@ Rhodostemonodaphne
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -2932,7 +2932,7 @@ Ruizterania
 <td style="text-align:left;">
 albiflora
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
@@ -2958,7 +2958,7 @@ Sextonia
 <td style="text-align:left;">
 rubra
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
@@ -2984,7 +2984,7 @@ Simarouba
 <td style="text-align:left;">
 amara
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3010,7 +3010,7 @@ Sterculia
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3036,7 +3036,7 @@ Symphonia
 <td style="text-align:left;">
 globulifera
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3062,7 +3062,7 @@ Symphonia
 <td style="text-align:left;">
 sp.1
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3088,7 +3088,7 @@ Terminalia
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3114,7 +3114,7 @@ Tetragastris
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3140,7 +3140,7 @@ Vatairea
 <td style="text-align:left;">
 eritrocarpa
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3166,7 +3166,7 @@ Vataireopsis
 <td style="text-align:left;">
 spp
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3192,7 +3192,7 @@ Virola
 <td style="text-align:left;">
 kwatae
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3218,7 +3218,7 @@ Virola
 <td style="text-align:left;">
 michelii
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3244,7 +3244,7 @@ Virola
 <td style="text-align:left;">
 multicostata
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3270,7 +3270,7 @@ Virola
 <td style="text-align:left;">
 sebifera
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3296,7 +3296,7 @@ Vochysia
 <td style="text-align:left;">
 guianensis
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3322,7 +3322,7 @@ Vochysia
 <td style="text-align:left;">
 neyratii
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3348,7 +3348,7 @@ Vochysia
 <td style="text-align:left;">
 surinamensis
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3374,7 +3374,7 @@ Vochysia
 <td style="text-align:left;">
 tomentosa
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
@@ -3400,7 +3400,7 @@ Vouacapoua
 <td style="text-align:left;">
 americana
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
@@ -3426,7 +3426,7 @@ Lecythis
 <td style="text-align:left;">
 poiteaui
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
@@ -3452,7 +3452,7 @@ Lecythis
 <td style="text-align:left;">
 praeclara
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
@@ -3478,7 +3478,7 @@ Lecythis
 <td style="text-align:left;">
 holcogyne
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
@@ -3504,7 +3504,7 @@ Lecythis
 <td style="text-align:left;">
 pneumatophora
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
@@ -3530,7 +3530,7 @@ Lecythis
 <td style="text-align:left;">
 chartacea
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
@@ -3556,7 +3556,7 @@ Micropholis
 <td style="text-align:left;">
 cayennensis
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
@@ -3582,7 +3582,7 @@ Micropholis
 <td style="text-align:left;">
 obscura
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
@@ -3608,7 +3608,7 @@ Pradosia
 <td style="text-align:left;">
 cochlearia
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
@@ -3634,7 +3634,7 @@ Pradosia
 <td style="text-align:left;">
 huberi
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
@@ -3920,22 +3920,22 @@ Family
 <tbody>
 <tr>
 <td style="text-align:right;">
-0.4377988
+0.5813849
 </td>
 <td style="text-align:right;">
-0.5687551
+0.5758275
 </td>
 <td style="text-align:left;">
 sp
 </td>
 <td style="text-align:left;">
-Guatteria_schomburgkiana
+Chrysophyllum_sanguinolentum
 </td>
 <td style="text-align:left;">
-Guatteria
+Chrysophyllum
 </td>
 <td style="text-align:left;">
-schomburgkiana
+sanguinolentum
 </td>
 <td style="text-align:left;">
 NA
@@ -3943,19 +3943,65 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.5122868
+0.4881766
 </td>
 <td style="text-align:right;">
-0.5864231
+0.5790192
+</td>
+<td style="text-align:left;">
+sp
+</td>
+<td style="text-align:left;">
+Chaunochiton_kappleri
+</td>
+<td style="text-align:left;">
+Chaunochiton
+</td>
+<td style="text-align:left;">
+kappleri
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.4725488
+</td>
+<td style="text-align:right;">
+0.5689785
+</td>
+<td style="text-align:left;">
+sp
+</td>
+<td style="text-align:left;">
+Licania_sprucei
+</td>
+<td style="text-align:left;">
+Licania
+</td>
+<td style="text-align:left;">
+sprucei
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.4892720
+</td>
+<td style="text-align:right;">
+0.5742063
 </td>
 <td style="text-align:left;">
 gen
 </td>
 <td style="text-align:left;">
-Tabebuia
+Mabea
 </td>
 <td style="text-align:left;">
-Tabebuia
+Mabea
 </td>
 <td style="text-align:left;">
 NA
@@ -3966,45 +4012,22 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4692232
+0.5094131
 </td>
 <td style="text-align:right;">
-0.5639661
+0.5871436
 </td>
 <td style="text-align:left;">
 sp
 </td>
 <td style="text-align:left;">
-Pogonophora_schomburgkiana
+Mahurea_palustris
 </td>
 <td style="text-align:left;">
-Pogonophora
+Mahurea
 </td>
 <td style="text-align:left;">
-schomburgkiana
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4247357
-</td>
-<td style="text-align:right;">
-0.5554407
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Tapirira_guianensis
-</td>
-<td style="text-align:left;">
-Tapirira
-</td>
-<td style="text-align:left;">
-guianensis
+palustris
 </td>
 <td style="text-align:left;">
 NA
@@ -4012,65 +4035,19 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4125032
+0.5202094
 </td>
 <td style="text-align:right;">
-0.5785169
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Tachigali_melinonii
-</td>
-<td style="text-align:left;">
-Tachigali
-</td>
-<td style="text-align:left;">
-melinonii
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4947435
-</td>
-<td style="text-align:right;">
-0.5747305
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Carapa_procera
-</td>
-<td style="text-align:left;">
-Carapa
-</td>
-<td style="text-align:left;">
-procera
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4273087
-</td>
-<td style="text-align:right;">
-0.5601953
+0.5748915
 </td>
 <td style="text-align:left;">
 gen
 </td>
 <td style="text-align:left;">
-Endlicheria
+Symphonia
 </td>
 <td style="text-align:left;">
-Endlicheria
+Symphonia
 </td>
 <td style="text-align:left;">
 NA
@@ -4081,22 +4058,22 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.5126455
+0.4632760
 </td>
 <td style="text-align:right;">
-0.5837687
+0.5834162
 </td>
 <td style="text-align:left;">
 sp
 </td>
 <td style="text-align:left;">
-Couma_guianensis
+Oxandra_asbeckii
 </td>
 <td style="text-align:left;">
-Couma
+Oxandra
 </td>
 <td style="text-align:left;">
-guianensis
+asbeckii
 </td>
 <td style="text-align:left;">
 NA
@@ -4104,19 +4081,19 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.5957007
+0.5306453
 </td>
 <td style="text-align:right;">
-0.5622960
+0.5896277
 </td>
 <td style="text-align:left;">
 gen
 </td>
 <td style="text-align:left;">
-Lecythis
+Caryocar
 </td>
 <td style="text-align:left;">
-Lecythis
+Caryocar
 </td>
 <td style="text-align:left;">
 NA
@@ -4127,22 +4104,45 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.5717611
+0.3925777
 </td>
 <td style="text-align:right;">
-0.5623689
+0.5426636
+</td>
+<td style="text-align:left;">
+gen
+</td>
+<td style="text-align:left;">
+Miconia
+</td>
+<td style="text-align:left;">
+Miconia
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.4761254
+</td>
+<td style="text-align:right;">
+0.5728836
 </td>
 <td style="text-align:left;">
 sp
 </td>
 <td style="text-align:left;">
-Pouteria_engleri
+Ficus_nymphaeifolia
 </td>
 <td style="text-align:left;">
-Pouteria
+Ficus
 </td>
 <td style="text-align:left;">
-engleri
+nymphaeifolia
 </td>
 <td style="text-align:left;">
 NA
@@ -4150,45 +4150,45 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.3680614
+0.4870358
 </td>
 <td style="text-align:right;">
-0.5427932
+0.5727919
+</td>
+<td style="text-align:left;">
+gen
+</td>
+<td style="text-align:left;">
+Jacaranda
+</td>
+<td style="text-align:left;">
+Jacaranda
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5819999
+</td>
+<td style="text-align:right;">
+0.5709075
 </td>
 <td style="text-align:left;">
 sp
 </td>
 <td style="text-align:left;">
-Xylopia_nitida
+Micropholis_melinoniana
 </td>
 <td style="text-align:left;">
-Xylopia
+Micropholis
 </td>
 <td style="text-align:left;">
-nitida
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4608428
-</td>
-<td style="text-align:right;">
-0.5901475
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Pterocarpus
-</td>
-<td style="text-align:left;">
-Pterocarpus
-</td>
-<td style="text-align:left;">
-NA
+melinoniana
 </td>
 <td style="text-align:left;">
 NA
@@ -4196,45 +4196,22 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.5454457
+0.5042846
 </td>
 <td style="text-align:right;">
-0.6002913
+0.5903477
 </td>
 <td style="text-align:left;">
-gen
+sp
 </td>
 <td style="text-align:left;">
-Tapura
+Sterculia_pruriens
 </td>
 <td style="text-align:left;">
-Tapura
+Sterculia
 </td>
 <td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4373051
-</td>
-<td style="text-align:right;">
-0.5789192
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Recordoxylon
-</td>
-<td style="text-align:left;">
-Recordoxylon
-</td>
-<td style="text-align:left;">
-NA
+pruriens
 </td>
 <td style="text-align:left;">
 NA
@@ -4242,19 +4219,42 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4518926
+0.4576424
 </td>
 <td style="text-align:right;">
-0.5779003
+0.6026807
+</td>
+<td style="text-align:left;">
+sp
+</td>
+<td style="text-align:left;">
+Vochysia_surinamensis
+</td>
+<td style="text-align:left;">
+Vochysia
+</td>
+<td style="text-align:left;">
+surinamensis
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.4791993
+</td>
+<td style="text-align:right;">
+0.5695743
 </td>
 <td style="text-align:left;">
 gen
 </td>
 <td style="text-align:left;">
-Goupia
+Conceveiba
 </td>
 <td style="text-align:left;">
-Goupia
+Conceveiba
 </td>
 <td style="text-align:left;">
 NA
@@ -4269,7 +4269,7 @@ NA
 <div class="section level1">
 <h1 id="all-the-functions-of-the-package">All the functions of the package<a class="anchor" aria-label="anchor" href="#all-the-functions-of-the-package"></a>
 </h1>
-<p>loggingsimulation loggingparameters scenariosparameters inventorycheckformat addtreedim treeselection ONFGuyafortaxojoin harvestable selected futurereserve treefelling createcanopy treefromthesky directionalfellingsuccessdef felling1tree rotatepolygon getgeometry timberharvestedvolume exploitablefuelwoodvolume</p>
+<p>loggingsimulation loggingparameters scenariosparameters inventorycheckformat addtreedim treeselection commercialcriteriajoin harvestable selected futurereserve treefelling createcanopy treefromthesky directionalfellingsuccessdef felling1tree rotatepolygon getgeometry timberharvestedvolume exploitablefuelwoodvolume</p>
 </div>
 <div class="section level1">
 <h1 id="arguments-presentation">Arguments presentation<a class="anchor" aria-label="anchor" href="#arguments-presentation"></a>
@@ -4646,8 +4646,8 @@ TRUE
                                       MainTrails <span class="op">=</span> <span class="va">MainTrails</span>, plotslope <span class="op">=</span> <span class="va">PlotSlope</span>,
                                       harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,
                                       advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; The harvestable volume (= 17.1m^3) was lower</span>
-<span class="co">#&gt;               (by 107.9m^3) than your objective volume.</span>
+<span class="co">#&gt; The harvestable volume (= 21.4m^3) was lower</span>
+<span class="co">#&gt;               (by 103.6m^3) than your objective volume.</span>
 <span class="co">#&gt;               You have chosen to continue logging without diversifying in this case.</span></code></pre></div>
 </div>
 <div class="section level3">
@@ -4657,7 +4657,7 @@ TRUE
 <h4 id="joins-commercial-criteria-table">Joins commercial criteria table<a class="anchor" aria-label="anchor" href="#joins-commercial-criteria-table"></a>
 </h4>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ONFGuyafortaxojoin.html">ONFGuyafortaxojoin</a></span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/commercialcriteriajoin.html">commercialcriteriajoin</a></span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="harvestable-trees-identification">Harvestable trees identification<a class="anchor" aria-label="anchor" href="#harvestable-trees-identification"></a>
@@ -4679,8 +4679,8 @@ TRUE
                       diversification <span class="op">=</span> <span class="cn">TRUE</span>, VO <span class="op">=</span> <span class="fl">125</span>, HVinit <span class="op">=</span> <span class="va">HVinit</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,
                       objectivelax <span class="op">=</span> <span class="cn">TRUE</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,
                       advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span>
-<span class="co">#&gt; The harvestable volume (= 87.4m^3) was lower</span>
-<span class="co">#&gt;               (by 37.6m^3) than your objective volume.</span>
+<span class="co">#&gt; The harvestable volume (= 93.2m^3) was lower</span>
+<span class="co">#&gt;               (by 31.8m^3) than your objective volume.</span>
 <span class="co">#&gt;               You have chosen to continue logging in this case.</span></code></pre></div>
 </div>
 <div class="section level4">
@@ -4742,6 +4742,8 @@ TRUE
                          winching <span class="op">=</span> <span class="st">"1"</span>, directionalfelling <span class="op">=</span> <span class="st">"2"</span>,
                          MainTrails <span class="op">=</span> <span class="va">MainTrails</span>, ScndTrail <span class="op">=</span> <span class="va">ScndTrail</span>,
                          advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
+<span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
 <span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
 <span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
 <span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>

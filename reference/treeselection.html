@@ -108,7 +108,7 @@ objective volume (if stand too poor), = FALSE by default (logical)</p></dd>
 <dd><p>Main trails defined at the entire harvestable area (sf polylines)</p></dd>
 <dt>harvestablepolygons</dt>
 <dd><p>Accessible area of the inventoried plot
-(default: <code><a href="HarvestableAreaDefinition.html">HarvestableAreaDefinition</a></code>) (sf polygons data.frame)</p></dd>
+(default: <code><a href="HarvestableAreaDefinition.html">harvestableareadefinition</a></code>) (sf polygons data.frame)</p></dd>
 <dt>plotslope</dt>
 <dd><p>Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: <code><a href="PlotSlope.html">PlotSlope</a></code>) (RasterLayer)</p></dd>
@@ -118,7 +118,7 @@ neighbourhood of 8 cells) (default: <code><a href="PlotSlope.html">PlotSlope</a>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with:</p><ul><li><p>input inventory with new columns:</p><ul><li><p>The exploitability criteria ("DistCrit", "Slope" (in radians), "SlopeCrit"), and if
+    <p>A list with:</p><ul><li><p>input inventory with new columns:</p><ul><li><p>The exploitability criteria ("DistCriteria", "Slope" (in radians), "SlopeCriteria"), and if
 they are validated for each of the trees ("LoggingStatus").</p></li>
 <li><p>The probability of a tree having visible defects ("VisibleDefectProba")
 and the visible defect trees ("VisibleDefect").</p></li>

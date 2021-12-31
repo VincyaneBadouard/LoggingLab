@@ -78,21 +78,32 @@
 <dt>fuel</dt>
 <dd><p>Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of
-hollow trees, damage and and unused part of the log for fuel = "2"</p></dd>
+hollow trees, damage and and unused part of the log for fuel = "2"
+If fuel wood exploitation (fuel = "1" or "2") the tree will be recovered
+from the crown with a grapple if possible (respected grapple conditions).
+If not, recovery at the foot with a cable at an angle to the trail.
+Avoid future/reserve trees if chosen.</p></dd>
 <dt>winching</dt>
-<dd><p>No cable or grapple = "0", only cable = "1", grapple + cable =
-"2"</p></dd>
+<dd><p>"0": no cable or grapple (trail to tree foot)
+"1": only cable (default = 40m)
+"2": grapple (default = 6m) + cable (grapple priority)
+If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+recovery of the tree foot with grapple if possible (respected grapple
+conditions) otherwise with cable with angle to the trail.
+Avoidance of future/reserves if chosen.</p></dd>
 <dt>directionalfelling</dt>
 <dd><p>Directional felling =
 "0": only to direct the foot of the tree towards the trail
 "1": to direct the foot of the tree towards the trail + to avoid damage to
 future and reserve trees if possible
 "2": to avoid damage to future and reserve trees if possible
-+ orientation angle to the trail</p></dd>
++ orientation angle to the trail. Among the 2 possible angle positions,
+the position that favours the return to the main trail should be chosen.
+The angle to the trail is favoured to avoid future/reserve trees.</p></dd>
 <dt>MainTrails</dt>
-<dd><p>Main trail (sfg)</p></dd>
+<dd><p>Main trails (sf)</p></dd>
 <dt>ScndTrail</dt>
-<dd><p>Secondary trails (sfg)</p></dd>
+<dd><p>Secondary trails (sf)</p></dd>
 <dt>advancedloggingparameters</dt>
 <dd><p>Other parameters of the logging simulator
 <code><a href="loggingparameters.html">loggingparameters</a></code> (list)</p></dd>
@@ -100,7 +111,7 @@ future and reserve trees if possible
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Input inventory with new columns:</p><ul><li><p>The tree felling success or fail("TreeFellingOrientationSuccess")</p></li>
-<li><p>The crowns of all the trees in the inventory  (Polygon)</p></li>
+<li><p>The crowns of the future/reserve trees (Polygon)</p></li>
 <li><p>The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
 according to the chosen scenario</p></li>
 <li><p>The dead trees under felled trees (DeathCause = "treefall2nd")</p></li>
@@ -110,6 +121,7 @@ according to the chosen scenario</p></li>
     <p>The felling of the tree creates a tree (including crown) on the
 ground, with dimensions calculated with specific allometries
 ('advancedloggingparameters').</p>
+<p>The crowns (fuel wood exploitation case) can only be retrieved with a grapple</p>
 <p>RIL1/RIL2broken/RIL2:</p><ul><li><p>at 40%: random fall</p></li>
 <li><p>at 60% ('TreefallSuccessProportion'):
 <em>base of the tree towards the nearest trail</em> (main or 2ndary)</p></li>
