@@ -53,7 +53,7 @@ data(HarvestablePolygons)
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
 
-inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
+inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, diversification = TRUE,
  specieslax = FALSE,

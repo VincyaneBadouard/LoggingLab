@@ -1,4 +1,4 @@
-#' SlopeRdCond
+#' sloperdcond
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
@@ -21,10 +21,10 @@
 #'\dontrun{
 #' data(DTMParacou)
 #'
-#' SlopeCond <- SlopeRdCond(topography = DTMParacou)
+#' SlopeCond <- sloperdcond(topography = DTMParacou)
 #'}
 #'
-SlopeRdCond <- function(
+sloperdcond <- function(
   topography,
   advancedloggingparameters = loggingparameters(),
   grapple = FALSE

@@ -1,7 +1,7 @@
 #' Filter access to harvestable zone
 #'
 #' @param harvestablepolygons Accessible area of the inventoried plot (default:
-#'   \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
+#'   \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
 #'
 #' @param MainTrails Main trails defined at the entire harvestable area (sf
 #'   polylines)
@@ -21,13 +21,13 @@
 #' data(MainTrails)
 #' data(HarvestablePolygons)
 #'
-#' AccessPolygones <- FilterAccesExplArea(
+#' AccessPolygones <- filteraccesexplarea(
 #'  harvestablepolygons = HarvestablePolygons,
 #'  MainTrails = MainTrails,
 #'  advancedloggingparameters = loggingparameters())
 #'
 #'
-FilterAccesExplArea <- function(
+filteraccesexplarea <- function(
   harvestablepolygons,
   MainTrails,
   advancedloggingparameters = loggingparameters()

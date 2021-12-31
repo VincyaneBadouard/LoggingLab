@@ -33,7 +33,7 @@ default (logical)}
 \item{MainTrails}{Main trails defined at the entire harvestable area (sf polylines)}
 
 \item{harvestablepolygons}{Accessible area of the inventoried plot
-(default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)}
+(default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
@@ -44,7 +44,7 @@ neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 \value{
 input inventory with new columns:
 \itemize{
-\item The exploitability criteria ("DistCrit", "Slope"(in radians), "SlopeCrit"), and if
+\item The exploitability criteria ("DistCriteria", "Slope"(in radians), "SlopeCriteria"), and if
 they are validated for each of the trees ("LoggingStatus").
 \item The probability of a tree having visible defects ("VisibleDefectProba")
 and the visible defect trees ("VisibleDefect").
@@ -85,7 +85,7 @@ data(MainTrails)
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
 
-inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
+inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 diversification = TRUE, specieslax = FALSE, MainTrails = MainTrails,

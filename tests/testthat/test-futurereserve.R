@@ -6,7 +6,7 @@ test_that("futurereserve", {
   data(MainTrails)
 
   inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask), volumeparameters = ForestZoneVolumeParametersTable)
-  inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
+  inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 
   harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
                                     topography = DTMParacou, plotslope = PlotSlope,
@@ -26,12 +26,12 @@ test_that("futurereserve", {
 
   advancedloggingparameters = loggingparameters()
 
-  # Future = Commercial == "1"
+  # Future = CommercialLevel == "1"
   FutureTrees <- testinventory %>%
     filter(LoggingStatus == "future")
 
 
-  expect_true(all(FutureTrees$Commercial == "1"
+  expect_true(all(FutureTrees$CommercialLevel == "1"
                   & (
                     (FutureTrees$Up == "0" &
                        (FutureTrees$DBH >= advancedloggingparameters$FutureTreesMinDiameter & FutureTrees$DBH < FutureTrees$MinFD))
@@ -42,7 +42,7 @@ test_that("futurereserve", {
   ReserveTrees <- testinventory %>%
     filter(LoggingStatus =="reserve")
 
-  expect_true(all(ReserveTrees$Commercial == "1"
+  expect_true(all(ReserveTrees$CommercialLevel == "1"
                   & (
                     (ReserveTrees$Up == "0" &
                        (ReserveTrees$DBH >= advancedloggingparameters$FutureTreesMinDiameter & ReserveTrees$DBH < ReserveTrees$MinFD))

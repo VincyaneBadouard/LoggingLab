@@ -32,7 +32,7 @@
 #' data(DTMParacou)
 #' data(VerticalCreekHeight)
 #'
-#' HarvestableAreaOutputs <- HarvestableAreaDefinition(
+#' HarvestableAreaOutputs <- harvestableareadefinition(
 #'   topography = DTMParacou,
 #'   verticalcreekheight = VerticalCreekHeight,
 #'   advancedloggingparameters = loggingparameters()
@@ -50,7 +50,7 @@
 #' HarvestableAreaOutputs[[2]]
 #' }
 #'
-HarvestableAreaDefinition <- function(
+harvestableareadefinition <- function(
   topography,
   verticalcreekheight,
   advancedloggingparameters = loggingparameters()

@@ -97,7 +97,7 @@ data(MainTrails)
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
 
-inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
+inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,

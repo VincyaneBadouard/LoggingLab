@@ -103,7 +103,7 @@ scenariosparameters
 inventorycheckformat
 addtreedim
 treeselection
-ONFGuyafortaxojoin
+commercialcriteriajoin
 harvestable
 selected
 futurereserve
@@ -411,7 +411,7 @@ treeselectionoutputs <- treeselection(inventory,
 ### Decomposed tree selection
 #### Joins commercial criteria table
 ```{r}
-inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
+inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 ```
 
 #### Harvestable trees identification

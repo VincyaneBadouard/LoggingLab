@@ -38,20 +38,32 @@
 #'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
 #'   hollow trees, damage and and unused part of the log for fuel = "2"
+#'   If fuel wood exploitation (fuel = "1" or "2") the tree will be recovered
+#'   from the crown with a grapple if possible (respected grapple conditions).
+#'   If not, recovery at the foot with a cable at an angle to the trail.
+#'   Avoid future/reserve trees if chosen.
 #'
 #'@param diversification Possibility to log other species in addition to the
 #' main commercial species (species with a value of 2 for commercial in the
 #' \code{\link{SpeciesCriteria}} table) (logical)
 #'
-#'@param winching No cable or grapple = "0", only cable = "1", grapple + cable =
-#'  "2"
+#'@param winching
+#' "0": no cable or grapple (trail to tree foot)
+#' "1": only cable (default = 40m)
+#' "2": grapple (default = 6m) + cable (grapple priority)
+#' If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+#'  recovery of the tree foot with grapple if possible (respected grapple
+#'  conditions) otherwise with cable with angle to the trail.
+#'  Avoidance of future/reserves if chosen.
 #'
 #'@param directionalfelling Directional felling =
 #' "0": only to direct the foot of the tree towards the trail
 #' "1": to direct the foot of the tree towards the trail + to avoid damage to
-#'         future and reserve trees
-#' "2": to avoid damage to future and reserve trees + orientation angle
-#'       to the trail
+#'         future and reserve trees if possible
+#' "2": to avoid damage to future and reserve trees if possible
+#'       + orientation angle to the trail. Among the 2 possible angle positions,
+#'       the position that favours the return to the main trail should be chosen.
+#'       The angle to the trail is favoured to avoid future/reserve trees.
 #'
 #'@param specieslax Allow diversification if stand is too poor to reach the
 #' objective volume without diversification, = FALSE by
@@ -227,7 +239,7 @@ loggingsimulation1 <- function(
   data(MainTrails) # A SUPPRIMER
 
   ##### Harvestable area definition: ####
-  HarvestableAreaOutputs <- HarvestableAreaDefinition(topography = topography,
+  HarvestableAreaOutputs <- harvestableareadefinition(topography = topography,
                                                       verticalcreekheight = verticalcreekheight,
                                                       advancedloggingparameters = advancedloggingparameters)
 

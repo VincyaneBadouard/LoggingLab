@@ -36,10 +36,10 @@
 #'
 #' scenarios <- scenariosparameters(scenario = "RIL3", objective = 15)
 #'
-#' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
+#' inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #'  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 #'
-#' AccessPolygons <- FilterAccesExplArea(harvestablepolygons = HarvestablePolygons,
+#' AccessPolygons <- filteraccesexplarea(harvestablepolygons = HarvestablePolygons,
 #' MainTrails = MainTrails,
 #' winching = scenarios$winching,
 #' advancedloggingparameters = loggingparameters())

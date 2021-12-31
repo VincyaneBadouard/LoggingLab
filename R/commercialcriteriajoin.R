@@ -11,7 +11,7 @@
 #'
 #' @return The forest inventory with economic informations (commercial name, economic interest level,
 #'   minimum/maximum felling diameter, increased minimum felling diameter) added for each
-#'   individual in the variables ONFName, Commercial, MinFD, UpMinFD, MaxFD (data.frame)
+#'   individual in the variables CommercialName, CommercialLevel, MinFD, UpMinFD, MaxFD (data.frame)
 #'
 #' @seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}}
 #'
@@ -22,9 +22,9 @@
 #' @examples
 #' data(Paracou6_2016)
 #' data(SpeciesCriteria)
-#' new <- ONFGuyafortaxojoin(Paracou6_2016, SpeciesCriteria)
+#' new <- commercialcriteriajoin(Paracou6_2016, SpeciesCriteria)
 #'
-ONFGuyafortaxojoin <- function(
+commercialcriteriajoin <- function(
   inventory,
   speciescriteria
 )
@@ -37,7 +37,7 @@ ONFGuyafortaxojoin <- function(
 
   # speciescriteria columns check
 
-  lapply(list("VernName", "Genus", "Species", "Commercial", "MinFD", "UpMinFD", "MaxFD"),
+  lapply(list("CommercialName", "Genus", "Species", "CommercialLevel", "MinFD", "UpMinFD", "MaxFD"),
          function(element)
            if(!(element %in% names(speciescriteria))) {
 
@@ -46,20 +46,20 @@ ONFGuyafortaxojoin <- function(
            }
   )
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
-  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- ONFName <- NULL
+  Accessible <- Circ <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
+  CommercialLevel.genus <- CommercialLevel.species <- Condition <- DBH <- NULL
+  DeathCause <- DistCriteria <- Family <- CommercialName <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
+  Selected <- Slope <- SlopeCriteria <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
-  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
-  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  UpMinFD.species <- CommercialName.genus <- NULL
+  CommercialName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
   Aggregative <- Aggregative.species <- Aggregative.genus <- NULL
@@ -79,36 +79,35 @@ ONFGuyafortaxojoin <- function(
     left_join(speciescriteria, by = c("Genus","Species"), suffix = c(".genus", ".species")) %>%
 
     # Suffixes management (species level first)
-    dplyr::rename(VernName = VernName.genus) %>%
-    mutate(ONFName = ifelse(is.na(VernName.species), VernName.genus.genus, VernName.species)) %>%
-    dplyr::select(-VernName.species, -VernName.genus.genus) %>%
+    mutate(CommercialName = ifelse(is.na(CommercialName.species), CommercialName.genus, CommercialName.species)) %>%
+    dplyr::select(-CommercialName.species, -CommercialName.genus) %>%
 
-    mutate(Commercial.species = as.character(Commercial.species)) %>%
-    mutate(Commercial.genus = as.character(Commercial.genus)) %>%
+    mutate(CommercialLevel.species = as.character(CommercialLevel.species)) %>%
+    mutate(CommercialLevel.genus = as.character(CommercialLevel.genus)) %>%
 
-    mutate(Commercial = ifelse(is.na(Commercial.species), Commercial.genus, Commercial.species)) %>%
+    mutate(CommercialLevel = ifelse(is.na(CommercialLevel.species), CommercialLevel.genus, CommercialLevel.species)) %>%
     mutate(MinFD = ifelse(is.na(MinFD.species), MinFD.genus, MinFD.species)) %>%
     mutate(UpMinFD = ifelse(is.na(UpMinFD.species), UpMinFD.genus, UpMinFD.species)) %>%
     mutate(MaxFD = ifelse(is.na(MaxFD.species), MaxFD.genus, MaxFD.species)) %>%
     mutate(Aggregative = ifelse(is.na(Aggregative.species), Aggregative.genus, Aggregative.species)) %>%
 
 
-    dplyr::select(-Commercial.species, -Commercial.genus, -MinFD.species, -MinFD.genus,
+    dplyr::select(-CommercialLevel.species, -CommercialLevel.genus, -MinFD.species, -MinFD.genus,
                   -UpMinFD.species, -UpMinFD.genus, -MaxFD.species, -MaxFD.genus,
                   -Aggregative.species, -Aggregative.genus) %>%
-    mutate(Commercial = as.character(Commercial)) %>%
+    mutate(CommercialLevel = as.character(CommercialLevel)) %>%
 
-    # Exceptions management (Commercial == "0" in speciescriteria)
-    mutate(ONFName = ifelse(Commercial == "0", NA, ONFName)) %>%
-    mutate(MinFD = ifelse(Commercial == "0", NA, MinFD)) %>%
-    mutate(UpMinFD = ifelse(Commercial == "0", NA, UpMinFD)) %>%
-    mutate(MaxFD = ifelse(Commercial == "0", NA, MaxFD)) %>%
-    mutate(Aggregative = ifelse(Commercial == "0", NA, Aggregative))
+    # Exceptions management (CommercialLevel == "0" in speciescriteria)
+    mutate(CommercialName = ifelse(CommercialLevel == "0", NA, CommercialName)) %>%
+    mutate(MinFD = ifelse(CommercialLevel == "0", NA, MinFD)) %>%
+    mutate(UpMinFD = ifelse(CommercialLevel == "0", NA, UpMinFD)) %>%
+    mutate(MaxFD = ifelse(CommercialLevel == "0", NA, MaxFD)) %>%
+    mutate(Aggregative = ifelse(CommercialLevel == "0", NA, Aggregative))
 
 
   inventory <- inventory %>%
-    mutate(Commercial = ifelse(is.na(Commercial), "0", Commercial)) %>%
-    mutate(Commercial = factor(as.character(Commercial)))
+    mutate(CommercialLevel = ifelse(is.na(CommercialLevel), "0", CommercialLevel)) %>%
+    mutate(CommercialLevel = factor(as.character(CommercialLevel)))
 
   return(inventory)
 }

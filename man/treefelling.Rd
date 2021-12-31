@@ -25,21 +25,32 @@ treefelling(
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of
-hollow trees, damage and and unused part of the log for fuel = "2"}
+hollow trees, damage and and unused part of the log for fuel = "2"
+If fuel wood exploitation (fuel = "1" or "2") the tree will be recovered
+from the crown with a grapple if possible (respected grapple conditions).
+If not, recovery at the foot with a cable at an angle to the trail.
+Avoid future/reserve trees if chosen.}
 
-\item{winching}{No cable or grapple = "0", only cable = "1", grapple + cable =
-"2"}
+\item{winching}{"0": no cable or grapple (trail to tree foot)
+"1": only cable (default = 40m)
+"2": grapple (default = 6m) + cable (grapple priority)
+If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+recovery of the tree foot with grapple if possible (respected grapple
+conditions) otherwise with cable with angle to the trail.
+Avoidance of future/reserves if chosen.}
 
 \item{directionalfelling}{Directional felling =
 "0": only to direct the foot of the tree towards the trail
 "1": to direct the foot of the tree towards the trail + to avoid damage to
 future and reserve trees if possible
 "2": to avoid damage to future and reserve trees if possible
-+ orientation angle to the trail}
++ orientation angle to the trail. Among the 2 possible angle positions,
+the position that favours the return to the main trail should be chosen.
+The angle to the trail is favoured to avoid future/reserve trees.}
 
-\item{MainTrails}{Main trail (sfg)}
+\item{MainTrails}{Main trails (sf)}
 
-\item{ScndTrail}{Secondary trails (sfg)}
+\item{ScndTrail}{Secondary trails (sf)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -48,7 +59,7 @@ future and reserve trees if possible
 Input inventory with new columns:
 \itemize{
 \item The tree felling success or fail("TreeFellingOrientationSuccess")
-\item The crowns of all the trees in the inventory  (Polygon)
+\item The crowns of the future/reserve trees (Polygon)
 \item The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
 according to the chosen scenario
 \item The dead trees under felled trees (DeathCause = "treefall2nd")
@@ -61,6 +72,8 @@ Tree felling
 The felling of the tree creates a tree (including crown) on the
 ground, with dimensions calculated with specific allometries
 ('advancedloggingparameters').
+
+The crowns (fuel wood exploitation case) can only be retrieved with a grapple
 
 RIL1/RIL2broken/RIL2:
 \itemize{

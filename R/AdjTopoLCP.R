@@ -42,7 +42,7 @@
 #' @importFrom utils combn
 #'
 #'
-AdjTopoLCP <- function(
+adjtopolcp <- function(
   topography,
   costSurface,
   slopeRdCond,

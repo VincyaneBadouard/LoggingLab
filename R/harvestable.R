@@ -19,7 +19,7 @@
 #'@param MainTrails Main trails defined at the entire harvestable area (sf polylines)
 #'
 #'@param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
+#'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
 #'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
@@ -28,7 +28,7 @@
 #'  (\code{\link{loggingparameters}}) (list)
 #'
 #'@return input inventory with new columns:
-#' - The exploitability criteria ("DistCrit", "Slope"(in radians), "SlopeCrit"), and if
+#' - The exploitability criteria ("DistCriteria", "Slope"(in radians), "SlopeCriteria"), and if
 #'        they are validated for each of the trees ("LoggingStatus").
 #' - The probability of a tree having visible defects ("VisibleDefectProba")
 #'         and the visible defect trees ("VisibleDefect").
@@ -75,7 +75,7 @@
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
-#' inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
+#' inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 #'
 #' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 #' diversification = TRUE, specieslax = FALSE, MainTrails = MainTrails,
@@ -107,27 +107,27 @@ harvestable <- function(
     stop("The 'topography' and 'plotslope' arguments of the 'harvestable' function must be RasterLayer")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
-  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DistCrit <- Family <- VisibleDefect <- VisibleDefectProba <- NULL
+  Accessible <- Circ <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
+  Condition <- DBH <- NULL
+  DistCriteria <- Family <- VisibleDefect <- VisibleDefectProba <- NULL
   DeathCause <- ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- LogDBH <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
+  Selected <- Slope <- SlopeCriteria <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- Aggregative <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
-  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
-  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  UpMinFD.species <- NULL
+  VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- PU <- NULL
 
 
   # Calculation of spatial information (distance and slope)
   SpatInventory <- inventory %>%
-    filter(Commercial!= "0") %>%  # only take commercial sp, the calculation time is long enough
+    filter(CommercialLevel!= "0") %>%  # only take commercial sp, the calculation time is long enough
     filter(DBH >= MinFD & DBH <= MaxFD) # already selected commercial DBHs
 
   sp::coordinates(SpatInventory) <- ~ Xutm + Yutm # transform the inventory into a spatial object by informing the coordinates
@@ -137,7 +137,7 @@ harvestable <- function(
   SlopeTmp <- as_tibble(raster::extract(x = plotslope, y = SpatInventory)) # extracts the slope values for the inventory spatialized points
 
   SpatInventory <- st_as_sf(SpatInventory) %>%  # transforming the spatialized inventory into an sf object
-    add_column(DistCrit = NA) # Create a default 'DistCrit' = FALSE column
+    add_column(DistCriteria = NA) # Create a default 'DistCriteria' = FALSE column
 
   # i = 1
   # ProgressBar <- txtProgressBar(min = 0, max = nrow(SpatInventory),style = 3) # Progression bar
@@ -151,7 +151,7 @@ harvestable <- function(
 
       SpatInventorytmp <- SpatInventory %>% # SpatInventorytmp stores only result, that of each turn
         filter(ScientificName == SpecieI) %>%
-        mutate(DistCrit = FALSE)
+        mutate(DistCriteria = FALSE)
 
       # SpatInventorytmp <- as_Spatial(SpatInventorytmp)
       # distSp <- topoDist(topography = topography, pts = SpatInventorytmp) # calculates topo distances
@@ -168,9 +168,9 @@ harvestable <- function(
         if (all(is.na(distSp[,ind]))) {FALSE # if all the column contains NA it is an Inf so we don't want it
         }else{
           # if the minimum distance to its congeners is < 100, it is harvestable:
-          SpatInventorytmp$DistCrit[ind] <- min(distSp[,ind],na.rm = TRUE) < advancedloggingparameters$IsolateTreeMinDistance
+          SpatInventorytmp$DistCriteria[ind] <- min(distSp[,ind],na.rm = TRUE) < advancedloggingparameters$IsolateTreeMinDistance
         }
-        SpatInventory$DistCrit[SpatInventory$idTree == SpatInventorytmp$idTree[ind]] <- SpatInventorytmp$DistCrit[ind]
+        SpatInventory$DistCriteria[SpatInventory$idTree == SpatInventorytmp$idTree[ind]] <- SpatInventorytmp$DistCriteria[ind]
         # i = i+1 # and inform the progress bar
         # setTxtProgressBar(ProgressBar, i)
       }
@@ -178,23 +178,23 @@ harvestable <- function(
   }
 
 
-  SlopeCritInventory <- SpatInventory %>%   # SpatInventory <- SpatInventory before
+  SlopeCriteriaInventory <- SpatInventory %>%   # SpatInventory <- SpatInventory before
     add_column(Slope = SlopeTmp$value) %>% # add slope values per tree
     # the NaN are the infinite values, which indicate a plateau so slope = 0:
     mutate(Slope = ifelse(is.nan(Slope), 0, Slope)) %>%
-    mutate(SlopeCrit = if_else(
+    mutate(SlopeCriteria = if_else(
       condition = Slope <= atan(advancedloggingparameters$TreeMaxSlope/100), # if slope <= 22% the tree is exploitable (we are in radian)
       TRUE,
       FALSE)) %>%
-    dplyr::select(idTree, DistCrit, Slope, SlopeCrit)
+    dplyr::select(idTree, DistCriteria, Slope, SlopeCriteria)
 
   inventory <- inventory %>%
-    left_join(SlopeCritInventory, by = "idTree") %>%
+    left_join(SlopeCriteriaInventory, by = "idTree") %>%
     dplyr::select(-geometry)
 
   # Check that the trees are contained in a accessible area (PU)
 
-   AccessPolygons <- FilterAccesExplArea(harvestablepolygons = harvestablepolygons, # define accessible areas (PU) from harvestablepolygons
+   AccessPolygons <- filteraccesexplarea(harvestablepolygons = harvestablepolygons, # define accessible areas (PU) from harvestablepolygons
                                          MainTrails = MainTrails,
                                          advancedloggingparameters = advancedloggingparameters)
 
@@ -207,9 +207,9 @@ harvestable <- function(
   # Essences selection
   HarverstableConditions <- # = 1 boolean vector
     if (diversification || (!diversification && specieslax)) {
-      inventory$Commercial =="1"| inventory$Commercial == "2" # now or maybe after we will diversify
+      inventory$CommercialLevel =="1"| inventory$CommercialLevel == "2" # now or maybe after we will diversify
     } else if (!diversification && !specieslax) {
-      inventory$Commercial == "1" # We will never diversify
+      inventory$CommercialLevel == "1" # We will never diversify
     }
 
 
@@ -218,8 +218,8 @@ harvestable <- function(
 
   # Select spatially
   HarverstableConditions <- HarverstableConditions & (
-    (!inventory$DistCrit %in% FALSE) & # take the TRUE and NA values
-      inventory$SlopeCrit %in% TRUE &
+    (!inventory$DistCriteria %in% FALSE) & # take the TRUE and NA values
+      inventory$SlopeCriteria %in% TRUE &
       inventory$PU %in% TRUE ) # !is.null(ProspectionUnitCode) &
   ## in a PU
   ## slope
@@ -229,14 +229,14 @@ harvestable <- function(
   inventory <- inventory %>%
     mutate(LoggingStatus = ifelse(HarverstableConditions, #Under the above criteria, designate the harvestable species
                                   "harvestable", "non-harvestable")) %>%
-    mutate(LoggingStatus = ifelse(Commercial == "0", #The non-commercial species are non-harvestable.
+    mutate(LoggingStatus = ifelse(CommercialLevel == "0", #The non-commercial species are non-harvestable.
                                   "non-harvestable", LoggingStatus)) %>%
 
     mutate(LoggingStatus = ifelse(
       !diversification &
         specieslax & #designate the secondarily harvestable species, because diversification only if necessary
         LoggingStatus == "harvestable" &
-        Commercial == "2",
+        CommercialLevel == "2",
       "harvestable2nd", LoggingStatus))
 
 

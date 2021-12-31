@@ -10,19 +10,32 @@
 #'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
 #'   hollow trees, damage and and unused part of the log for fuel = "2"
+#'   If fuel wood exploitation (fuel = "1" or "2") the tree will be recovered
+#'   from the crown with a grapple if possible (respected grapple conditions).
+#'   If not, recovery at the foot with a cable at an angle to the trail.
+#'   Avoid future/reserve trees if chosen.
 #'
-#'@param winching No cable or grapple = "0", only cable = "1", grapple + cable =
-#'  "2"
+#'@param winching
+#' "0": no cable or grapple (trail to tree foot)
+#' "1": only cable (default = 40m)
+#' "2": grapple (default = 6m) + cable (grapple priority)
+#' If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+#'  recovery of the tree foot with grapple if possible (respected grapple
+#'  conditions) otherwise with cable with angle to the trail.
+#'  Avoidance of future/reserves if chosen.
+
 #'
 #'@param directionalfelling Directional felling =
 #' "0": only to direct the foot of the tree towards the trail
 #' "1": to direct the foot of the tree towards the trail + to avoid damage to
 #'         future and reserve trees if possible
 #' "2": to avoid damage to future and reserve trees if possible
-#'       + orientation angle to the trail
+#'       + orientation angle to the trail. Among the 2 possible angle positions,
+#'       the position that favours the return to the main trail should be chosen.
+#'       The angle to the trail is favoured to avoid future/reserve trees.
 #'
-#'@param MainTrails Main trail (sfg)
-#'@param ScndTrail Secondary trails (sfg)
+#'@param MainTrails Main trails (sf)
+#'@param ScndTrail Secondary trails (sf)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
@@ -30,7 +43,7 @@
 #'
 #'@return Input inventory with new columns:
 #'- The tree felling success or fail("TreeFellingOrientationSuccess")
-#'- The crowns of all the trees in the inventory  (Polygon)
+#'- The crowns of the future/reserve trees (Polygon)
 #'- The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
 #'   according to the chosen scenario
 #'- The dead trees under felled trees (DeathCause = "treefall2nd")
@@ -38,6 +51,8 @@
 #'@details The felling of the tree creates a tree (including crown) on the
 #' ground, with dimensions calculated with specific allometries
 #' ('advancedloggingparameters').
+#'
+#'The crowns (fuel wood exploitation case) can only be retrieved with a grapple
 #'
 #'RIL1/RIL2broken/RIL2:
 #' - at 40%: random fall
@@ -233,13 +248,13 @@ treefelling <- function(
          you must fill in the arguments 'fuel' and 'directionalfelling'")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
+  Accessible <- Circ <- CircCorr <- CodeAlive <-NULL
   Condition <- DBH <- MinFD <- Taxo <- alpha <- bCoef <- NULL
-  DeathCause <- DistCrit <- Family <- CrownHeight <- CrownDiameter <- NULL
+  DeathCause <- DistCriteria <- Family <- CrownHeight <- CrownDiameter <- NULL
   Genus <- Logged <- TreePolygon <- NULL
   LoggingStatus <- MaxFD <- Crowns <- NULL
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- SlopeCrit <- Species <- NULL
+  Selected <- SlopeCriteria <- Species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- NULL
   VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
@@ -397,15 +412,15 @@ directionalfellingsuccessdef <- function(
     stop("The 'advancedloggingparameters' argument of the 'directionalfellingsuccessdef' function must be a list")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
-  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- CrownHeight <- CrownDiameter <- NULL
+  Accessible <- Circ <- CircCorr <- CodeAlive <- NULL
+  Condition <- DBH <- NULL
+  DeathCause <- DistCriteria <- Family <- CrownHeight <- CrownDiameter <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- TreePolygon <- NULL
   LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   ParamCrownDiameterAllometry <- NULL
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- SlopeCrit <- Species <- Species.genus <- NULL
+  Selected <- SlopeCriteria <- Species <- Species.genus <- NULL
   Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
@@ -576,19 +591,31 @@ rotatepolygon <- function(
 #'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
 #'   hollow trees, damage and and unused part of the log for fuel = "2"
+#'   If fuel wood exploitation (fuel = "1" or "2") the tree will be recovered
+#'   from the crown with a grapple if possible (respected grapple conditions).
+#'   If not, recovery at the foot with a cable at an angle to the trail.
+#'   Avoid future/reserve trees if chosen.
 #'
-#'@param winching No cable or grapple = "0", only cable = "1", grapple + cable =
-#'  "2"
+#'@param winching
+#' "0": no cable or grapple (trail to tree foot)
+#' "1": only cable (default = 40m)
+#' "2": grapple (default = 6m) + cable (grapple priority)
+#' If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+#'  recovery of the tree foot with grapple if possible (respected grapple
+#'  conditions) otherwise with cable with angle to the trail.
+#'  Avoidance of future/reserves if chosen.
 #'
 #'@param directionalfelling Directional felling =
 #' "0": only to direct the foot of the tree towards the trail
 #' "1": to direct the foot of the tree towards the trail + to avoid damage to
-#'        future and reserve trees if possible
-#' "2": to direct the foot of the tree towards the trail + to avoid damage to
-#'        future and reserve trees if possible + orientation angle to the trail
+#'         future and reserve trees if possible
+#' "2": to avoid damage to future and reserve trees if possible
+#'       + orientation angle to the trail. Among the 2 possible angle positions,
+#'       the position that favours the return to the main trail should be chosen.
+#'       The angle to the trail is favoured to avoid future/reserve trees.
 #'
-#'@param MainTrails (sfg)
-#'@param ScndTrail (sfg)
+#'@param MainTrails Main trails (sf)
+#'@param ScndTrail Secondary trails (sf)
 #'
 #'@param FutureReserveCrowns Future/reserve trees crown (sf)
 #'
@@ -708,14 +735,14 @@ felling1tree <- function(
     stop("The 'advancedloggingparameters' argument of the 'felling1tree' function must be a list")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
-  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- CrownHeight <- CrownDiameter <- NULL
+  Accessible <- Circ <- CircCorr <- CodeAlive <- NULL
+  Condition <- DBH <- NULL
+  DeathCause <- DistCriteria <- Family <- CrownHeight <- CrownDiameter <- NULL
   Genus <- Logged <- TreePolygon <- Crowns <- NULL
   LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- SlopeCrit <- Species <- Species.genus <- NULL
+  Selected <- SlopeCriteria <- Species <- Species.genus <- NULL
   Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
@@ -979,7 +1006,7 @@ felling1tree <- function(
 
     TrailDist <- st_distance(Foot, TrailPt) # distance between the tree foot and the Trail closest point
 
-    # ADD SLOPE CRITERIA !!!
+    # ADD SLOPE CRITERIA !!! advancedloggingparameters$GrappleMaxslope
 
     if(dat$TreeFellingOrientationSuccess == "1"){
 
