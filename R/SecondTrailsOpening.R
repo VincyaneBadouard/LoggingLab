@@ -148,27 +148,28 @@ secondtrailsopening <- function(
 
   # Transformation of the DTM so that the MainTrails are outside the plot
 
-  DTMExtExtended <- raster::extend(topography, c(1,1)) # extend the extent
+  DTMExtExtended <- raster::extend(topography, c(fact,fact)) # extend the extent
 
-  fill.boundaries <- function(x, i=5) { # function to be integrated in the focal
-    if( is.na(x[i]) ) {
-      return( round(mean(x, na.rm=TRUE),3) )
+  fill.boundaries <- function(x) {
+    center = 0.5 + (fact*fact/2)
+    if( is.na(x)[center] ) {
+      return( round(mean(x, na.rm=T),5) )
     } else {
-      return( x[i] )
+      return( x[center] )
     }
   }
 
   DTMExtended <- raster::focal(DTMExtExtended,
-                               matrix(1,3,3),
+                               matrix(1,fact,fact),
                                fun=fill.boundaries,
                                na.rm=F, pad=T)
 
   # Transformation of vertical creek height raster
 
-  VerticalCreekHeightExtExtended <- raster::extend(verticalcreekheight, c(1,1))
+  VerticalCreekHeightExtExtended <- raster::extend(verticalcreekheight, c(fact,fact))
 
   VerticalCreekHeightExtended <- raster::focal(VerticalCreekHeightExtExtended,
-                                               matrix(1,3,3),
+                                               matrix(1,fact,fact),
                                                fun=fill.boundaries,
                                                na.rm=F, pad=T)
 
@@ -192,7 +193,8 @@ secondtrailsopening <- function(
 
   AccessPolygons <- FilterAccesExplArea(harvestablepolygons = harvestablepolygons,
                                         MainTrails = MainTrails,
-                                        advancedloggingparameters = loggingparameters())
+                                        advancedloggingparameters = loggingparameters()) #%>%
+  #st_intersection(st_as_sf(PlotMask))
 
   # Generate accessible area from HarvestablePolygones and winching == "0"
   AccessMainTrails <- FilterAccesExplArea(harvestablepolygons = harvestablepolygons,
@@ -207,7 +209,7 @@ secondtrailsopening <- function(
 
   # Generate intersections between accessible area and MainTrails (ID = accessible area index)
   PartMainTrails <- st_intersection(st_geometry(MainTrails%>%
-                                                  st_buffer(dist = .1)),
+                                                  st_buffer(dist = raster::res(topography))),
                                     st_geometry(AccessMainTrails %>%
                                                   st_buffer(dist = raster::res(topography)))) %>%
     st_union(by_feature = T) %>%
@@ -270,8 +272,7 @@ secondtrailsopening <- function(
   AccessRaster <- raster(extent(DTMExtended),resolution = res(DTMExtended), crs = crs(DTMExtended))
   values(AccessRaster) <- CostMatrix[[2]][[2]]$CostValue
 
-  AccessRaster <- rasterize(x = as_Spatial(AccessPolygons %>%
-                                             st_buffer(dist =  -advancedloggingparameters$ScndTrailWidth/2)),
+  AccessRaster <- rasterize(x = as_Spatial(AccessPolygons %>% st_buffer(dist= -(advancedloggingparameters$ScndTrailWidth/2))),
                             y = AccessRaster ,
                             field = 0,
                             update = TRUE)
@@ -353,7 +354,7 @@ secondtrailsopening <- function(
 
     CostRasterGrpl <- CostRaster + CostRasterGrpl
 
-    CostRasterGrpl <- rasterize(x = as_Spatial(PartMainTrails),
+    CostRasterGrpl <- rasterize(x = as_Spatial(AccessPoint %>% st_buffer(dist = advancedloggingparameters$ScndTrailWidth*2)),
                                 y = CostRasterGrpl ,
                                 field = CostMatrix[[2]][[6]]$CostValue,
                                 update = TRUE)
@@ -366,7 +367,7 @@ secondtrailsopening <- function(
 
 
   #Generate maintrail intersection cost raster
-  CostRaster <- rasterize(x = as_Spatial(PartMainTrails),
+  CostRaster <- rasterize(x = as_Spatial(AccessPoint %>% st_buffer(dist = advancedloggingparameters$ScndTrailWidth*2)),
                           y = CostRaster ,
                           field = CostMatrix[[2]][[6]]$CostValue,
                           update = TRUE)
@@ -563,7 +564,7 @@ secondtrailsopening <- function(
       ptsCbl <- TreePts %>% #def cbl polygons
         st_buffer(dist = advancedloggingparameters$CableLength) %>%
         st_snap_to_grid(size = 1) %>%# avoid GEOS error (st-intersection issue)
-        #st_set_precision(1) %>%
+        st_set_precision(1) %>%
         st_intersection() %>%
         st_make_valid()
 
@@ -581,7 +582,7 @@ secondtrailsopening <- function(
       ptsCbl <- ptsCbl %>% #Filter polygons which intersect accessible area to second trails
         filter(st_intersects(st_geometry(ptsCbl),
                              st_geometry(AccessMainTrails %>%
-                                           st_union()),
+                                          st_union()),
                              sparse = FALSE)) %>%
         mutate(IDpts = paste0("I.",row_number()))
 
@@ -603,7 +604,7 @@ secondtrailsopening <- function(
       ptsCbl <- TreePts %>% #def cbl point
         st_buffer(dist = advancedloggingparameters$CableLength) %>%
         st_snap_to_grid(size = 1) %>% # avoid GEOS error (st-intersection issue)
-         #st_set_precision(1) %>%
+         st_set_precision(1) %>%
         st_intersection() %>%
         st_make_valid() %>%
         mutate(IDpts = paste0("I.",row_number()))
