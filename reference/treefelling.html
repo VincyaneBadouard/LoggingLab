@@ -99,7 +99,9 @@ future and reserve trees if possible
 "2": to avoid damage to future and reserve trees if possible
 + orientation angle to the trail. Among the 2 possible angle positions,
 the position that favours the return to the main trail should be chosen.
-The angle to the trail is favoured to avoid future/reserve trees.</p></dd>
+The angle to the trail is favoured to avoid future/reserve trees.
+If the avoidance of future/reserve trees could not be performed,
+a message is returned.</p></dd>
 <dt>MainTrails</dt>
 <dd><p>Main trails (sf)</p></dd>
 <dt>ScndTrail</dt>
@@ -265,7 +267,7 @@ will be considered dead.</p>
 <span class="r-in"><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-plt img"><img src="treefelling-2.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in CPL_geos_op2(op, x, y):</span> Evaluation error: TopologyException: Input geom 0 is invalid: Self-intersection at or near point 286553.66311385966 583037.1626409603 at 286553.66311385966 583037.1626409603.</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
