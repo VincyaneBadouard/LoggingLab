@@ -64,6 +64,8 @@
 #'       + orientation angle to the trail. Among the 2 possible angle positions,
 #'       the position that favours the return to the main trail should be chosen.
 #'       The angle to the trail is favoured to avoid future/reserve trees.
+#' If the avoidance of future/reserve trees could not be performed,
+#' a message is returned.
 #'
 #'@param specieslax Allow diversification if stand is too poor to reach the
 #' objective volume without diversification, = FALSE by

@@ -74,7 +74,7 @@ loggingsummary1 <- function(x
   cat('Damages volume :', round(x$DamageVolume, digits = 1), 'm3, ',
       round(x$DamageVolume/PlotArea, digits = 1), 'm3/ha\n') # only damages (without purge and hollow trees) (m3)
 
-  cat('Lost biomass :', round(x$LostBiomass, digits = 1), 'ton\n') # Lost biomass (ton)
+  cat('Lost biomass :', round(x$LostBiomass, digits = 1), 'ton\n') # Total lost biomass (ton)
 
   # cat('Trails density :', x$TrailsDensity, 'm/m^2\n') # Trails density (m/m^2)
 

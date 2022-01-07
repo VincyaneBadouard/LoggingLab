@@ -360,8 +360,7 @@ treeselection <- function(
 
   # Points vector with coordinates of the big trees (DBH >= 50 cm):
   BigTreesPoints <- inventory %>%
-    filter(DBH >= advancedloggingparameters$BigTrees &
-             (Selected != "1" & LoggingStatus != "harvestable")) #  & LoggingStatus != "harvestableUp" & LoggingStatus != "harvestable2nd"
+    filter(DBH >= advancedloggingparameters$BigTrees) #  & (Selected != "1" & LoggingStatus != "harvestable") & LoggingStatus != "harvestableUp" & LoggingStatus != "harvestable2nd"
 
   if (dim(BigTreesPoints)[1] != 0) {
 

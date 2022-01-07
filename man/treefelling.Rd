@@ -46,7 +46,9 @@ future and reserve trees if possible
 "2": to avoid damage to future and reserve trees if possible
 + orientation angle to the trail. Among the 2 possible angle positions,
 the position that favours the return to the main trail should be chosen.
-The angle to the trail is favoured to avoid future/reserve trees.}
+The angle to the trail is favoured to avoid future/reserve trees.
+If the avoidance of future/reserve trees could not be performed,
+a message is returned.}
 
 \item{MainTrails}{Main trails (sf)}
 

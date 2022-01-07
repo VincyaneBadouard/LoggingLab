@@ -22,7 +22,7 @@ test_that("rotatepolygon", {
 
   # Check the function arguments
   expect_error(rotatepolygon(p = NotAPol, angle = Numeric, fixed = Point),
-               regexp = "The 'p' argument of the 'rotatepolygon' function must be a POLYGON or a sfc_POLYGON")
+               regexp = "The 'p' argument of the 'rotatepolygon' function must be a sf, a sfc_POLYGON or a POLYGON")
 
   expect_error(rotatepolygon(p = Pol, angle = Integer, fixed = Point),
                regexp = "The 'angle' argument of the 'rotatepolygon' function must be numeric")

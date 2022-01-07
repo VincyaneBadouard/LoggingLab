@@ -58,7 +58,7 @@ timberharvestedvolume <- function(
   advancedloggingparameters = loggingparameters()
 ){
 
-  # Global variables
+  #### Global variables ####
   Accessible <- Circ <- CircCorr <- CodeAlive <- NULL
   Condition <- DBH <- NULL
   DeathCause <- DistCriteria <- Family <- NULL
@@ -74,7 +74,7 @@ timberharvestedvolume <- function(
   VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
 
 
-  # Arguments check
+  #### Arguments check ####
   if(!inherits(inventory, "data.frame"))
     stop("The 'inventory' argument of the 'timberharvestedvolume' function must be a data.frame")
 
@@ -91,13 +91,13 @@ timberharvestedvolume <- function(
     stop("The 'advancedloggingparameters' argument of the 'timberharvestedvolume' function must be a list")
 
 
-  # Redefinition of the parameters according to the chosen scenario
+  #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, fuel = fuel)
 
   fuel <- scenariosparameters$fuel
 
 
-  # Function
+  #### Function ####
   LoggedTable <- inventory %>%
     filter(Selected == "1" & ProbedHollow == "0") # Logged trees
 

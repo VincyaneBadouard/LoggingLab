@@ -33,6 +33,8 @@
 #'       + orientation angle to the trail. Among the 2 possible angle positions,
 #'       the position that favours the return to the main trail should be chosen.
 #'       The angle to the trail is favoured to avoid future/reserve trees.
+#' If the avoidance of future/reserve trees could not be performed,
+#' a message is returned.
 #'
 #'@param MainTrails Main trails (sf)
 #'@param ScndTrail Secondary trails (sf)
@@ -547,8 +549,8 @@ rotatepolygon <- function(
 ){
 
   # Arguments check
-  if(!inherits(p, c("POLYGON", "sfc_POLYGON")))
-    stop("The 'p' argument of the 'rotatepolygon' function must be a POLYGON or a sfc_POLYGON")
+  if(!inherits(p, c("sf", "sfc_POLYGON", "POLYGON")))
+    stop("The 'p' argument of the 'rotatepolygon' function must be a sf, a sfc_POLYGON or a POLYGON")
 
   if(!inherits(angle, "numeric"))
     stop("The 'angle' argument of the 'rotatepolygon' function must be numeric")
@@ -765,7 +767,6 @@ felling1tree <- function(
            eyCrown = CrownHeight/2) %>%
     st_as_sf(coords = c("xCrown", "yCrown")) # ellipse centroid coordinates
   Crown <- st_ellipse(Crown, Crown$exCrown, Crown$eyCrown) # create the ellipse
-  Crown <- st_set_crs(Crown, st_crs(MainTrails)) # set a crs
 
   # The trunk
   Trunk <- with(dat,
@@ -878,11 +879,20 @@ felling1tree <- function(
 
   #### Felling function ####
   felling0angle <- function(Angl){
-    # Calculate the crown and trunk position
-    FallenTree <- st_difference(st_union(
-      rotatepolygon(Trunk, angle = Angl, fixed = Foot), # turned trunk
-      rotatepolygon(Crown, angle = Angl, fixed = Foot) # turned crown
-    ))
+
+    Trunksf <- st_as_sf(rotatepolygon(Trunk, angle = Angl, fixed = Foot))
+    Crownsf <- st_as_sf(rotatepolygon(Crown, angle = Angl, fixed = Foot))
+
+    Trunk_Crowns <- Trunksf %>% rbind(Crownsf)
+
+    FallenTree <- st_sfc(do.call(c, st_geometry(Trunk_Crowns)))
+
+    # Previous version
+    # FallenTree <- st_difference(st_union(
+    #   rotatepolygon(Trunk, angle = Angl, fixed = Foot), # turned trunk
+    #   rotatepolygon(Crown, angle = Angl, fixed = Foot) # turned crown
+    # ))
+
     return(FallenTree)
   }
 
