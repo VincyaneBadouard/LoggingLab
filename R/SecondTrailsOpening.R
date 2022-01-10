@@ -209,11 +209,11 @@ secondtrailsopening <- function(
 
   # Generate intersections between accessible area and MainTrails (ID = accessible area index)
   PartMainTrails <- st_intersection(st_geometry(MainTrails%>%
-                                                  st_buffer(dist = raster::res(topography))),
+                                                  st_buffer(dist = raster::res(topography)+.5)),
                                     st_geometry(AccessMainTrails %>%
-                                                  st_buffer(dist = raster::res(topography)))) %>%
+                                                  st_buffer(dist = raster::res(topography)+.5))) %>%
     st_union(by_feature = T) %>%
-    st_buffer(dist = raster::res(topography)) %>%
+    st_buffer(dist = raster::res(topography)+1) %>%
     st_intersection(st_as_sf(plotmask) %>% st_union()) %>%
     st_cast("MULTIPOLYGON")  %>%
     st_as_sf() %>%
@@ -354,7 +354,7 @@ secondtrailsopening <- function(
 
     CostRasterGrpl <- CostRaster + CostRasterGrpl
 
-    CostRasterGrpl <- rasterize(x = as_Spatial(AccessPoint %>% st_buffer(dist = advancedloggingparameters$ScndTrailWidth*2)),
+    CostRasterGrpl <- rasterize(x = as_Spatial(AccessPoint %>% st_buffer(dist = advancedloggingparameters$ScndTrailWidth+2)),
                                 y = CostRasterGrpl ,
                                 field = CostMatrix[[2]][[6]]$CostValue,
                                 update = TRUE)
@@ -363,11 +363,12 @@ secondtrailsopening <- function(
     CostRasterMeanGrpl <- crop(CostRasterMeanGrpl,  CostRaster)
     CostRasterMeanGrpl <- mask(CostRasterMeanGrpl, plotmask)
 
+
   }
 
 
   #Generate maintrail intersection cost raster
-  CostRaster <- rasterize(x = as_Spatial(AccessPoint %>% st_buffer(dist = advancedloggingparameters$ScndTrailWidth*2)),
+  CostRaster <- rasterize(x = as_Spatial(AccessPoint %>% st_buffer(dist = advancedloggingparameters$ScndTrailWidth+2)),
                           y = CostRaster ,
                           field = CostMatrix[[2]][[6]]$CostValue,
                           update = TRUE)
@@ -394,12 +395,36 @@ secondtrailsopening <- function(
   k <- 1 #Initialize pathlines index
 
   #Generate appropriate selected trees points format
+
+
   pts <- treeselectionoutputs$SelectedTreesPoints %>%
     select(idTree) %>%
     st_cast("POINT") %>%
     mutate(ID = NA) %>%
     mutate(type = "Tree") %>%
-    select(ID,type,idTree)
+    st_set_crs(st_crs(AccessPoint)) %>%
+    st_join(AccessMainTrails %>% mutate(ID_Acc = ID) %>% select(-ID)) %>%
+    select(ID,ID_Acc,type,idTree)
+
+  ptsAll <- pts
+
+  AccessPointAll <- AccessPoint
+
+  # Reassign Selected Tree values (= BigTrees) to the aggregated Cost raster
+  CostRasterMean <- rasterize(x = as_Spatial(pts %>% st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2 +2)),
+                              y = CostRasterMean ,
+                              field = CostMatrix[[2]][[3]]$CostValue,
+                              update = TRUE)
+  if (scenarios$winching == "2") {
+    # Reassign Selected Tree values (= BigTrees) to the aggregated Cost raster (Grpl)
+    CostRasterMeanGrpl <- rasterize(x = as_Spatial(pts %>% st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2 +2)),
+                                    y = CostRasterMeanGrpl ,
+                                    field = CostMatrix[[2]][[3]]$CostValue,
+                                    update = TRUE)
+  }
+
+
+
 
 
   winching <- scenarios$winching
@@ -408,12 +433,23 @@ secondtrailsopening <- function(
 
   ########### Compute LCP algorithm ###############
 
+  if (winching == "2") {
+    #Compute adjacent transition layer according to slope conditions (winching = "2")
+    SlopeCondGrpl <- SlopeRdCond(topography = DTMmean,
+                                 advancedloggingparameters = loggingparameters(),
+                                 grapple = TRUE)
+  }
+  #Compute adjacent transition layer according to slope conditions (winching = "1")
+  SlopeCond <- SlopeRdCond(topography = DTMmean,advancedloggingparameters = loggingparameters())
+
+
+  for (ID_Access in unique(ptsAll$ID_Acc)) {
+    pts <- ptsAll %>% filter(ID_Acc == ID_Access) %>%  select(-ID_Acc)
+    AccessPoint <- AccessPointAll %>% filter(ID == ID_Access)
+
+
   if (winching == "0") {
     # winching 0 #########
-
-    #Compute adjacent transition layer according to slope conditions (winching = "0")
-    SlopeCond <- SlopeRdCond(topography = DTMmean,advancedloggingparameters = loggingparameters())
-
 
     pts <- st_set_crs(pts, st_crs(AccessPoint))# set crs
 
@@ -438,9 +474,9 @@ secondtrailsopening <- function(
                                 as_Spatial(),
                               slopeRdCond = SlopeCond,
                               paths = FALSE) [,1:dim(AccessPoint)[1]]
-    CostDistEst <- CostDistEst[(dim(PointAcc)[1]+1):dim(CostDistEst)[1],1:dim(PointAcc)[1]]
+    CostDistEst <- CostDistEst[(length(PointAcc$ID)+1):length(CostDistEst)[1]]
 
-    CostDistEst <- matrix(CostDistEst,ncol = dim(PointAcc)[1] )
+    CostDistEst <- matrix(CostDistEst,ncol = length(PointAcc$ID) )
 
     #Attribute a least cost point access to each points
     PointTree <- pts %>% filter(type == "Tree") %>%
@@ -463,12 +499,12 @@ secondtrailsopening <- function(
     #Attribute a least cost point access to each points
     PointTree <- pts %>% filter(type == "Tree") %>%
       mutate(ptAcc = max.col(-CostDistEst))
-    if (dim(PointAcc)[1] == 1) {
+    if (length(PointAcc$ID) == 1) {
       PointTree <- PointTree %>% mutate(EstCost = CostDistEst)
     }else{PointTree <- PointTree %>% mutate(EstCost = apply(CostDistEst,1, min))}
     selectedPoints <- rbind(PointAcc,PointTree)
 
-    for (accessPtId in 1:dim(PointAcc)[1]) {
+    for (accessPtId in 1:length(PointAcc$ID)) {
       TmpSelectedPts <- selectedPoints %>%
         filter(ptAcc == accessPtId)
 
@@ -510,16 +546,6 @@ secondtrailsopening <- function(
 
     # Select intersection points from buffer polygons
 
-    if (winching == "2") {
-      #Compute adjacent transition layer according to slope conditions (winching = "2")
-      SlopeCondGrpl <- SlopeRdCond(topography = DTMmean,
-                                   advancedloggingparameters = loggingparameters(),
-                                   grapple = TRUE)
-    }
-    #Compute adjacent transition layer according to slope conditions (winching = "1")
-    SlopeCond <- SlopeRdCond(topography = DTMmean,advancedloggingparameters = loggingparameters())
-
-
 
 
     PointAcc <- AccessPoint %>% #def Access Point
@@ -558,7 +584,12 @@ secondtrailsopening <- function(
 
       ptsWIP <- ptsGrpl %>% #def Grpl point as WIP point
         st_set_agr("constant") %>%
-        st_centroid() %>%
+        st_centroid()
+
+      ptsWIP <- ptsWIP %>%  filter(st_intersects(st_geometry(ptsWIP),
+                                        st_geometry(AccessMainTrails %>%
+                                                      st_union()),
+                                        sparse = FALSE)) %>%
         select(-ID)
 
       ptsCbl <- TreePts %>% #def cbl polygons
@@ -579,18 +610,19 @@ secondtrailsopening <- function(
 
       ptsCbl <- st_set_crs(ptsCbl,st_crs(AccessMainTrails)) #set crs from AccessMainTrails
 
-      ptsCbl <- ptsCbl %>% #Filter polygons which intersect accessible area to second trails
-        filter(st_intersects(st_geometry(ptsCbl),
-                             st_geometry(AccessMainTrails %>%
-                                          st_union()),
-                             sparse = FALSE)) %>%
-        mutate(IDpts = paste0("I.",row_number()))
+      ptsCbl <- ptsCbl %>%
+        mutate(IDpts = paste0("I.",row_number())) #Filter polygons which intersect accessible area to second trails
 
 
 
-      ptsWIPCbl <-  ptsCbl %>%#Convert polygons to centroid
+      ptsWIPCbl <- ptsCbl %>%#Convert polygons to centroid
         st_set_agr("constant") %>%
-        st_centroid() %>%
+        st_centroid()
+
+      ptsWIPCbl <- ptsWIPCbl %>%  filter(st_intersects(st_geometry(ptsWIPCbl),
+                                  st_geometry(AccessMainTrails %>%
+                                                st_union()),
+                                  sparse = FALSE)) %>%
         select(-ID)
 
       ptsWIP <- ptsWIP %>%
@@ -668,18 +700,18 @@ secondtrailsopening <- function(
                                    pts = ptsWIPmax %>%
                                      as_Spatial(),
                                    slopeRdCond = SlopeCond,
-                                   paths = FALSE) [,1:dim(PointAcc)[1]]
+                                   paths = FALSE) [,1:length(PointAcc$ID)]
 
-      CostDistEstCbl <- CostDistEstCbl[(dim(PointAcc)[1]+1):dim(CostDistEstCbl)[1],1:dim(PointAcc)[1]]
+      CostDistEstCbl <- CostDistEstCbl[(length(PointAcc$ID)+1):length(CostDistEstCbl)[1]]
 
-      CostDistEstCbl <- matrix(CostDistEstCbl,ncol = dim(PointAcc)[1] )
+      CostDistEstCbl <- matrix(CostDistEstCbl,ncol = length(PointAcc$ID) )
 
       #Attribute a least cost point access to each points
       PointTree <- ptsWIPmax %>% filter(type == "Tree") %>%
         mutate(ptAccCbl = max.col(- CostDistEstCbl,ties.method = "first"))
 
 
-      if (dim(PointAcc)[1] == 1) {
+      if (length(PointAcc$ID) == 1) {
         PointTree <- PointTree %>% mutate(EstCostCbl = CostDistEstCbl)
       }else{
         PointTree <- PointTree %>% mutate(EstCostCbl = apply(CostDistEstCbl,1, min))
@@ -696,21 +728,21 @@ secondtrailsopening <- function(
                                       pts = ptsWIPmax %>%
                                         as_Spatial(),
                                       slopeRdCond = SlopeCondGrpl,
-                                      paths = FALSE) [,1:dim(PointAcc)[1]]
+                                      paths = FALSE) [,1:length(PointAcc$ID)]
 
-        CostDistEstGrpl <- CostDistEstGrpl[(dim(PointAcc)[1]+1):dim(CostDistEstGrpl)[1],1:dim(PointAcc)[1]]
-        CostDistEstGrpl <- matrix(CostDistEstGrpl,ncol = dim(PointAcc)[1] )
+        CostDistEstGrpl <- CostDistEstGrpl[(length(PointAcc$ID)+1):length(CostDistEstGrpl)[1]]
+        CostDistEstGrpl <- matrix(CostDistEstGrpl,ncol = length(PointAcc$ID) )
 
 
         #Attribute a least cost point access to each points
         PointTree <- PointTree %>%
-          mutate(ptAccGpl = max.col(-matrix(CostDistEstGrpl,ncol = dim(PointAcc)[1] ),ties.method = "first"))
+          mutate(ptAccGpl = max.col(-matrix(CostDistEstGrpl,ncol = length(PointAcc$ID) ),ties.method = "first"))
 
-        if (dim(PointAcc)[1] == 1) {
+        if (length(PointAcc$ID) == 1) {
           PointTree <- PointTree %>% mutate(EstCostGrpl = CostDistEstGrpl)
         }else{
           PointTree <- PointTree %>% mutate(EstCostGrpl = apply(matrix(
-            CostDistEstGrpl,ncol = dim(PointAcc)[1] ),
+            CostDistEstGrpl,ncol = length(PointAcc$ID) ),
             1, min
           ))
         }
@@ -719,7 +751,7 @@ secondtrailsopening <- function(
         CostDistEstGrpl[CostDistEstGrpl != Inf] <- 0
         CostDistEstGrpl[CostDistEstGrpl == Inf] <- 1
 
-        for (j in 1:dim(CostDistEstGrpl)[1]) {
+        for (j in 1:length(CostDistEstGrpl)[1]) {
           PointTree[j,"TypeAcc"] <-  as.character(prod(CostDistEstGrpl[j,]))
         }
         PointTree$TypeAcc[PointTree$TypeAcc == "0"] <- "Grpl"
@@ -835,13 +867,13 @@ secondtrailsopening <- function(
 
       #Compute Cost between all points and Access points
       CostDistEstWIP <-  AdjTopoLCP(costSurface = CondSurf,topography = DTMmean , pts = TmpPtsWIP %>% as_Spatial(),
-                                    slopeRdCond = SlopeCondRd,paths = FALSE)[,1:dim(PointAcc)[1]]
+                                    slopeRdCond = SlopeCondRd,paths = FALSE)[,1:length(PointAcc$ID)]
 
-      CostDistEstWIP <- CostDistEstWIP[(dim(PointAcc)[1]+1):dim(CostDistEstWIP)[1],]
+      CostDistEstWIP <- CostDistEstWIP[(length(PointAcc$ID)+1):length(CostDistEstWIP)[1]]
 
-      CostDistEstWIP <- matrix(CostDistEstWIP, ncol = dim(PointAcc)[1])
+      CostDistEstWIP <- matrix(CostDistEstWIP, ncol = length(PointAcc$ID))
 
-      if (dim(PointAcc)[1] == 1) {
+      if (length(PointAcc$ID) == 1) {
         PointTreeWIP <- TmpPtsWIP %>%
           filter(type == "Overlay") %>%
           mutate(EstCost = CostDistEstWIP) %>%
@@ -861,7 +893,7 @@ secondtrailsopening <- function(
       TmpPathWIP <- AdjTopoLCP(costSurface = CondSurf,topography = DTMmean , pts = TmpPtsWIP %>% as_Spatial(),
                                slopeRdCond = SlopeCondRd,paths = FALSE)
 
-      TmpPathWIPCost <- TmpPathWIP[1:dim(PointAcc)[1],dim(PointAcc)[1]+1]
+      TmpPathWIPCost <- TmpPathWIP[1:length(PointAcc$ID),length(PointAcc$ID)+1]
 
       LCPathWIP <- max.col(t(-TmpPathWIPCost))
 
@@ -961,7 +993,10 @@ secondtrailsopening <- function(
 
 
   }
-  ptsHarvested <- pts %>%
+
+  }
+
+  ptsHarvested <- ptsAll %>%
     filter(type == "Tree")
 
   paths <- do.call(rbind, pathLines)
