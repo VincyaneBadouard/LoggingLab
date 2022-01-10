@@ -4277,7 +4277,7 @@ NA
 <div id="all-the-functions-of-the-package" class="section level1">
 <h1 class="hasAnchor">
 <a href="#all-the-functions-of-the-package" class="anchor"></a>All the functions of the package</h1>
-<p>loggingsimulation loggingparameters scenariosparameters inventorycheckformat addtreedim treeselection ONFGuyafortaxojoin harvestable selected futurereserve treefelling createcanopy treefromthesky directionalfellingsuccessdef felling1tree rotatepolygon getgeometry timberharvestedvolume exploitablefuelwoodvolume</p>
+<p>loggingsimulation loggingparameters scenariosparameters inventorycheckformat addtreedim treeselection commercialcriteriajoin harvestable selected futurereserve treefelling createcanopy treefromthesky directionalfellingsuccessdef felling1tree rotatepolygon getgeometry timberharvestedvolume exploitablefuelwoodvolume</p>
 </div>
 <div id="arguments-presentation" class="section level1">
 <h1 class="hasAnchor">
@@ -4542,7 +4542,7 @@ TRUE
 <span class="co">#                                scenario = "RIL1", specieslax = FALSE, objectivelax = TRUE,</span>
 <span class="co">#                                crowndiameterparameters = ParamCrownDiameterAllometry,</span>
 <span class="co">#                                advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)</span>
-<span class="co"># loggingsummary(RIL1_Rslt)</span>
+<span class="co"># loggingsummary1(RIL1_Rslt)</span>
 <span class="co"># # Without diversification the harvestable volume is too poor</span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># RIL2broken_Rslt &lt;- loggingsimulation(Paracou6_2016,</span>
@@ -4552,7 +4552,7 @@ TRUE
 <span class="co">#                                      scenario = "RIL2broken", specieslax = FALSE, objectivelax = TRUE,</span>
 <span class="co">#                                      crowndiameterparameters = ParamCrownDiameterAllometry,</span>
 <span class="co">#                                      advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)</span>
-<span class="co"># loggingsummary(RIL2broken_Rslt)</span>
+<span class="co"># loggingsummary1(RIL2broken_Rslt)</span>
 <span class="co"># RIL2broken_inventory &lt;- RIL2broken_Rslt$inventory</span>
 <span class="co"># # Without diversification the harvestable volume is too poor</span>
 <span class="co"># # Not all harvestable trees are always harvested because they are eventually probed hollow, and there is not always a harvestable tree to replace them.</span></code></pre></div>
@@ -4564,7 +4564,7 @@ TRUE
 <span class="co">#                                scenario = "RIL2", specieslax = FALSE, objectivelax = TRUE,</span>
 <span class="co">#                                crowndiameterparameters = ParamCrownDiameterAllometry,</span>
 <span class="co">#                                advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)</span>
-<span class="co"># loggingsummary(RIL2_Rslt)</span>
+<span class="co"># loggingsummary1(RIL2_Rslt)</span>
 <span class="co"># # Without diversification the harvestable volume is too poor</span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># RIL3_Rslt &lt;- loggingsimulation(Paracou6_2016,</span>
@@ -4576,7 +4576,7 @@ TRUE
 <span class="co">#                                advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)</span>
 <span class="co"># </span>
 <span class="co"># RIL3_inventory &lt;- RIL3_Rslt$inventory</span>
-<span class="co"># loggingsummary(RIL3_Rslt)</span>
+<span class="co"># loggingsummary1(RIL3_Rslt)</span>
 <span class="co"># # With diversification the harvestable volume is much higher</span>
 <span class="co"># # but 30m3/ha is a too high objective for this plot size</span>
 <span class="co"># # Not all harvestable trees are always harvested because they are eventually probed hollow, and there is not always a harvestable tree to replace them.</span></code></pre></div>
@@ -4588,7 +4588,7 @@ TRUE
 <span class="co">#                                    scenario = "RIL3fuel", specieslax = FALSE, objectivelax = TRUE,</span>
 <span class="co">#                                    crowndiameterparameters = ParamCrownDiameterAllometry,</span>
 <span class="co">#                                    advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)</span>
-<span class="co"># loggingsummary(RIL3fuel_Rslt)</span>
+<span class="co"># loggingsummary1(RIL3fuel_Rslt)</span>
 <span class="co"># # Not all harvestable trees are always harvested because they are eventually probed hollow, and there is not always a harvestable tree to replace them.</span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># RIL3fuelhollow_Rslt &lt;- loggingsimulation(Paracou6_2016,</span>
@@ -4601,12 +4601,12 @@ TRUE
 <span class="co">#                                          advancedloggingparameters = loggingparameters(),</span>
 <span class="co">#                                          iter = 1, cores = 1)</span>
 <span class="co"># RIL3fuelhollow_inventory &lt;- RIL3fuelhollow_Rslt$inventory</span>
-<span class="co"># # loggingsummary(RIL3fuelhollow_Rslt)</span></code></pre></div>
+<span class="co"># # loggingsummary1(RIL3fuelhollow_Rslt)</span></code></pre></div>
 <div id="results-summary" class="section level2">
 <h2 class="hasAnchor">
 <a href="#results-summary" class="anchor"></a>Results summary</h2>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># loggingsummary(Rslt)</span></code></pre></div>
+<code class="sourceCode R"><span class="co"># loggingsummary1(Rslt)</span></code></pre></div>
 </div>
 </div>
 <div id="decomposed-harvesting" class="section level1">
@@ -4660,7 +4660,7 @@ TRUE
 <h4 class="hasAnchor">
 <a href="#joins-commercial-criteria-table" class="anchor"></a>Joins commercial criteria table</h4>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ONFGuyafortaxojoin.html">ONFGuyafortaxojoin</a></span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/commercialcriteriajoin.html">commercialcriteriajoin</a></span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="harvestable-trees-identification" class="section level4">
 <h4 class="hasAnchor">

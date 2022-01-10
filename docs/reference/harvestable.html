@@ -173,7 +173,7 @@ default (logical)</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>input inventory with new columns:</p><ul>
-<li><p>The exploitability criteria ("DistCrit", "Slope"(in radians), "SlopeCrit"), and if
+<li><p>The exploitability criteria ("DistCriteria", "Slope"(in radians), "SlopeCriteria"), and if
 they are validated for each of the trees ("LoggingStatus").</p></li>
 <li><p>The probability of a tree having visible defects ("VisibleDefectProba")
 and the visible defect trees ("VisibleDefect").</p></li>
@@ -213,7 +213,7 @@ criteria and are therefore considered 'non-harvestable'.</p>
 <span class='va'>inventory</span> <span class='op'>&lt;-</span> <span class='fu'><a href='addtreedim.html'>addtreedim</a></span><span class='op'>(</span><span class='fu'><a href='inventorycheckformat.html'>inventorycheckformat</a></span><span class='op'>(</span><span class='va'>Paracou6_2016</span><span class='op'>)</span>,
 volumeparameters <span class='op'>=</span> <span class='va'>ForestZoneVolumeParametersTable</span><span class='op'>)</span>
 
-<span class='va'>inventory</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ONFGuyafortaxojoin.html'>ONFGuyafortaxojoin</a></span><span class='op'>(</span><span class='va'>inventory</span>, <span class='va'>SpeciesCriteria</span><span class='op'>)</span>
+<span class='va'>inventory</span> <span class='op'>&lt;-</span> <span class='fu'><a href='commercialcriteriajoin.html'>commercialcriteriajoin</a></span><span class='op'>(</span><span class='va'>inventory</span>, <span class='va'>SpeciesCriteria</span><span class='op'>)</span>
 
 <span class='va'>harvestableOutputs</span> <span class='op'>&lt;-</span> <span class='fu'>harvestable</span><span class='op'>(</span><span class='va'>inventory</span>, topography <span class='op'>=</span> <span class='va'>DTMParacou</span>,
 plotslope <span class='op'>=</span> <span class='va'>PlotSlope</span>, diversification <span class='op'>=</span> <span class='cn'>TRUE</span>, specieslax <span class='op'>=</span> <span class='cn'>FALSE</span>,

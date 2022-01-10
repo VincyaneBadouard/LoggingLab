@@ -1,6 +1,6 @@
-#' SlopeRdCond
+#' sloperdcond
 #'
-#' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
+#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
@@ -12,7 +12,6 @@
 #'  longitudinal / transversal slope condition
 #'
 #'
-#'
 #'@importFrom gdistance transition geoCorrection
 #'@importFrom raster adjacent aggregate resample ncol ncell
 #'@importFrom utils txtProgressBar setTxtProgressBar
@@ -22,10 +21,10 @@
 #'\dontrun{
 #' data(DTMParacou)
 #'
-#' SlopeCond <- SlopeRdCond(topography = DTMParacou)
+#' SlopeCond <- sloperdcond(topography = DTMParacou)
 #'}
 #'
-SlopeRdCond <- function(
+sloperdcond <- function(
   topography,
   advancedloggingparameters = loggingparameters(),
   grapple = FALSE

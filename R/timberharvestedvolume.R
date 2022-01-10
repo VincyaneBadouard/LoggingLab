@@ -58,23 +58,23 @@ timberharvestedvolume <- function(
   advancedloggingparameters = loggingparameters()
 ){
 
-  # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
-  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- NULL
+  #### Global variables ####
+  Accessible <- Circ <- CircCorr <- CodeAlive <- NULL
+  Condition <- DBH <- NULL
+  DeathCause <- DistCriteria <- Family <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
+  Selected <- Slope <- SlopeCriteria <- Species <- Species.genus <- NULL
   SpeciesCriteria  <- geometry <- idTree <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD  <- NULL
-  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
 
 
-  # Arguments check
+  #### Arguments check ####
   if(!inherits(inventory, "data.frame"))
     stop("The 'inventory' argument of the 'timberharvestedvolume' function must be a data.frame")
 
@@ -91,13 +91,13 @@ timberharvestedvolume <- function(
     stop("The 'advancedloggingparameters' argument of the 'timberharvestedvolume' function must be a list")
 
 
-  # Redefinition of the parameters according to the chosen scenario
+  #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, fuel = fuel)
 
   fuel <- scenariosparameters$fuel
 
 
-  # Function
+  #### Function ####
   LoggedTable <- inventory %>%
     filter(Selected == "1" & ProbedHollow == "0") # Logged trees
 

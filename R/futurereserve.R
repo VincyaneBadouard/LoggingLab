@@ -42,7 +42,7 @@
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
-#' inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
+#' inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 #'
 #' harvestableOutputs <- harvestable(inventory, diversification = TRUE,
 #'  specieslax = FALSE,
@@ -78,20 +78,20 @@ futurereserve <- function(
   #   stop("The 'advancedloggingparameters' argument of the 'futurereserve' function must be a list")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
-  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- NULL
+  Accessible <- Circ <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
+  Condition <- DBH <- NULL
+  DeathCause <- DistCriteria <- Family <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
+  Selected <- Slope <- SlopeCriteria <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
-  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
-  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  UpMinFD.species <- NULL
+  VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
@@ -99,7 +99,7 @@ futurereserve <- function(
   #Future: select essence and diameters
 
   inventory <- inventory %>%
-    mutate(LoggingStatus = ifelse(Commercial == "1" & Selected != "1" &
+    mutate(LoggingStatus = ifelse(CommercialLevel == "1" & Selected != "1" &
                                     ((Up == "0" &
                                         (DBH >= advancedloggingparameters$FutureTreesMinDiameter & DBH < MinFD))
                                      | (Up == "1" &

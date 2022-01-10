@@ -34,6 +34,9 @@ Paracou6_2016 <- Paracou6_2016 %>%
 
 usethis::use_data(Paracou6_2016, overwrite = TRUE)
 
+# LoggingSimulationOutputs <- Rslt
+# usethis::use_data(LoggingSimulationOutputs)
+
 ```
 
 ```{r ParamCrownDiameterAllometry table code}
@@ -55,11 +58,11 @@ SpeciesCriteria <- read_csv("D:/VSC Kourou/DATA/SpeciesCriteria.csv",
                                              UpMinFD = col_number(), MaxFD = col_number()),
                             locale = locale(encoding = "Latin1")) %>%
   separate(ScientificName, sep = " ", into = c("Genus", "Species"), remove = T) %>% 
-  mutate(Aggregative = ifelse(VernName == "Angélique" | VernName == "Gonfolo rose",
+  mutate(Aggregative = ifelse(CommercialName == "Angélique" | CommercialName == "Gonfolo rose",
                               TRUE, FALSE))
 # unite(Genus, Species, col = "ScientificName", sep = "_", remove = F)
 
-SpeciesCriteria$VernName <- tolower(SpeciesCriteria$VernName)
+SpeciesCriteria$CommercialName <- tolower(SpeciesCriteria$CommercialName)
 
 # usethis::use_data(SpeciesCriteria, overwrite = TRUE)
 ```

@@ -84,7 +84,7 @@
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
-#' inventory <- ONFGuyafortaxojoin(inventory, SpeciesCriteria)
+#' inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 #'
 #' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 #' diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
@@ -148,20 +148,20 @@ selected <- function(
   diversification <- scenariosparameters$diversification
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
-  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- ONFName <- Crumbs <- NULL
+  Accessible <- Circ <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
+  Condition <- DBH <- NULL
+  DeathCause <- DistCriteria <- Family <- CommercialName <- Crumbs <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
+  Selected <- Slope <- SlopeCriteria <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
-  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
-  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  UpMinFD.species <- NULL
+  VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
@@ -268,7 +268,7 @@ selected <- function(
 
     inventory <- inventory %>%
       mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" &
-                                      Commercial == "1" & (DBH >= UpMinFD & DBH <= MaxFD), #designate preferred individuals of first economic rank species, when the plot is species-rich.
+                                      CommercialLevel == "1" & (DBH >= UpMinFD & DBH <= MaxFD), #designate preferred individuals of first economic rank species, when the plot is species-rich.
                                     "harvestableUp", LoggingStatus))
 
     if (!diversification) {
@@ -374,7 +374,7 @@ selected <- function(
       if (HVupCommercial1 > VO){
 
         inventory <- inventory %>%
-          mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" & Commercial == "2" & DBH >= UpMinFD & DBH <= MaxFD, #designate preferred individuals of 2nd economic rank species too, when the plot is species-rich.
+          mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" & CommercialLevel == "2" & DBH >= UpMinFD & DBH <= MaxFD, #designate preferred individuals of 2nd economic rank species too, when the plot is species-rich.
                                         "harvestableUp", LoggingStatus))
 
         HarvestableTable <- inventory %>%
@@ -461,7 +461,7 @@ selected <- function(
   # Upgraded MinFD species:
   # to inform for each individual if its species have been FD upgraded
   inventory <- inventory %>%
-    group_by(ONFName) %>%
+    group_by(CommercialName) %>%
     mutate(Up = ifelse(any(LoggingStatus == "harvestableUp"), "1", Up)) %>%
     ungroup()
 

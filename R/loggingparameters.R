@@ -67,7 +67,7 @@
 #'  (H) in m, and the DBH in cm. (Aubry-Kientz et al.2019)(function)
 #'
 #'@param RottenModel Estimates the tree probability of being probed hollow
-#'  (default: 1 / (1 + exp(-(-5.151 + 0.042  DBH))) with DBH in cm) (function)
+#'  (default: 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) with DBH in cm) (function)
 #'
 #'@param VisiblyDefectModel Estimates the commercial tree probability to have visible
 #'  defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm

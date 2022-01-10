@@ -237,7 +237,7 @@ an unreached objective volume, or be abandoned ('objectivelax')</p>
 <span class='va'>inventory</span> <span class='op'>&lt;-</span> <span class='fu'><a href='addtreedim.html'>addtreedim</a></span><span class='op'>(</span><span class='fu'><a href='inventorycheckformat.html'>inventorycheckformat</a></span><span class='op'>(</span><span class='va'>Paracou6_2016</span><span class='op'>)</span>,
 volumeparameters <span class='op'>=</span> <span class='va'>ForestZoneVolumeParametersTable</span><span class='op'>)</span>
 
-<span class='va'>inventory</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ONFGuyafortaxojoin.html'>ONFGuyafortaxojoin</a></span><span class='op'>(</span><span class='va'>inventory</span>, <span class='va'>SpeciesCriteria</span><span class='op'>)</span>
+<span class='va'>inventory</span> <span class='op'>&lt;-</span> <span class='fu'><a href='commercialcriteriajoin.html'>commercialcriteriajoin</a></span><span class='op'>(</span><span class='va'>inventory</span>, <span class='va'>SpeciesCriteria</span><span class='op'>)</span>
 
 <span class='va'>harvestableOutputs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='harvestable.html'>harvestable</a></span><span class='op'>(</span><span class='va'>inventory</span>, topography <span class='op'>=</span> <span class='va'>DTMParacou</span>,
 diversification <span class='op'>=</span> <span class='cn'>TRUE</span>, specieslax <span class='op'>=</span> <span class='cn'>FALSE</span>, plotslope <span class='op'>=</span> <span class='va'>PlotSlope</span>,

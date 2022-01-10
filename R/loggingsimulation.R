@@ -38,20 +38,34 @@
 #'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
 #'   hollow trees, damage and and unused part of the log for fuel = "2"
+#'   If fuel wood exploitation (fuel = "1" or "2") the tree will be recovered
+#'   from the crown with a grapple if possible (respected grapple conditions).
+#'   If not, recovery at the foot with a cable at an angle to the trail.
+#'   Avoid future/reserve trees if chosen.
 #'
 #'@param diversification Possibility to log other species in addition to the
 #' main commercial species (species with a value of 2 for commercial in the
 #' \code{\link{SpeciesCriteria}} table) (logical)
 #'
-#'@param winching No cable or grapple = "0", only cable = "1", grapple + cable =
-#'  "2"
+#'@param winching
+#' "0": no cable or grapple (trail to tree foot)
+#' "1": only cable (default = 40m)
+#' "2": grapple (default = 6m) + cable (grapple priority)
+#' If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+#'  recovery of the tree foot with grapple if possible (respected grapple
+#'  conditions) otherwise with cable with angle to the trail.
+#'  Avoidance of future/reserves if chosen.
 #'
 #'@param directionalfelling Directional felling =
 #' "0": only to direct the foot of the tree towards the trail
 #' "1": to direct the foot of the tree towards the trail + to avoid damage to
-#'         future and reserve trees
-#' "2": to avoid damage to future and reserve trees + orientation angle
-#'       to the trail
+#'         future and reserve trees if possible
+#' "2": to avoid damage to future and reserve trees if possible
+#'       + orientation angle to the trail. Among the 2 possible angle positions,
+#'       the position that favours the return to the main trail should be chosen.
+#'       The angle to the trail is favoured to avoid future/reserve trees.
+#' If the avoidance of future/reserve trees could not be performed,
+#' a message is returned.
 #'
 #'@param specieslax Allow diversification if stand is too poor to reach the
 #' objective volume without diversification, = FALSE by
@@ -71,7 +85,7 @@
 #'@param iter Number of iterations (numeric). Default = 1.
 #'@param cores Number of cores for parallelization (numeric). Default = 1.
 #'
-#'@return Input inventory (data.frame) with logging informations
+#'@return Input inventory (data.frame) with logging informations (list)
 #'(see the outputs metadata in the \code{\link{vignette}}).
 #'
 #'@seealso \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
@@ -88,10 +102,7 @@
 #'
 #'@export
 #'
-#'@importFrom dplyr filter mutate select left_join bind_rows
-#'@importFrom sf st_as_sf st_point
-#'@importFrom raster crs extract
-#'@importFrom methods as
+#'@importFrom parallel makePSOCKcluster clusterExport parLapply stopCluster
 #'
 #' @examples
 #' \dontrun{
@@ -109,7 +120,7 @@
 #'  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
 #'  crowndiameterparameters = ParamCrownDiameterAllometry,
-#'  advancedloggingparameters = loggingparameters(), iter = 2, cores = 1)
+#'  advancedloggingparameters = loggingparameters(), iter = 2, cores = 2)
 #'  }
 #'
 loggingsimulation <- function(
@@ -163,7 +174,7 @@ loggingsimulation <- function(
   #                                    advancedloggingparameters = advancedloggingparameters),
   #           simplify = F)
   #
-  # lapply(seq_along(iter), loggingsimulation1(inventory = inventory,
+  # lapply(seq_len(iter), function(x) loggingsimulation1(inventory = inventory,
   #                                            plotmask = plotmask,
   #                                            topography = topography,
   #                                            verticalcreekheight = verticalcreekheight,
@@ -200,7 +211,7 @@ loggingsimulation <- function(
   #                                      advancedloggingparameters = advancedloggingparameters)
   # )
   #
-  # purr::map(seq_along(iter), ~ loggingsimulation1(inventory = inventory,
+  # purr::map(seq_len(iter), ~ loggingsimulation1(inventory = inventory,
   #                                                 plotmask = plotmask,
   #                                                 topography = topography,
   #                                                 verticalcreekheight = verticalcreekheight,
@@ -219,29 +230,37 @@ loggingsimulation <- function(
   # )
   #
   #
-  # # Parallelization version
+  # Parallelization version
   # For Windows
-  # cl <- makePSOCKcluster(cores) # create a cluster
-  # parallel::parLapply(cl, seq_along(iter), loggingsimulation1(inventory = inventory,
-  #                                                             plotmask = plotmask,
-  #                                                             topography = topography,
-  #                                                             verticalcreekheight = verticalcreekheight,
-  #                                                             speciescriteria = speciescriteria,
-  #                                                             volumeparameters = volumeparameters,
-  #                                                             scenario = scenario,
-  #                                                             objective = objective,
-  #                                                             fuel = fuel,
-  #                                                             diversification = diversification,
-  #                                                             winching = winching,
-  #                                                             directionalfelling = directionalfelling,
-  #                                                             specieslax = specieslax,
-  #                                                             objectivelax = objectivelax,
-  #                                                             crowndiameterparameters = crowndiameterparameters,
-  #                                                             advancedloggingparameters = advancedloggingparameters))
-  #
-  #                     stopCluster(cl) # stop the cluster
+  cl <- makePSOCKcluster(getOption("cl.cores", cores)) # create a cluster
+
+  clusterExport(cl, varlist = c("inventory", "plotmask","topography","verticalcreekheight",
+                                "speciescriteria","volumeparameters","scenario","objective",
+                                "fuel","diversification","winching","directionalfelling",
+                                "specieslax","objectivelax","crowndiameterparameters","advancedloggingparameters"),
+                envir = environment()) # cluster environment
+
+  output <- parLapply(cl, seq_len(iter), function(x) loggingsimulation1(inventory = inventory,
+                                                              plotmask = plotmask,
+                                                              topography = topography,
+                                                              verticalcreekheight = verticalcreekheight,
+                                                              speciescriteria = speciescriteria,
+                                                              volumeparameters = volumeparameters,
+                                                              scenario = scenario,
+                                                              objective = objective,
+                                                              fuel = fuel,
+                                                              diversification = diversification,
+                                                              winching = winching,
+                                                              directionalfelling = directionalfelling,
+                                                              specieslax = specieslax,
+                                                              objectivelax = objectivelax,
+                                                              crowndiameterparameters = crowndiameterparameters,
+                                                              advancedloggingparameters = advancedloggingparameters))
+
+  stopCluster(cl) # stop the cluster
+
   # For other OS
-  # parallel::mclapply(seq_along(iter), loggingsimulation1(inventory = inventory,
+  # parallel::mclapply(seq_len(iter), function(x) loggingsimulation1(inventory = inventory,
   #                                                        plotmask = plotmask,
   #                                                        topography = topography,
   #                                                        verticalcreekheight = verticalcreekheight,
@@ -259,6 +278,8 @@ loggingsimulation <- function(
   #                                                        advancedloggingparameters = advancedloggingparameters),
   #                    mc.cores = cores)
 
+
+  return(output)
 
 }
 

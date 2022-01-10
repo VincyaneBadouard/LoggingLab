@@ -6,7 +6,7 @@
 #' @param plotmask Inventoried plot mask (SpatialPolygonsDataFrame)
 #'
 #' @param treeselectionoutputs A list with:
-#' - your inventory with: "DistCrit", "Slope", "SlopeCrit", "LoggingStatus",
+#' - your inventory with: "DistCriteria", "Slope", "SlopeCriteria", "LoggingStatus",
 #' "Selected", "Up", "VolumeCumSum", "ProbedHollowProba", "ProbedHollow"
 #' new columns (see the outputs metadata in the \code{\link{vignette}}).
 #'
@@ -21,7 +21,18 @@
 #' @param CostMatrix List of list defining conditional weight over binned slopes
 #'   values
 #'
-#' @param scenarios The chosen scenario from scenariosparameters function
+#'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+#'  \code{\link{vignette}})
+#'
+#'@param winching
+#' "0": no cable or grapple (trail to tree foot)
+#' "1": only cable (default = 40m)
+#' "2": grapple (default = 6m) + cable (grapple priority)
+#' If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+#'  recovery of the tree foot with grapple if possible (respected grapple
+#'  conditions) otherwise with cable with angle to the trail.
+#'  Avoidance of future/reserves if chosen.
 #'
 #' @param fact Aggregation factor of cost raster resolution to initial DTM
 #'
@@ -31,10 +42,10 @@
 #' @return A list with :
 #' - raw second trails
 #' -
-#' - Smoothed secondary trails polygons
-#' - Second trails density (in m.ha^-1)
-#' - Updated inventory
-#' - A cost Raster (RasterLayer)
+#' - SmoothedSecondTrails: Smoothed secondary trails polygons (sfc_MULTIPOLYGON)
+#' - TrailsDensity: Second trails density (in m/ha)
+#' - inventory: Updated inventory
+#' - CostRasterMean: A cost Raster (RasterLayer)
 #'
 #' @importFrom sf st_cast st_as_sf st_intersection st_union st_sample st_join
 #'   st_buffer as_Spatial st_centroid st_set_precision st_make_valid st_set_agr
@@ -52,25 +63,23 @@
 #'
 #' @examples
 #' \dontrun{
-#' data(DTMParacou)
 #' data(Paracou6_2016)
+#' data(PlotMask)
+#' data(DTMParacou)
 #' data(HarvestablePolygons)
 #' data(MainTrails)
-#' data(PlotMask)
 #' data(PlotSlope)
 #' data("SpeciesCriteria")
 #' data(VerticalCreekHeight)
 #'
-#' scenarios <- scenariosparameters(scenario = "RIL3")
-#'
-#' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
+#' inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #'  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 #'
 #'
 #' treeselectionoutputs <- treeselection(inventory,
 #' topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
 #' harvestablepolygons = HarvestablePolygons,
-#' speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+#' speciescriteria = SpeciesCriteria,
 #' scenario = "RIL3",
 #' objectivelax = TRUE,
 #' advancedloggingparameters = loggingparameters())
@@ -83,21 +92,35 @@
 #'   CostMatrix = list(list(list(Slope = 3, Cost = 3),
 #'                          list(Slope = 5, Cost = 5),
 #'                          list(Slope = 12, Cost = 20),
-#'                          list(Slope = 22, Cost = 60),
-#'                          list(Slope = 27, Cost = 600),
-#'                          list(Slope = Inf, Cost = 1000)),
+#'                          list(Slope = 22, Cost = 100),
+#'                          list(Slope = 27, Cost = 1000),
+#'                          list(Slope = Inf, Cost = 10000)),
 #'                     list(list(CostType = "Initial", CostValue = 1000),
 #'                          list(CostType = "Access", CostValue = 10000),
 #'                          list(CostType = "BigTrees", CostValue = 500),
-#'                          list(CostType = "Reserves", CostValue = 500),
-#'                          list(CostType = "Futures", CostValue = 50),
+#'                          list(CostType = "Reserves", CostValue = 1000),
+#'                          list(CostType = "Futures", CostValue = 900),
 #'                          list(CostType = "MainTrails", CostValue = 1E-4),
-#'                          list(CostType = "SecondTrails", CostValue = 0.1))),
-#'   scenarios = scenarios,
+#'                          list(CostType = "SecondTrails", CostValue = 1E-2))),
+#'   scenario = "RIL3",
 #'   fact = 3,
 #'   advancedloggingparameters = loggingparameters())
 #'
-#'   plot(secondtrails[[3]])
+#' library(ggplot2)
+#' library(sf)
+#' ggplot() +
+#'   # Harvestable zones
+#'   geom_sf(data = HarvestablePolygons,
+#'         aes(alpha = Harvestable),
+#'         fill = "olivedrab") +
+#'   labs(alpha = "Harvestable") +
+#'   labs(title = "P6 zones exploitables") +
+#'
+#'   # 2ndary trails
+#'   geom_sf(data = st_as_sf(secondtrails[[3]]), col = "darkgreen") +
+#'   geom_sf(data = st_as_sf(secondtrails[[1]]), col = "red")
+#'
+#' secondtrails[[4]]
 #'   }
 #'
 secondtrailsopening <- function(
@@ -118,7 +141,8 @@ secondtrailsopening <- function(
                          list(CostType = "Futures", CostValue = 50),
                          list(CostType = "MainTrails", CostValue = 1E-4),
                          list(CostType = "SecondTrails", CostValue = 0.1))),
-  scenarios = NULL,
+  scenario,
+  winching = NULL,
   fact = 3,
   advancedloggingparameters = loggingparameters()
 ){
@@ -128,25 +152,36 @@ secondtrailsopening <- function(
   if(!inherits(treeselectionoutputs, "list"))
     stop("The 'treeselectionoutputs' arguments of the 'secondtrailsopening' function must be list following treeselection output format")
 
-  if(!any(unlist(lapply(list(plotmask), inherits, "SpatialPolygonsDataFrame"))))
+  if(!inherits(plotmask, "SpatialPolygonsDataFrame"))
     stop("The 'plotmask' argument of the 'secondtrailsopening' function must be SpatialPolygonsDataFrame")
 
-  if(!any(unlist(lapply(list(topography), inherits, "RasterLayer"))))
-    stop("The 'topography' argument of the 'secondtrailsopening' function must be raster")
+  # if(!any(unlist(lapply(list(MainTrails), inherits, "sf" ))))
+  #   stop("The 'MainTrails' argument of the 'secondtrailsopening' function must be sf polygon")
 
-  if (st_is_empty(treeselectionoutputs$SelectedTreesPoints)[1]) {
+  if(!inherits(topography, "RasterLayer"))
+    stop("The 'topography' argument of the 'secondtrailsopening' function must be RasterLayer")
+
+  if(st_is_empty(treeselectionoutputs$SelectedTreesPoints)[1]) {
     stop("The 'treeselectionoutputs' argument does not contain any selected tree.")
   }
 
   # Global Variables
   slope <- x <- y <- Harvestable <- idTree <- ID <- type <- ptAcc <- plotslope <- NULL
   EstCost <- n.overlaps <- TypeAcc <- IDpts <- Logged <- harvestablepolygons<- HarvestableAreaDefintionOutputs <- NULL
+  Selected <- DeathCause <- NULL
+
+
+  # Redefinition of the parameters according to the chosen scenario
+  scenariosparameters <- scenariosparameters(scenario = scenario, winching = winching)
+
+  winching <- scenariosparameters$winching
 
   ##################################
 
   sf_use_s2(FALSE) # to deal with actual unresolved s2 issues in sf
 
   # Transformation of the DTM so that the MainTrails are outside the plot
+
 
   DTMExtExtended <- raster::extend(topography, c(fact,fact)) # extend the extent
 
@@ -166,7 +201,9 @@ secondtrailsopening <- function(
 
   # Transformation of vertical creek height raster
 
+
   VerticalCreekHeightExtExtended <- raster::extend(verticalcreekheight, c(fact,fact))
+
 
   VerticalCreekHeightExtended <- raster::focal(VerticalCreekHeightExtExtended,
                                                matrix(1,fact,fact),
@@ -184,22 +221,22 @@ secondtrailsopening <- function(
   # Generate accessible area from HarvestablePolygones and winching choice
 
 
-  HarvestableAreaDefintionOutputs <- HarvestableAreaDefinition(topography = DTMExtended,
+  HarvestableAreaDefintionOutputs <- harvestableareadefinition(topography = DTMExtended,
                                                                verticalcreekheight = VerticalCreekHeightExtended)
 
   harvestablepolygons <- HarvestableAreaDefintionOutputs[[1]]
 
   plotslope <- HarvestableAreaDefintionOutputs[[2]]
 
-  AccessPolygons <- FilterAccesExplArea(harvestablepolygons = harvestablepolygons,
+  AccessPolygons <- filteraccesexplarea(harvestablepolygons = harvestablepolygons,
                                         MainTrails = MainTrails,
-                                        advancedloggingparameters = loggingparameters()) #%>%
-  #st_intersection(st_as_sf(PlotMask))
+                                        advancedloggingparameters = advancedloggingparameters)
+
 
   # Generate accessible area from HarvestablePolygones and winching == "0"
-  AccessMainTrails <- FilterAccesExplArea(harvestablepolygons = harvestablepolygons,
+  AccessMainTrails <- filteraccesexplarea(harvestablepolygons = harvestablepolygons,
                                           MainTrails = MainTrails,
-                                          advancedloggingparameters = loggingparameters()) %>%
+                                          advancedloggingparameters = advancedloggingparameters) %>%
     st_cast("POLYGON") %>%
     st_as_sf() %>%
     mutate(ID = paste0("ID_",row_number()))
@@ -264,7 +301,7 @@ secondtrailsopening <- function(
           )
         )
       )
-    )) %>% select(x,y,Harvestable)
+    )) %>% dplyr::select(x,y,Harvestable)
 
   CostRaster <- rasterFromXYZ(CostSlopeRaster, crs = crs(DTMExtended)) # Update weights from plotTib tibble
 
@@ -333,7 +370,7 @@ secondtrailsopening <- function(
   CostRaster <- CostRaster + BigTreesRaster + ReserveRaster + FutureRaster + SelectedRaster
 
   #Generate Slope accessibility for grapple machine
-  if (scenarios$winching == "2") {
+  if (winching == "2") {
 
     plotslopePointGrpl <- as_tibble(rasterToPoints(plotslope))
 
@@ -348,7 +385,7 @@ secondtrailsopening <- function(
         slope <= atan(advancedloggingparameters$GrappleMaxslope/100),
         true = 0,
         false = Inf
-      )) %>% select(x,y,Harvestable)
+      )) %>% dplyr::select(x,y,Harvestable)
 
     CostRasterGrpl <- rasterFromXYZ(CostSlopeRasterGrpl, crs = crs(topography))
 
@@ -398,7 +435,7 @@ secondtrailsopening <- function(
 
 
   pts <- treeselectionoutputs$SelectedTreesPoints %>%
-    select(idTree) %>%
+    dplyr::select(idTree) %>%
     st_cast("POINT") %>%
     mutate(ID = NA) %>%
     mutate(type = "Tree") %>%
@@ -431,21 +468,24 @@ secondtrailsopening <- function(
 
 
 
+
   ########### Compute LCP algorithm ###############
 
   if (winching == "2") {
     #Compute adjacent transition layer according to slope conditions (winching = "2")
-    SlopeCondGrpl <- SlopeRdCond(topography = DTMmean,
+    SlopeCondGrpl <- sloperdcond(topography = DTMmean,
                                  advancedloggingparameters = loggingparameters(),
                                  grapple = TRUE)
   }
   #Compute adjacent transition layer according to slope conditions (winching = "1")
-  SlopeCond <- SlopeRdCond(topography = DTMmean,advancedloggingparameters = loggingparameters())
+  SlopeCond <- sloperdcond(topography = DTMmean,advancedloggingparameters = loggingparameters())
+
 
 
   for (ID_Access in unique(ptsAll$ID_Acc)) {
     pts <- ptsAll %>% filter(ID_Acc == ID_Access) %>%  select(-ID_Acc)
     AccessPoint <- AccessPointAll %>% filter(ID == ID_Access)
+
 
 
   if (winching == "0") {
@@ -468,7 +508,7 @@ secondtrailsopening <- function(
 
 
     #Compute Cost between points and Access points
-    CostDistEst <- AdjTopoLCP(costSurface = CondSurf,
+    CostDistEst <- adjtopolcp(costSurface = CondSurf,
                               topography = DTMmean ,
                               pts = pts %>%
                                 as_Spatial(),
@@ -521,7 +561,7 @@ secondtrailsopening <- function(
 
           #Compute Least cost path polygons to the WIP selected tree
           TmpPtsWIP <- rbind(TmpAccPts,TmpTreePts[TreeId,])
-          TmpPathWIP <-  AdjTopoLCP(costSurface = CondSurf,topography = DTMmean , pts = TmpPtsWIP %>% as_Spatial(),
+          TmpPathWIP <-  adjtopolcp(costSurface = CondSurf,topography = DTMmean , pts = TmpPtsWIP %>% as_Spatial(),
                                     slopeRdCond = SlopeCond,paths = TRUE)
 
           #Update Cost raster with LCP second trail
@@ -547,12 +587,11 @@ secondtrailsopening <- function(
     # Select intersection points from buffer polygons
 
 
-
     PointAcc <- AccessPoint %>% #def Access Point
       mutate(type = "Access") %>%
       mutate(IDpts = paste0("A.",row_number())) %>%
       mutate(n.overlaps = NA, origins = NA) %>%
-      select(-ID)
+      dplyr::select(-ID)
 
     TreePts <- pts %>% filter(type == "Tree")
 
@@ -584,6 +623,7 @@ secondtrailsopening <- function(
 
       ptsWIP <- ptsGrpl %>% #def Grpl point as WIP point
         st_set_agr("constant") %>%
+
         st_centroid()
 
       ptsWIP <- ptsWIP %>%  filter(st_intersects(st_geometry(ptsWIP),
@@ -625,6 +665,7 @@ secondtrailsopening <- function(
                                   sparse = FALSE)) %>%
         select(-ID)
 
+
       ptsWIP <- ptsWIP %>%
         arrange(desc(n.overlaps))
 
@@ -653,7 +694,7 @@ secondtrailsopening <- function(
       ptsWIP <-  ptsCbl %>%#def cbl point as WIP point
         st_set_agr("constant") %>%
         st_centroid() %>%
-        select(-ID)
+        dplyr::select(-ID)
 
       ptsWIP <- ptsWIP %>%  #filter cbl intersection centroid point out plot
         filter(st_intersects(st_geometry(ptsWIP),
@@ -695,7 +736,7 @@ secondtrailsopening <- function(
         mutate(ptsAcc = NA)
 
       #Compute Cost between points and Access points in cbl exploitation
-      CostDistEstCbl <- AdjTopoLCP(costSurface = CondSurf,
+      CostDistEstCbl <- adjtopolcp(costSurface = CondSurf,
                                    topography = DTMmean ,
                                    pts = ptsWIPmax %>%
                                      as_Spatial(),
@@ -723,7 +764,7 @@ secondtrailsopening <- function(
         CondSurfGrpl <- 1/CostRasterMeanGrpl
 
         #Compute Cost between points and Access points in grpl exploitation
-        CostDistEstGrpl <- AdjTopoLCP(costSurface = CondSurfGrpl,
+        CostDistEstGrpl <- adjtopolcp(costSurface = CondSurfGrpl,
                                       topography = DTMmean ,
                                       pts = ptsWIPmax %>%
                                         as_Spatial(),
@@ -805,7 +846,7 @@ secondtrailsopening <- function(
           ptsWIP <- na.exclude(ptsWIP)
 
           ptsWIP <- ptsWIP %>%
-            select(-Logged) %>%
+            dplyr::select(-Logged) %>%
             arrange(desc(n.overlaps))
 
 
@@ -866,8 +907,10 @@ secondtrailsopening <- function(
 
 
       #Compute Cost between all points and Access points
+
       CostDistEstWIP <-  AdjTopoLCP(costSurface = CondSurf,topography = DTMmean , pts = TmpPtsWIP %>% as_Spatial(),
                                     slopeRdCond = SlopeCondRd,paths = FALSE)[,1:length(PointAcc$ID)]
+
 
       CostDistEstWIP <- CostDistEstWIP[(length(PointAcc$ID)+1):length(CostDistEstWIP)[1]]
 
@@ -890,7 +933,7 @@ secondtrailsopening <- function(
 
       TmpPtsWIP <- rbind(TmpPtsWIP %>% filter(type == "Access") %>% mutate(EstCost = NA),PointTreeWIP[1,])
 
-      TmpPathWIP <- AdjTopoLCP(costSurface = CondSurf,topography = DTMmean , pts = TmpPtsWIP %>% as_Spatial(),
+      TmpPathWIP <- adjtopolcp(costSurface = CondSurf,topography = DTMmean , pts = TmpPtsWIP %>% as_Spatial(),
                                slopeRdCond = SlopeCondRd,paths = FALSE)
 
       TmpPathWIPCost <- TmpPathWIP[1:length(PointAcc$ID),length(PointAcc$ID)+1]
@@ -899,7 +942,7 @@ secondtrailsopening <- function(
 
       TmpPtsWIP <- rbind(TmpPtsWIP[LCPathWIP,],PointTreeWIP[1,])
 
-      TmpPathWIP <- AdjTopoLCP(costSurface = CondSurf,topography = DTMmean , pts = TmpPtsWIP %>% as_Spatial(),
+      TmpPathWIP <- adjtopolcp(costSurface = CondSurf,topography = DTMmean , pts = TmpPtsWIP %>% as_Spatial(),
                                slopeRdCond = SlopeCondRd,paths = TRUE)
 
       if (TmpPathWIP[[1]][2,1] != 0) {
@@ -935,7 +978,7 @@ secondtrailsopening <- function(
         ptsWIPCbl[ptsWIPCbl$Logged == TRUE,"Logged"] <- NA
         ptsWIPCbl <- na.exclude(ptsWIPCbl)
         ptsWIPCbl <- ptsWIPCbl %>%
-          select(-Logged) %>%
+          dplyr::select(-Logged) %>%
           arrange(desc(n.overlaps))
       }else{
 
@@ -952,7 +995,7 @@ secondtrailsopening <- function(
         ptsWIP <- na.exclude(ptsWIP)
 
         ptsWIP <- ptsWIP %>%
-          select(-Logged) %>%
+          dplyr::select(-Logged) %>%
           arrange(desc(n.overlaps))
 
         if (winching == "2") {
@@ -965,7 +1008,7 @@ secondtrailsopening <- function(
           ptsWIPCbl[ptsWIPCbl$Logged == TRUE,"Logged"] <- NA
           ptsWIPCbl <- na.exclude(ptsWIPCbl)
           ptsWIPCbl <- ptsWIPCbl %>%
-            select(-Logged) %>%
+            dplyr::select(-Logged) %>%
             arrange(desc(n.overlaps))
         }
 
@@ -1010,24 +1053,53 @@ secondtrailsopening <- function(
                                pts = ptsHarvested,
                                plotmask,
                                partMainTrails = PartMainTrails,
-                               advancedloggingparameters = loggingparameters())
+                               advancedloggingparameters = advancedloggingparameters)
 
+  SmoothedSecondTrails <- secondtrails$SmoothedSecondTrails
+  TrailsDensity <- secondtrails$TrailsDensity
+  #
+  #
+  # # Records the dead trees
+  inventory <- treeselectionoutputs$inventory
 
-  AllTrees <- treeselectionoutputs$inventory
+  if (!("DeathCause" %in% names(inventory))){
+    inventory <- inventory %>%
+      add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
+  }
 
-  coordinates(AllTrees) <- ~Xutm + Yutm
-  proj4string(AllTrees) <- crs(topography)
+  DeadTrees <- suppressWarnings(sf::st_intersection(
+    st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography)),
+    sf::st_make_valid(st_as_sf(secondtrails[[1]])) # "make valid" to avoid self-intersection
+  )) %>%
+    add_column(DeadTrees = "1") %>%
+    dplyr::select(idTree, DeadTrees)
+  sf::st_geometry(DeadTrees) <- NULL # remove geometry column (sf to data.frame)
+  DeadTrees <- unique(DeadTrees)
 
-  AllTrees <- st_as_sf(AllTrees)
+  inventory <- inventory %>%
+    left_join(DeadTrees, by = "idTree") %>%
+    mutate(DeathCause = ifelse(is.na(DeathCause) & Selected != "1" & DeadTrees == "1",
+                               "2ndTrail", DeathCause)) %>%  # Damage trees
+    dplyr::select(-DeadTrees)
 
-  DeathInter <-  st_intersects(st_geometry(AllTrees),st_geometry(secondtrails[[1]]),sparse = FALSE)
-  DeathInter[DeathInter == TRUE] <-  "2ndTrail"
-  DeathInter[DeathInter == FALSE] <- NA
+  # # AllTrees <- treeselectionoutputs$inventory
+  # #
+  # # coordinates(AllTrees) <- ~Xutm + Yutm
+  # # proj4string(AllTrees) <- crs(topography)
+  # #
+  # # AllTrees <- st_as_sf(AllTrees)
+  #
+  # # Trees under the 2ndary trails
+  #
+  # # DeathInter <-  st_intersects(st_geometry(AllTrees), st_geometry(secondtrails[[1]]), sparse = FALSE)
+  # # DeathInter[DeathInter == TRUE] <-  "2ndTrail"
+  # # DeathInter[DeathInter == FALSE] <- NA
+  # #
+  # # inventory <- treeselectionoutputs$inventory %>%
+  # #   mutate(DeathCause = DeathInter)
+  #
 
-  inventory <- treeselectionoutputs$inventory %>%
-    mutate(DeathCause = DeathInter)
-
-  secondtrails <- list(paths,lines,secondtrails[[1]],secondtrails[[2]],inventory,CostRasterMean)
+  secondtrails <- list(paths, lines, SmoothedSecondTrails, TrailsDensity, inventory, CostRasterMean)
 
   return(secondtrails)
 

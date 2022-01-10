@@ -38,20 +38,34 @@
 #'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
 #'   hollow trees, damage and and unused part of the log for fuel = "2"
+#'   If fuel wood exploitation (fuel = "1" or "2") the tree will be recovered
+#'   from the crown with a grapple if possible (respected grapple conditions).
+#'   If not, recovery at the foot with a cable at an angle to the trail.
+#'   Avoid future/reserve trees if chosen.
 #'
 #'@param diversification Possibility to log other species in addition to the
 #' main commercial species (species with a value of 2 for commercial in the
 #' \code{\link{SpeciesCriteria}} table) (logical)
 #'
-#'@param winching No cable or grapple = "0", only cable = "1", grapple + cable =
-#'  "2"
+#'@param winching
+#' "0": no cable or grapple (trail to tree foot)
+#' "1": only cable (default = 40m)
+#' "2": grapple (default = 6m) + cable (grapple priority)
+#' If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+#'  recovery of the tree foot with grapple if possible (respected grapple
+#'  conditions) otherwise with cable with angle to the trail.
+#'  Avoidance of future/reserves if chosen.
 #'
 #'@param directionalfelling Directional felling =
 #' "0": only to direct the foot of the tree towards the trail
 #' "1": to direct the foot of the tree towards the trail + to avoid damage to
-#'         future and reserve trees
-#' "2": to avoid damage to future and reserve trees + orientation angle
-#'       to the trail
+#'         future and reserve trees if possible
+#' "2": to avoid damage to future and reserve trees if possible
+#'       + orientation angle to the trail. Among the 2 possible angle positions,
+#'       the position that favours the return to the main trail should be chosen.
+#'       The angle to the trail is favoured to avoid future/reserve trees.
+#' If the avoidance of future/reserve trees could not be performed,
+#' a message is returned.
 #'
 #'@param specieslax Allow diversification if stand is too poor to reach the
 #' objective volume without diversification, = FALSE by
@@ -68,7 +82,7 @@
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
-#'@return Input inventory (data.frame) with logging informations
+#'@return Input inventory (data.frame) with logging informations (list)
 #'(see the outputs metadata in the \code{\link{vignette}}).
 #'
 #'@seealso \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
@@ -143,7 +157,7 @@ loggingsimulation1 <- function(
          of the 'loggingsimulation' function must be data.frames")
 
   # plotmask
-  if (!inherits(plotmask, "SpatialPolygonsDataFrame"))
+  if(!inherits(plotmask, "SpatialPolygonsDataFrame"))
     stop("The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygonsDataFrame")
 
   # topography, verticalcreekheight
@@ -193,8 +207,9 @@ loggingsimulation1 <- function(
 
 
   #### Global variables ####
+  DeathCause <- AGB <- NULL
 
-  # Redefinition of the parameters according to the chosen scenario
+  #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, objective = objective, fuel = fuel,
                                              diversification = diversification, winching = winching,
                                              directionalfelling = directionalfelling)
@@ -221,35 +236,18 @@ loggingsimulation1 <- function(
                           advancedloggingparameters = advancedloggingparameters)
 
 
-  #### Main trails layout: (only for ONF plots) ####
+  #### Main trails layout ####
+
+  data(MainTrails) # A SUPPRIMER
 
   ##### Harvestable area definition: ####
-  HarvestableAreaOutputs <- HarvestableAreaDefinition(topography = topography,
+  HarvestableAreaOutputs <- harvestableareadefinition(topography = topography,
                                                       verticalcreekheight = verticalcreekheight,
                                                       advancedloggingparameters = advancedloggingparameters)
 
   HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
   PlotSlope <- HarvestableAreaOutputs$PlotSlope
   HarvestableArea <- HarvestableAreaOutputs$HarvestableArea
-
-  data(MainTrails) # A SUPPRIMER
-
-  pol1 <- list(matrix(c(286503, 582925,
-                        286503, 583240,
-                        286507, 583240,
-                        286507, 582925,
-                        286503, 582925) # the return
-                      ,ncol=2, byrow=TRUE))
-  pol2 <- list(matrix(c(286650, 582925,
-                        286650, 583240,
-                        286654, 583240,
-                        286654, 582925,
-                        286650, 582925) # the return
-                      ,ncol=2, byrow=TRUE))
-
-  PolList = list(pol1,pol2) #list of lists of numeric matrices
-  ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
-  ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails)) # A SUPPRIMER
 
   #### Tree selection (harvestable, future and reserve trees + defects trees): ####
   treeselectionoutputs <- treeselection(inventory, topography = topography, plotslope = PlotSlope,
@@ -269,21 +267,39 @@ loggingsimulation1 <- function(
   HollowTreesPoints <- treeselectionoutputs$HollowTreesPoints
   EnergywoodTreesPoints <- treeselectionoutputs$EnergywoodTreesPoints
 
-  #### Secondary trails layout (preliminaries for fuel wood harvesting): A FAIRE ####
+  #### Secondary trails layout (preliminaries for fuel wood harvesting) ####
+  pol1 <- list(matrix(c(286503, 582925,
+                        286503, 583240,
+                        286507, 583240,
+                        286507, 582925,
+                        286503, 582925) # the return
+                      ,ncol=2, byrow=TRUE))
+  pol2 <- list(matrix(c(286650, 582925,
+                        286650, 583240,
+                        286654, 583240,
+                        286654, 582925,
+                        286650, 582925) # the return
+                      ,ncol=2, byrow=TRUE))
+
+  PolList = list(pol1,pol2) #list of lists of numeric matrices
+  ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
+  ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails)) # A SUPPRIMER
+
   # ScndTrailOutputs <- secondtrailsopening(
   #   topography = topography,
   #   plotmask = PlotMask,
   #   treeselectionoutputs = treeselectionoutputs,
   #   verticalcreekheight = verticalcreekheight,
   #   CostMatrix = CostMatrix,
-  #   scenarios = scenarios,
+  #   scenario = scenario, winching = winching,
   #   fact = 3,
   #   advancedloggingparameters = advancedloggingparameters)
 
   # ScndTrail <- ScndTrailOutputs$ScndTrail
   # TrailsDensity <- ScndTrailOutputs$TrailsDensity # A AJOUTER A LA FCT
 
-  #### Tree felling: ####
+
+  #### Tree felling ####
   inventory <- treefelling(inventory, scenario = scenario, fuel = fuel,
                            winching = winching, directionalfelling = directionalfelling,
                            MainTrails = MainTrails, ScndTrail = ScndTrail,
@@ -292,7 +308,7 @@ loggingsimulation1 <- function(
 
   #### Adjusted secondary trails layout (for fuel wood harvesting only) A FAIRE ####
 
-  #### Landings implementation: (only for ONF plots) ####
+  #### Landings implementation (only for ONF plots) ####
 
   #### Timber harvested volume quantification ####
   Timberoutputs <- timberharvestedvolume(inventory,
@@ -316,7 +332,7 @@ loggingsimulation1 <- function(
   DeadTrees <- inventory %>%
     filter(!is.na(DeathCause))
 
-  LostBiomass <- sum(DeadTrees$AGB) # in Mg
+  LostBiomass <- sum(DeadTrees$AGB) # in ton
 
 
   #### Outputs ####

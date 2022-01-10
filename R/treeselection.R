@@ -37,7 +37,7 @@
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
 #'
 #'@param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{HarvestableAreaDefinition}}) (sf polygons data.frame)
+#'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
@@ -45,7 +45,7 @@
 #'
 #'@return A list with:
 #'  - input inventory with new columns:
-#'     - The exploitability criteria ("DistCrit", "Slope" (in radians), "SlopeCrit"), and if
+#'     - The exploitability criteria ("DistCriteria", "Slope" (in radians), "SlopeCriteria"), and if
 #'        they are validated for each of the trees ("LoggingStatus").
 #'     - The probability of a tree having visible defects ("VisibleDefectProba")
 #'         and the visible defect trees ("VisibleDefect").
@@ -244,20 +244,20 @@ treeselection <- function(
          you must fill in the arguments 'objective', 'fuel' and 'diversification'")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- Commercial <- NULL
-  Commercial.genus <- Commercial.species <- Condition <- DBH <- NULL
-  DeathCause <- DistCrit <- Family <- LogDBH <- NULL
+  Accessible <- Circ <- CircCorr <- CodeAlive <-  NULL
+  Condition <- DBH <- NULL
+  DeathCause <- DistCriteria <- Family <- LogDBH <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
   MaxFD.species <- MinFD <- MinFD.genus <- MinFD.species <- NULL
   NoHollowTimberLoggedVolume <- ParamCrownDiameterAllometry <- PlotSlope <- NULL
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
-  Selected <- Slope <- SlopeCrit <- Species <- Species.genus <- NULL
+  Selected <- Slope <- SlopeCriteria <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
-  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
-  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  UpMinFD.species <- NULL
+  VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
@@ -277,7 +277,7 @@ treeselection <- function(
   VO <- objective * unique(inventory$PlotArea)
 
   # Joins commercial criteria to the inventory
-  inventory <- ONFGuyafortaxojoin(inventory, speciescriteria = speciescriteria)
+  inventory <- commercialcriteriajoin(inventory, speciescriteria = speciescriteria)
 
   # Harvestable trees identification
   harvestableOutputs <- harvestable(inventory,
@@ -359,9 +359,8 @@ treeselection <- function(
   } else {ReserveTreesPoints = st_point(x = c(NA_real_, NA_real_))} # empty
 
   # Points vector with coordinates of the big trees (DBH >= 50 cm):
-
   BigTreesPoints <- inventory %>%
-    filter(DBH >= advancedloggingparameters$BigTrees & ( Selected != "1"& LoggingStatus != "harvestable" & LoggingStatus != "harvestableUp" & LoggingStatus != "harvestable2nd" ))
+    filter(DBH >= advancedloggingparameters$BigTrees) #  & (Selected != "1" & LoggingStatus != "harvestable") & LoggingStatus != "harvestableUp" & LoggingStatus != "harvestable2nd"
 
   if (dim(BigTreesPoints)[1] != 0) {
 

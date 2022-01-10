@@ -36,10 +36,10 @@
 #'
 #' scenarios <- scenariosparameters(scenario = "RIL3", objective = 15)
 #'
-#' inventory <- ONFGuyafortaxojoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
+#' inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #'  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 #'
-#' AccessPolygons <- FilterAccesExplArea(harvestablepolygons = HarvestablePolygons,
+#' AccessPolygons <- filteraccesexplarea(harvestablepolygons = HarvestablePolygons,
 #' MainTrails = MainTrails,
 #' winching = scenarios$winching,
 #' advancedloggingparameters = loggingparameters())
@@ -89,26 +89,26 @@ smoothtrails <- function(
     st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2) %>%
     st_union()
 
-  secondtrails <- paths %>%
+  SmoothedSecondTrails <- paths %>%
     st_as_sf()  %>%
     st_difference(partMainTrails %>% st_buffer(dist = 2) %>% st_union()) %>%
-    smoothr::smooth(method = "ksmooth",smoothness = smthfact) %>%
+    smoothr::smooth(method = "ksmooth", smoothness = smthfact) %>%
     st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2) %>%
     st_union(ptsBuffered) %>%
     st_union() %>%
     st_intersection(st_as_sf(plotmask) %>% st_union())
 
-  ScndTrailDens <- (secondtrails %>% st_area / advancedloggingparameters$ScndTrailWidth)/(plotmask %>% st_as_sf() %>% st_area() /10000)
+  TrailsDensity <- (SmoothedSecondTrails %>% st_area / advancedloggingparameters$ScndTrailWidth)/(plotmask %>% st_as_sf() %>% st_area() /10000)
 
-  if (as.numeric(ScndTrailDens) <= 200) {
-    message(paste0("The second trails density criteria is validated (", ScndTrailDens," m.ha^-1 <= 200m.ha^-1 )"))
+  if (as.numeric(TrailsDensity) <= 200) {
+    message(paste0("The second trails density criteria is validated (", round(TrailsDensity, digits = 1)," m/ha <= 200 m/ha)"))
   }else{
-    message(paste0("The second trails density criteria is NOT validated (", ScndTrailDens," m.ha^-1 >= 200m.ha^-1)"))
+    message(paste0("The second trails density criteria is NOT validated (", round(TrailsDensity, digits = 1)," m/ha > 200 m/ha)"))
   }
 
 
-secondtrails <- list(secondtrails = secondtrails,
-                     ScndTrailDens = ScndTrailDens)
+secondtrails <- list(SmoothedSecondTrails = SmoothedSecondTrails,
+                     TrailsDensity = TrailsDensity)
 
   return(secondtrails)
 }
