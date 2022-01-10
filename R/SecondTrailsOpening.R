@@ -663,7 +663,7 @@ secondtrailsopening <- function(
                                   st_geometry(AccessMainTrails %>%
                                                 st_union()),
                                   sparse = FALSE)) %>%
-        select(-ID)
+        dplyr::select(-ID)
 
 
       ptsWIP <- ptsWIP %>%
@@ -908,7 +908,7 @@ secondtrailsopening <- function(
 
       #Compute Cost between all points and Access points
 
-      CostDistEstWIP <-  AdjTopoLCP(costSurface = CondSurf,topography = DTMmean , pts = TmpPtsWIP %>% as_Spatial(),
+      CostDistEstWIP <-  adjtopolcp(costSurface = CondSurf,topography = DTMmean , pts = TmpPtsWIP %>% as_Spatial(),
                                     slopeRdCond = SlopeCondRd,paths = FALSE)[,1:length(PointAcc$ID)]
 
 
