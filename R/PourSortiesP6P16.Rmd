@@ -27,8 +27,6 @@ data(DTMParacou)
 ##RIL2broken
 ```{r}
 
-scenarios <- scenariosparameters(scenario = "RIL2broken")
-
 inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
@@ -59,7 +57,7 @@ secondtrailsRIL2broken <- secondtrailsopening(
                          list(CostType = "Futures", CostValue = 1900),
                          list(CostType = "MainTrails", CostValue = 1E-4),
                          list(CostType = "SecondTrails", CostValue = .1))),
-  scenario = scenarios,
+  scenario = "RIL2broken",
   fact = 3,
   advancedloggingparameters = loggingparameters())
   
@@ -78,8 +76,6 @@ if (is.null(secondtrailsRIL2broken$paths) ) {
 ##RIL2
 
 ```{r}
-
-scenarios <- scenariosparameters(scenario = "RIL2")
 
 inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
@@ -111,7 +107,7 @@ secondtrailsRIL2 <- secondtrailsopening(
                          list(CostType = "Futures", CostValue = 1900),
                          list(CostType = "MainTrails", CostValue = 1E-4),
                          list(CostType = "SecondTrails", CostValue = .1))),
-  scenario = scenarios,
+  scenario = "RIL2",
   fact = 3,
   advancedloggingparameters = loggingparameters())
 
@@ -131,8 +127,6 @@ if (is.null(secondtrailsRIL2$paths) ) {
 
 ##RIL3
 ```{r}
-
-scenarios <- scenariosparameters(scenario = "RIL3")
 
 inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
@@ -165,7 +159,7 @@ CostMatrix = list(list(list(Slope = 3, Cost = 3),
                          list(CostType = "Futures", CostValue = 900),
                          list(CostType = "MainTrails", CostValue = 1E-4),
                          list(CostType = "SecondTrails", CostValue = 1E-2))),
-  scenario = scenarios,
+  scenario = "RIL3",
   fact = 3,
   advancedloggingparameters = loggingparameters())
 
@@ -183,8 +177,6 @@ if (is.null(secondtrailsRIL3$paths) ) {
 
 ##RIL3fuel
 ```{r}
-
-scenarios <- scenariosparameters(scenario = "RIL3fuel")
 
 inventoryP6RIL3fuel <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
@@ -216,7 +208,7 @@ CostMatrix = list(list(list(Slope = 3, Cost = 3),
                          list(CostType = "Futures", CostValue = 900),
                          list(CostType = "MainTrails", CostValue = 1E-4),
                          list(CostType = "SecondTrails", CostValue = 1E-2))),
-  scenario = scenarios,
+  scenario = "RIL3fuel",
   fact = 3,
   advancedloggingparameters = loggingparameters())
   
@@ -238,8 +230,6 @@ if (is.null(secondtrailsRIL3fuel$paths) ) {
 ##RIL3fuelhollow
 ```{r}
 
-scenarios <- scenariosparameters(scenario = "RIL3fuelhollow")
-
 inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
@@ -247,7 +237,7 @@ inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, Plo
 treeselectionoutputsRIL3fuelhollow <- treeselection(inventory,
 topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
 harvestablepolygons = HarvestablePolygons,
-speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+speciescriteria = SpeciesCriteria,
 scenario = "RIL3fuelhollow",
 objectivelax = TRUE,
 advancedloggingparameters = loggingparameters())
@@ -270,7 +260,7 @@ CostMatrix = list(list(list(Slope = 3, Cost = 3),
                          list(CostType = "Futures", CostValue = 900),
                          list(CostType = "MainTrails", CostValue = 1E-4),
                          list(CostType = "SecondTrails", CostValue = 1E-2))),
-  scenario = scenarios,
+  scenario = "RIL3fuelhollow",
   fact = 3,
   advancedloggingparameters = loggingparameters())
 

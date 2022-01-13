@@ -90,15 +90,15 @@
 #'   topography = DTMParacou,
 #'   plotmask = PlotMask,
 #'   treeselectionoutputs = treeselectionoutputs,
-#'   verticalcreekheight = VerticalCreekHeight,
+#'   creekdistances = CreekDistances,
 #'   CostMatrix = list(list(list(Slope = 3, Cost = 3),
 #'                          list(Slope = 5, Cost = 5),
 #'                          list(Slope = 12, Cost = 20),
 #'                          list(Slope = 22, Cost = 100),
 #'                          list(Slope = 27, Cost = 1000),
-#'                          list(Slope = Inf, Cost = 10000)),
+#'                          list(Slope = Inf, Cost = Inf)),
 #'                     list(list(CostType = "Initial", CostValue = 1000),
-#'                          list(CostType = "Access", CostValue = 10000),
+#'                          list(CostType = "Access", CostValue = Inf),
 #'                          list(CostType = "BigTrees", CostValue = 500),
 #'                          list(CostType = "Reserves", CostValue = 1000),
 #'                          list(CostType = "Futures", CostValue = 900),
@@ -173,9 +173,9 @@ secondtrailsopening <- function(
   Selected <- DeathCause <- NULL
 
 
-  # Redefinition of the parameters according to the chosen scenario
-
-  WinchingInit <- scenario$winching
+  #### Redefinition of the parameters according to the chosen scenario ####
+  scenariosparameters <- scenariosparameters(scenario = scenario, winching = winching)
+  WinchingInit <- scenariosparameters$winching
   winching <- WinchingInit
 
   ##################################
@@ -433,7 +433,7 @@ secondtrailsopening <- function(
 
     CostRasterMeanGrpl <- aggregate(CostRasterGrpl, fact=fact, fun=mean)
     CostRasterMeanGrpl <- crop(CostRasterMeanGrpl,  CostRaster)
-    CostRasterMeanGrpl <- mask(CostRasterMeanGrpl, MainTrails)
+    CostRasterMeanGrpl <- mask(CostRasterMeanGrpl, plotmask)
 
 
   }
@@ -805,10 +805,12 @@ secondtrailsopening <- function(
         if (winching == "2") {
           ptsDirAcc <- ptsTreeWIP %>%  mutate(gprlAcc  = c(FALSE,as.numeric(st_distance(ptsTreeWIP)[2:dim(ptsTreeWIP)[1],1]) < advancedloggingparameters$GrappleLength)) %>%
             filter(gprlAcc == TRUE | type == "Access") %>% dplyr::select(-gprlAcc)
+          TmpTypeAcc <- "Grpl"
 
         }else{
           ptsDirAcc <- ptsTreeWIP %>%  mutate(cblAcc  = c(FALSE,as.numeric(st_distance(ptsTreeWIP)[2:dim(ptsTreeWIP)[1],1]) < advancedloggingparameters$CableLength)) %>%
             filter(cblAcc == TRUE | type == "Access") %>% dplyr::select(-cblAcc)
+          TmpTypeAcc <- "Cbl"
         }
       }else{
 
@@ -817,9 +819,13 @@ secondtrailsopening <- function(
         ptsDirAcc <- ptsTreeWIP %>%  mutate(gprlAcc  = c(FALSE,as.numeric(st_distance(ptsTreeWIP,st_union(paths,PointAcc))[2:dim(ptsTreeWIP)[1],1]) < advancedloggingparameters$GrappleLength)) %>%
           filter(gprlAcc == TRUE | type == "Access") %>% dplyr::select(-gprlAcc)
 
+        TmpTypeAcc <- "Grpl"
+
       }else{
         ptsDirAcc <- ptsTreeWIP %>%  mutate(cblAcc  = c(FALSE,as.numeric(st_distance(ptsTreeWIP,st_union(paths,PointAcc))[2:dim(ptsTreeWIP)[1],1]) < advancedloggingparameters$CableLength)) %>%
           filter(cblAcc == TRUE | type == "Access") %>% dplyr::select(-cblAcc)
+
+        TmpTypeAcc <- "Cbl"
        }
       }
 
@@ -829,7 +835,7 @@ secondtrailsopening <- function(
 
         PointTreeWIP <- ptsDirAcc %>% filter(type == "Tree")
 
-        Lines[[l]] <- list("LineID" = NA,"LoggedTrees" = PointTreeWIP$origins, "winching" = winching)
+        Lines[[l]] <- list("LineID" = NA,"LoggedTrees" = PointTreeWIP$origins, "TypeExpl" = TmpTypeAcc)
 
 
         l <- l+1
@@ -913,6 +919,8 @@ secondtrailsopening <- function(
             mutate(origins = PointTree$origins[1])%>%
             mutate(n.overlaps = PointTree$n.overlaps[1])
 
+          TmpTypeAcc <- "Grpl"
+
           #Select adjacent grpl graph
           SlopeCondRd <- SlopeCondGrpl
 
@@ -937,6 +945,8 @@ secondtrailsopening <- function(
 
           #Select adjacent cbl graph
           SlopeCondRd <- SlopeCond
+
+          TmpTypeAcc <- "Cbl"
         }
 
       }else{
@@ -957,6 +967,8 @@ secondtrailsopening <- function(
 
         #Select adjacent cbl graph
         SlopeCondRd <- SlopeCond
+
+        TmpTypeAcc <- "Cbl"
 
       }
 
@@ -1028,7 +1040,7 @@ secondtrailsopening <- function(
                                                   collapse='-'),
                                             sep = ".")
 
-      Lines[[l]] <- list("LineID" = k,"LoggedTrees" = PointTreeWIP$origins[[1]], "winching" = winching)
+      Lines[[l]] <- list("LineID" = k,"LoggedTrees" = PointTreeWIP$origins[[1]], "TypeExpl" = TmpTypeAcc)
 
       k <- k +1
       l <- l+1
