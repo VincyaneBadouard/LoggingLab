@@ -34,7 +34,7 @@ inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, Plo
 treeselectionoutputsRIL2broken <- treeselection(inventory,
 topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
 harvestablepolygons = HarvestablePolygons,
-speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+speciescriteria = SpeciesCriteria,
 scenario = "RIL2broken",
 objectivelax = TRUE,
 advancedloggingparameters = loggingparameters())
@@ -84,7 +84,7 @@ inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, Plo
 treeselectionoutputsRIL2 <- treeselection(inventory,
 topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
 harvestablepolygons = HarvestablePolygons,
-speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+speciescriteria = SpeciesCriteria,
 scenario = "RIL2",
 objectivelax = TRUE,
 advancedloggingparameters = loggingparameters())
@@ -135,7 +135,7 @@ inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, Plo
 treeselectionoutputsRIL3 <- treeselection(inventory,
 topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
 harvestablepolygons = HarvestablePolygons,
-speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+speciescriteria = SpeciesCriteria,
 scenario = "RIL3",
 objectivelax = TRUE,
 advancedloggingparameters = loggingparameters())
@@ -185,7 +185,7 @@ inventoryP6RIL3fuel <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6
 treeselectionoutputsRIL3fuel <- treeselection(inventoryP6RIL3fuel,
 topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
 harvestablepolygons = HarvestablePolygons,
-speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+speciescriteria = SpeciesCriteria,
 scenario = "RIL3fuel",
 objectivelax = TRUE,
 advancedloggingparameters = loggingparameters())

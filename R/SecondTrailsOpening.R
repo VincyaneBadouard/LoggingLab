@@ -466,7 +466,7 @@ secondtrailsopening <- function(
                               y = CostRasterMean ,
                               field = CostMatrix[[2]][[3]]$CostValue,
                               update = TRUE)
-  if (scenarios$winching == "2") {
+  if (winching == "2") {
     # Reassign Selected Tree values (= BigTrees) to the aggregated Cost raster (Grpl)
     CostRasterMeanGrpl <- rasterize(x = as_Spatial(ptsAll %>% st_buffer(dist = max(2*fact,advancedloggingparameters$ScndTrailWidth/2 + 2))),
                                     y = CostRasterMeanGrpl ,
