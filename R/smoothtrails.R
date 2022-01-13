@@ -2,15 +2,13 @@
 #'
 #'@param paths Raw secondary trails polygons (sp polylines)
 #'
-#'@param pts Harvested tree locations (sf points)
-#'
 #'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame)
-#'
-#'@param partMainTrails Intersections between accessible area and MainTrails (sf
-#'  polygon)
 #'
 #'@param smthfact A positive number controlling the smoothness and level of
 #'  generalization (numeric)
+#'
+#'@param verbose return message on second trails density criteria (boolean)
+#'
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
@@ -78,33 +76,29 @@
 #'
 smoothtrails <- function(
   paths,
-  pts,
   plotmask,
-  partMainTrails,
   smthfact = 5,
+  verbose = FALSE,
   advancedloggingparameters = loggingparameters()
 ){
 
-  ptsBuffered <- pts  %>%
-    st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2) %>%
-    st_union()
-
   SmoothedSecondTrails <- paths %>%
-    st_as_sf()  %>%
-    st_difference(partMainTrails %>% st_buffer(dist = 2) %>% st_union()) %>%
+    st_as_sf() %>% filter(st_is_empty(paths %>%
+                                        st_as_sf()) == FALSE)  %>%
     smoothr::smooth(method = "ksmooth", smoothness = smthfact) %>%
     st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2) %>%
-    st_union(ptsBuffered) %>%
     st_union() %>%
     st_intersection(st_as_sf(plotmask) %>% st_union())
 
   TrailsDensity <- (SmoothedSecondTrails %>% st_area / advancedloggingparameters$ScndTrailWidth)/(plotmask %>% st_as_sf() %>% st_area() /10000)
-
-  if (as.numeric(TrailsDensity) <= 200) {
-    message(paste0("The second trails density criteria is validated (", round(TrailsDensity, digits = 1)," m/ha <= 200 m/ha)"))
-  }else{
-    message(paste0("The second trails density criteria is NOT validated (", round(TrailsDensity, digits = 1)," m/ha > 200 m/ha)"))
+  if (verbose) {
+    if (as.numeric(TrailsDensity) <= 200) {
+      message(paste0("The second trails density criteria is validated (", round(TrailsDensity, digits = 1)," m/ha <= 200 m/ha)"))
+    }else{
+      message(paste0("The second trails density criteria is NOT validated (", round(TrailsDensity, digits = 1)," m/ha > 200 m/ha)"))
+    }
   }
+
 
 
 secondtrails <- list(SmoothedSecondTrails = SmoothedSecondTrails,

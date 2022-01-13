@@ -29,23 +29,23 @@ data("MainTrails")
 ```{r}
 secondtrails$TrailsDensity
 
-secondtrails[[1]] # 'paths'
-class(secondtrails[[1]]) # SpatialLines (sp)
+secondtrails$paths # 'paths'
+class(secondtrails$paths) # SpatialLines (sp)
 
-secondtrails[[2]] # 'lines' Sert à quoi ??
-class(secondtrails[[2]]) # matrix
+secondtrails$lines # 'lines' Sert à quoi ??
+class(secondtrails$lines) # matrix
 
-plot(secondtrails[[3]]) # SmoothedSecondTrails
-class(secondtrails[[3]]) # sfc_MULTIPOLYGON
+plot(secondtrails$SmoothedSecondTrails) # SmoothedSecondTrails
+class(secondtrails$SmoothedSecondTrails) # sfc_MULTIPOLYGON
 
-secondtrails[[4]] # TrailsDensity
-class(secondtrails[[4]]) # "units" ??? A mettre en numeric !
+secondtrails$TrailsDensity # TrailsDensity
+class(secondtrails$TrailsDensity) # "units" ??? A mettre en numeric !
 
-new_inventory <- secondtrails[[5]] # inventory
-class(secondtrails[[5]]) # data.frame
+new_inventory <- secondtrails$inventory # inventory
+class(secondtrails$inventory ) # data.frame
 
-secondtrails[[6]] # CostRasterMean. Sert à quoi ??
-class(secondtrails[[6]]) # RasterLayer
+secondtrails$CostRasterAgg  # CostRasterMean. Sert à quoi ??
+class(secondtrails$CostRasterAgg) # RasterLayer
 
 ```
 
@@ -60,8 +60,8 @@ ggplot() +
   labs(title = "P6 zones exploitables") +
   
   # 2ndary trails
-  geom_sf(data = st_as_sf(secondtrails[[3]]), col = "darkgreen") +
-  geom_sf(data = st_as_sf(secondtrails[[1]]), col = "red")
+  geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
+  geom_sf(data = st_as_sf(secondtrails$paths), col = "red")
 
 ```
 
@@ -80,10 +80,10 @@ Harvestable <- sf::st_as_sf(
   coords = c("Xutm", "Yutm")) %>% 
   st_set_crs(st_crs(HarvestablePolygons))
 
-HarvestableUp <- sf::st_as_sf(
-  dplyr::filter(NewInventory, LoggingStatus == "harvestableUp"),
-  coords = c("Xutm", "Yutm")) %>% 
-  st_set_crs(st_crs(HarvestablePolygons))
+# HarvestableUp <- sf::st_as_sf(
+#   dplyr::filter(NewInventory, LoggingStatus == "harvestableUp"),
+#   coords = c("Xutm", "Yutm")) %>% 
+#   st_set_crs(st_crs(HarvestablePolygons))
 
 Selected <- sf::st_as_sf(
   dplyr::filter(NewInventory, Selected == "1"), coords = c("Xutm", "Yutm")) %>% 
@@ -94,10 +94,10 @@ Reserve <- sf::st_as_sf(
   coords = c("Xutm", "Yutm")) %>% 
   st_set_crs(st_crs(HarvestablePolygons))
 
-Future <- sf::st_as_sf(
-  dplyr::filter(NewInventory, LoggingStatus == "future"),
-  coords = c("Xutm", "Yutm")) %>% 
-  st_set_crs(st_crs(HarvestablePolygons))
+# Future <- sf::st_as_sf(
+#   dplyr::filter(NewInventory, LoggingStatus == "future"),
+#   coords = c("Xutm", "Yutm")) %>% 
+#   st_set_crs(st_crs(HarvestablePolygons))
 
 ProbedHollow <- sf::st_as_sf(
   dplyr::filter(NewInventory, ProbedHollow == "1"), coords = c("Xutm", "Yutm")) %>% 
@@ -121,16 +121,16 @@ ggplot() +
   labs(title = "P6 zones exploitables") +
   
   # 2ndary trails
-  geom_sf(data = st_as_sf(secondtrails[[3]]), col = "darkgreen") +
-  geom_sf(data = st_as_sf(secondtrails[[1]]), col = "red") +
+  geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
+  geom_sf(data = st_as_sf(secondtrails$paths), col = "red") +
   
   # Tree selection
   # geom_sf(data = NonHarvestable,
   #         aes(colour = "Non-harvestable"), show.legend = "point") +
   geom_sf(data = VisibleDefect,
           aes(colour = "Visible defect"), show.legend = "point") +
-  geom_sf(data = Future,
-          aes(colour = "Future"), show.legend = "point", size = 4) +
+  # geom_sf(data = Future,
+  #         aes(colour = "Future"), show.legend = "point", size = 4) +
   geom_sf(data = Reserve,
           aes(colour = "Reserve"), show.legend = "point", size = 4) +
   geom_sf(data = Harvestable,
@@ -182,8 +182,8 @@ ggplot() +
   #         aes(colour = "Non-harvestable"), show.legend = "point") +
   geom_sf(data = VisibleDefect,
           aes(colour = "Visible defect"), show.legend = "point") +
-  geom_sf(data = Future,
-          aes(colour = "Future"), show.legend = "point", size = 4) +
+  # geom_sf(data = Future,
+  #         aes(colour = "Future"), show.legend = "point", size = 4) +
   geom_sf(data = Reserve,
           aes(colour = "Reserve"), show.legend = "point", size = 4) +
   geom_sf(data = Harvestable,
@@ -203,6 +203,6 @@ ggplot() +
                                  "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
                                  "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
   labs(color = "Logging status") +
-  labs(title = "P16 EFI3")
+  labs(title = "P6 EFI3 Hollow Fuel")
 ```
 

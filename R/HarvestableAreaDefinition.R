@@ -3,8 +3,8 @@
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
-#' @param verticalcreekheight Relative elevation from nearest channel network
-#'   (Large RasterLayer)
+#' @param creekdistances Relative distances (vertical and horizontal) from nearest channel network
+#'   (list of 2 large RasterLayers)
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
@@ -30,11 +30,11 @@
 #' \dontrun{
 #' data(PlotMask)
 #' data(DTMParacou)
-#' data(VerticalCreekHeight)
+#' data(creekdistances)
 #'
 #' HarvestableAreaOutputs <- harvestableareadefinition(
 #'   topography = DTMParacou,
-#'   verticalcreekheight = VerticalCreekHeight,
+#'   creekdistances = creekdistances,
 #'   advancedloggingparameters = loggingparameters()
 #'   )
 #'
@@ -52,7 +52,7 @@
 #'
 harvestableareadefinition <- function(
   topography,
-  verticalcreekheight,
+  creekdistances,
   advancedloggingparameters = loggingparameters()
 ){
 
@@ -75,28 +75,35 @@ harvestableareadefinition <- function(
     as_tibble(rasterToPoints(PlotSlope))
 
   CreekVHeightPlotPoint <-
-    as_tibble(rasterToPoints(verticalcreekheight))
+    as_tibble(rasterToPoints(creekdistances$distvert))
+
+  CreekHDistPlotPoint <-
+    as_tibble(rasterToPoints(creekdistances$distHorz))
 
   # Join tibbles by x and y
   PlotTib <-
-    left_join(PlotSlopePoint, CreekVHeightPlotPoint, by = c('x', 'y'))
+    left_join(PlotSlopePoint, CreekVHeightPlotPoint, by = c('x', 'y')) %>%
+  left_join(CreekHDistPlotPoint, by = c('x', 'y'))
 
   SlpCrit <- atan(advancedloggingparameters$MaxAreaSlope/100)
+  CreekHDistCrit <- advancedloggingparameters$WaterSourcesBufferZone
+  CreekVDistCrit <- advancedloggingparameters$WaterSourcesRelativeHeight
 
-  PlotTib %>% rename("CreekVHeight" = names(PlotTib[4]))  %>%
+  PlotTib %>% rename("CreekVHeight" = names(PlotTib[4]),"CreekHDist" = names(PlotTib[5]))  %>%
     mutate(Harvestable = if_else(
-      condition = CreekVHeight > 2 &
+      condition = CreekVHeight > CreekVDistCrit &
+        CreekHDist > CreekHDistCrit &
         slope <= SlpCrit,
       true = 1,
       false = 0
-    )) -> PlotSlopeCreekVHeight # Identify harvestable area (1) /  non-harvestable area (0) by slope and Creek Vertical Height
+    )) -> PlotSlopeCreekDist # Identify harvestable area (1) /  non-harvestable area (0) by slope and Creek Vertical Height
 
 
 
 
   # transform tibble to raster
   RasterHarvestable <-
-    rasterFromXYZ(PlotSlopeCreekVHeight, crs = raster::crs(topography)) # set crs to WGS84 UTM 22N
+    rasterFromXYZ(PlotSlopeCreekDist, crs = raster::crs(topography)) # set crs to WGS84 UTM 22N
 
   # raster to polygon
   PolygonHarvestable <-

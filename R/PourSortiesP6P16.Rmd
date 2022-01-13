@@ -1,0 +1,529 @@
+---
+title: "Sorties Pistes"
+author: "Gaquiere Thomas"
+date: "29/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+library(Maria)
+library(sf)
+library(dplyr)
+
+
+data(Paracou6_2016)
+data(HarvestablePolygons)
+data(MainTrails)
+data(PlotMask)
+data(PlotSlope)
+data("SpeciesCriteria")
+data(CreekDistances)
+data(DTMParacou)
+```
+
+#Sorties P6
+
+##RIL2broken
+```{r}
+
+scenarios <- scenariosparameters(scenario = "RIL2broken")
+
+inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
+ volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
+
+
+treeselectionoutputsRIL2broken <- treeselection(inventory,
+topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
+harvestablepolygons = HarvestablePolygons,
+speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+scenario = "RIL2broken",
+objectivelax = TRUE,
+advancedloggingparameters = loggingparameters())
+
+secondtrailsRIL2broken <- secondtrailsopening(
+  topography = DTMParacou,
+  plotmask = PlotMask,
+  treeselectionoutputs = treeselectionoutputsRIL2broken,
+  creekdistances = CreekDistances,
+ CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 22, Cost = 60),
+                         list(Slope = 27, Cost = 1E20),
+                         list(Slope = Inf, Cost = Inf)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = Inf),
+                         list(CostType = "BigTrees", CostValue = 1500),
+                         list(CostType = "Reserves", CostValue = 2000),
+                         list(CostType = "Futures", CostValue = 1900),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = .1))),
+  scenario = scenarios,
+  fact = 3,
+  advancedloggingparameters = loggingparameters())
+  
+if (is.null(secondtrailsRIL2broken$paths) ) {
+  plot(secondtrailsRIL2broken$SmoothedSecondTrails)
+  plot(secondtrailsRIL2broken$CostRasterAgg)
+  plot(secondtrailsRIL2broken$SmoothedSecondTrails,add=T)
+}else{
+  plot(secondtrailsRIL2broken$paths)
+  plot(secondtrailsRIL2broken$SmoothedSecondTrails)
+  plot(secondtrailsRIL2broken$CostRasterAgg)
+  plot(secondtrailsRIL2broken$SmoothedSecondTrails,add=T)
+}
+```
+
+##RIL2
+
+```{r}
+
+scenarios <- scenariosparameters(scenario = "RIL2")
+
+inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
+ volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
+
+
+treeselectionoutputsRIL2 <- treeselection(inventory,
+topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
+harvestablepolygons = HarvestablePolygons,
+speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+scenario = "RIL2",
+objectivelax = TRUE,
+advancedloggingparameters = loggingparameters())
+
+secondtrailsRIL2 <- secondtrailsopening(
+  topography = DTMParacou,
+  plotmask = PlotMask,
+  treeselectionoutputs = treeselectionoutputsRIL2,
+  creekdistances = CreekDistances,
+ CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 22, Cost = 60),
+                         list(Slope = 27, Cost = 1000),
+                         list(Slope = Inf, Cost = Inf)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = Inf),
+                         list(CostType = "BigTrees", CostValue = 1500),
+                         list(CostType = "Reserves", CostValue = 2000),
+                         list(CostType = "Futures", CostValue = 1900),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = .1))),
+  scenario = scenarios,
+  fact = 3,
+  advancedloggingparameters = loggingparameters())
+
+if (is.null(secondtrailsRIL2$paths) ) {
+  plot(secondtrailsRIL2$SmoothedSecondTrails)
+  plot(secondtrailsRIL2$CostRasterAgg)
+  plot(secondtrailsRIL2$SmoothedSecondTrails,add=T)
+}else{
+  plot(secondtrailsRIL2$paths)
+  plot(secondtrailsRIL2$SmoothedSecondTrails)
+  plot(secondtrailsRIL2$CostRasterAgg)
+  plot(secondtrailsRIL2$SmoothedSecondTrails,add=T)
+}
+
+```
+
+
+##RIL3
+```{r}
+
+scenarios <- scenariosparameters(scenario = "RIL3")
+
+inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
+ volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
+
+
+treeselectionoutputsRIL3 <- treeselection(inventory,
+topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
+harvestablepolygons = HarvestablePolygons,
+speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+scenario = "RIL3",
+objectivelax = TRUE,
+advancedloggingparameters = loggingparameters())
+
+
+secondtrailsRIL3 <- secondtrailsopening(
+  topography = DTMParacou,
+  plotmask = PlotMask,
+  treeselectionoutputs = treeselectionoutputsRIL3,
+  creekdistances = CreekDistances,
+CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 22, Cost = 100),
+                         list(Slope = 27, Cost = 1000),
+                         list(Slope = Inf, Cost = Inf)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = Inf),
+                         list(CostType = "BigTrees", CostValue = 500),
+                         list(CostType = "Reserves", CostValue = 1000),
+                         list(CostType = "Futures", CostValue = 900),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = 1E-2))),
+  scenario = scenarios,
+  fact = 3,
+  advancedloggingparameters = loggingparameters())
+
+if (is.null(secondtrailsRIL3$paths) ) {
+  plot(secondtrailsRIL3$SmoothedSecondTrails)
+  plot(secondtrailsRIL3$CostRasterAgg)
+  plot(secondtrailsRIL3$SmoothedSecondTrails,add=T)
+}else{
+  plot(secondtrailsRIL3$paths)
+  plot(secondtrailsRIL3$SmoothedSecondTrails)
+  plot(secondtrailsRIL3$CostRasterAgg)
+  plot(secondtrailsRIL3$SmoothedSecondTrails,add=T)
+}
+```
+
+##RIL3fuel
+```{r}
+
+scenarios <- scenariosparameters(scenario = "RIL3fuel")
+
+inventoryP6RIL3fuel <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
+ volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
+
+
+treeselectionoutputsRIL3fuel <- treeselection(inventoryP6RIL3fuel,
+topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
+harvestablepolygons = HarvestablePolygons,
+speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+scenario = "RIL3fuel",
+objectivelax = TRUE,
+advancedloggingparameters = loggingparameters())
+
+secondtrailsRIL3fuel <- secondtrailsopening(
+  topography = DTMParacou,
+  plotmask = PlotMask,
+  treeselectionoutputs = treeselectionoutputsRIL3fuel,
+  creekdistances = CreekDistances,
+CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 22, Cost = 100),
+                         list(Slope = 27, Cost = 1000),
+                         list(Slope = Inf, Cost = Inf)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = Inf),
+                         list(CostType = "BigTrees", CostValue = 500),
+                         list(CostType = "Reserves", CostValue = 1000),
+                         list(CostType = "Futures", CostValue = 900),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = 1E-2))),
+  scenario = scenarios,
+  fact = 3,
+  advancedloggingparameters = loggingparameters())
+  
+
+secondtrailsRIL3fuel$lines
+
+if (is.null(secondtrailsRIL3fuel$paths) ) {
+  plot(secondtrailsRIL3fuel$SmoothedSecondTrails)
+  plot(secondtrailsRIL3fuel$CostRasterAgg)
+  plot(secondtrailsRIL3fuel$SmoothedSecondTrails,add=T)
+}else{
+  plot(secondtrailsRIL3fuel$paths)
+  plot(secondtrailsRIL3fuel$SmoothedSecondTrails)
+  plot(secondtrailsRIL3fuel$CostRasterAgg)
+  plot(secondtrailsRIL3fuel$SmoothedSecondTrails,add=T)
+}
+```
+
+##RIL3fuelhollow
+```{r}
+
+scenarios <- scenariosparameters(scenario = "RIL3fuelhollow")
+
+inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
+ volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
+
+
+treeselectionoutputsRIL3fuelhollow <- treeselection(inventory,
+topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
+harvestablepolygons = HarvestablePolygons,
+speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+scenario = "RIL3fuelhollow",
+objectivelax = TRUE,
+advancedloggingparameters = loggingparameters())
+
+secondtrailsRIL3fuelhollow <- secondtrailsopening(
+  topography = DTMParacou,
+  plotmask = PlotMask,
+  treeselectionoutputs = treeselectionoutputsRIL3fuelhollow,
+  creekdistances = CreekDistances,
+CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 22, Cost = 100),
+                         list(Slope = 27, Cost = 1000),
+                         list(Slope = Inf, Cost = Inf)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = Inf),
+                         list(CostType = "BigTrees", CostValue = 500),
+                         list(CostType = "Reserves", CostValue = 1000),
+                         list(CostType = "Futures", CostValue = 900),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = 1E-2))),
+  scenario = scenarios,
+  fact = 3,
+  advancedloggingparameters = loggingparameters())
+
+secondtrailsRIL3fuelhollow$lines
+
+if (is.null(secondtrailsRIL3fuelhollow$paths) ) {
+  plot(secondtrailsRIL3fuelhollow$SmoothedSecondTrails)
+  plot(secondtrailsRIL3fuelhollow$CostRasterAgg)
+  plot(secondtrailsRIL3fuelhollow$SmoothedSecondTrails,add=T)
+}else{
+  plot(secondtrailsRIL3fuelhollow$paths)
+  plot(secondtrailsRIL3fuelhollow$SmoothedSecondTrails)
+  plot(secondtrailsRIL3fuelhollow$CostRasterAgg)
+  plot(secondtrailsRIL3fuelhollow$SmoothedSecondTrails,add=T)
+}
+```
+
+#Sorties P16
+
+Load PourSortiesP16.rdata avant de lancer les chunks
+
+```{r, include=FALSE}
+
+crs(DemParacou) <- crs(DTMParacou)
+crs(DemParacou)
+
+crs(HANDParacou16) <- crs(DTMParacou)
+crs(HANDParacou16)
+
+
+HADP16<- Maria::HarvestableAreaDefinition(topography = DemParacou,creekdistances = HANDParacou16)
+
+harvestablepolygonsP16 <- HADP16[[1]]
+
+plotslopeP16<- HADP16[[2]]
+
+#Parcelle %>% st_as_sf() -> MainTrailsP16
+#MainTrailsP16 <- st_set_crs(MainTrailsP16,raster::crs(HANDParacou16))
+crs(plotslopeP16)
+
+crs(Parcelle)
+```
+
+#RIL2broken
+
+```{r}
+
+scenarios <- scenariosparameters(scenario = "RIL2broken")
+
+inventory <- commercialcriteriajoin(addtreedim(cleaninventory(InvP16, Parcelle),
+ volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
+
+
+treeselectionoutputsP16RIL2broken<- Maria::treeselection(inventory,
+                                                       topography = DemParacou, plotslope = plotslopeP16, MainTrails = MainTrailsP16,
+                                                       harvestablepolygons = harvestablepolygonsP16,
+                                                       speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+                                                       scenario ="RIL2broken",
+                                                       objectivelax = TRUE,
+                                                       advancedloggingparameters = loggingparameters())
+
+secondtrailsP16RIL2broken <- Maria::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
+                                                            creekdistances= HANDParacou16,  treeselectionoutputsP16RIL2broken, 
+                                                           CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 22, Cost = 100),
+                         list(Slope = 27, Cost = 1000),
+                         list(Slope = Inf, Cost = Inf)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = Inf),
+                         list(CostType = "BigTrees", CostValue = 500),
+                         list(CostType = "Reserves", CostValue = 1000),
+                         list(CostType = "Futures", CostValue = 900),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = 1E-2))),
+  scenarios = scenarios,
+  fact = 3,
+  advancedloggingparameters = loggingparameters())
+
+
+plot(secondtrailsP16RIL2broken[[1]])
+plot(secondtrailsP16RIL2broken[[3]])
+plot(secondtrailsP16RIL2broken[[6]])
+```
+
+#RIL2
+
+```{r}
+
+scenarios <- scenariosparameters(scenario = "RIL2")
+
+inventory <- commercialcriteriajoin(addtreedim(cleaninventory(InvP16, Parcelle),
+ volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
+
+
+treeselectionoutputsP16RIL2<- Maria::treeselection(inventory,
+                                                       topography = DemParacou, plotslope = plotslopeP16, MainTrails = MainTrailsP16,
+                                                       harvestablepolygons = harvestablepolygonsP16,
+                                                       speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+                                                       scenario ="RIL2",
+                                                       objectivelax = TRUE,
+                                                       advancedloggingparameters = loggingparameters())
+
+secondtrailsP16RIL2broken <- Maria::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
+                                                            creekdistances= HANDParacou16,  treeselectionoutputsP16RIL2, 
+                                                          CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 22, Cost = 60),
+                         list(Slope = 27, Cost = 10000),
+                         list(Slope = Inf, Cost = 10000)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = 10000),
+                         list(CostType = "BigTrees", CostValue = 1500),
+                         list(CostType = "Reserves", CostValue = 2000),
+                         list(CostType = "Futures", CostValue = 1900),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = .1))),
+  scenarios = scenarios,
+  fact = 3,
+  advancedloggingparameters = loggingparameters())
+
+plot(secondtrailsP16RIL2[[1]])
+plot(secondtrailsP16RIL2[[3]])
+plot(secondtrailsP16RIL2[[6]])
+```
+
+#RIL3
+
+```{r}
+
+scenarios <- scenariosparameters(scenario = "RIL3")
+
+inventory <- commercialcriteriajoin(addtreedim(cleaninventory(InvP16, Parcelle),
+ volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
+
+
+treeselectionoutputsP16RIL3<- Maria::treeselection(inventory,
+                                                       topography = DemParacou, plotslope = plotslopeP16, MainTrails = MainTrailsP16,
+                                                       harvestablepolygons = harvestablepolygonsP16,
+                                                       speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+                                                       scenario ="RIL3",
+                                                       objectivelax = TRUE,
+                                                       advancedloggingparameters = loggingparameters())
+
+secondtrailsP16RIL3 <- Maria::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
+                                                            creekdistances= HANDParacou16,  treeselectionoutputsP16RIL3, 
+                                                          CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 22, Cost = 100),
+                         list(Slope = 27, Cost = 1000),
+                         list(Slope = Inf, Cost = Inf)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = Inf),
+                         list(CostType = "BigTrees", CostValue = 500),
+                         list(CostType = "Reserves", CostValue = 1000),
+                         list(CostType = "Futures", CostValue = 900),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = 1E-2))),
+  scenarios = scenarios,
+  fact = 3,
+  advancedloggingparameters = loggingparameters())
+
+plot(secondtrailsP16RIL3[[1]])
+plot(secondtrailsP16RIL3[[3]])
+plot(secondtrailsP16RIL3[[6]])
+```
+
+#RIL3fuel
+
+```{r}
+
+scenarios <- scenariosparameters(scenario = "RIL3fuel")
+
+inventory <- commercialcriteriajoin(addtreedim(cleaninventory(InvP16, Parcelle),
+ volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
+
+
+treeselectionoutputsP16RIL3fuel<- Maria::treeselection(inventory,
+                                                       topography = DemParacou, plotslope = plotslopeP16, MainTrails = MainTrailsP16,
+                                                       harvestablepolygons = harvestablepolygonsP16,
+                                                       speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+                                                       scenario ="RIL3fuel",
+                                                       objectivelax = TRUE,
+                                                       advancedloggingparameters = loggingparameters())
+
+secondtrailsP16RIL3fuel <- Maria::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
+                                                            creekdistances= HANDParacou16,  treeselectionoutputsP16RIL3fuel, 
+                                                         CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 22, Cost = 60),
+                         list(Slope = 27, Cost = 10000),
+                         list(Slope = Inf, Cost = 10000)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = 10000),
+                         list(CostType = "BigTrees", CostValue = 1500),
+                         list(CostType = "Reserves", CostValue = 2000),
+                         list(CostType = "Futures", CostValue = 1900),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = .1))),
+  scenarios = scenarios,
+  fact = 3,
+  advancedloggingparameters = loggingparameters())
+
+plot(secondtrailsP16RIL3fuel[[1]])
+plot(secondtrailsP16RIL3fuel[[3]])
+plot(secondtrailsP16RIL3fuel[[6]])
+```
+
+
+#RIL3fuelhollow
+
+```{r}
+
+scenarios <- scenariosparameters(scenario = "RIL3fuelhollow")
+
+inventory <- commercialcriteriajoin(addtreedim(cleaninventory(InvP16, Parcelle),
+ volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
+
+
+treeselectionoutputsP16RIL3fuelhollow<- Maria::treeselection(inventory,
+                                                       topography = DemParacou, plotslope = plotslopeP16, MainTrails = MainTrailsP16,
+                                                       harvestablepolygons = harvestablepolygonsP16,
+                                                       speciescriteria = SpeciesCriteria, objective = scenarios$objective,
+                                                       scenario ="RIL3fuelhollow",
+                                                       objectivelax = TRUE,
+                                                       advancedloggingparameters = loggingparameters())
+
+secondtrailsP16RIL3fuelhollow <- Maria::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
+                                                            creekdistances= HANDParacou16,  treeselectionoutputsP16RIL3fuelhollow, 
+                                                          CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 22, Cost = 60),
+                         list(Slope = 27, Cost = 10000),
+                         list(Slope = Inf, Cost = 10000)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = 10000),
+                         list(CostType = "BigTrees", CostValue = 1500),
+                         list(CostType = "Reserves", CostValue = 2000),
+                         list(CostType = "Futures", CostValue = 1900),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = .1))),
+  scenarios = scenarios,
+  fact = 3,
+  advancedloggingparameters = loggingparameters())
+
+
+plot(secondtrailsP16RIL3fuelhollow[[1]])
+plot(secondtrailsP16RIL3fuelhollow[[3]])
+plot(secondtrailsP16RIL3fuelhollow[[6]])
+
+```

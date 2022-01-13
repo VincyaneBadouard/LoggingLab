@@ -6,7 +6,7 @@
 \usage{
 loggingparameters(
   MinDBHValue = 10,
-  MaxAreaSlope = 27,
+  MaxAreaSlope = 22,
   MaxTrailCenterlineSlope = 22,
   MaxTrailCrossSlope = 4,
   GrappleMaxslope = 20,
@@ -14,6 +14,7 @@ loggingparameters(
   PlateauMaxSlope = 5,
   SlopeDistance = 6,
   WaterSourcesBufferZone = 30,
+  WaterSourcesRelativeHeight = 2,
   MinMainTrailWidth = 5,
   MaxMainTrailWidth = 6,
   ScndTrailWidth = 4,
@@ -66,8 +67,11 @@ in \% (double)}
 \item{SlopeDistance}{Distance over which the slope is calculated.
 Default = 6, in m (3m each side) (double)}
 
-\item{WaterSourcesBufferZone}{Buffer zone around the water sources. Default =
+\item{WaterSourcesBufferZone}{Buffer zone based on relative horizontal distance to the nearest water source. Default =
 30, in m (double)}
+
+\item{WaterSourcesRelativeHeight}{Buffer zone based on relative elevation to the nearest water source. Default =
+2, in m (double)}
 
 \item{MinMainTrailWidth}{Minimum main trail width. Default = 5, in m (double)}
 

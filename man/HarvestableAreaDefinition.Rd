@@ -6,7 +6,7 @@
 \usage{
 harvestableareadefinition(
   topography,
-  verticalcreekheight,
+  creekdistances,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -14,8 +14,8 @@ harvestableareadefinition(
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
-\item{verticalcreekheight}{Relative elevation from nearest channel network
-(Large RasterLayer)}
+\item{creekdistances}{Relative distances (vertical and horizontal) from nearest channel network
+(list of 2 large RasterLayers)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -38,11 +38,11 @@ Harvestable area definition
 \dontrun{
 data(PlotMask)
 data(DTMParacou)
-data(VerticalCreekHeight)
+data(creekdistances)
 
 HarvestableAreaOutputs <- harvestableareadefinition(
   topography = DTMParacou,
-  verticalcreekheight = VerticalCreekHeight,
+  creekdistances = creekdistances,
   advancedloggingparameters = loggingparameters()
   )
 
