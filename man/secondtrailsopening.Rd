@@ -7,7 +7,7 @@
 secondtrailsopening(
   topography,
   plotmask,
-  verticalcreekheight,
+  creekdistances,
   treeselectionoutputs,
   CostMatrix = list(list(list(Slope = 3, Cost = 3), list(Slope = 5, Cost = 5),
     list(Slope = 12, Cost = 20), list(Slope = 22, Cost = 60), list(Slope = 27, Cost =
@@ -28,8 +28,8 @@ or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame)}
 
-\item{verticalcreekheight}{Relative elevation from nearest channel network
-(Large RasterLayer)}
+\item{creekdistances}{Relative distances (vertical and horizontal) from nearest channel network
+(list of 2 large RasterLayers)}
 
 \item{treeselectionoutputs}{A list with:
 \itemize{
@@ -84,7 +84,7 @@ data(HarvestablePolygons)
 data(MainTrails)
 data(PlotSlope)
 data("SpeciesCriteria")
-data(VerticalCreekHeight)
+data("CreekDistances")
 
 inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)

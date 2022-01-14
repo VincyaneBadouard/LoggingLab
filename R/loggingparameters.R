@@ -16,8 +16,10 @@
 #'  in % (double)
 #'@param SlopeDistance Distance over which the slope is calculated.
 #'  Default = 6, in m (3m each side) (double)
-#'@param WaterSourcesBufferZone Buffer zone around the water sources. Default =
+#'@param WaterSourcesBufferZone Buffer zone based on relative horizontal distance to the nearest water source. Default =
 #'  30, in m (double)
+#'@param WaterSourcesRelativeHeight Buffer zone based on relative elevation to the nearest water source. Default =
+#'  2, in m (double)
 #'@param MinMainTrailWidth Minimum main trail width. Default = 5, in m (double)
 #'@param MaxMainTrailWidth Maximum main trail width. Default = 6, in m (double)
 #'@param ScndTrailWidth 2nd trail width. Default = 4, in m (double)
@@ -84,7 +86,7 @@
 #'
 loggingparameters <- function(
   MinDBHValue = 10, #in cm
-  MaxAreaSlope = 27, #in %
+  MaxAreaSlope = 22, #in %
   MaxTrailCenterlineSlope = 22, #in %
   MaxTrailCrossSlope = 4, #in %
   GrappleMaxslope = 20, #in %
@@ -92,6 +94,7 @@ loggingparameters <- function(
   PlateauMaxSlope = 5, #in %
   SlopeDistance = 6, #in m (3m for each side)
   WaterSourcesBufferZone = 30, #in m
+  WaterSourcesRelativeHeight = 2, #in m
   MinMainTrailWidth = 5, #in m
   MaxMainTrailWidth = 6, #in m
   ScndTrailWidth = 4, #in m
@@ -194,6 +197,7 @@ loggingparameters <- function(
     PlateauMaxSlope = PlateauMaxSlope,
     SlopeDistance = SlopeDistance,
     WaterSourcesBufferZone = WaterSourcesBufferZone,
+    WaterSourcesRelativeHeight = WaterSourcesRelativeHeight,
     MinMainTrailWidth = MinMainTrailWidth,
     MaxMainTrailWidth = MaxMainTrailWidth,
     ScndTrailWidth = ScndTrailWidth,

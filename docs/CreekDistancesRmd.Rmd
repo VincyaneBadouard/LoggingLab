@@ -16,7 +16,11 @@ library(tidyverse)
 # Prenons un MNT (1m de résolution si possible) ----
 
 ```{r}
-DTM <- 
+data("PlotMask")
+
+DATA_paracou_path <- paste0(Sys.getenv('DATAPATH'), "/GIS/Paracou/")
+
+DTM <- paste0(DATA_paracou_path,"Dem.sgrd")
 ```
 
 
@@ -68,10 +72,20 @@ DistancesCrique <- Saga$ta_channels$overland_flow_distance_to_channel_network(el
 ## Selection de la distance verticale à la crique ----
 
 ```{r}
-CreekVerticalHeight <- DistancesCrique$distvert
+  DistancesCrique$distvert <- mask(DistancesCrique$distvert, PlotMask)
+  DistancesCrique$distvert <- crop(DistancesCrique$distvert, PlotMask)
+  
+  DistancesCrique$disthorz <- mask(DistancesCrique$disthorz, PlotMask)
+  DistancesCrique$disthorz <- crop(DistancesCrique$disthorz, PlotMask)
+
+CreekDistances <- list(distvert = DistancesCrique$distvert,distHorz = DistancesCrique$disthorz)
+
+
 ```
 
 ```{r}
-plot(CreekVerticalHeight,  breaks=c(0,2), col='red') # les jolis bas-fonds !
+plot(CreekDistances$distvert,  breaks=c(0,2), col='red') 
+
+plot(CreekDistances$distHorz,  breaks=c(0,30), col='red')
 ```
 

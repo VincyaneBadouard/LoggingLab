@@ -6,25 +6,21 @@
 \usage{
 smoothtrails(
   paths,
-  pts,
   plotmask,
-  partMainTrails,
   smthfact = 5,
+  verbose = FALSE,
   advancedloggingparameters = loggingparameters()
 )
 }
 \arguments{
 \item{paths}{Raw secondary trails polygons (sp polylines)}
 
-\item{pts}{Harvested tree locations (sf points)}
-
 \item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame)}
-
-\item{partMainTrails}{Intersections between accessible area and MainTrails (sf
-polygon)}
 
 \item{smthfact}{A positive number controlling the smoothness and level of
 generalization (numeric)}
+
+\item{verbose}{return message on second trails density criteria (boolean)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}

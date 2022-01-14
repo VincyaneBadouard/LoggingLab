@@ -45,7 +45,7 @@ filteraccesexplarea <- function(
     sf::st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth)
 
   accesspolygones <- harvestablepolygons %>% filter(Harvestable == 1) %>%
-    sf::st_buffer(dist = -advancedloggingparameters$ScndTrailWidth) %>%
+    sf::st_buffer(dist = -(advancedloggingparameters$ScndTrailWidth)) %>%
     sf::st_union() %>% sf::st_cast("POLYGON") %>% sf::st_as_sf()
 
   accesspolygones <- accesspolygones %>%
