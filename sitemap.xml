@@ -25,6 +25,9 @@
     <loc>/reference/AdjTopoLCP.html</loc>
   </url>
   <url>
+    <loc>/reference/CreekDistances.html</loc>
+  </url>
+  <url>
     <loc>/reference/DTMParacou.html</loc>
   </url>
   <url>
@@ -68,9 +71,6 @@
   </url>
   <url>
     <loc>/reference/SpeciesCriteria.html</loc>
-  </url>
-  <url>
-    <loc>/reference/VerticalCreekHeight.html</loc>
   </url>
   <url>
     <loc>/reference/VolumeParametersTable.html</loc>
