@@ -16,10 +16,10 @@
 #'  in % (double)
 #'@param SlopeDistance Distance over which the slope is calculated.
 #'  Default = 6, in m (3m each side) (double)
-#'@param WaterSourcesBufferZone Buffer zone based on relative horizontal distance to the nearest water source. Default =
-#'  30, in m (double)
-#'@param WaterSourcesRelativeHeight Buffer zone based on relative elevation to the nearest water source. Default =
-#'  2, in m (double)
+#'@param WaterSourcesBufferZone Buffer zone based on relative horizontal
+#'  distance to the nearest water source. Default = 30, in m (double)
+#'@param WaterSourcesRelativeHeight Buffer zone based on relative elevation to
+#'  the nearest water source. Default = 2, in m (double)
 #'@param MinMainTrailWidth Minimum main trail width. Default = 5, in m (double)
 #'@param MaxMainTrailWidth Maximum main trail width. Default = 6, in m (double)
 #'@param ScndTrailWidth 2nd trail width. Default = 4, in m (double)
@@ -75,7 +75,7 @@
 #'  defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 #'  (function)
 #'
-#'@return A named list of 30 objects.
+#'@return A named list of 31 objects.
 #'
 #'@export
 #'

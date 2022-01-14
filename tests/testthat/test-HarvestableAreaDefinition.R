@@ -1,10 +1,10 @@
 test_that("harvestableareadefinition",{
 
   data(DTMParacou)
-  data(VerticalCreekHeight)
+  data(CreekDistances)
 
   test_Harvestable <- harvestableareadefinition(topography = DTMParacou,
-                                                verticalcreekheight = VerticalCreekHeight)
+                                                creekdistances = CreekDistances)
   test_HarvestablePolygons <- test_Harvestable[[1]]
   test_PlotSlope <- test_Harvestable[[2]]
   test_HarvestableArea <- test_Harvestable[[3]]

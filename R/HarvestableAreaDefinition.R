@@ -3,8 +3,8 @@
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
 #'
-#' @param creekdistances Relative distances (vertical and horizontal) from nearest channel network
-#'   (list of 2 large RasterLayers)
+#' @param creekdistances Relative distances (vertical (distvert) and horizontal
+#' (distHorz)) from nearest channel network (list of 2 large RasterLayers)
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
@@ -27,14 +27,12 @@
 #' @importFrom magrittr %>%
 #'
 #' @examples
-#' \dontrun{
-#' data(PlotMask)
 #' data(DTMParacou)
-#' data(creekdistances)
+#' data(CreekDistances)
 #'
 #' HarvestableAreaOutputs <- harvestableareadefinition(
 #'   topography = DTMParacou,
-#'   creekdistances = creekdistances,
+#'   creekdistances = CreekDistances,
 #'   advancedloggingparameters = loggingparameters()
 #'   )
 #'
@@ -47,8 +45,7 @@
 #'   labs(alpha = "Harvestable") +
 #'   labs(title = "P6  Harvestable zones")
 #'
-#' HarvestableAreaOutputs[[2]]
-#' }
+#' HarvestableAreaOutputs$HarvestableArea # in ha
 #'
 harvestableareadefinition <- function(
   topography,
@@ -59,7 +56,7 @@ harvestableareadefinition <- function(
 
 
   # Variables
-  PlotSlope <- PlotSlopePoint <- CreekVHeightPlotPoint <- PlotTib <- NULL
+  PlotSlope <- PlotSlopePoint <- CreekVHeightPlotPoint <- PlotTib <- CreekHDist <- NULL
   SlpCrit <- PlotSlopeCreekVHeight <- RasterHarvestable <- PolygonHarvestable <- NULL
   sf_PolygonHarvestable <- HarvestablePolygons <- CreekVHeight<- slope <-  NULL
 
@@ -127,7 +124,7 @@ harvestableareadefinition <- function(
   return(list(
     HarvestablePolygons = HarvestablePolygons,
     PlotSlope = PlotSlope,
-    HarvestableArea = HarvestableArea
+    HarvestableArea = HarvestableArea # in ha
   ))
 
 }

@@ -15,8 +15,8 @@
 #' - 6 sets of spatial points:
 #'   harvestable, selected, future and reserve, hollow and fuel wood trees
 #'
-#' @param creekdistances Relative distances (vertical and horizontal) from nearest channel network
-#'   (list of 2 large RasterLayers)
+#' @param creekdistances Relative distances (vertical (distvert) and horizontal
+#' (distHorz)) from nearest channel network (list of 2 large RasterLayers)
 #'
 #' @param CostMatrix List of list defining conditional weight over binned slopes
 #'   values
@@ -40,16 +40,19 @@
 #'   \code{\link{loggingparameters}} (list)
 #'
 #' @return A list with :
-#' - raw second trails
-#' -
+#' - RawSecondTrails : non-smoothed secondary trails
+#' - TrailsIdentity: information on sections of the trails with:
+#'     - LineID:
+#'     - LoggedTrees: idTree of trees reached by the trails
+#'     - TypeExpl: type of winching
 #' - SmoothedSecondTrails: Smoothed secondary trails polygons (sfc_MULTIPOLYGON)
 #' - TrailsDensity: Second trails density (in m/ha)
 #' - inventory: Updated inventory
-#' - CostRasterMean: A cost Raster (RasterLayer)
+#' - CostRasterAgg: A cost Raster (RasterLayer)
 #'
 #' @importFrom sf st_cast st_as_sf st_intersection st_union st_sample st_join
 #'   st_buffer as_Spatial st_centroid st_set_precision st_make_valid st_set_agr
-#'   st_geometry st_area st_is_empty st_set_crs st_crs sf_use_s2
+#'   st_geometry st_area st_is_empty st_set_crs st_crs sf_use_s2 st_geometry<-
 #' @importFrom dplyr mutate row_number select as_tibble left_join if_else filter
 #'   arrange desc
 #' @importFrom raster raster extend extent focal res crs mask crop rasterize
@@ -61,6 +64,11 @@
 #'
 #' @importFrom smoothr smooth
 #'
+#'@importFrom gdistance transition geoCorrection
+#'@importFrom raster adjacent aggregate resample ncol ncell
+#'@importFrom utils txtProgressBar setTxtProgressBar
+#'@importFrom stats na.exclude
+#'
 #' @export
 #'
 #' @examples
@@ -71,8 +79,8 @@
 #' data(HarvestablePolygons)
 #' data(MainTrails)
 #' data(PlotSlope)
-#' data("SpeciesCriteria")
-#' data("CreekDistances")
+#' data(SpeciesCriteria)
+#' data(CreekDistances)
 #'
 #' inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #'  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
@@ -170,7 +178,7 @@ secondtrailsopening <- function(
   # Global Variables
   slope <- x <- y <- Harvestable <- idTree <- ID <- type <- ptAcc <- plotslope <- NULL
   EstCost <- n.overlaps <- TypeAcc <- IDpts <- Logged <- harvestablepolygons<- HarvestableAreaDefintionOutputs <- NULL
-  Selected <- DeathCause <- NULL
+  Selected <- DeathCause <- ID_Acc <- isEmpty <- gprlAcc <- cblAcc <- NULL
 
 
   #### Redefinition of the parameters according to the chosen scenario ####
@@ -204,7 +212,7 @@ secondtrailsopening <- function(
   # Transformation of vertical creek height raster
 
 
-  VerticalCreekHeightExtExtended <- raster::extend(CreekDistances$distvert, c(fact,fact))
+  VerticalCreekHeightExtExtended <- raster::extend(creekdistances$distvert, c(fact,fact))
 
 
   VerticalCreekHeightExtended <- raster::focal(VerticalCreekHeightExtExtended,
@@ -212,7 +220,7 @@ secondtrailsopening <- function(
                                                fun=fill.boundaries,
                                                na.rm=F, pad=T)
 
-  HorizontalCreekDistanceExtExtended <- raster::extend(CreekDistances$distHorz, c(fact,fact))
+  HorizontalCreekDistanceExtExtended <- raster::extend(creekdistances$distHorz, c(fact,fact))
 
 
   HorizontalCreekDistanceExtended <- raster::focal(HorizontalCreekDistanceExtExtended,
@@ -486,11 +494,11 @@ secondtrailsopening <- function(
   if (winching == "2") {
     #Compute adjacent transition layer according to slope conditions (winching = "2")
     SlopeCondGrpl <- sloperdcond(topography = DTMmean,
-                                 advancedloggingparameters = loggingparameters(),
+                                 advancedloggingparameters = advancedloggingparameters,
                                  grapple = TRUE)
   }
   #Compute adjacent transition layer according to slope conditions (winching = "1")
-  SlopeCond <- sloperdcond(topography = DTMmean,advancedloggingparameters = loggingparameters())
+  SlopeCond <- sloperdcond(topography = DTMmean,advancedloggingparameters = advancedloggingparameters)
 
   ########### Compute LCP algorithm ###############
 
@@ -1310,7 +1318,12 @@ secondtrailsopening <- function(
 
   #
 
-  secondtrails <- list("paths" = paths,"lines" = lines,"SmoothedSecondTrails" =  SmoothedSecondTrails,"TrailsDensity" =  TrailsDensity,"inventory" =  inventory,"CostRasterAgg" = CostRasterMean)
+  secondtrails <- list("RawSecondTrails" = paths,
+                       "TrailsIdentity" = lines,              # "LineID","LoggedTrees", "TypeExpl"
+                       "SmoothedSecondTrails" =  SmoothedSecondTrails,
+                       "TrailsDensity" =  TrailsDensity,
+                       "inventory" =  inventory,
+                       "CostRasterAgg" = CostRasterMean)
 
   return(secondtrails)
 

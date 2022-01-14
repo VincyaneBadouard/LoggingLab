@@ -127,7 +127,6 @@
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
-#' set.seed(2)
 #' treeselectionoutputs <- treeselection(inventory,
 #' topography = DTMParacou,
 #' speciescriteria = SpeciesCriteria, objective = 10,
@@ -136,6 +135,7 @@
 #' harvestablepolygons = HarvestablePolygons,
 #' advancedloggingparameters = loggingparameters())
 #'
+#' \dontrun{
 #' NewInventory <- treeselectionoutputs$inventory
 #'
 #' NonHarvestable <- sf::st_as_sf(
@@ -191,6 +191,8 @@
 #'   "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
 #'   "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
 #'   labs(color = "Logging status")
+#'
+#'   }
 #'
 treeselection <- function(
   inventory,

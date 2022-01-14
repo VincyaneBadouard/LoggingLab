@@ -4285,7 +4285,7 @@ NA
 <ul>
 <li><p><strong>inventory</strong> : Input inventory (see the inputs formats and metadata in the ) (data.frame)</p></li>
 <li><p><strong>topography</strong> : Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM) (RasterLayer)</p></li>
-<li><p><strong>verticalcreekheight</strong> : (RasterLayer)</p></li>
+<li><p><strong>creekdistances</strong> : (RasterLayer)</p></li>
 <li><p><strong>speciescriteria</strong> : Table of species exploitability criteria : species names, economic interest level, minimum and maximum felling diameter, in the same format of  (2 levels of commercial species) (data.frame)</p></li>
 <li><p><strong>volumeparameters</strong> : Volume parameters table (in the same format of ) to compute the harvestable volume of each tree, depend to its geographic zone if several locations (data.frame)</p></li>
 <li><p><strong>scenario</strong> : Logging scenario: “<strong>RIL1</strong>”, “<strong>RIL2broken</strong>”, “<strong>RIL2</strong>”, “<strong>RIL3</strong>”, “<strong>RIL3fuel</strong>”, “<strong>RIL3fuelhollow</strong>” or “<strong>manual</strong>”(character)</p></li>
@@ -4525,7 +4525,7 @@ TRUE
 <a href="#harvest-in-1-function" class="anchor"></a>Harvest in 1 function</h1>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Rslt &lt;- loggingsimulation(Paracou6_2016,</span>
-<span class="co">#                           topography = DTMParacou, verticalcreekheight  = DTMParacou,</span>
+<span class="co">#                           topography = DTMParacou, creekdistances  = DTMParacou,</span>
 <span class="co">#                           speciescriteria = SpeciesCriteria,</span>
 <span class="co">#                           volumeparameters = ForestZoneVolumeParametersTable,</span>
 <span class="co">#                           scenario = "manual", objective = 20,</span>
@@ -4536,7 +4536,7 @@ TRUE
 <p>The harvestable volume may change from one simulation to another because the identification of defect trees contains a random component.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># RIL1_Rslt &lt;- loggingsimulation(Paracou6_2016,</span>
-<span class="co">#                                topography = DTMParacou, verticalcreekheight  = DTMParacou,</span>
+<span class="co">#                                topography = DTMParacou, creekdistances  = DTMParacou,</span>
 <span class="co">#                                speciescriteria = SpeciesCriteria,</span>
 <span class="co">#                                volumeparameters = ForestZoneVolumeParametersTable,</span>
 <span class="co">#                                scenario = "RIL1", specieslax = FALSE, objectivelax = TRUE,</span>
@@ -4546,7 +4546,7 @@ TRUE
 <span class="co"># # Without diversification the harvestable volume is too poor</span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># RIL2broken_Rslt &lt;- loggingsimulation(Paracou6_2016,</span>
-<span class="co">#                                      topography = DTMParacou, verticalcreekheight  = DTMParacou,</span>
+<span class="co">#                                      topography = DTMParacou, creekdistances  = DTMParacou,</span>
 <span class="co">#                                      speciescriteria = SpeciesCriteria,</span>
 <span class="co">#                                      volumeparameters = ForestZoneVolumeParametersTable,</span>
 <span class="co">#                                      scenario = "RIL2broken", specieslax = FALSE, objectivelax = TRUE,</span>
@@ -4558,7 +4558,7 @@ TRUE
 <span class="co"># # Not all harvestable trees are always harvested because they are eventually probed hollow, and there is not always a harvestable tree to replace them.</span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># RIL2_Rslt &lt;- loggingsimulation(Paracou6_2016,</span>
-<span class="co">#                                topography = DTMParacou, verticalcreekheight  = DTMParacou,</span>
+<span class="co">#                                topography = DTMParacou, creekdistances  = DTMParacou,</span>
 <span class="co">#                                speciescriteria = SpeciesCriteria,</span>
 <span class="co">#                                volumeparameters = ForestZoneVolumeParametersTable,</span>
 <span class="co">#                                scenario = "RIL2", specieslax = FALSE, objectivelax = TRUE,</span>
@@ -4568,7 +4568,7 @@ TRUE
 <span class="co"># # Without diversification the harvestable volume is too poor</span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># RIL3_Rslt &lt;- loggingsimulation(Paracou6_2016,</span>
-<span class="co">#                                topography = DTMParacou, verticalcreekheight  = DTMParacou,</span>
+<span class="co">#                                topography = DTMParacou, creekdistances  = DTMParacou,</span>
 <span class="co">#                                speciescriteria = SpeciesCriteria,</span>
 <span class="co">#                                volumeparameters = ForestZoneVolumeParametersTable,</span>
 <span class="co">#                                scenario = "RIL3", specieslax = FALSE, objectivelax = TRUE,</span>
@@ -4582,7 +4582,7 @@ TRUE
 <span class="co"># # Not all harvestable trees are always harvested because they are eventually probed hollow, and there is not always a harvestable tree to replace them.</span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># RIL3fuel_Rslt &lt;- loggingsimulation(Paracou6_2016,</span>
-<span class="co">#                                    topography = DTMParacou, verticalcreekheight  = DTMParacou,</span>
+<span class="co">#                                    topography = DTMParacou, creekdistances  = DTMParacou,</span>
 <span class="co">#                                    speciescriteria = SpeciesCriteria,</span>
 <span class="co">#                                    volumeparameters = ForestZoneVolumeParametersTable,</span>
 <span class="co">#                                    scenario = "RIL3fuel", specieslax = FALSE, objectivelax = TRUE,</span>
@@ -4592,7 +4592,7 @@ TRUE
 <span class="co"># # Not all harvestable trees are always harvested because they are eventually probed hollow, and there is not always a harvestable tree to replace them.</span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># RIL3fuelhollow_Rslt &lt;- loggingsimulation(Paracou6_2016,</span>
-<span class="co">#                                          topography = DTMParacou, verticalcreekheight  = DTMParacou,</span>
+<span class="co">#                                          topography = DTMParacou, creekdistances  = DTMParacou,</span>
 <span class="co">#                                          speciescriteria = SpeciesCriteria,</span>
 <span class="co">#                                          volumeparameters = ForestZoneVolumeParametersTable,</span>
 <span class="co">#                                          scenario = "RIL3fuelhollow",</span>

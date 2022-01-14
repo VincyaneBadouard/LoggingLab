@@ -67,11 +67,11 @@ in \% (double)}
 \item{SlopeDistance}{Distance over which the slope is calculated.
 Default = 6, in m (3m each side) (double)}
 
-\item{WaterSourcesBufferZone}{Buffer zone based on relative horizontal distance to the nearest water source. Default =
-30, in m (double)}
+\item{WaterSourcesBufferZone}{Buffer zone based on relative horizontal
+distance to the nearest water source. Default = 30, in m (double)}
 
-\item{WaterSourcesRelativeHeight}{Buffer zone based on relative elevation to the nearest water source. Default =
-2, in m (double)}
+\item{WaterSourcesRelativeHeight}{Buffer zone based on relative elevation to
+the nearest water source. Default = 2, in m (double)}
 
 \item{MinMainTrailWidth}{Minimum main trail width. Default = 5, in m (double)}
 
@@ -143,7 +143,7 @@ defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 (function)}
 }
 \value{
-A named list of 30 objects.
+A named list of 31 objects.
 }
 \description{
 Advanced parameters of the logging simulator

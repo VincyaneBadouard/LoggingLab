@@ -14,10 +14,10 @@
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
-#'@param verticalcreekheight Vertical creek height (in m) of the inventoried
-#' plot (1 m resolution) (Default: \code{\link{VerticalCreekHeight}})
+#'@param creekdistances Vertical creek height (in m) of the inventoried
+#' plot (1 m resolution) (Default: \code{\link{CreekDistances}})
 #' (Large RasterLayer). To generate vertical creek height:
-#'  \code{\link{VerticalCreekHeight}} in 'docs' folder of the package
+#'  \code{\link{CreekDistances}} in 'docs' folder of the package
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the
@@ -110,14 +110,14 @@
 #' data(Paracou6_2016) # inventory
 #' data(PlotMask) # inventoried plot mask
 #' data(DTMParacou) # topography
-#' data(VerticalCreekHeight) # relative elevation
+#' data(CreekDistances) # relative elevation
 #' data(SpeciesCriteria) # species exploitability criteria
 #' data(ForestZoneVolumeParametersTable) # volume parameters
 #' data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 #'
 #' Rslt <- loggingsimulation1(
 #'  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-#'  verticalcreekheight  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
+#'  creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
@@ -129,7 +129,7 @@ loggingsimulation1 <- function(
   inventory,
   plotmask,
   topography,
-  verticalcreekheight,
+  creekdistances,
   speciescriteria,
   volumeparameters,
 
@@ -160,9 +160,9 @@ loggingsimulation1 <- function(
   if(!inherits(plotmask, "SpatialPolygonsDataFrame"))
     stop("The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygonsDataFrame")
 
-  # topography, verticalcreekheight
-  if(!all(unlist(lapply(list(topography, verticalcreekheight), inherits, "RasterLayer"))))
-    stop("The 'topography' and 'verticalcreekheight' arguments of the 'loggingsimulation' function must be RasterLayers")
+  # topography, creekdistances
+  if(!all(unlist(lapply(list(topography, creekdistances), inherits, "RasterLayer"))))
+    stop("The 'topography' and 'creekdistances' arguments of the 'loggingsimulation' function must be RasterLayers")
 
   # scenario
   if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"|| scenario == "RIL3"||
@@ -207,7 +207,7 @@ loggingsimulation1 <- function(
 
 
   #### Global variables ####
-  DeathCause <- AGB <- NULL
+  DeathCause <- AGB <- ParamCrownDiameterAllometry <- NULL
 
   #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, objective = objective, fuel = fuel,
@@ -242,7 +242,7 @@ loggingsimulation1 <- function(
 
   ##### Harvestable area definition: ####
   HarvestableAreaOutputs <- harvestableareadefinition(topography = topography,
-                                                      verticalcreekheight = verticalcreekheight,
+                                                      creekdistances = creekdistances,
                                                       advancedloggingparameters = advancedloggingparameters)
 
   HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
@@ -289,7 +289,7 @@ loggingsimulation1 <- function(
   #   topography = topography,
   #   plotmask = PlotMask,
   #   treeselectionoutputs = treeselectionoutputs,
-  #   verticalcreekheight = verticalcreekheight,
+  #   creekdistances = creekdistances,
   #   CostMatrix = CostMatrix,
   #   scenario = scenario, winching = winching,
   #   fact = 3,

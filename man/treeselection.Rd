@@ -147,7 +147,6 @@ data(HarvestablePolygons)
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
 
-set.seed(2)
 treeselectionoutputs <- treeselection(inventory,
 topography = DTMParacou,
 speciescriteria = SpeciesCriteria, objective = 10,
@@ -156,6 +155,7 @@ objectivelax = TRUE, MainTrails = MainTrails, plotslope = PlotSlope,
 harvestablepolygons = HarvestablePolygons,
 advancedloggingparameters = loggingparameters())
 
+\dontrun{
 NewInventory <- treeselectionoutputs$inventory
 
 NonHarvestable <- sf::st_as_sf(
@@ -211,6 +211,8 @@ ggplot() +
   "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
   "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
   labs(color = "Logging status")
+
+  }
 
 }
 \seealso{

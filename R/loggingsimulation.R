@@ -14,10 +14,10 @@
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
-#'@param verticalcreekheight Vertical creek height (in m) of the inventoried
-#' plot (1 m resolution) (Default: \code{\link{VerticalCreekHeight}})
+#'@param creekdistances Vertical creek height (in m) of the inventoried
+#' plot (1 m resolution) (Default: \code{\link{CreekDistances}})
 #' (Large RasterLayer). To generate vertical creek height:
-#'  \code{\link{VerticalCreekHeight}} in 'docs' folder of the package
+#'  \code{\link{CreekDistances}} in 'docs' folder of the package
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the
@@ -108,14 +108,14 @@
 #' \dontrun{
 #' data(Paracou6_2016) # inventory
 #' data(DTMParacou) # topography
-#' data(VerticalCreekHeight) # relative elevation
+#' data(CreekDistances) # relative elevation
 #' data(SpeciesCriteria) # species exploitability criteria
 #' data(ForestZoneVolumeParametersTable) # volume parameters
 #' data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 #'
 #' Rslt <- loggingsimulation(
 #'  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-#'  verticalcreekheight  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
+#'  creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
@@ -127,7 +127,7 @@ loggingsimulation <- function(
   inventory,
   plotmask,
   topography,
-  verticalcreekheight,
+  creekdistances,
   speciescriteria,
   volumeparameters,
 
@@ -150,16 +150,20 @@ loggingsimulation <- function(
 
 ){
 
+
   # Check args
   if(!all(unlist(lapply(list(iter, cores), inherits, "numeric"))))
     stop("The 'iter' and 'cores' arguments of the 'loggingsimulation' function must be numeric")
+
+  # Global variables
+  ParamCrownDiameterAllometry <- NULL
 
 
   # apply versions
   # replicate(iter, loggingsimulation1(inventory = inventory,
   #                                    plotmask = plotmask,
   #                                    topography = topography,
-  #                                    verticalcreekheight = verticalcreekheight,
+  #                                    creekdistances = creekdistances,
   #                                    speciescriteria = speciescriteria,
   #                                    volumeparameters = volumeparameters,
   #                                    scenario = scenario,
@@ -177,7 +181,7 @@ loggingsimulation <- function(
   # lapply(seq_len(iter), function(x) loggingsimulation1(inventory = inventory,
   #                                            plotmask = plotmask,
   #                                            topography = topography,
-  #                                            verticalcreekheight = verticalcreekheight,
+  #                                            creekdistances = creekdistances,
   #                                            speciescriteria = speciescriteria,
   #                                            volumeparameters = volumeparameters,
   #                                            scenario = scenario,
@@ -196,7 +200,7 @@ loggingsimulation <- function(
   # purr::rerun(iter, loggingsimulation1(inventory = inventory,
   #                                      plotmask = plotmask,
   #                                      topography = topography,
-  #                                      verticalcreekheight = verticalcreekheight,
+  #                                      creekdistances = creekdistances,
   #                                      speciescriteria = speciescriteria,
   #                                      volumeparameters = volumeparameters,
   #                                      scenario = scenario,
@@ -214,7 +218,7 @@ loggingsimulation <- function(
   # purr::map(seq_len(iter), ~ loggingsimulation1(inventory = inventory,
   #                                                 plotmask = plotmask,
   #                                                 topography = topography,
-  #                                                 verticalcreekheight = verticalcreekheight,
+  #                                                 creekdistances = creekdistances,
   #                                                 speciescriteria = speciescriteria,
   #                                                 volumeparameters = volumeparameters,
   #                                                 scenario = scenario,
@@ -234,7 +238,7 @@ loggingsimulation <- function(
   # For Windows
   cl <- makePSOCKcluster(getOption("cl.cores", cores)) # create a cluster
 
-  clusterExport(cl, varlist = c("inventory", "plotmask","topography","verticalcreekheight",
+  clusterExport(cl, varlist = c("inventory", "plotmask","topography","creekdistances",
                                 "speciescriteria","volumeparameters","scenario","objective",
                                 "fuel","diversification","winching","directionalfelling",
                                 "specieslax","objectivelax","crowndiameterparameters","advancedloggingparameters"),
@@ -243,7 +247,7 @@ loggingsimulation <- function(
   output <- parLapply(cl, seq_len(iter), function(x) loggingsimulation1(inventory = inventory,
                                                               plotmask = plotmask,
                                                               topography = topography,
-                                                              verticalcreekheight = verticalcreekheight,
+                                                              creekdistances = creekdistances,
                                                               speciescriteria = speciescriteria,
                                                               volumeparameters = volumeparameters,
                                                               scenario = scenario,
@@ -263,7 +267,7 @@ loggingsimulation <- function(
   # parallel::mclapply(seq_len(iter), function(x) loggingsimulation1(inventory = inventory,
   #                                                        plotmask = plotmask,
   #                                                        topography = topography,
-  #                                                        verticalcreekheight = verticalcreekheight,
+  #                                                        creekdistances = creekdistances,
   #                                                        speciescriteria = speciescriteria,
   #                                                        volumeparameters = volumeparameters,
   #                                                        scenario = scenario,

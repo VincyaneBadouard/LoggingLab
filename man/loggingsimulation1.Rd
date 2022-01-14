@@ -8,7 +8,7 @@ loggingsimulation1(
   inventory,
   plotmask,
   topography,
-  verticalcreekheight,
+  creekdistances,
   speciescriteria,
   volumeparameters,
   scenario,
@@ -32,10 +32,10 @@ loggingsimulation1(
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer)}
 
-\item{verticalcreekheight}{Vertical creek height (in m) of the inventoried
-plot (1 m resolution) (Default: \code{\link{VerticalCreekHeight}})
+\item{creekdistances}{Vertical creek height (in m) of the inventoried
+plot (1 m resolution) (Default: \code{\link{CreekDistances}})
 (Large RasterLayer). To generate vertical creek height:
-\code{\link{VerticalCreekHeight}} in 'docs' folder of the package}
+\code{\link{CreekDistances}} in 'docs' folder of the package}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the
@@ -115,14 +115,14 @@ volume and damages quantification.
 data(Paracou6_2016) # inventory
 data(PlotMask) # inventoried plot mask
 data(DTMParacou) # topography
-data(VerticalCreekHeight) # relative elevation
+data(CreekDistances) # relative elevation
 data(SpeciesCriteria) # species exploitability criteria
 data(ForestZoneVolumeParametersTable) # volume parameters
 data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 
 Rslt <- loggingsimulation1(
  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
- verticalcreekheight  = VerticalCreekHeight, speciescriteria = SpeciesCriteria,
+ creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,

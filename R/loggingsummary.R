@@ -21,6 +21,9 @@
 loggingsummary <- function(x
 ){
 
+  # Global variables
+  m3 <- ha <- NULL
+
   # Arguments check
   if(!inherits(x, "list"))
     stop("The argument of the 'loggingsummary' function must be a list")
