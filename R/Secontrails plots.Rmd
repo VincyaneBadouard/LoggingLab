@@ -56,7 +56,7 @@ ggplot() +
           aes(alpha = Harvestable),
           fill = "olivedrab") +
   labs(alpha = "Harvestable") +
-  labs(title = "P6 zones exploitables") +
+  labs(title = "Paracou P6 zones exploitables") +
   
   # 2ndary trails
   geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
@@ -128,8 +128,8 @@ ggplot() +
   #         aes(colour = "Non-harvestable"), show.legend = "point") +
   geom_sf(data = VisibleDefect,
           aes(colour = "Visible defect"), show.legend = "point") +
-  # geom_sf(data = Future,
-  #         aes(colour = "Future"), show.legend = "point", size = 4) +
+  geom_sf(data = Future,
+          aes(colour = "Future"), show.legend = "point", size = 4) +
   geom_sf(data = Reserve,
           aes(colour = "Reserve"), show.legend = "point", size = 4) +
   geom_sf(data = Harvestable,
@@ -147,7 +147,7 @@ ggplot() +
                                  "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
                                  "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
   labs(color = "Logging status") +
-  labs(title = "P16 EFI3")
+  labs(title = "Paracou P16 EFI3")
 ```
 
 # Plot with treefelling

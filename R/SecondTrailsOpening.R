@@ -608,7 +608,7 @@ secondtrailsopening <- function(
           pathLines[[k]] <- TmpPathWIP[[2]]
           pathLines[[k]]@lines[[1]]@ID <- paste("Path", TmpPtsWIP$idTree[2], sep = ".")
 
-          Lines[[k]] <- list("LineID" = k,"LoggedTrees" = TmpPtsWIP$idTree[2],"winching" = winching)
+          Lines[[k]] <- list("LineID" = k,"LoggedTrees" = TmpPtsWIP$idTree[2],"TypeExpl" = "FoT")
 
           k <- k +1
 
@@ -1263,7 +1263,8 @@ secondtrailsopening <- function(
                                  plotmask,
                                  advancedloggingparameters = advancedloggingparameters)
 
-    SmoothedSecondTrails <- secondtrails$SmoothedSecondTrails
+    SmoothedSecondTrails <- secondtrails$SmoothedSecondTrails %>% st_set_crs(st_crs(topography))
+
     TrailsDensity <- secondtrails$TrailsDensity
     #
     #
@@ -1293,7 +1294,7 @@ secondtrailsopening <- function(
   }else{
     paths <- NULL
     lines <- do.call(rbind, Lines)
-    SmoothedSecondTrails <- AccessPointAll %>% st_buffer(dist = 1) %>% st_union()
+    SmoothedSecondTrails <- AccessPointAll %>% st_buffer(dist = 1) %>% st_union() %>% st_set_crs(st_crs(topography))
     TrailsDensity <- 0
 
     inventory <- treeselectionoutputs$inventory
