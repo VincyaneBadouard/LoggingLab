@@ -27,16 +27,14 @@ data("MainTrails")
 
 # Outputs
 ```{r}
-secondtrails$TrailsDensity
+secondtrails$RawSecondTrails # 'non-smoothed secondary trails
+class(secondtrails$RawSecondTrails) # SpatialLines (sp)
+plot(st_as_sf(secondtrails$RawSecondTrails))
 
-secondtrails$paths # 'paths'
-class(secondtrails$paths) # SpatialLines (sp)
-plot(st_as_sf(secondtrails$paths))
+secondtrails$TrailsIdentity # information on sections of the trails
+class(secondtrails$TrailsIdentity) # matrix
 
-secondtrails$lines # 'lines' Sert à quoi ??
-class(secondtrails$lines) # matrix
-
-plot(secondtrails$SmoothedSecondTrails) # SmoothedSecondTrails
+plot(secondtrails$SmoothedSecondTrails) # Smoothed Secondary Trails
 class(secondtrails$SmoothedSecondTrails) # sfc_MULTIPOLYGON
 
 secondtrails$TrailsDensity # TrailsDensity
@@ -62,13 +60,13 @@ ggplot() +
   
   # 2ndary trails
   geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
-  geom_sf(data = st_as_sf(secondtrails$paths), col = "red")
+  geom_sf(data = st_as_sf(secondtrails$RawSecondTrails), col = "red")
 
 ```
 
 # With tree selection
 ```{r}
-NewInventory <- treeselectionoutputs$inventory # scenario = "RIL3", objectivelax = TRUE
+NewInventory <- treeselectionoutputs$inventory # objectivelax = TRUE
 
 
 NonHarvestable <- sf::st_as_sf(
@@ -81,10 +79,10 @@ Harvestable <- sf::st_as_sf(
   coords = c("Xutm", "Yutm")) %>% 
   st_set_crs(st_crs(HarvestablePolygons))
 
-# HarvestableUp <- sf::st_as_sf(
-#   dplyr::filter(NewInventory, LoggingStatus == "harvestableUp"),
-#   coords = c("Xutm", "Yutm")) %>% 
-#   st_set_crs(st_crs(HarvestablePolygons))
+HarvestableUp <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "harvestableUp"),
+  coords = c("Xutm", "Yutm")) %>%
+  st_set_crs(st_crs(HarvestablePolygons))
 
 Selected <- sf::st_as_sf(
   dplyr::filter(NewInventory, Selected == "1"), coords = c("Xutm", "Yutm")) %>% 
@@ -95,10 +93,10 @@ Reserve <- sf::st_as_sf(
   coords = c("Xutm", "Yutm")) %>% 
   st_set_crs(st_crs(HarvestablePolygons))
 
-# Future <- sf::st_as_sf(
-#   dplyr::filter(NewInventory, LoggingStatus == "future"),
-#   coords = c("Xutm", "Yutm")) %>% 
-#   st_set_crs(st_crs(HarvestablePolygons))
+Future <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "future"),
+  coords = c("Xutm", "Yutm")) %>%
+  st_set_crs(st_crs(HarvestablePolygons))
 
 ProbedHollow <- sf::st_as_sf(
   dplyr::filter(NewInventory, ProbedHollow == "1"), coords = c("Xutm", "Yutm")) %>% 
@@ -123,7 +121,7 @@ ggplot() +
   
   # 2ndary trails
   geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
-  geom_sf(data = st_as_sf(secondtrails$paths), col = "red") +
+  geom_sf(data = st_as_sf(secondtrails$RawSecondTrails), col = "red") +
   
   # Tree selection
   # geom_sf(data = NonHarvestable,
@@ -140,8 +138,8 @@ ggplot() +
   #         aes(colour = "HarvestableUp"), show.legend = "point", size = 4) +
   geom_sf(data = Selected,
           aes(colour = "Selected"), show.legend = "point") +
-  geom_sf(data = ProbedHollow,
-          aes(colour = "Probed hollow"), show.legend = "point") +
+  # geom_sf(data = ProbedHollow,
+  #         aes(colour = "Probed hollow"), show.legend = "point") +
   geom_sf(data = MainTrails) +
   
   scale_colour_manual(values = c("Non-harvestable" = "grey",
@@ -166,6 +164,8 @@ NewInventory_crs <- NewInventory %>%
 
 
 ```{r}
+# enregistré avec une hauteur = 1000 or 1100 or 1500
+
 ggplot() +
   # Harvestable zones
   geom_sf(data = HarvestablePolygons,
@@ -175,8 +175,9 @@ ggplot() +
   labs(title = "P6 zones exploitables") +
   
   # 2ndary trails
-  geom_sf(data = st_as_sf(secondtrails[[3]]), col = "darkgreen") +
-  geom_sf(data = st_as_sf(secondtrails[[1]]), col = "red") +
+  geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
+  geom_sf(data = st_as_sf(secondtrails$RawSecondTrails), col = "red") +
+  
   
   # Tree selection
   # geom_sf(data = NonHarvestable,
@@ -204,6 +205,10 @@ ggplot() +
                                  "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
                                  "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
   labs(color = "Logging status") +
-  labs(title = "P6 EFI3 Hollow Fuel")
+  labs(title = "Paracou P6 EFI3")
+
+
+write.csv2(NewInventory, "C:/Users/Vincyane/Documents/Maria-pictures/ParacouP6_EFI3.csv") #  D:/VSC Kourou/Dataexemple
+
 ```
 
