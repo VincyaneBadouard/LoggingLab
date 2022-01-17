@@ -608,7 +608,7 @@ secondtrailsopening <- function(
           pathLines[[k]] <- TmpPathWIP[[2]]
           pathLines[[k]]@lines[[1]]@ID <- paste("Path", TmpPtsWIP$idTree[2], sep = ".")
 
-          Lines[[k]] <- list("LineID" = k,"LoggedTrees" = TmpPtsWIP$idTree[2],"winching" = winching)
+          Lines[[k]] <- list("LineID" = k,"LoggedTrees" = TmpPtsWIP$idTree[2],"TypeExpl" = "FoT")
 
           k <- k +1
 
