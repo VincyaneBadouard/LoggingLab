@@ -22,7 +22,26 @@ library(tibble)
 ```{r}
 # save(secondtrails, file = "../data/secondtrails.Rdata")
 data("HarvestablePolygons")
+data(DTMParacou)
+data(CreekDistances)
 data("MainTrails")
+```
+
+# Def UP
+```{r}
+HarvestableAreaOutputs27 <- harvestableareadefinition(
+  topography = DTMParacou,
+  creekdistances = CreekDistances,
+  advancedloggingparameters = loggingparameters(MaxAreaSlope = 27)
+)
+HarvesPolygons22 <-  HarvestableAreaOutputs$HarvestablePolygons
+HarvesPolygons27 <-  HarvestableAreaOutputs27$HarvestablePolygons
+
+HarvestableAreaOutputs27$HarvestableArea # 6.0683
+HarvestableAreaOutputs$HarvestableArea # 6.0683
+
+
+PlotSlope <-  HarvestableAreaOutputs$PlotSlope
 ```
 
 # Outputs
@@ -52,11 +71,14 @@ class(secondtrails$CostRasterAgg) # RasterLayer
 ```{r}
 ggplot() +
   # Harvestable zones
-  geom_sf(data = HarvestablePolygons,
+  geom_sf(data = HarvesPolygons27,
           aes(alpha = Harvestable),
           fill = "olivedrab") +
   labs(alpha = "Harvestable") +
-  labs(title = "Paracou P6 zones exploitables") +
+  labs(title = "Paracou P6 zones exploitables 22 et 27% de pente")+
+  geom_sf(data = HarvesPolygons22,
+          aes(alpha = Harvestable),
+          fill = "pink")
   
   # 2ndary trails
   geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +

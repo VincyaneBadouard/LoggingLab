@@ -76,14 +76,14 @@
 #' data(Paracou6_2016)
 #' data(PlotMask)
 #' data(DTMParacou)
-#' data(HarvestablePolygons)
+#' # data(HarvestablePolygons)
 #' data(MainTrails)
-#' data(PlotSlope)
+#' # data(PlotSlope)
 #' data(SpeciesCriteria)
 #' data(CreekDistances)
 #'
-#' inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
-#'  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
+#' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
+#'  volumeparameters = ForestZoneVolumeParametersTable)
 #'
 #'
 #' treeselectionoutputs <- treeselection(inventory,
@@ -127,7 +127,7 @@
 #'   labs(title = "P6 zones exploitables") +
 #'
 #'   # 2ndary trails
-#'     geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "red") +
+#'     geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
 #'     geom_sf(data = st_as_sf(secondtrails$RawSecondTrails), col = "red")
 #'
 #' secondtrails[[4]]

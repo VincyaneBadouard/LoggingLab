@@ -13,7 +13,7 @@ library(dplyr)
 
 
 data(Paracou6_2016)
-data(HarvestablePolygons)
+# data(HarvestablePolygons)
 data(MainTrails)
 data(PlotMask)
 data(PlotSlope)

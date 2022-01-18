@@ -3,7 +3,7 @@
 #'@param MinDBHValue Minimum DBH for inclusion in the forest inventory. Default = 10, in cm
 #'  (double)
 #'@param MaxAreaSlope Maximum area slope for inclusion in a logging unit
-#'  (harvestable area). Default = 27, in % (double)
+#'  (harvestable area). Default = 22, in % (double)
 #'@param MaxTrailCenterlineSlope Maximum main & 2nd trail centerline slope.
 #'  Default = 22, in % (double)
 #'@param MaxTrailCrossSlope Maximum main & 2nd trail cross slope. Default = 4,
