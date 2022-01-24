@@ -29,12 +29,12 @@ data("MainTrails")
 ```{r}
 secondtrails$TrailsDensity
 
-secondtrails$paths # 'paths'
-class(secondtrails$paths) # SpatialLines (sp)
-plot(st_as_sf(secondtrails$paths))
+secondtrails$RawSecondTrails # 'RawSecondTrails'
+class(secondtrails$RawSecondTrails) # SpatialTrailsIdentity (sp)
+plot(st_as_sf(secondtrails$RawSecondTrails))
 
-secondtrails$lines # 'lines' Sert à quoi ??
-class(secondtrails$lines) # matrix
+secondtrails$TrailsIdentity # 'TrailsIdentity' Sert à quoi ??
+class(secondtrails$TrailsIdentity) # matrix
 
 plot(secondtrails$SmoothedSecondTrails) # SmoothedSecondTrails
 class(secondtrails$SmoothedSecondTrails) # sfc_MULTIPOLYGON
@@ -62,7 +62,7 @@ ggplot() +
   
   # 2ndary trails
   geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
-  geom_sf(data = st_as_sf(secondtrails$paths), col = "red")
+  geom_sf(data = st_as_sf(secondtrails$RawSecondTrails), col = "red")
 
 ```
 
@@ -123,7 +123,7 @@ ggplot() +
   
   # 2ndary trails
   geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
-  geom_sf(data = st_as_sf(secondtrails$paths), col = "red") +
+  geom_sf(data = st_as_sf(secondtrails$RawSecondTrails), col = "red") +
   
   # Tree selection
   # geom_sf(data = NonHarvestable,
