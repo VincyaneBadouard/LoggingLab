@@ -780,7 +780,8 @@ felling1tree <- function(
   #### Tree-Trail link ####
   # Find the point (TrailPt) on the Trail closest to the location of the tree (Foot)
 
-  Trail <- st_union(MainTrails, ScndTrail) # Our trail will be MainTrails or ScndTrail
+  # Trail <- st_union(MainTrails, ScndTrail) # Our trail will be MainTrails or ScndTrail
+  Trail <- ScndTrail # only ScndTrail
 
   NearestPoints <- st_nearest_points(Foot_crs, Trail) # from the Foot of the tree to the Trail (linestring)
 

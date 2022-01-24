@@ -22,21 +22,38 @@ library(tibble)
 ```{r}
 # save(secondtrails, file = "../data/secondtrails.Rdata")
 data("HarvestablePolygons")
+data(DTMParacou)
+data(CreekDistances)
 data("MainTrails")
+```
+
+# Def UP
+```{r}
+HarvestableAreaOutputs27 <- harvestableareadefinition(
+  topography = DTMParacou,
+  creekdistances = CreekDistances,
+  advancedloggingparameters = loggingparameters(MaxAreaSlope = 27)
+)
+HarvesPolygons22 <-  HarvestableAreaOutputs$HarvestablePolygons
+HarvesPolygons27 <-  HarvestableAreaOutputs27$HarvestablePolygons
+
+HarvestableAreaOutputs27$HarvestableArea # 6.0683
+HarvestableAreaOutputs$HarvestableArea # 6.0683
+
+
+PlotSlope <-  HarvestableAreaOutputs$PlotSlope
 ```
 
 # Outputs
 ```{r}
-secondtrails$TrailsDensity
-
-secondtrails$RawSecondTrails # 'RawSecondTrails'
-class(secondtrails$RawSecondTrails) # SpatialTrailsIdentity (sp)
+secondtrails$RawSecondTrails # 'non-smoothed secondary trails
+class(secondtrails$RawSecondTrails) # SpatialLines (sp)
 plot(st_as_sf(secondtrails$RawSecondTrails))
 
-secondtrails$TrailsIdentity # 'TrailsIdentity' Sert à quoi ??
+secondtrails$TrailsIdentity # information on sections of the trails
 class(secondtrails$TrailsIdentity) # matrix
 
-plot(secondtrails$SmoothedSecondTrails) # SmoothedSecondTrails
+plot(secondtrails$SmoothedSecondTrails) # Smoothed Secondary Trails
 class(secondtrails$SmoothedSecondTrails) # sfc_MULTIPOLYGON
 
 secondtrails$TrailsDensity # TrailsDensity
@@ -54,11 +71,14 @@ class(secondtrails$CostRasterAgg) # RasterLayer
 ```{r}
 ggplot() +
   # Harvestable zones
-  geom_sf(data = HarvestablePolygons,
+  geom_sf(data = HarvesPolygons27,
           aes(alpha = Harvestable),
           fill = "olivedrab") +
   labs(alpha = "Harvestable") +
-  labs(title = "P6 zones exploitables") +
+  labs(title = "Paracou P6 zones exploitables 22 et 27% de pente")+
+  geom_sf(data = HarvesPolygons22,
+          aes(alpha = Harvestable),
+          fill = "pink")
   
   # 2ndary trails
   geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
@@ -68,7 +88,7 @@ ggplot() +
 
 # With tree selection
 ```{r}
-NewInventory <- treeselectionoutputs$inventory # scenario = "RIL3", objectivelax = TRUE
+NewInventory <- treeselectionoutputs$inventory # objectivelax = TRUE
 
 
 NonHarvestable <- sf::st_as_sf(
@@ -81,10 +101,10 @@ Harvestable <- sf::st_as_sf(
   coords = c("Xutm", "Yutm")) %>% 
   st_set_crs(st_crs(HarvestablePolygons))
 
-# HarvestableUp <- sf::st_as_sf(
-#   dplyr::filter(NewInventory, LoggingStatus == "harvestableUp"),
-#   coords = c("Xutm", "Yutm")) %>% 
-#   st_set_crs(st_crs(HarvestablePolygons))
+HarvestableUp <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "harvestableUp"),
+  coords = c("Xutm", "Yutm")) %>%
+  st_set_crs(st_crs(HarvestablePolygons))
 
 Selected <- sf::st_as_sf(
   dplyr::filter(NewInventory, Selected == "1"), coords = c("Xutm", "Yutm")) %>% 
@@ -95,10 +115,10 @@ Reserve <- sf::st_as_sf(
   coords = c("Xutm", "Yutm")) %>% 
   st_set_crs(st_crs(HarvestablePolygons))
 
-# Future <- sf::st_as_sf(
-#   dplyr::filter(NewInventory, LoggingStatus == "future"),
-#   coords = c("Xutm", "Yutm")) %>% 
-#   st_set_crs(st_crs(HarvestablePolygons))
+Future <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "future"),
+  coords = c("Xutm", "Yutm")) %>%
+  st_set_crs(st_crs(HarvestablePolygons))
 
 ProbedHollow <- sf::st_as_sf(
   dplyr::filter(NewInventory, ProbedHollow == "1"), coords = c("Xutm", "Yutm")) %>% 
@@ -130,8 +150,8 @@ ggplot() +
   #         aes(colour = "Non-harvestable"), show.legend = "point") +
   geom_sf(data = VisibleDefect,
           aes(colour = "Visible defect"), show.legend = "point") +
-  # geom_sf(data = Future,
-  #         aes(colour = "Future"), show.legend = "point", size = 4) +
+  geom_sf(data = Future,
+          aes(colour = "Future"), show.legend = "point", size = 4) +
   geom_sf(data = Reserve,
           aes(colour = "Reserve"), show.legend = "point", size = 4) +
   geom_sf(data = Harvestable,
@@ -140,8 +160,8 @@ ggplot() +
   #         aes(colour = "HarvestableUp"), show.legend = "point", size = 4) +
   geom_sf(data = Selected,
           aes(colour = "Selected"), show.legend = "point") +
-  geom_sf(data = ProbedHollow,
-          aes(colour = "Probed hollow"), show.legend = "point") +
+  # geom_sf(data = ProbedHollow,
+  #         aes(colour = "Probed hollow"), show.legend = "point") +
   geom_sf(data = MainTrails) +
   
   scale_colour_manual(values = c("Non-harvestable" = "grey",
@@ -149,7 +169,7 @@ ggplot() +
                                  "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
                                  "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
   labs(color = "Logging status") +
-  labs(title = "P16 EFI3")
+  labs(title = "Paracou P16 EFI3")
 ```
 
 # Plot with treefelling
@@ -166,6 +186,8 @@ NewInventory_crs <- NewInventory %>%
 
 
 ```{r}
+# enregistré avec une hauteur = 1000 or 1100 or 1500
+
 ggplot() +
   # Harvestable zones
   geom_sf(data = HarvestablePolygons,
@@ -175,8 +197,9 @@ ggplot() +
   labs(title = "P6 zones exploitables") +
   
   # 2ndary trails
-  geom_sf(data = st_as_sf(secondtrails[[3]]), col = "darkgreen") +
-  geom_sf(data = st_as_sf(secondtrails[[1]]), col = "red") +
+  geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
+  geom_sf(data = st_as_sf(secondtrails$RawSecondTrails), col = "red") +
+  
   
   # Tree selection
   # geom_sf(data = NonHarvestable,
@@ -204,6 +227,10 @@ ggplot() +
                                  "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
                                  "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
   labs(color = "Logging status") +
-  labs(title = "P6 EFI3 Hollow Fuel")
+  labs(title = "Paracou P6 EFI3")
+
+
+write.csv2(NewInventory, "C:/Users/Vincyane/Documents/Maria-pictures/ParacouP6_EFI3.csv") #  D:/VSC Kourou/Dataexemple
+
 ```
 

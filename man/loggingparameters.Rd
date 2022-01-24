@@ -47,7 +47,7 @@ loggingparameters(
 (double)}
 
 \item{MaxAreaSlope}{Maximum area slope for inclusion in a logging unit
-(harvestable area). Default = 27, in \% (double)}
+(harvestable area). Default = 22, in \% (double)}
 
 \item{MaxTrailCenterlineSlope}{Maximum main & 2nd trail centerline slope.
 Default = 22, in \% (double)}

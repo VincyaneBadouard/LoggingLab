@@ -76,14 +76,14 @@
 #' data(Paracou6_2016)
 #' data(PlotMask)
 #' data(DTMParacou)
-#' data(HarvestablePolygons)
+#' # data(HarvestablePolygons)
 #' data(MainTrails)
-#' data(PlotSlope)
+#' # data(PlotSlope)
 #' data(SpeciesCriteria)
 #' data(CreekDistances)
 #'
-#' inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
-#'  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
+#' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
+#'  volumeparameters = ForestZoneVolumeParametersTable)
 #'
 #'
 #' treeselectionoutputs <- treeselection(inventory,
@@ -127,8 +127,8 @@
 #'   labs(title = "P6 zones exploitables") +
 #'
 #'   # 2ndary trails
-#'   geom_sf(data = st_as_sf(secondtrails[[3]]), col = "darkgreen") +
-#'   geom_sf(data = st_as_sf(secondtrails[[1]]), col = "red")
+#'     geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
+#'     geom_sf(data = st_as_sf(secondtrails$RawSecondTrails), col = "red")
 #'
 #' secondtrails[[4]]
 #'   }
@@ -160,19 +160,23 @@ secondtrailsopening <- function(
   # Arguments check
 
   if(!inherits(treeselectionoutputs, "list"))
-    stop("The 'treeselectionoutputs' arguments of the 'secondtrailsopening' function must be list following treeselection output format")
+    stop("The 'treeselectionoutputs' arguments of the 'secondtrailsopening'
+         function must be list following treeselection output format")
 
   if(!inherits(plotmask, "SpatialPolygonsDataFrame"))
-    stop("The 'plotmask' argument of the 'secondtrailsopening' function must be SpatialPolygonsDataFrame")
+    stop("The 'plotmask' argument of the 'secondtrailsopening' function must be
+         SpatialPolygonsDataFrame")
 
   # if(!any(unlist(lapply(list(MainTrails), inherits, "sf" ))))
   #   stop("The 'MainTrails' argument of the 'secondtrailsopening' function must be sf polygon")
 
   if(!inherits(topography, "RasterLayer"))
-    stop("The 'topography' argument of the 'secondtrailsopening' function must be RasterLayer")
+    stop("The 'topography' argument of the 'secondtrailsopening' function must
+         be RasterLayer")
 
   if(st_is_empty(treeselectionoutputs$SelectedTreesPoints)[1]) {
-    stop("The 'treeselectionoutputs' argument does not contain any selected tree.")
+    stop("The 'treeselectionoutputs' argument does not contain any selected
+         tree.")
   }
 
   # Global Variables
@@ -604,7 +608,7 @@ secondtrailsopening <- function(
           pathLines[[k]] <- TmpPathWIP[[2]]
           pathLines[[k]]@lines[[1]]@ID <- paste("Path", TmpPtsWIP$idTree[2], sep = ".")
 
-          Lines[[k]] <- list("LineID" = k,"LoggedTrees" = TmpPtsWIP$idTree[2],"winching" = winching)
+          Lines[[k]] <- list("LineID" = k,"LoggedTrees" = TmpPtsWIP$idTree[2],"TypeExpl" = "FoT")
 
           k <- k +1
 
@@ -1259,7 +1263,8 @@ secondtrailsopening <- function(
                                  plotmask,
                                  advancedloggingparameters = advancedloggingparameters)
 
-    SmoothedSecondTrails <- secondtrails$SmoothedSecondTrails
+    SmoothedSecondTrails <- secondtrails$SmoothedSecondTrails %>% st_set_crs(st_crs(topography))
+
     TrailsDensity <- secondtrails$TrailsDensity
     #
     #
@@ -1289,7 +1294,7 @@ secondtrailsopening <- function(
   }else{
     paths <- NULL
     lines <- do.call(rbind, Lines)
-    SmoothedSecondTrails <- AccessPointAll %>% st_buffer(dist = 1) %>% st_union()
+    SmoothedSecondTrails <- AccessPointAll %>% st_buffer(dist = 1) %>% st_union() %>% st_set_crs(st_crs(topography))
     TrailsDensity <- 0
 
     inventory <- treeselectionoutputs$inventory
@@ -1319,7 +1324,7 @@ secondtrailsopening <- function(
   #
 
   secondtrails <- list("RawSecondTrails" = paths,
-                       "TrailsIdentity" = lines,              # "LineID","LoggedTrees", "TypeExpl"
+                       "TrailsIdentity" = lines,        # "LineID","LoggedTrees", "TypeExpl"
                        "SmoothedSecondTrails" =  SmoothedSecondTrails,
                        "TrailsDensity" =  TrailsDensity,
                        "inventory" =  inventory,

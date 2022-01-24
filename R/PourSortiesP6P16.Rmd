@@ -13,7 +13,7 @@ library(dplyr)
 
 
 data(Paracou6_2016)
-data(HarvestablePolygons)
+# data(HarvestablePolygons)
 data(MainTrails)
 data(PlotMask)
 data(PlotSlope)
@@ -61,15 +61,14 @@ secondtrailsRIL2broken <- secondtrailsopening(
   fact = 3,
   advancedloggingparameters = loggingparameters())
   
-if (is.null(secondtrailsRIL2broken$paths) ) {
-  plot(secondtrailsRIL2broken$SmoothedSecondTrails)
-  plot(secondtrailsRIL2broken$CostRasterAgg)
-  plot(secondtrailsRIL2broken$SmoothedSecondTrails,add=T)
+if (is.null(secondtrailsRIL2broken$RawSecondTrails) == FALSE) {
+  secondtrailsRIL2broken$TrailsIdentity
+  plot(st_as_sf(secondtrailsRIL2broken$RawSecondTrails))
+  plot(st_as_sf(secondtrailsRIL2broken$SmoothedSecondTrails))
+  raster::plot(secondtrailsRIL2broken$CostRasterAgg)
+  plot(st_as_sf(secondtrailsRIL2broken$SmoothedSecondTrails),add=T)
 }else{
-  plot(secondtrailsRIL2broken$paths)
-  plot(secondtrailsRIL2broken$SmoothedSecondTrails)
-  plot(secondtrailsRIL2broken$CostRasterAgg)
-  plot(secondtrailsRIL2broken$SmoothedSecondTrails,add=T)
+  secondtrailsRIL2broken$TrailsIdentity
 }
 ```
 
@@ -111,15 +110,14 @@ secondtrailsRIL2 <- secondtrailsopening(
   fact = 3,
   advancedloggingparameters = loggingparameters())
 
-if (is.null(secondtrailsRIL2$paths) ) {
-  plot(secondtrailsRIL2$SmoothedSecondTrails)
-  plot(secondtrailsRIL2$CostRasterAgg)
-  plot(secondtrailsRIL2$SmoothedSecondTrails,add=T)
+if (is.null(secondtrailsRIL2$RawSecondTrails) == FALSE) {
+  secondtrailsRIL2$TrailsIdentity
+  plot(st_as_sf(secondtrailsRIL2$RawSecondTrails))
+  plot(st_as_sf(secondtrailsRIL2$SmoothedSecondTrails))
+  raster::plot(secondtrailsRIL2$CostRasterAgg)
+  plot(st_as_sf(secondtrailsRIL2$SmoothedSecondTrails),add=T)
 }else{
-  plot(secondtrailsRIL2$paths)
-  plot(secondtrailsRIL2$SmoothedSecondTrails)
-  plot(secondtrailsRIL2$CostRasterAgg)
-  plot(secondtrailsRIL2$SmoothedSecondTrails,add=T)
+  secondtrailsRIL2$TrailsIdentity
 }
 
 ```
@@ -163,16 +161,16 @@ CostMatrix = list(list(list(Slope = 3, Cost = 3),
   fact = 3,
   advancedloggingparameters = loggingparameters())
 
-if (is.null(secondtrailsRIL3$paths) ) {
-  plot(secondtrailsRIL3$SmoothedSecondTrails)
-  plot(secondtrailsRIL3$CostRasterAgg)
-  plot(secondtrailsRIL3$SmoothedSecondTrails,add=T)
+if (is.null(secondtrailsRIL3$paths) == FALSE) {
+  secondtrailsRIL3$lines
+  plot(st_as_sf(secondtrailsRIL3$paths))
+  plot(st_as_sf(secondtrailsRIL3$SmoothedSecondTrails))
+  raster::plot(secondtrailsRIL3$CostRasterAgg)
+  plot(st_as_sf(secondtrailsRIL3$SmoothedSecondTrails),add=T)
 }else{
-  plot(secondtrailsRIL3$paths)
-  plot(secondtrailsRIL3$SmoothedSecondTrails)
-  plot(secondtrailsRIL3$CostRasterAgg)
-  plot(secondtrailsRIL3$SmoothedSecondTrails,add=T)
+  secondtrailsRIL3$lines
 }
+
 ```
 
 ##RIL3fuel
@@ -213,17 +211,14 @@ CostMatrix = list(list(list(Slope = 3, Cost = 3),
   advancedloggingparameters = loggingparameters())
   
 
-secondtrailsRIL3fuel$lines
-
-if (is.null(secondtrailsRIL3fuel$paths) ) {
-  plot(secondtrailsRIL3fuel$SmoothedSecondTrails)
-  plot(secondtrailsRIL3fuel$CostRasterAgg)
-  plot(secondtrailsRIL3fuel$SmoothedSecondTrails,add=T)
+if (is.null(secondtrailsRIL3fuel$paths) == FALSE) {
+  secondtrailsRIL3fuel$lines
+  plot(st_as_sf(secondtrailsRIL3fuel$paths))
+  plot(st_as_sf(secondtrailsRIL3fuel$SmoothedSecondTrails))
+  raster::plot(secondtrailsRIL3fuel$CostRasterAgg)
+  plot(st_as_sf(secondtrailsRIL3fuel$SmoothedSecondTrails),add=T)
 }else{
-  plot(secondtrailsRIL3fuel$paths)
-  plot(secondtrailsRIL3fuel$SmoothedSecondTrails)
-  plot(secondtrailsRIL3fuel$CostRasterAgg)
-  plot(secondtrailsRIL3fuel$SmoothedSecondTrails,add=T)
+  secondtrailsRIL3fuel$lines
 }
 ```
 
@@ -264,17 +259,14 @@ CostMatrix = list(list(list(Slope = 3, Cost = 3),
   fact = 3,
   advancedloggingparameters = loggingparameters())
 
-secondtrailsRIL3fuelhollow$lines
-
-if (is.null(secondtrailsRIL3fuelhollow$paths) ) {
-  plot(secondtrailsRIL3fuelhollow$SmoothedSecondTrails)
-  plot(secondtrailsRIL3fuelhollow$CostRasterAgg)
-  plot(secondtrailsRIL3fuelhollow$SmoothedSecondTrails,add=T)
+if (is.null(secondtrailsRIL3fuelhollow$paths) == FALSE) {
+  secondtrailsRIL3fuelhollow$lines
+  plot(st_as_sf(secondtrailsRIL3fuelhollow$paths))
+  plot(st_as_sf(secondtrailsRIL3fuelhollow$SmoothedSecondTrails))
+  raster::plot(secondtrailsRIL3fuelhollow$CostRasterAgg)
+  plot(st_as_sf(secondtrailsRIL3fuelhollow$SmoothedSecondTrails),add=T)
 }else{
-  plot(secondtrailsRIL3fuelhollow$paths)
-  plot(secondtrailsRIL3fuelhollow$SmoothedSecondTrails)
-  plot(secondtrailsRIL3fuelhollow$CostRasterAgg)
-  plot(secondtrailsRIL3fuelhollow$SmoothedSecondTrails,add=T)
+  secondtrailsRIL3fuelhollow$lines
 }
 ```
 

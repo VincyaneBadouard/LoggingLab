@@ -38,6 +38,7 @@ scenariosparameters <- function(
   winching = NULL,
   directionalfelling = NULL
 ){
+
   # check inputs
   if(!(scenario %in% c("RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow", "manual")))
     stop(paste('"scenario" argument should be in "RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel",
