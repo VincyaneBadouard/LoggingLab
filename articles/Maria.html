@@ -115,8 +115,12 @@
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span>
 <span class="co"># Crown diameter allometry parameters table</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ParamCrownDiameterAllometry</span><span class="op">)</span>
-<span class="co"># Digital terrain model (DTM) of the plot 6 of Paracou (1m resolution, LiDAR campaign of 2016)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></code></pre></div>
+<span class="co"># Digital terrain model (DTM) of the inventoried plot (1m resolution)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span>
+<span class="co"># Mask of the inventoried plot (1m resolution)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotMask</span><span class="op">)</span>
+<span class="co"># Relative (vertical and horizontal) distances from nearest channel network, of the inventoried plot</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">CreekDistances</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="required-format-of-the-inventory">Required format of the inventory<a class="anchor" aria-label="anchor" href="#required-format-of-the-inventory"></a>
@@ -3923,19 +3927,19 @@ Family
 <tbody>
 <tr>
 <td style="text-align:right;">
-0.4791993
+0.4296768
 </td>
 <td style="text-align:right;">
-0.5695743
+0.5759190
 </td>
 <td style="text-align:left;">
 gen
 </td>
 <td style="text-align:left;">
-Conceveiba
+Alexa
 </td>
 <td style="text-align:left;">
-Conceveiba
+Alexa
 </td>
 <td style="text-align:left;">
 NA
@@ -3946,45 +3950,22 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.6412434
+0.4355070
 </td>
 <td style="text-align:right;">
-0.5547430
+0.5898421
 </td>
 <td style="text-align:left;">
 sp
 </td>
 <td style="text-align:left;">
-Eschweilera_coriacea
+Tachigali_paraensis
 </td>
 <td style="text-align:left;">
-Eschweilera
+Tachigali
 </td>
 <td style="text-align:left;">
-coriacea
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4052851
-</td>
-<td style="text-align:right;">
-0.5489806
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Mouriri
-</td>
-<td style="text-align:left;">
-Mouriri
-</td>
-<td style="text-align:left;">
-NA
+paraensis
 </td>
 <td style="text-align:left;">
 NA
@@ -3992,85 +3973,16 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4844569
+0.4496736
 </td>
 <td style="text-align:right;">
-0.5852036
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Eperua
-</td>
-<td style="text-align:left;">
-Eperua
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4448597
-</td>
-<td style="text-align:right;">
-0.5587949
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Pourouma_melinonii
-</td>
-<td style="text-align:left;">
-Pourouma
-</td>
-<td style="text-align:left;">
-melinonii
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.5256147
-</td>
-<td style="text-align:right;">
-0.5851850
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Platonia
-</td>
-<td style="text-align:left;">
-Platonia
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4421970
-</td>
-<td style="text-align:right;">
-0.5613364
+0.5621220
 </td>
 <td style="text-align:left;">
 fam
 </td>
 <td style="text-align:left;">
-Arecaceae
+Malpighiaceae
 </td>
 <td style="text-align:left;">
 NA
@@ -4079,73 +3991,50 @@ NA
 NA
 </td>
 <td style="text-align:left;">
-Arecaceae
+Malpighiaceae
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0.5069987
+0.4742262
 </td>
 <td style="text-align:right;">
-0.5912706
+0.5731076
 </td>
 <td style="text-align:left;">
-sp
+fam
 </td>
 <td style="text-align:left;">
-Sterculia_speciosa
-</td>
-<td style="text-align:left;">
-Sterculia
-</td>
-<td style="text-align:left;">
-speciosa
+Humiriaceae
 </td>
 <td style="text-align:left;">
 NA
 </td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Humiriaceae
+</td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4779573
+0.4665498
 </td>
 <td style="text-align:right;">
-0.5752327
+0.5674537
 </td>
 <td style="text-align:left;">
 gen
 </td>
 <td style="text-align:left;">
-Brosimum
+Laetia
 </td>
 <td style="text-align:left;">
-Brosimum
-</td>
-<td style="text-align:left;">
-NA
+Laetia
 </td>
 <td style="text-align:left;">
 NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4767485
-</td>
-<td style="text-align:right;">
-0.6038705
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Parkia_nitida
-</td>
-<td style="text-align:left;">
-Parkia
-</td>
-<td style="text-align:left;">
-nitida
 </td>
 <td style="text-align:left;">
 NA
@@ -4153,114 +4042,229 @@ NA
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4741537
+0.5070751
 </td>
 <td style="text-align:right;">
-0.5710248
+0.5937486
 </td>
 <td style="text-align:left;">
 gen
-</td>
-<td style="text-align:left;">
-Ficus
-</td>
-<td style="text-align:left;">
-Ficus
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.5389628
-</td>
-<td style="text-align:right;">
-0.5943869
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Caryocar_glabrum
-</td>
-<td style="text-align:left;">
-Caryocar
-</td>
-<td style="text-align:left;">
-glabrum
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.5056234
-</td>
-<td style="text-align:right;">
-0.5822394
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Glycydendron_amazonicum
-</td>
-<td style="text-align:left;">
-Glycydendron
-</td>
-<td style="text-align:left;">
-amazonicum
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.4308677
-</td>
-<td style="text-align:right;">
-0.5479766
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Talisia_simaboides
-</td>
-<td style="text-align:left;">
-Talisia
-</td>
-<td style="text-align:left;">
-simaboides
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0.5107029
-</td>
-<td style="text-align:right;">
-0.5968172
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Eriotheca_globosa
 </td>
 <td style="text-align:left;">
 Eriotheca
 </td>
 <td style="text-align:left;">
-globosa
+Eriotheca
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5615981
+</td>
+<td style="text-align:right;">
+0.5580992
+</td>
+<td style="text-align:left;">
+sp
+</td>
+<td style="text-align:left;">
+Micropholis_obscura
+</td>
+<td style="text-align:left;">
+Micropholis
+</td>
+<td style="text-align:left;">
+obscura
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.4871337
+</td>
+<td style="text-align:right;">
+0.5792505
+</td>
+<td style="text-align:left;">
+gen
+</td>
+<td style="text-align:left;">
+Bagassa
+</td>
+<td style="text-align:left;">
+Bagassa
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5055877
+</td>
+<td style="text-align:right;">
+0.5813021
+</td>
+<td style="text-align:left;">
+fam
+</td>
+<td style="text-align:left;">
+Rubiaceae
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Rubiaceae
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5311257
+</td>
+<td style="text-align:right;">
+0.5853185
+</td>
+<td style="text-align:left;">
+gen
+</td>
+<td style="text-align:left;">
+Moronobea
+</td>
+<td style="text-align:left;">
+Moronobea
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5373669
+</td>
+<td style="text-align:right;">
+0.5932712
+</td>
+<td style="text-align:left;">
+gen
+</td>
+<td style="text-align:left;">
+Agonandra
+</td>
+<td style="text-align:left;">
+Agonandra
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5049816
+</td>
+<td style="text-align:right;">
+0.5824258
+</td>
+<td style="text-align:left;">
+sp
+</td>
+<td style="text-align:left;">
+Chaetocarpus_sp.1CAY-ATDN
+</td>
+<td style="text-align:left;">
+Chaetocarpus
+</td>
+<td style="text-align:left;">
+sp.1CAY-ATDN
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5077839
+</td>
+<td style="text-align:right;">
+0.5817858
+</td>
+<td style="text-align:left;">
+gen
+</td>
+<td style="text-align:left;">
+Dendrobangia
+</td>
+<td style="text-align:left;">
+Dendrobangia
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5125492
+</td>
+<td style="text-align:right;">
+0.5790873
+</td>
+<td style="text-align:left;">
+gen
+</td>
+<td style="text-align:left;">
+Virola
+</td>
+<td style="text-align:left;">
+Virola
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.5083044
+</td>
+<td style="text-align:right;">
+0.5957550
+</td>
+<td style="text-align:left;">
+sp
+</td>
+<td style="text-align:left;">
+Eriotheca_longitubulosa
+</td>
+<td style="text-align:left;">
+Eriotheca
+</td>
+<td style="text-align:left;">
+longitubulosa
 </td>
 <td style="text-align:left;">
 NA
@@ -4280,7 +4284,7 @@ NA
 <ul>
 <li><p><strong>inventory</strong> : Input inventory (see the inputs formats and metadata in the ) (data.frame)</p></li>
 <li><p><strong>topography</strong> : Digital terrain model (DTM) of the inventoried plot (LiDAR or SRTM) (RasterLayer)</p></li>
-<li><p><strong>verticalcreekheight</strong> : (RasterLayer)</p></li>
+<li><p><strong>creekdistances</strong> Relative (vertical and horizontal) distances from nearest channel network (list of 2 large RasterLayers)</p></li>
 <li><p><strong>speciescriteria</strong> : Table of species exploitability criteria : species names, economic interest level, minimum and maximum felling diameter, in the same format of  (2 levels of commercial species) (data.frame)</p></li>
 <li><p><strong>volumeparameters</strong> : Volume parameters table (in the same format of ) to compute the harvestable volume of each tree, depend to its geographic zone if several locations (data.frame)</p></li>
 <li><p><strong>scenario</strong> : Logging scenario: “<strong>RIL1</strong>”, “<strong>RIL2broken</strong>”, “<strong>RIL2</strong>”, “<strong>RIL3</strong>”, “<strong>RIL3fuel</strong>”, “<strong>RIL3fuelhollow</strong>” or “<strong>manual</strong>”(character)</p></li>
@@ -4649,8 +4653,8 @@ TRUE
                                       MainTrails <span class="op">=</span> <span class="va">MainTrails</span>, plotslope <span class="op">=</span> <span class="va">PlotSlope</span>,
                                       harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,
                                       advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; The harvestable volume (= 10.9m^3) was lower</span>
-<span class="co">#&gt;               (by 114.1m^3) than your objective volume.</span>
+<span class="co">#&gt; The harvestable volume (= 6.9m^3) was lower</span>
+<span class="co">#&gt;               (by 118.1m^3) than your objective volume.</span>
 <span class="co">#&gt;               You have chosen to continue logging without diversifying in this case.</span></code></pre></div>
 </div>
 <div class="section level4">
@@ -4682,8 +4686,8 @@ TRUE
                       diversification <span class="op">=</span> <span class="cn">TRUE</span>, VO <span class="op">=</span> <span class="fl">125</span>, HVinit <span class="op">=</span> <span class="va">HVinit</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,
                       objectivelax <span class="op">=</span> <span class="cn">TRUE</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,
                       advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span>
-<span class="co">#&gt; The harvestable volume (= 41.7m^3) was lower</span>
-<span class="co">#&gt;               (by 83.3m^3) than your objective volume.</span>
+<span class="co">#&gt; The harvestable volume (= 29.6m^3) was lower</span>
+<span class="co">#&gt;               (by 95.4m^3) than your objective volume.</span>
 <span class="co">#&gt;               You have chosen to continue logging in this case.</span></code></pre></div>
 </div>
 <div class="section level5">
@@ -4745,6 +4749,7 @@ TRUE
                          winching <span class="op">=</span> <span class="st">"1"</span>, directionalfelling <span class="op">=</span> <span class="st">"2"</span>,
                          MainTrails <span class="op">=</span> <span class="va">MainTrails</span>, ScndTrail <span class="op">=</span> <span class="va">ScndTrail</span>,
                          advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
 <span class="co">#&gt; It was not possible to avoid future/reserve trees in the felling of a tree</span>
 
 <span class="va">Treefall</span> <span class="op">&lt;-</span> <span class="va">inventory</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
