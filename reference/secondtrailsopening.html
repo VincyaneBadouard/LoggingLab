@@ -44,7 +44,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Second trails opening</h1>
-      <small class="dont-index">Source: <a href="https://github.com/VincyaneBadouard/Maria/blob/HEAD/R/secondtrailsopening.R" class="external-link"><code>R/secondtrailsopening.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/VincyaneBadouard/Maria/blob/HEAD/R/SecondTrailsOpening.R" class="external-link"><code>R/SecondTrailsOpening.R</code></a></small>
       <div class="d-none name"><code>secondtrailsopening.Rd</code></div>
     </div>
 
@@ -131,14 +131,14 @@ Avoidance of future/reserves if chosen.</p></dd>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotMask</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestablePolygons</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># data(HarvestablePolygons)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotSlope</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># data(PlotSlope)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">CreekDistances</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="commercialcriteriajoin.html">commercialcriteriajoin</a></span><span class="op">(</span><span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
-<span class="r-in"> volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span>,<span class="va">SpeciesCriteria</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
+<span class="r-in"> volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">treeselectionoutputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>,</span>
@@ -182,8 +182,8 @@ Avoidance of future/reserves if chosen.</p></dd>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"P6 zones exploitables"</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in"></span>
 <span class="r-in">  <span class="co"># 2ndary trails</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">secondtrails</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"darkgreen"</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">secondtrails</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
+<span class="r-in">    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">secondtrails</span><span class="op">$</span><span class="va">SmoothedSecondTrails</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"darkgreen"</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">secondtrails</span><span class="op">$</span><span class="va">RawSecondTrails</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">secondtrails</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span></span>
 <span class="r-in">  <span class="op">}</span></span>
