@@ -24,14 +24,21 @@
 #' main commercial species (species with a value of 2 for commercial in the
 #' \code{\link{SpeciesCriteria}} table) (logical)
 #'
+#' @param winching
+#' "0": no cable or grapple (trail to tree foot)
+#' "1": only cable (default = 40m)
+#' "2": grapple (default = 6m) + cable (grapple priority)
+#' If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+#'  recovery of the tree foot with grapple if possible (respected grapple
+#'  conditions) otherwise with cable with angle to the trail.
+#'  Avoidance of future/reserves if chosen.
+#'
 #'@param specieslax Allow diversification if the stand is too poor to reach the
 #' objective volume without diversification, = FALSE by
 #'  default (logical)
 #'
 #'@param objectivelax Allow exploitation in case of non-achievement of the
 #'  objective volume (if stand too poor), = FALSE by default (logical)
-#'
-#'@param MainTrails Main trails defined at the entire harvestable area (sf polylines)
 #'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
@@ -120,9 +127,20 @@
 #' @examples
 #' data(Paracou6_2016)
 #' data(DTMParacou)
-#' data(PlotSlope)
+#' data(PlotMask)
+#' data(SpeciesCriteria)
+#' data(CreekDistances)
 #' data(MainTrails)
-#' data(HarvestablePolygons)
+#'
+#'HarvestableAreaOutputs <- harvestableareadefinition(
+#'   topography = DTMParacou,
+#'   creekdistances = CreekDistances,
+#'   maintrails = MainTrails,
+#'   plotmask = PlotMask,
+#'   scenario = "manual",winching = "0",
+#'   advancedloggingparameters = loggingparameters()
+#'   )
+#'
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -130,9 +148,10 @@
 #' treeselectionoutputs <- treeselection(inventory,
 #' topography = DTMParacou,
 #' speciescriteria = SpeciesCriteria, objective = 10,
-#' scenario = "manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
-#' objectivelax = TRUE, MainTrails = MainTrails, plotslope = PlotSlope,
-#' harvestablepolygons = HarvestablePolygons,
+#' scenario = "manual", fuel = "2", diversification = TRUE,
+#' winching = "0", specieslax = FALSE,
+#' objectivelax = TRUE, plotslope = HarvestableAreaOutputs$PlotSlope,
+#' harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
 #' advancedloggingparameters = loggingparameters())
 #'
 #' \dontrun{
@@ -202,9 +221,9 @@ treeselection <- function(
   objective = NULL,
   fuel = NULL,
   diversification = NULL,
+  winching = NULL,
   specieslax = FALSE,
   objectivelax = FALSE,
-  MainTrails,
   harvestablepolygons,
   plotslope,
   advancedloggingparameters = loggingparameters()
@@ -234,6 +253,9 @@ treeselection <- function(
   if (!any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
     stop("The 'fuel' argument of the 'treeselection' function must be '0', '1', or '2'")
 
+  if (!any(winching == "0" || winching == "1"|| winching == "2"|| is.null(winching)))
+    stop("The 'winching' argument of the 'treeselection' function must be '0', '1', or '2'")
+
   if(!all(unlist(lapply(list(topography, plotslope), inherits, "RasterLayer"))))
     stop("The 'topography' and 'plotslope' arguments of the 'treeselection' function must be RasterLayer")
 
@@ -243,7 +265,7 @@ treeselection <- function(
   if(scenario == "manual" &&
      (is.null(objective) || is.null(fuel) || is.null(diversification)))
     stop("If you choose the 'manual' mode,
-         you must fill in the arguments 'objective', 'fuel' and 'diversification'")
+         you must fill in the arguments 'objective', 'fuel' , 'winching' and 'diversification'")
 
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <-  NULL
@@ -265,11 +287,12 @@ treeselection <- function(
 
   # Redefinition of the parameters according to the chosen scenario
   scenariosparameters <- scenariosparameters(scenario = scenario, objective = objective, fuel = fuel,
-                                             diversification = diversification)
+                                             diversification = diversification, winching = winching)
 
   objective <- scenariosparameters$objective
   fuel <- scenariosparameters$fuel
   diversification <- scenariosparameters$diversification
+  winching <- scenariosparameters$winching
 
   # Function
 
@@ -284,9 +307,9 @@ treeselection <- function(
   # Harvestable trees identification
   harvestableOutputs <- harvestable(inventory,
                                     topography = topography,
-                                    harvestablepolygons = harvestablepolygons,
-                                    MainTrails = MainTrails, plotslope = plotslope,
+                                    harvestablepolygons = harvestablepolygons,plotslope = plotslope,
                                     diversification = diversification, specieslax = specieslax,
+                                    scenario = scenario, winching = winching,
                                     advancedloggingparameters = advancedloggingparameters)
 
   inventory <- harvestableOutputs$inventory       # new inventory
@@ -342,7 +365,7 @@ treeselection <- function(
 
   if (dim(FutureTreesPoints)[1] != 0) {
 
-    st_as_sf(FutureTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(FutureTreesPoints) <- ~ Xutm + Yutm
+    FutureTreesPoints <- st_as_sf(FutureTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(FutureTreesPoints) <- ~ Xutm + Yutm
 
     # sp::proj4string(FutureTreesPoints) <- raster::crs(topography)
 
@@ -354,7 +377,7 @@ treeselection <- function(
 
   if (dim(ReserveTreesPoints)[1] != 0) {
 
-    st_as_sf(ReserveTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(ReserveTreesPoints) <- ~ Xutm + Yutm
+    ReserveTreesPoints <-  st_as_sf(ReserveTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(ReserveTreesPoints) <- ~ Xutm + Yutm
 
     # sp::proj4string(ReserveTreesPoints) <- raster::crs(topography)
 

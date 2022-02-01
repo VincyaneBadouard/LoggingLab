@@ -12,9 +12,9 @@ treeselection(
   objective = NULL,
   fuel = NULL,
   diversification = NULL,
+  winching = NULL,
   specieslax = FALSE,
   objectivelax = FALSE,
-  MainTrails,
   harvestablepolygons,
   plotslope,
   advancedloggingparameters = loggingparameters()
@@ -45,14 +45,20 @@ hollow trees, damage and and unused part of the log for fuel = "2"}
 main commercial species (species with a value of 2 for commercial in the
 \code{\link{SpeciesCriteria}} table) (logical)}
 
+\item{winching}{"0": no cable or grapple (trail to tree foot)
+"1": only cable (default = 40m)
+"2": grapple (default = 6m) + cable (grapple priority)
+If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+recovery of the tree foot with grapple if possible (respected grapple
+conditions) otherwise with cable with angle to the trail.
+Avoidance of future/reserves if chosen.}
+
 \item{specieslax}{Allow diversification if the stand is too poor to reach the
 objective volume without diversification, = FALSE by
 default (logical)}
 
 \item{objectivelax}{Allow exploitation in case of non-achievement of the
 objective volume (if stand too poor), = FALSE by default (logical)}
-
-\item{MainTrails}{Main trails defined at the entire harvestable area (sf polylines)}
 
 \item{harvestablepolygons}{Accessible area of the inventoried plot
 (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
@@ -140,9 +146,20 @@ the number of reserve trees is equal to the number of harvested trees.
 \examples{
 data(Paracou6_2016)
 data(DTMParacou)
-data(PlotSlope)
+data(PlotMask)
+data(SpeciesCriteria)
+data(CreekDistances)
 data(MainTrails)
-data(HarvestablePolygons)
+
+HarvestableAreaOutputs <- harvestableareadefinition(
+  topography = DTMParacou,
+  creekdistances = CreekDistances,
+  maintrails = MainTrails,
+  plotmask = PlotMask,
+  scenario = "manual",winching = "0",
+  advancedloggingparameters = loggingparameters()
+  )
+
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -150,9 +167,10 @@ volumeparameters = ForestZoneVolumeParametersTable)
 treeselectionoutputs <- treeselection(inventory,
 topography = DTMParacou,
 speciescriteria = SpeciesCriteria, objective = 10,
-scenario = "manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
-objectivelax = TRUE, MainTrails = MainTrails, plotslope = PlotSlope,
-harvestablepolygons = HarvestablePolygons,
+scenario = "manual", fuel = "2", diversification = TRUE,
+winching = "0", specieslax = FALSE,
+objectivelax = TRUE, plotslope = HarvestableAreaOutputs$PlotSlope,
+harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
 advancedloggingparameters = loggingparameters())
 
 \dontrun{

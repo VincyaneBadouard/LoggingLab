@@ -24,15 +24,17 @@ library(tibble)
 data("HarvestablePolygons")
 data(DTMParacou)
 data(CreekDistances)
+data(PlotMask)
 data("MainTrails")
 ```
 
 # Def UP
 ```{r}
-HarvestableAreaOutputs27 <- harvestableareadefinition(
+HarvestableAreaOutputs <- harvestableareadefinition(
   topography = DTMParacou,
   creekdistances = CreekDistances,
-  advancedloggingparameters = loggingparameters(MaxAreaSlope = 27)
+  plotmask = PlotMask,
+  scenario = "RIL2"
 )
 HarvesPolygons22 <-  HarvestableAreaOutputs$HarvestablePolygons
 HarvesPolygons27 <-  HarvestableAreaOutputs27$HarvestablePolygons
@@ -197,7 +199,7 @@ ggplot() +
   labs(title = "P6 zones exploitables") +
   
   # 2ndary trails
-  geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
+  geom_sf(data = st_as_sf(secondtrails$SmoothedTrails), col = "darkgreen") +
   geom_sf(data = st_as_sf(secondtrails$RawSecondTrails), col = "red") +
   
   

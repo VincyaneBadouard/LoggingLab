@@ -42,7 +42,7 @@ inventory <- suppressMessages(treeselection(inventory,
 
 inventory <- inventory \%>\%
      dplyr::filter(Selected == "1") \%>\%
-     dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
+     dplyr::dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
      CrownDiameter,Selected, Xutm, Yutm)
 dat <- inventory[1,]
 

@@ -6,7 +6,10 @@
 \usage{
 filteraccesexplarea(
   harvestablepolygons,
+  scenario,
+  winching = NULL,
   MainTrails,
+  resolution,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -14,8 +17,22 @@ filteraccesexplarea(
 \item{harvestablepolygons}{Accessible area of the inventoried plot (default:
 \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
 
+\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+\code{\link{vignette}})}
+
+\item{winching}{"0": no cable or grapple (trail to tree foot)
+"1": only cable (default = 40m)
+"2": grapple (default = 6m) + cable (grapple priority)
+If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+recovery of the tree foot with grapple if possible (respected grapple
+conditions) otherwise with cable with angle to the trail.
+Avoidance of future/reserves if chosen.}
+
 \item{MainTrails}{Main trails defined at the entire harvestable area (sf
 polylines)}
+
+\item{resolution}{Initial résolution of DTM raster (numeric)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}

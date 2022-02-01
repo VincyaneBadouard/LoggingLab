@@ -16,13 +16,24 @@
 #'@param specieslax Allow diversification if stand is too poor, = FALSE by
 #'  default (logical)
 #'
-#'@param MainTrails Main trails defined at the entire harvestable area (sf polylines)
-#'
 #'@param harvestablepolygons Accessible area of the inventoried plot
 #'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
 #'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
+#'
+#'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+#'  \code{\link{vignette}})
+#'
+#'@param winching
+#' "0": no cable or grapple (trail to tree foot)
+#' "1": only cable (default = 40m)
+#' "2": grapple (default = 6m) + cable (grapple priority)
+#' If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+#'  recovery of the tree foot with grapple if possible (respected grapple
+#'  conditions) otherwise with cable with angle to the trail.
+#'  Avoidance of future/reserves if chosen.
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  (\code{\link{loggingparameters}}) (list)
@@ -59,7 +70,7 @@
 #'@importFrom dplyr filter mutate select left_join if_else
 #'@importFrom tibble as_tibble add_column
 #'@importFrom sp coordinates proj4string
-#'@importFrom sf st_as_sf st_distance st_contains
+#'@importFrom sf st_as_sf st_distance st_contains st_union
 #'@importFrom raster crs extract
 #'@importFrom utils setTxtProgressBar txtProgressBar
 #'
@@ -67,10 +78,19 @@
 #'@examples
 #' data(Paracou6_2016)
 #' data(DTMParacou)
-#' data(PlotSlope)
+#' data(PlotMask)
 #' data(SpeciesCriteria)
-#' data(HarvestablePolygons)
+#' data(CreekDistances)
 #' data(MainTrails)
+#'
+#'HarvestableAreaOutputs <- harvestableareadefinition(
+#'   topography = DTMParacou,
+#'   creekdistances = CreekDistances,
+#'   maintrails = MainTrails,
+#'   plotmask = PlotMask,
+#'   scenario = "manual",winching = "0",
+#'   advancedloggingparameters = loggingparameters()
+#'   )
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -78,8 +98,10 @@
 #' inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 #'
 #' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
-#' diversification = TRUE, specieslax = FALSE, MainTrails = MainTrails,
-#' plotslope = PlotSlope, harvestablepolygons = HarvestablePolygons,
+#' diversification = TRUE, specieslax = FALSE,
+#' plotslope = HarvestableAreaOutputs$PlotSlope,
+#' harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
+#' scenario = "manual",winching = "0",
 #' advancedloggingparameters = loggingparameters())
 #'
 #' new <- harvestableOutputs$inventory
@@ -89,9 +111,10 @@ harvestable <- function(
   topography,
   diversification,
   specieslax = FALSE,
-  MainTrails,
   harvestablepolygons,
   plotslope,
+  scenario,
+  winching = NULL,
   advancedloggingparameters = loggingparameters()
 ){
 
@@ -125,16 +148,22 @@ harvestable <- function(
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- PU <- NULL
 
 
+  #### Redefinition of the parameters according to the chosen scenario ####
+  scenariosparameters <- scenariosparameters(scenario = scenario, winching = winching)
+  winching <- scenariosparameters$winching
+
+  ##################################
+
   # Calculation of spatial information (distance and slope)
   SpatInventory <- inventory %>%
     filter(CommercialLevel!= "0") %>%  # only take commercial sp, the calculation time is long enough
     filter(DBH >= MinFD & DBH <= MaxFD) # already selected commercial DBHs
 
-  sp::coordinates(SpatInventory) <- ~ Xutm + Yutm # transform the inventory into a spatial object by informing the coordinates
+  coordinates(SpatInventory) <- ~ Xutm + Yutm # transform the inventory into a spatial object by informing the coordinates
 
-  sp::proj4string(SpatInventory) <- raster::crs(topography) # allocate the Paracou crs to our spatial inventory
+  proj4string(SpatInventory) <- crs(topography) # allocate the Paracou crs to our spatial inventory
 
-  SlopeTmp <- as_tibble(raster::extract(x = plotslope, y = SpatInventory)) # extracts the slope values for the inventory spatialized points
+  SlopeTmp <- as_tibble(extract(x = plotslope, y = SpatInventory)) # extracts the slope values for the inventory spatialized points
 
   SpatInventory <- st_as_sf(SpatInventory) %>%  # transforming the spatialized inventory into an sf object
     add_column(DistCriteria = NA) # Create a default 'DistCriteria' = FALSE column
@@ -177,28 +206,40 @@ harvestable <- function(
     } # Calculating distances end
   }
 
+ if (winching == "0") {
+   TreeMaxSlope <- advancedloggingparameters$MaxTrailCenterlineSlope
+ }else{
+   TreeMaxSlope <- advancedloggingparameters$CableTreesMaxSlope
+ }
 
-  SlopeCriteriaInventory <- SpatInventory %>%   # SpatInventory <- SpatInventory before
+
+  DistCriteriaInventory <- SpatInventory %>%   # SpatInventory <- SpatInventory before
     add_column(Slope = SlopeTmp$value) %>% # add slope values per tree
     # the NaN are the infinite values, which indicate a plateau so slope = 0:
     mutate(Slope = ifelse(is.nan(Slope), 0, Slope)) %>%
     mutate(SlopeCriteria = if_else(
-      condition = Slope <= atan(advancedloggingparameters$TreeMaxSlope/100), # if slope <= 22% the tree is exploitable (we are in radian)
+      condition = Slope <= atan(TreeMaxSlope/100), # if slope <= 22% the tree is exploitable (we are in radian)
       TRUE,
       FALSE)) %>%
     dplyr::select(idTree, DistCriteria, Slope, SlopeCriteria)
 
   inventory <- inventory %>%
-    left_join(SlopeCriteriaInventory, by = "idTree") %>%
+    left_join(DistCriteriaInventory, by = "idTree") %>%
     dplyr::select(-geometry)
 
   # Check that the trees are contained in a accessible area (PU)
 
-   AccessPolygons <- filteraccesexplarea(harvestablepolygons = harvestablepolygons, # define accessible areas (PU) from harvestablepolygons
-                                         MainTrails = MainTrails,
-                                         advancedloggingparameters = advancedloggingparameters)
+   AccessPolygons <- harvestablepolygons
 
-   PUSpatInventory<- SpatInventory %>% mutate(PU = as.vector(sf::st_contains(AccessPolygons, SpatInventory,sparse = F))) %>% # check if trees are contained in PUs
+   # Calculation of spatial information (distance and slope)
+   SpatInventoryAll <- inventory  # already selected commercial DBHs
+
+   coordinates(SpatInventoryAll) <- ~ Xutm + Yutm # transform the inventory into a spatial object by informing the coordinates
+
+   proj4string(SpatInventoryAll) <- crs(topography) # allocate the Paracou crs to our spatial inventory
+
+
+   PUSpatInventory<- st_as_sf(SpatInventoryAll) %>% mutate(PU = as.vector(st_contains(AccessPolygons %>% st_union(), st_as_sf(SpatInventoryAll),sparse = F))) %>% # check if trees are contained in PUs
      dplyr::select(idTree , PU)
 
    inventory<- inventory %>% left_join(PUSpatInventory, by = "idTree")%>%

@@ -10,8 +10,8 @@ treefelling(
   fuel = NULL,
   winching = NULL,
   directionalfelling = NULL,
-  MainTrails,
-  ScndTrail,
+  maintrailsaccess,
+  scndtrail,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -50,9 +50,9 @@ The angle to the trail is favoured to avoid future/reserve trees.
 If the avoidance of future/reserve trees could not be performed,
 a message is returned.}
 
-\item{MainTrails}{Main trails (sf)}
+\item{maintrailsaccess}{Main trails access points (sf)}
 
-\item{ScndTrail}{Secondary trails (sf)}
+\item{scndtrail}{main and second trails (sf)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -115,41 +115,68 @@ will be considered dead.
 \examples{
 data(Paracou6_2016)
 data(DTMParacou)
-data(PlotSlope)
+data(PlotMask)
 data(SpeciesCriteria)
-data(HarvestablePolygons)
+data(CreekDistances)
 data(MainTrails)
 
-pol1 <- list(matrix(c(286503, 582925,
-                      286503, 583240,
-                      286507, 583240,
-                      286507, 582925,
-                      286503, 582925) # the return
-                   ,ncol=2, byrow=TRUE))
-pol2 <- list(matrix(c(286650, 582925,
-                      286650, 583240,
-                      286654, 583240,
-                      286654, 582925,
-                      286650, 582925) # the return
-                   ,ncol=2, byrow=TRUE))
+scenariosparameters <- scenariosparameters(scenario = "manual",
+ winching = "2",
+ objective = 10,
+ fuel = "0",
+ diversification = TRUE,
+ directionalfelling = "0")
 
-PolList = list(pol1,pol2) #list of lists of numeric matrices
-ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
-ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails))
+
+HarvestableAreaOutputs <- harvestableareadefinition(
+  topography = DTMParacou,
+  creekdistances = CreekDistances,
+  maintrails = MainTrails,
+  plotmask = PlotMask,
+  scenario = "manual",winching = scenariosparameters$winching,
+  advancedloggingparameters = loggingparameters()
+  )
+
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
 
-inventory <- suppressMessages(treeselection(inventory, objective = 4,
- scenario ="manual", fuel = "0", diversification = TRUE, specieslax = FALSE,
- objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
- speciescriteria = SpeciesCriteria, MainTrails = MainTrails,
- harvestablepolygons = HarvestablePolygons,
- advancedloggingparameters = loggingparameters())$inventory)
+treeselectionoutputs <- suppressWarnings(treeselection(inventory,
+topography = DTMParacou,
+speciescriteria = SpeciesCriteria, objective = scenariosparameters$objective,
+scenario = "manual", fuel = scenariosparameters$fuel, diversification = scenariosparameters$diversification,
+winching = scenariosparameters$winching, specieslax = FALSE,
+objectivelax = TRUE, plotslope = HarvestableAreaOutputs$PlotSlope,
+harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
+advancedloggingparameters = loggingparameters()))
 
-NewInventory <- treefelling(inventory, scenario = "manual", fuel = "0",
-winching = "0", directionalfelling = "0",
-MainTrails = MainTrails, ScndTrail = ScndTrail,
+secondtrails <- secondtrailsopening(
+  topography = DTMParacou,
+  plotmask = PlotMask,
+  plotslope = HarvestableAreaOutputs$PlotSlope,
+  harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
+  machinepolygons = HarvestableAreaOutputs$MachinePolygons,
+  treeselectionoutputs = treeselectionoutputs,
+  CostMatrix = list(list(list(Slope = 3, Cost = 3),
+  list(Slope = 5, Cost = 5),
+  list(Slope = 12, Cost = 20),
+  list(Slope = 22, Cost = 60),
+  list(Slope = 35, Cost = 1000),
+  list(Slope = Inf, Cost = Inf)),
+  list(list(CostType = "Initial", CostValue = 1000),
+  list(CostType = "Access", CostValue = Inf),
+  list(CostType = "BigTrees", CostValue = 500),
+  list(CostType = "Reserves", CostValue = 500),
+  list(CostType = "Futures", CostValue = 50),
+  list(CostType = "MainTrails", CostValue = 1E-4),
+  list(CostType = "SecondTrails", CostValue = 0.1))),
+  scenario = "manual",
+  winching = scenariosparameters$winching,
+  advancedloggingparameters = loggingparameters())
+
+NewInventory <- treefelling(secondtrails$inventory, scenario = "manual", fuel = scenariosparameters$fuel,
+winching = scenariosparameters$winching, directionalfelling = scenariosparameters$directionalfelling,
+maintrailsaccess = secondtrails$MainTrailsAccess, scndtrail = secondtrails$SmoothedTrails,
 advancedloggingparameters = loggingparameters())
 
 NewInventory_crs <- NewInventory \%>\%
@@ -213,7 +240,7 @@ ggplot() +
   geom_sf(data = Selected, aes(colour = "Selected"), show.legend = "point") +
   geom_sf(data = ProbedHollow,
   aes(colour = "Probed hollow"), show.legend = "point") +
-  geom_sf(data = MainTrails,
+  geom_sf(data = maintrailsaccess,
   alpha = 0.5, fill = "black") +
   geom_sf(data = ScndTrail,
   alpha = 0.5, fill = "black") +

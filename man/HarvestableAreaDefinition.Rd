@@ -7,6 +7,10 @@
 harvestableareadefinition(
   topography,
   creekdistances,
+  maintrails,
+  plotmask,
+  scenario,
+  winching = NULL,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -14,8 +18,24 @@ harvestableareadefinition(
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
-\item{creekdistances}{Relative distances (vertical (distvert) and horizontal
-(distHorz)) from nearest channel network (list of 2 large RasterLayers)}
+\item{creekdistances}{Relative distances (vertical and horizontal) from nearest channel network
+(list of 2 large RasterLayers)}
+
+\item{maintrails}{Main trails defined at the entire harvestable area (sf linestring)}
+
+\item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame)}
+
+\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+\code{\link{vignette}})}
+
+\item{winching}{"0": no cable or grapple (trail to tree foot)
+"1": only cable (default = 40m)
+"2": grapple (default = 6m) + cable (grapple priority)
+If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+recovery of the tree foot with grapple if possible (respected grapple
+conditions) otherwise with cable with angle to the trail.
+Avoidance of future/reserves if chosen.}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -29,30 +49,40 @@ A list with:
 \item 'PlotSlope': a raster with slope (in radians) characteristic of the studied
 plot (Large RasterLayer)
 \item HarvestableArea : the harvestable area in hectares (double).
+\item MachinePolygons : a collection of polygons (sf (sfc_POLYGON)) defined as:
+1 : accessible machine area,
+0 : non-accessible machine area
 }
 }
 \description{
 Harvestable area definition
 }
 \examples{
+\dontrun{
+data(PlotMask)
 data(DTMParacou)
 data(CreekDistances)
+data(MainTrails)
 
 HarvestableAreaOutputs <- harvestableareadefinition(
   topography = DTMParacou,
   creekdistances = CreekDistances,
+  maintrails = MainTrails,
+  plotmask = PlotMask,
+  scenario = "RIL2broken",
   advancedloggingparameters = loggingparameters()
   )
 
 library(ggplot2)
 library(sf)
 ggplot() +
-geom_sf(data = HarvestableAreaOutputs[[1]],
+geom_sf(data = HarvestableAreaOutputs$HarvestablePolygons,
         aes(alpha = Harvestable),
         fill = "olivedrab") +
   labs(alpha = "Harvestable") +
-  labs(title = "P6  Harvestable zones")
+  labs(title = "P6  Harvestable zones RIL2")
 
-HarvestableAreaOutputs$HarvestableArea # in ha
+HarvestableAreaOutputs$PlotSlope
+}
 
 }

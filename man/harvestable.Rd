@@ -9,9 +9,10 @@ harvestable(
   topography,
   diversification,
   specieslax = FALSE,
-  MainTrails,
   harvestablepolygons,
   plotslope,
+  scenario,
+  winching = NULL,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -30,13 +31,23 @@ commercial species (2 levels of commercial species in the
 \item{specieslax}{Allow diversification if stand is too poor, = FALSE by
 default (logical)}
 
-\item{MainTrails}{Main trails defined at the entire harvestable area (sf polylines)}
-
 \item{harvestablepolygons}{Accessible area of the inventoried plot
 (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
+
+\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
+\code{\link{vignette}})}
+
+\item{winching}{"0": no cable or grapple (trail to tree foot)
+"1": only cable (default = 40m)
+"2": grapple (default = 6m) + cable (grapple priority)
+If grapple + cable (winching = "2") without fuel wood (fuel = "0")
+recovery of the tree foot with grapple if possible (respected grapple
+conditions) otherwise with cable with angle to the trail.
+Avoidance of future/reserves if chosen.}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 (\code{\link{loggingparameters}}) (list)}
@@ -77,10 +88,19 @@ criteria and are therefore considered 'non-harvestable'.
 \examples{
 data(Paracou6_2016)
 data(DTMParacou)
-data(PlotSlope)
+data(PlotMask)
 data(SpeciesCriteria)
-data(HarvestablePolygons)
+data(CreekDistances)
 data(MainTrails)
+
+HarvestableAreaOutputs <- harvestableareadefinition(
+  topography = DTMParacou,
+  creekdistances = CreekDistances,
+  maintrails = MainTrails,
+  plotmask = PlotMask,
+  scenario = "manual",winching = "0",
+  advancedloggingparameters = loggingparameters()
+  )
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -88,8 +108,10 @@ volumeparameters = ForestZoneVolumeParametersTable)
 inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
-diversification = TRUE, specieslax = FALSE, MainTrails = MainTrails,
-plotslope = PlotSlope, harvestablepolygons = HarvestablePolygons,
+diversification = TRUE, specieslax = FALSE,
+plotslope = HarvestableAreaOutputs$PlotSlope,
+harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
+scenario = "manual",winching = "0",
 advancedloggingparameters = loggingparameters())
 
 new <- harvestableOutputs$inventory
