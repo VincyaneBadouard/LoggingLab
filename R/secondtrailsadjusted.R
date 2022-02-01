@@ -1118,16 +1118,19 @@ secondtrailsadjusted <- function(
         print(RemainTree)
         print(paste0("Crown2FoT : ",Crown2FoT))
 
-        if (!Crown2FoT & dim(CrownPts)[1] == 0) {
-          Crown2FoT <- TRUE
-        }
-
 
         #Switch from grpl to cbl exploitation when grapple accessible tree != 0
         Grpl2CblFlag <- FALSE
         stoplog <- FALSE
+        if (!Crown2FoT & dim(CrownPts)[1] == 0) {
+          Crown2FoT <- TRUE
+          stoplog <- TRUE
+        }
 
-        if ((dim(ptsWIP)[1] != 0 & !Crown2FoT)| (dim(TreePts)[1] != 0 & Crown2FoT) | (dim(TreePts)[1] != 0 & (winching=="1")) ) {
+
+
+
+        if ((dim(ptsWIP)[1] != 0 & !Crown2FoT)| (dim(TreePts)[1] != 0 & Crown2FoT & !stoplog) | (dim(TreePts)[1] != 0 & (winching=="1")) ) {
 
 
 
