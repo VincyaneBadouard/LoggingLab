@@ -76,11 +76,14 @@ HarvestableAreaOutputs <- harvestableareadefinition(
 library(ggplot2)
 library(sf)
 ggplot() +
-geom_sf(data = HarvestableAreaOutputs$HarvestablePolygons,
-        aes(alpha = Harvestable),
-        fill = "olivedrab") +
+  # Harvestable zones
+  geom_sf(data = HarvestableAreaOutputs$HarvestablePolygons,
+        fill = "olivedrab", alpha = 0.1) +
+   geom_sf(data = HarvestableAreaOutputs$MachinePolygons,
+        fill = "olivedrab", alpha = 0.5) +
   labs(alpha = "Harvestable") +
-  labs(title = "P6  Harvestable zones RIL2")
+  labs(title = "P6 zones exploitables") +
+  scale_colour_manual(values = c("Harvestable area" = "olivedrab"))
 
 HarvestableAreaOutputs$PlotSlope
 }

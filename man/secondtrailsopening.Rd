@@ -103,7 +103,7 @@ data(MainTrails)
 
 scenariosparameters <- scenariosparameters(scenario = "manual",
  winching = "2",
- objective = 10,
+ objective = 30,
  fuel = "0",
  diversification = TRUE,
  directionalfelling = "0")
@@ -206,8 +206,8 @@ ggplot() +
 
   geom_sf(data = VisibleDefect,
   aes(colour = "Visible defect"), show.legend = "point") +
-  geom_sf(data = Future,
-  aes(colour = "Future"), show.legend = "point", size = 4) +
+  # geom_sf(data = Future,
+  # aes(colour = "Future"), show.legend = "point", size = 4) +
   geom_sf(data = Reserve,
   aes(colour = "Reserve"), show.legend = "point", size = 4) +
   geom_sf(data = Harvestable,
@@ -223,8 +223,7 @@ ggplot() +
     geom_sf(data = st_as_sf(secondtrails$SmoothedTrails), col = "darkgreen") +
     geom_sf(data = st_as_sf(secondtrails$MainTrailsAccess), col = "black") +
 
-    scale_colour_manual(values = c("Visible defect" = "pink", "
-    Harvestable" = "skyblue",
+    scale_colour_manual(values = c("Visible defect" = "pink", "Harvestable" = "skyblue",
   "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
   "Reserve" = "purple", "Probed hollow" = "forestgreen",
   "Second trails" = "darkgreen", "Harvestable area" = "olivedrab"))

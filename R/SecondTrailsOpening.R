@@ -208,6 +208,8 @@
 #'   geom_sf(data = ProbedHollow,
 #'   aes(colour = "Probed hollow"), show.legend = "point") +
 #'
+#'
+#'
 #'   # 2ndary trails
 #'     geom_sf(data = st_as_sf(secondtrails$SmoothedTrails), col = "darkgreen") +
 #'     geom_sf(data = st_as_sf(secondtrails$MainTrailsAccess), col = "black") +
@@ -897,6 +899,12 @@ secondtrailsopening <- function(
       #Switch from grpl to cbl exploitation when grapple accessible tree != 0
       Grpl2CblFlag <- FALSE
 
+      if (length(unique(unlist(ptsWIP$origins))) == 0 & WinchingSwitch == FALSE & winching == "2") {
+        winching <- "1"
+        ptsWIP <- ptsWIPCbl
+        WinchingSwitch <- TRUE
+      }
+
 
 
       ptsWIPmax <- rbind(PointAcc,ptsWIP %>%
@@ -1377,16 +1385,6 @@ secondtrailsopening <- function(
         }
 
         RemainTree <- dim(TreePts)[1]
-
-
-
-
-
-      if (length(unique(unlist(ptsWIP$origins))) == 0 & WinchingSwitch == FALSE & winching == "2") {
-        winching <- "1"
-        ptsWIP <- ptsWIPCbl
-        WinchingSwitch <- TRUE
-      }
 
     }
 

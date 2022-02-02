@@ -12,6 +12,7 @@ secondtrailsadjusted(
   harvestablepolygons,
   machinepolygons,
   postlogginginventory,
+  accesspts = NULL,
   CostMatrix = list(list(list(Slope = 3, Cost = 3), list(Slope = 5, Cost = 5),
     list(Slope = 12, Cost = 20), list(Slope = 20, Cost = 60), list(Slope = 35, Cost =
     1000), list(Slope = Inf, Cost = Inf)), list(list(CostType = "Initial", CostValue =
@@ -50,6 +51,8 @@ neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
 according to the chosen scenario
 \item The dead trees under felled trees (DeathCause = "treefall2nd")
 }}
+
+\item{accesspts}{Random access point of maintrail for each PU (sfc_MULTIPOLYGON)}
 
 \item{CostMatrix}{List of list defining conditional weight over binned slopes
 values}
@@ -102,7 +105,7 @@ data(MainTrails)
 
 scenariosparameters <- scenariosparameters(scenario = "manual",
  winching = "2",
- objective = 10,
+ objective = 30,
  fuel = "0",
  diversification = TRUE,
  directionalfelling = "0")
@@ -166,6 +169,7 @@ ScdTrailsAdj <- secondtrailsadjusted(
   harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
   machinepolygons = HarvestableAreaOutputs$MachinePolygons,
   postlogginginventory = PostLogInventory,
+  accesspts = secondtrails$MainTrailsAccess,
   CostMatrix = list(list(list(Slope = 3, Cost = 3),
    list(Slope = 5, Cost = 5),
    list(Slope = 12, Cost = 20),
@@ -188,6 +192,10 @@ library(ggplot2)
 library(sf)
 
 NewInventory <- treeselectionoutputs$inventory
+
+NewInventory_crs <- NewInventory \%>\%
+getgeometry(TreePolygon) \%>\%
+sf::st_set_crs(sf::st_crs(MainTrails))
 
 
 Harvestable <- sf::st_as_sf(
@@ -247,17 +255,24 @@ ggplot() +
   geom_sf(data = ProbedHollow,
   aes(colour = "Probed hollow"), show.legend = "point") +
 
+   geom_sf(data = NewInventory_crs, # cuted trees
+   alpha = 0.5, fill = "red") +
+
   # 2ndary trails
-    geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "darkgreen") +
-    geom_sf(data = st_as_sf(secondtrails$RawSecondTrails), col = "red") +
+    geom_sf(data = st_as_sf(secondtrails$SmoothedSecondTrails), col = "Initial trails") +
+    geom_sf(data = st_as_sf(secondtrails$RawSecondTrails), col = "green") +
 
-    scale_colour_manual(values = c("Visible defect" = "pink", "
-    Harvestable" = "skyblue",
+  # 2ndary trails adjusted
+    geom_sf(data = st_as_sf(ScdTrailsAdj$SmoothedSecondTrails), col = "Adjusted trails") +
+    geom_sf(data = st_as_sf(ScdTrailsAdj$RawSecondTrails), col = "red") +
+
+    scale_colour_manual(values = c("Visible defect" = "pink",
+    "Harvestable" = "skyblue",
   "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
-  "Reserve" = "purple", "Probed hollow" = "forestgreen",
-  "Second trails" = "darkgreen", "Harvestable area" = "olivedrab"))
+  "Reserve" = "purple", "Probed hollow" = "forestgreen", "Harvestable area" = "olivedrab",
+  "Initial trails" = "darkgreen" , "Adjusted trails" = "darkred"))
 
-secondtrails$TrailsIdentity
+ScdTrailsAdj$TrailsIdentity
   }
 
 }
