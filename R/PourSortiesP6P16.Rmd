@@ -16,7 +16,6 @@ data(Paracou6_2016)
 # data(HarvestablePolygons)
 data(MainTrails)
 data(PlotMask)
-data(PlotSlope)
 data("SpeciesCriteria")
 data(CreekDistances)
 data(DTMParacou)
@@ -26,6 +25,14 @@ data(DTMParacou)
 
 ##RIL2broken
 ```{r}
+
+Harvestableoutputs <- harvestableareadefinition(topography = DTMParacou,
+                                                 creekdistances = CreekDistances,
+                                                 plotmask = PlotMask,
+                                                 scenario = "RIL2broken")
+HarvestablePolygons <- Harvestableoutputs$HarvestablePolygons
+  
+PlotSlope <- Harvestableoutputs$PlotSlope
 
 inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)

@@ -6,19 +6,20 @@
 \usage{
 loggingparameters(
   MinDBHValue = 10,
-  MaxAreaSlope = 22,
   MaxTrailCenterlineSlope = 22,
   MaxTrailCrossSlope = 4,
   GrappleMaxslope = 20,
-  TreeMaxSlope = 22,
+  CableTreesMaxSlope = 35,
   PlateauMaxSlope = 5,
-  SlopeDistance = 6,
+  SlopeDistance = 3L,
   WaterSourcesBufferZone = 30,
   WaterSourcesRelativeHeight = 2,
   MinMainTrailWidth = 5,
   MaxMainTrailWidth = 6,
   ScndTrailWidth = 4,
   BigTrees = 50,
+  ResamplDistDTM = 5L,
+  SmoothingFact = 5,
   CableLength = 40,
   GrappleLength = 6,
   IsolateTreeMinDistance = 100,
@@ -43,11 +44,8 @@ loggingparameters(
 )
 }
 \arguments{
-\item{MinDBHValue}{Minimum DBH for inclusion in the forest inventory. Default = 10, in cm
-(double)}
-
-\item{MaxAreaSlope}{Maximum area slope for inclusion in a logging unit
-(harvestable area). Default = 22, in \% (double)}
+\item{MinDBHValue}{Minimum DBH for inclusion in the forest inventory.
+Default = 10, in cm (double)}
 
 \item{MaxTrailCenterlineSlope}{Maximum main & 2nd trail centerline slope.
 Default = 22, in \% (double)}
@@ -58,14 +56,14 @@ in \% (double)}
 \item{GrappleMaxslope}{Maximum slope accessible by the grapple. Default
 = 20, in \% (double)}
 
-\item{TreeMaxSlope}{Maximum slope around the tree to access it. Default = 22,
-in \% (double)}
+\item{CableTreesMaxSlope}{Maximum slope around the tree to access it with
+cable. Default = 22, in \% (double)}
 
-\item{PlateauMaxSlope}{Maximum slope to define an area as a plateau. Default = 5,
-in \% (double)}
+\item{PlateauMaxSlope}{Maximum slope to define an area as a plateau.
+Default = 5, in \% (double)}
 
 \item{SlopeDistance}{Distance over which the slope is calculated.
-Default = 6, in m (3m each side) (double)}
+Default = 6, in m (3m each side) (integer)}
 
 \item{WaterSourcesBufferZone}{Buffer zone based on relative horizontal
 distance to the nearest water source. Default = 30, in m (double)}
@@ -77,10 +75,15 @@ the nearest water source. Default = 2, in m (double)}
 
 \item{MaxMainTrailWidth}{Maximum main trail width. Default = 6, in m (double)}
 
-\item{ScndTrailWidth}{2nd trail width. Default = 4, in m (double)}
+\item{ScndTrailWidth}{Secondary trail width. Default = 4, in m (double)}
 
 \item{BigTrees}{Minimum DBH of trees to be avoided by trails. Default =
 50, in cm (double)}
+
+\item{ResamplDistDTM}{Distance of DTM resampling to erase microtopographic
+variation (integer).}
+
+\item{SmoothingFact}{A unitless factor used to smooth second trails (double)}
 
 \item{CableLength}{Cable length. Default = 40, in m (double)}
 
@@ -143,7 +146,7 @@ defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 (function)}
 }
 \value{
-A named list of 31 objects.
+A named list of 32 objects.
 }
 \description{
 Advanced parameters of the logging simulator

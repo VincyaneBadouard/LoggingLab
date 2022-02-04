@@ -357,6 +357,7 @@ The harvestable volume may change from one simulation to another because the ide
 ## Check & format input inventory data for the "Maria" package
 ```{r}
 inventory <- inventorycheckformat(Paracou6_2016)
+inventory <- cleaninventory(inventory, PlotMask, loggingparameters())
 ```
 
 ## Compute tree dimensions
@@ -365,10 +366,44 @@ inventory <- inventorycheckformat(Paracou6_2016)
 inventory <- addtreedim(inventory, volumeparameters = ForestZoneVolumeParametersTable)
 ```
 
+## Main trails opening
+```{r}
+MainTrails <- maintrailextract(DTMParacou)
+
+plot(DTMParacou)
+plot(MainTrails, add = T)
+```
+
 ## Harvestable area definition
 By default, a prospecting unit is an area connected to a truck trail or a main skid trail, with a slope of less than 27%, avoiding lowlands and the water system (30 m buffer).
 RIL1: SRTM is used.
 RIL2broken/RIL2/RIL3/RIL3/RIL3fuel/RIL3fuelhollow: LIDAR is used.
+```{r}
+HarvestableAreaOutputs <- harvestableareadefinition(
+  topography = DTMParacou,
+  creekdistances = CreekDistances,
+  maintrails = MainTrails,
+  plotmask = PlotMask,
+  scenario = "manual", winching = "1", # with an zone for cable only
+  advancedloggingparameters = loggingparameters()
+)
+HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
+PlotSlope <- HarvestableAreaOutputs$PlotSlope
+HarvestableArea <- HarvestableAreaOutputs$HarvestableArea
+MachinePolygons <- HarvestableAreaOutputs$MachinePolygons
+
+library(sf)
+ggplot() +
+  # Harvestable zones
+  geom_sf(data = HarvestablePolygons,
+          fill = "olivedrab", alpha = 0.1) +
+  geom_sf(data = MachinePolygons,
+          fill = "olivedrab", alpha = 0.5) +
+  labs(alpha = "Harvestable") +
+  labs(title = "Paracou P6 - Harvestable zones") +
+  scale_colour_manual(values = c("Harvestable area" = "olivedrab"))
+```
+
 
 ## Tree selection
 Trees with visible defects are identified ('VisiblyDefectModel' in 
@@ -406,10 +441,11 @@ If the harvestable volume is too low, diversification can be applied if it was n
 treeselectionoutputs <- treeselection(inventory,
                                       topography = DTMParacou,
                                       speciescriteria = SpeciesCriteria,
-                                      objective = 20, scenario ="manual", fuel = "2",
+                                      scenario ="manual", objective = 20,
+                                      fuel = "2", winching = "2",
                                       diversification = FALSE, specieslax = FALSE,
                                       objectivelax = TRUE,
-                                      MainTrails = MainTrails, plotslope = PlotSlope,
+                                      plotslope = PlotSlope,
                                       harvestablepolygons = HarvestablePolygons,
                                       advancedloggingparameters = loggingparameters())
 ```
@@ -424,8 +460,9 @@ inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 ```{r}
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
                                   diversification = TRUE, specieslax = FALSE,
-                                  MainTrails = MainTrails, plotslope = PlotSlope,
+                                  plotslope = PlotSlope,
                                   harvestablepolygons = HarvestablePolygons,
+                                  scenario = "manual", winching = "0",
                                   advancedloggingparameters = loggingparameters())
 inventory <- harvestableOutputs$inventory
 HVinit <- harvestableOutputs$HVinit
@@ -433,9 +470,9 @@ HVinit <- harvestableOutputs$HVinit
 
 #### Trees to be exploited selection
 ```{r}
-inventory <- selected(inventory, scenario = "manual", fuel = "2",
-                      diversification = TRUE, VO = 125, HVinit = HVinit, specieslax = FALSE,
-                      objectivelax = TRUE, topography = DTMParacou,
+inventory <- selected(inventory, topography = DTMParacou,
+                      scenario = "manual", fuel = "2", diversification = TRUE,
+                      VO = 125, HVinit = HVinit, specieslax = FALSE, objectivelax = TRUE,
                       advancedloggingparameters = loggingparameters())$inventory
 ```
 
@@ -479,8 +516,6 @@ Damage :
 - on the edge of the trail: neglected.
 
 ```{r}
-data(MainTrails)
-
 pol1 <- list(matrix(c(286503, 582925,
                       286503, 583240,
                       286507, 583240,
@@ -531,31 +566,9 @@ Secondary windfall: *all trees under the felled tree (timber or energy) will be 
 ```{r}
 inventory <- treefelling(inventory, scenario = "manual", fuel = "0",
                          winching = "1", directionalfelling = "2",
-                         MainTrails = MainTrails, ScndTrail = ScndTrail,
+                         maintrailsaccess = ScndTrail,
+                         scndtrail = ScndTrail,
                          advancedloggingparameters = loggingparameters())
-
-Treefall <- inventory %>%
-  dplyr::filter(DeathCause == "treefall2nd")
-
-Reserve <- inventory %>%
-  dplyr::filter(LoggingStatus == "reserve")
-
-Future <- inventory %>%
-  dplyr::filter(LoggingStatus == "future")
-
-ggplot() +
-  geom_sf(data = sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))) +
-  geom_sf(data = getgeometry (inventory, TreePolygon), fill = "red") + # cuted trees
-  geom_sf(data = sf::st_as_sf(Treefall, coords = c("Xutm", "Yutm")), colour = "yellow") +
-  geom_sf(data = sf::st_as_sf(Reserve, coords = c("Xutm", "Yutm")), colour = "green") +
-  geom_sf(data = sf::st_as_sf(Future, coords = c("Xutm", "Yutm")), colour = "pink")
-
-sf::st_intersection( # trees under the fallen trees
-  sf::st_make_valid(getgeometry(inventory, TreePolygon)), # "make valid" to avoid self-intersection
-  sf::st_as_sf(inventory, coords = c("Xutm", "Yutm"))
-) %>%
-  ggplot() +
-  geom_sf()
 ```
 
 ## Quantify the volumes achieved
@@ -620,14 +633,16 @@ canopy <- dplyr::arrange(canopy, TreeHeight)
 ggplot() +
   geom_sf(data = getgeometry(canopy, Crowns),
           aes(alpha = TreeHeight),
-          fill = "forestgreen")
+          fill = "forestgreen") +
+  labs(alpha = "Tree height")
 ```
 
 ## 1 tree from the sky
 
 'createcanopy' function return an ellipse (*sfc_POLYGON*) as a crown, with its diameter filled in, representing the tree from the sky.
 ```{r}
-dat <- inventory[679,]
+dat <- inventory %>% 
+  filter(CrownDiameter == max(CrownDiameter))
 
 Crown <- treefromthesky(dat)
 
@@ -641,10 +656,29 @@ felling1tree
 
 
 ## Rotate a polygon 
-Orient the input polygon to a given angle and fixed point.
+Rotate the input polygon with a given angle and around a fix point.
+
+With:
+*p* a polygon (POLYGON or sfc_POLYGON)
+*angle* the angle in degrees in the clockwise direction (numeric)
+*fixed* a fix point around which the polygon will be rotated (POINT)
+
+Function adapted from Jeffrey Evans' 'rotate.polygon' function:
+https://github.com/jeffreyevans/spatialEco/blob/master/R/rotate.polygon.R
 
 ```{r}
+NotAPol <- matrix(c(286503, 583134,
+                    286503, 583240,
+                    286507, 583240,
+                    286507, 583134,
+                    286503, 583134)
+                  ,ncol=2, byrow=TRUE)
+Pol <- sf::st_polygon(list(NotAPol))
 
+Point <- sf::st_point(c(286505,583134))
+
+Rslt <- rotatepolygon(p = Pol, angle = 10, fixed = Point)
+plot(Rslt)
 ```
 
 

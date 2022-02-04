@@ -1,51 +1,77 @@
 #'Advanced parameters of the logging simulator
 #'
-#'@param MinDBHValue Minimum DBH for inclusion in the forest inventory. Default = 10, in cm
-#'  (double)
-#'@param MaxAreaSlope Maximum area slope for inclusion in a logging unit
-#'  (harvestable area). Default = 22, in % (double)
+#'@param MinDBHValue Minimum DBH for inclusion in the forest inventory.
+#'   Default = 10, in cm (double)
+#'
 #'@param MaxTrailCenterlineSlope Maximum main & 2nd trail centerline slope.
 #'  Default = 22, in % (double)
+#'
 #'@param MaxTrailCrossSlope Maximum main & 2nd trail cross slope. Default = 4,
 #'  in % (double)
+#'
 #'@param GrappleMaxslope Maximum slope accessible by the grapple. Default
 #'  = 20, in % (double)
-#'@param TreeMaxSlope Maximum slope around the tree to access it. Default = 22,
-#'  in % (double)
-#'@param PlateauMaxSlope Maximum slope to define an area as a plateau. Default = 5,
-#'  in % (double)
+#'
+#'@param CableTreesMaxSlope Maximum slope around the tree to access it with
+#'  cable. Default = 22, in % (double)
+#'
+#'@param PlateauMaxSlope Maximum slope to define an area as a plateau.
+#'   Default = 5, in % (double)
+#'
 #'@param SlopeDistance Distance over which the slope is calculated.
-#'  Default = 6, in m (3m each side) (double)
+#'  Default = 6, in m (3m each side) (integer)
+#'
 #'@param WaterSourcesBufferZone Buffer zone based on relative horizontal
 #'  distance to the nearest water source. Default = 30, in m (double)
+#'
 #'@param WaterSourcesRelativeHeight Buffer zone based on relative elevation to
 #'  the nearest water source. Default = 2, in m (double)
+#'
 #'@param MinMainTrailWidth Minimum main trail width. Default = 5, in m (double)
+#'
 #'@param MaxMainTrailWidth Maximum main trail width. Default = 6, in m (double)
-#'@param ScndTrailWidth 2nd trail width. Default = 4, in m (double)
+#'
+#'@param ScndTrailWidth Secondary trail width. Default = 4, in m (double)
+#'
 #'@param BigTrees Minimum DBH of trees to be avoided by trails. Default =
 #'  50, in cm (double)
+#'
+#'@param SmoothingFact A unitless factor used to smooth second trails (double)
+#'
+#'@param ResamplDistDTM Distance of DTM resampling to erase microtopographic
+#'  variation (integer).
+#'
 #'@param CableLength Cable length. Default = 40, in m (double)
+#'
 #'@param GrappleLength Grapple length. Default = 6, in m (double)
+#'
 #'@param IsolateTreeMinDistance Minimum distance to consider a tree "isolated"
 #'  from other trees of its species, in the aggregative species case
 #'  (\code{\link{SpeciesCriteria}}, 'Aggregative' column).
 #'  Default = 100, in m (double)
+#'
 #'@param FutureTreesMinDiameter Future trees minimum diameter. Default = 35, in
 #'  cm (future trees are only commercial species of the 1st economic level) (double)
+#'
 #'@param TreefallSuccessProportion Proportion of successful directional felling
 #'  events. Default = 0.6 (double)
+#'
 #'@param MinTreefallOrientation Minimum orientation of the tree fall to the
 #'  trail. Default = 30, in degree (double)
+#'
 #'@param MaxTreefallOrientation Maximum orientation of the tree fall to the
 #'  trail. Default = 45, in degree (double)
+#'
 #'@param TreeHollowPartForFuel Proportion of hollow trees used as fuel wood.
 #'  Default = 1/3 (double)
+#'
 #'@param Purge Part of the log no used for timber, can be used for fuel wood.
 #'  Default = 0.14, in m3 of purge/m3 of volume of timber harvested. (double)
+#'
 #'@param MaxTrailDensity Maximum trail density. Default = 200, in m/ha (double)
 #'  (has no impact on the simulation. A message will be sent to inform if
 #'  this threshold has been exceeded)
+#'
 #'@param MaxLandingArea Maximum landing area. Default = 1500) in square meters
 #'  (double) (has no impact on the simulation. A message will be sent to inform if
 #'  this threshold has been exceeded)
@@ -75,7 +101,7 @@
 #'  defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 #'  (function)
 #'
-#'@return A named list of 31 objects.
+#'@return A named list of 32 objects.
 #'
 #'@export
 #'
@@ -86,19 +112,20 @@
 #'
 loggingparameters <- function(
   MinDBHValue = 10, #in cm
-  MaxAreaSlope = 22, #in %
   MaxTrailCenterlineSlope = 22, #in %
   MaxTrailCrossSlope = 4, #in %
   GrappleMaxslope = 20, #in %
-  TreeMaxSlope = 22, #in %
+  CableTreesMaxSlope = 35, #in %
   PlateauMaxSlope = 5, #in %
-  SlopeDistance = 6, #in m (3m for each side)
+  SlopeDistance = 3L, #in m (3m for each side)
   WaterSourcesBufferZone = 30, #in m
   WaterSourcesRelativeHeight = 2, #in m
   MinMainTrailWidth = 5, #in m
   MaxMainTrailWidth = 6, #in m
   ScndTrailWidth = 4, #in m
   BigTrees = 50, #in cm
+  ResamplDistDTM = 5L, #in m
+  SmoothingFact = 5 , #unitless
   # ObjectiveBonus = 30, #in % [20;30%]
   CableLength = 40, #in m
   GrappleLength = 6, #in m
@@ -146,18 +173,17 @@ loggingparameters <- function(
   # Arguments check
   lapply(c(
     MinDBHValue,
-    MaxAreaSlope,
     MaxTrailCenterlineSlope,
     MaxTrailCrossSlope,
     GrappleMaxslope,
-    TreeMaxSlope,
+    CableTreesMaxSlope,
     PlateauMaxSlope,
-    SlopeDistance,
     WaterSourcesBufferZone,
     MinMainTrailWidth,
     MaxMainTrailWidth,
     ScndTrailWidth,
     BigTrees,
+    SmoothingFact,
     # ObjectiveBonus,
     CableLength,
     GrappleLength,
@@ -174,6 +200,10 @@ loggingparameters <- function(
         stop("You have assigned a non-numerical value to one of the arguments of the 'loggingparameters' function
          expects a numerical value. Look at the help page for the 'loggingparameters' function (?loggingparameters)"))
 
+  if(!all(unlist(lapply(list(ResamplDistDTM,SlopeDistance), inherits, "integer"))))
+    stop("You have assigned a non-integer value to ResamplDistDTM parameters of the 'loggingparameters' function
+         expects an integer value. Look at the help page for the 'loggingparameters' function (?loggingparameters)")
+
   lapply(c(
     TreeHarvestableVolumeAllometry,
     TrunkHeightAllometry,
@@ -185,15 +215,15 @@ loggingparameters <- function(
              Look at the help page for the 'loggingparameters' function (?loggingparameters)"))
 
 
+
   # Function
   list(
     ### Values
     MinDBHValue = MinDBHValue,
-    MaxAreaSlope = MaxAreaSlope,
     MaxTrailCenterlineSlope = MaxTrailCenterlineSlope,
     MaxTrailCrossSlope = MaxTrailCrossSlope,
     GrappleMaxslope = GrappleMaxslope,
-    TreeMaxSlope = TreeMaxSlope,
+    CableTreesMaxSlope = CableTreesMaxSlope,
     PlateauMaxSlope = PlateauMaxSlope,
     SlopeDistance = SlopeDistance,
     WaterSourcesBufferZone = WaterSourcesBufferZone,
@@ -202,6 +232,8 @@ loggingparameters <- function(
     MaxMainTrailWidth = MaxMainTrailWidth,
     ScndTrailWidth = ScndTrailWidth,
     BigTrees = BigTrees,
+    ResamplDistDTM = ResamplDistDTM,
+    SmoothingFact = SmoothingFact,
     # ObjectiveBonus = ObjectiveBonus,
     CableLength = CableLength,
     GrappleLength = GrappleLength,

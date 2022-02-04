@@ -1,15 +1,16 @@
 test_that("harvestable", {
 
-  # Check the function arguments
-  data("Paracou6_2016")
-  data("MainTrails")
-  data("HarvestablePolygons")
-  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
-
+  # Data loading
+  data(Paracou6_2016)
   data(DTMParacou)
-  data(PlotSlope)
+  data(PlotMask)
+  data(SpeciesCriteria)
+  data(HarvestableAreaOutputsCable)
 
+  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
   MatrixInventory <- as.matrix(Paracou6_2016)
+
+  # Check the function arguments
   expect_error(harvestable(MatrixInventory), regexp = "The 'inventory' argument of the 'harvestable' function must be a data.frame")
 
   expect_error(harvestable(Paracou6_2016, diversification = "1", specieslax = 2),
@@ -24,14 +25,23 @@ test_that("harvestable", {
   inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 
   Outputs1 <- harvestable(inventory,
-                          diversification = T, specieslax = F, topography = DTMParacou, plotslope = PlotSlope,
-                          MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)
+                          topography = DTMParacou,
+                          diversification = T, specieslax = F,
+                          scenario = "RIL1",
+                          plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                          harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
   Outputs2 <- harvestable(inventory,
-                          diversification = F, specieslax = T, topography = DTMParacou, plotslope = PlotSlope,
-                          MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)
+                          topography = DTMParacou,
+                          diversification = F, specieslax = T,
+                          scenario = "RIL2",
+                          plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                          harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
   Outputs3 <- harvestable(inventory,
-                          diversification = F, specieslax = F, topography = DTMParacou, plotslope = PlotSlope,
-                          MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)
+                          topography = DTMParacou,
+                          diversification = F, specieslax = F,
+                          scenario = "RIL3",
+                          plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                          harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
 
   testinventory1 <- Outputs1$inventory
   testinventory2 <- Outputs2$inventory
@@ -43,12 +53,12 @@ test_that("harvestable", {
 
   # CommercialLevel == "0" are  LoggingStatus =="non-harvestable"
   TestCommercial <- testinventory1 %>%
-    filter(CommercialLevel == "0")
+    dplyr::filter(CommercialLevel == "0")
 
   expect_true(all(TestCommercial$LoggingStatus =="non-harvestable"))
 
   TestCommercial <- testinventory2 %>%
-    filter(CommercialLevel == "0")
+    dplyr::filter(CommercialLevel == "0")
 
   expect_true(all(TestCommercial$LoggingStatus =="non-harvestable"))
 
@@ -56,9 +66,9 @@ test_that("harvestable", {
 
   # "harvestable": CommercialLevel == "1" ou "2" if diversification=T, or  diversification=F & specieslax=T
   testinventory1a <- testinventory1 %>%
-    filter(CommercialLevel == "2")
+    dplyr::filter(CommercialLevel == "2")
   testinventory2a <- testinventory2 %>%
-    filter(CommercialLevel == "2")
+    dplyr::filter(CommercialLevel == "2")
 
   expect_true(any(testinventory1a$LoggingStatus =="harvestable"))
   expect_true(any(testinventory2a$LoggingStatus =="harvestable2nd"))
@@ -66,18 +76,18 @@ test_that("harvestable", {
 
   # "harvestable": CommercialLevel == "1"  diversification=F & specieslax=F
   testinventory3a <- testinventory3 %>%
-    filter(CommercialLevel != "1")
+    dplyr::filter(CommercialLevel != "1")
   expect_true(all(testinventory3a$LoggingStatus == "non-harvestable"))
 
 
   # "harvestable": check spatial!! "DistCriteria", "Slope", "SlopeCriteria"
 
   StatialTable <- testinventory1 %>%
-    filter(DBH >= MinFD & DBH <= MaxFD)
+    dplyr::filter(DBH >= MinFD & DBH <= MaxFD)
 
   ## Aggregative species individuals are checked for the distance between individuals of the same species
   AggregativeTable <- StatialTable %>%
-    filter(Aggregative)
+    dplyr::filter(Aggregative)
 
   expect_true(all(!is.na(AggregativeTable$DistCriteria)))
   expect_true(all(!is.na(StatialTable$Slope)))
@@ -91,11 +101,11 @@ test_that("harvestable", {
   HVinit3 <- Outputs3$HVinit
 
   HarvestableTable1 <- testinventory1 %>%
-    filter(LoggingStatus == "harvestable")
+    dplyr::filter(LoggingStatus == "harvestable")
   HarvestableTable2 <- testinventory2 %>%
-    filter(LoggingStatus == "harvestable")
+    dplyr::filter(LoggingStatus == "harvestable")
   HarvestableTable3 <- testinventory3 %>%
-    filter(LoggingStatus == "harvestable")
+    dplyr::filter(LoggingStatus == "harvestable")
 
   expect_true(HVinit1 == sum(HarvestableTable1$TreeHarvestableVolume))
   expect_true(HVinit2 == sum(HarvestableTable2$TreeHarvestableVolume))
@@ -106,7 +116,7 @@ test_that("harvestable", {
   expect_true(all(HarvestableTable2$VisibleDefect == "0"))
   expect_true(all(HarvestableTable3$VisibleDefect == "0"))
 
-# Harvestables have the good maximum slope, and good distance between individuals for aggregative species
+  # Harvestables have the good maximum slope, and good distance between individuals for aggregative species
   expect_true(all(!HarvestableTable1$DistCriteria %in% FALSE))
   expect_true(all(!HarvestableTable1$DistCriteria %in% FALSE))
   expect_true(all(!HarvestableTable1$DistCriteria %in% FALSE))

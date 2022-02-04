@@ -3,32 +3,34 @@ test_that("selected", {
   # Check the function arguments
   # Test data preparation
   data(Paracou6_2016)
+  data(DTMParacou)
   data(SpeciesCriteria)
-  data("MainTrails")
-  data("HarvestablePolygons")
+  data(HarvestableAreaOutputsCable)
 
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
 
-  data(DTMParacou)
-  data(PlotSlope)
 
   inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
                           volumeparameters = ForestZoneVolumeParametersTable)
   inventory0 <- commercialcriteriajoin(inventory, SpeciesCriteria)
 
-  harvestableOutputs <- harvestable(inventory0, diversification = TRUE, specieslax = FALSE,
-                                    topography = DTMParacou, plotslope = PlotSlope,
-                                    advancedloggingparameters = loggingparameters(),
-                                    MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)
+  harvestableOutputs <- harvestable(inventory0,
+                                    topography = DTMParacou,
+                                    diversification = T, specieslax = F,
+                                    scenario = "RIL1",
+                                    plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                    harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
 
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
   VO <- 20
 
-  testinventory <- suppressMessages(selected(inventory, scenario = "manual", fuel = "0",
+  testinventory <- suppressMessages(selected(inventory,
+                                             topography = DTMParacou,
+                                             scenario = "manual", fuel = "0",
                                              diversification = TRUE, specieslax = FALSE,
-                                             objectivelax = FALSE, topography = DTMParacou,
+                                             objectivelax = FALSE,
                                              advancedloggingparameters = loggingparameters(),
                                              VO = VO, HVinit = HVinit))$inventory
 
@@ -87,7 +89,9 @@ test_that("selected", {
   ## if (!diversification && specieslax)
   harvestableOutputs <- harvestable(inventory0,
                                     diversification = FALSE, specieslax = TRUE, topography = DTMParacou,
-                                    plotslope = PlotSlope, MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)
+                                    scenario = "RIL1",
+                                    plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                    harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
@@ -112,8 +116,9 @@ test_that("selected", {
   # if (!diversification && !specieslax && objectivelax)
   harvestableOutputs <- harvestable(inventory0,
                                     diversification = FALSE,  specieslax = FALSE,
-                                    topography = DTMParacou, plotslope = PlotSlope, MainTrails = MainTrails,
-                                    harvestablepolygons = HarvestablePolygons)
+                                    topography = DTMParacou, scenario = "RIL1",
+                                    plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                    harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
@@ -128,9 +133,9 @@ test_that("selected", {
 
   # if (diversification && objectivelax)
   harvestableOutputs <- harvestable(inventory0,
-                                    diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope,
-                                    MainTrails = MainTrails,
-                                    harvestablepolygons = HarvestablePolygons)
+                                    diversification = TRUE, topography = DTMParacou, scenario = "RIL1",
+                                    plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                    harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
@@ -155,9 +160,9 @@ test_that("selected", {
   # if HVinit > VO
 
   harvestableOutputs <- harvestable(inventory0,
-                                    diversification = TRUE, topography = DTMParacou, plotslope = PlotSlope,
-                                    MainTrails = MainTrails,
-                                    harvestablepolygons = HarvestablePolygons)
+                                    diversification = TRUE, topography = DTMParacou, scenario = "RIL1",
+                                    plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                    harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
 
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
@@ -221,7 +226,7 @@ test_that("selected", {
                                              advancedloggingparameters = loggingparameters(),
                                              VO = VO, HVinit = HVinit))$inventory
 
-  if (any(testinventory$ProbedHollow == "1", na.rm = TRUE)) {
+  if (any(testinventory$ProbedHollow == "1" & testinventory$Selected == "1", na.rm = TRUE)) {
     expect_true(any(testinventory$DeathCause == "hollowfuel"))
   }
 
@@ -272,3 +277,4 @@ test_that("selected", {
 # if scenario == "RIL3fuelhollow"| (scenario == "manual"& fuel =="2") : ya des "hollowfuel" dans DeathCause
 
 # 2 points vectors with coordinates of the probed hollow trees: "HollowTreesPoints" and "EnergywoodTreesPoints"
+

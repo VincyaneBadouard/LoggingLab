@@ -3,15 +3,17 @@ test_that("futurereserve", {
   data(Paracou6_2016)
   data(DTMParacou)
   data(HarvestablePolygons)
-  data(MainTrails)
 
   inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask), volumeparameters = ForestZoneVolumeParametersTable)
   inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 
-  harvestableOutputs <- harvestable(inventory, diversification = TRUE, specieslax = FALSE,
-                                    topography = DTMParacou, plotslope = PlotSlope,
-                                    advancedloggingparameters = loggingparameters(),
-                                    MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)
+  harvestableOutputs <- harvestable(inventory,
+                                    topography = DTMParacou,
+                                    diversification = T, specieslax = F,
+                                    scenario = "RIL1",
+                                    plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                    harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
+
 
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit

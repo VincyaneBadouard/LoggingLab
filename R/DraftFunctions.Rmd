@@ -68,11 +68,25 @@ SpeciesCriteria$CommercialName <- tolower(SpeciesCriteria$CommercialName)
 ```
 ```{r}
 ScenariosTable <- read_csv("D:/VSC Kourou/DATA/ScenariosTable.csv", 
-    col_types = cols(Winching = col_factor(levels = c("0", 
-        "1", "2")), DirectionalFelling = col_factor(levels = c("0", 
-        "1", "2"))), trim_ws = TRUE)
+                           col_types = cols(Winching = col_factor(levels = c("0", 
+                                                                             "1", "2")), DirectionalFelling = col_factor(levels = c("0", 
+                                                                                                                                    "1", "2"))), trim_ws = TRUE)
 
 # usethis::use_data(ScenariosTable,overwrite = TRUE)
+```
+
+# Generate prospection units
+```{r}
+HarvestableAreaOutputsCable <- harvestableareadefinition(
+  topography = DTMParacou,
+  creekdistances = CreekDistances,
+  maintrails = MainTrails,
+  plotmask = PlotMask,
+  scenario = "manual", winching = "1",
+  advancedloggingparameters = loggingparameters()
+)
+
+# usethis::use_data(HarvestableAreaOutputsCable, overwrite = TRUE)
 ```
 
 # Data loading

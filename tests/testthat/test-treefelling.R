@@ -3,9 +3,7 @@ test_that("treefelling", {
   # Test data
   data(Paracou6_2016)
   data(DTMParacou)
-  data(PlotSlope)
-  data("HarvestablePolygons")
-  data(MainTrails)
+  data(HarvestableAreaOutputsCable)
 
   MatrixInventory <- as.matrix(Paracou6_2016)
   MainTrails_no_sf <- MainTrails
@@ -35,16 +33,20 @@ test_that("treefelling", {
 
   inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
                           volumeparameters = ForestZoneVolumeParametersTable)
-  inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
-                                              fuel = "2", diversification = TRUE, specieslax = FALSE,
-                                              objectivelax = TRUE, topography = DTMParacou,
-                                              plotslope = PlotSlope,
+  inventory <- suppressMessages(treeselection(inventory, topography = DTMParacou,
                                               speciescriteria = SpeciesCriteria,
-                                              advancedloggingparameters = loggingparameters(),
-                                              MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory)
+                                              scenario ="manual", objective = 20,
+                                              fuel = "2", diversification = TRUE,
+                                              winching = "2",
+                                              specieslax = FALSE, objectivelax = TRUE,
+                                              harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+                                              plotslope =  HarvestableAreaOutputsCable$PlotSlope,
+                                              advancedloggingparameters = loggingparameters())$inventory)
 
-  testinventory <- treefelling(inventory, scenario = "manual", fuel = "2", winching = "2",
-                               directionalfelling = "2", MainTrails = MainTrails, ScndTrail = ScndTrail,
+  testinventory <- treefelling(inventory,
+                               scenario = "manual", fuel = "2", winching = "2",
+                               directionalfelling = "2",
+                               maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
                                advancedloggingparameters = loggingparameters())
 
 
@@ -75,17 +77,17 @@ test_that("treefelling", {
   expect_error(treefelling(Paracou6_2016,
                            scenario = "manual", fuel = "2", winching = "0", directionalfelling = "2",
                            advancedloggingparameters = loggingparameters(),
-                           MainTrails =  MainTrails_no_sf, ScndTrail = ScndTrail_no_sf),
-               regexp = "The 'MainTrails' and 'ScndTrail' arguments of the 'treefelling' function must be sf")
+                           maintrailsaccess = ScndTrail, scndtrail = ScndTrail_no_sf),
+               regexp = "The 'maintrailsaccess' and 'scndtrail'arguments of the 'treefelling' function must be sf")
 
 
   expect_error(treefelling(Paracou6_2016, scenario = "manual", winching = "0", fuel = "2",
-                           directionalfelling = "2", MainTrails = MainTrails, ScndTrail = ScndTrail,
+                           directionalfelling = "2", maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
                            advancedloggingparameters = as.matrix(loggingparameters())),
                regexp = "The 'advancedloggingparameters' argument of the 'treefelling' function must be a list")
 
   expect_error(treefelling(Paracou6_2016, scenario = "manual", winching = "0",
-                           MainTrails = MainTrails, ScndTrail = ScndTrail,
+                           maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
                            fuel = NULL, directionalfelling = NULL),
                regexp = "If you choose the 'manual' mode,
          you must fill in the arguments 'fuel' and 'directionalfelling'")
@@ -115,22 +117,22 @@ test_that("treefelling", {
     dplyr::filter(!is.na(TreePolygon)) %>%
     dplyr::select(TreePolygon)
 
-    DeadTrees <- suppressWarnings(sf::st_intersection(
-      sf::st_as_sf(testinventory, coords = c("Xutm", "Yutm")), # all the inventory trees
-      sf::st_make_valid(getgeometry(felttrees, TreePolygon)) # "make valid" to avoid self-intersection
-      # felt trees
+  DeadTrees <- suppressWarnings(sf::st_intersection(
+    sf::st_as_sf(testinventory, coords = c("Xutm", "Yutm")), # all the inventory trees
+    sf::st_make_valid(getgeometry(felttrees, TreePolygon)) # "make valid" to avoid self-intersection
+    # felt trees
   )) %>%
-      dplyr::filter(is.na(TreePolygon)) %>%
-      # dplyr::filter(Selected != "1"| is.na(Selected)) %>% # not already cutted trees
-      # dplyr::filter((Selected != "1" & ProbedHollow != "1")| is.na(Selected)) %>%
-      select(idTree)
-    sf::st_geometry(DeadTrees) <- NULL # remove TreePolygon column (sf to data.frame)
-    DeadTrees <- DeadTrees %>%
-      unique() %>% # you only die once
-      dplyr::arrange(idTree)
+    dplyr::filter(is.na(TreePolygon)) %>%
+    # dplyr::filter(Selected != "1"| is.na(Selected)) %>% # not already cutted trees
+    # dplyr::filter((Selected != "1" & ProbedHollow != "1")| is.na(Selected)) %>%
+    select(idTree)
+  sf::st_geometry(DeadTrees) <- NULL # remove TreePolygon column (sf to data.frame)
+  DeadTrees <- DeadTrees %>%
+    unique() %>% # you only die once
+    dplyr::arrange(idTree)
 
-    treefall <- testinventory %>%
-      dplyr::filter(DeathCause == "treefall2nd")
+  treefall <- testinventory %>%
+    dplyr::filter(DeathCause == "treefall2nd")
 
   Damage <- testinventory %>%
     dplyr::filter(is.na(TreePolygon) & !is.na(DeathCause)) %>%  # & DeadTrees == "1"

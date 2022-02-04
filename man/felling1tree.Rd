@@ -9,8 +9,8 @@ felling1tree(
   fuel,
   winching,
   directionalfelling,
-  MainTrails,
-  ScndTrail,
+  maintrailsaccess,
+  scndtrail,
   FutureReserveCrowns,
   advancedloggingparameters = loggingparameters()
 )
@@ -44,9 +44,9 @@ future and reserve trees if possible
 the position that favours the return to the main trail should be chosen.
 The angle to the trail is favoured to avoid future/reserve trees.}
 
-\item{MainTrails}{Main trails (sf)}
+\item{maintrailsaccess}{Main trails access points (sf)}
 
-\item{ScndTrail}{Secondary trails (sf)}
+\item{scndtrail}{Secondary trails (sf)}
 
 \item{FutureReserveCrowns}{Future/reserve trees crown (sf)}
 
@@ -80,6 +80,8 @@ data(SpeciesCriteria)
 data(HarvestablePolygons)
 data(MainTrails)
 
+# maintrailsaccess <- secondtrails$MainTrailsAccess
+
 pol1 <- list(matrix(c(286503, 582925,
                       286503, 583240,
                       286507, 583240,
@@ -94,8 +96,8 @@ pol2 <- list(matrix(c(286650, 582925,
                    ,ncol=2, byrow=TRUE))
 
 PolList = list(pol1,pol2) #list of lists of numeric matrices
-ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
-ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails))
+scndtrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
+scndtrail <- sf::st_set_crs(ScndTrail, sf::st_crs(maintrailsaccess))
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -122,18 +124,18 @@ dat <- inventory \%>\%
 
 rslt <- felling1tree(dat,
  fuel = "0", winching = "0", directionalfelling = "0",
- MainTrails = MainTrails, ScndTrail = ScndTrail,
+ maintrailsaccess = maintrailsaccess, scndtrail = scndtrail,
  FutureReserveCrowns = FutureReserveCrowns,
  advancedloggingparameters = loggingparameters())
 
 library(ggplot2)
 ggplot() +
-  geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$Foot), sf::st_crs(MainTrails))) +
-  geom_sf(data = sf::st_set_crs(sf::st_as_sf(rslt$Trail), sf::st_crs(MainTrails))) +
+  geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$Foot), sf::st_crs(maintrailsaccess))) +
+  geom_sf(data = sf::st_set_crs(sf::st_as_sf(rslt$Trail), sf::st_crs(maintrailsaccess))) +
   geom_sf(data = rslt$NearestPoints) +
-  geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$TrailPt), sf::st_crs(MainTrails))) +
-  geom_sf(data = sf::st_set_crs(rslt$FallenTree, sf::st_crs(MainTrails))) +
-  geom_sf(data = sf::st_set_crs(FutureReserveCrowns, sf::st_crs(MainTrails))) # set a crs
+  geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$TrailPt), sf::st_crs(maintrailsaccess))) +
+  geom_sf(data = sf::st_set_crs(rslt$FallenTree, sf::st_crs(maintrailsaccess))) +
+  geom_sf(data = sf::st_set_crs(FutureReserveCrowns, sf::st_crs(maintrailsaccess))) # set a crs
 }
 \seealso{
 \code{\link{loggingparameters}}

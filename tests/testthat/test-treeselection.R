@@ -1,18 +1,16 @@
 test_that("treeselection", {
 
-  # Check the function arguments
-
+  # Data loading
   data(Paracou6_2016)
-  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
-
   data(DTMParacou)
-  data("HarvestablePolygons")
-  data("MainTrails")
+  data(SpeciesCriteria)
+  data(HarvestableAreaOutputsCable)
 
+  Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
   MatrixInventory <- as.matrix(Paracou6_2016)
   Matrixspeciescriteria <- as.matrix(SpeciesCriteria)
 
-
+  # Check the function arguments
   expect_error(treeselection(MatrixInventory,
                              scenario ="manual", fuel = "0", objective = 20,
                              diversification = TRUE, specieslax = FALSE, objectivelax = FALSE,
@@ -58,23 +56,22 @@ test_that("treeselection", {
 
   expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
                              scenario = "manual",
-                             objective = 20, fuel = NULL, diversification = T, topography = DTMParacou, plotslope = PlotSlope),
-               regexp = "If you choose the 'manual' mode,
-         you must fill in the arguments 'objective', 'fuel' and 'diversification'")
+                             objective = 20, fuel = NULL, diversification = T,
+                             topography = DTMParacou, plotslope = PlotSlope),
+               regexp = "If you choose the 'manual' mode, you must fill in the arguments
+         'objective', 'fuel' , 'winching' and 'diversification'")
 
   # Test data preparation
   inventory = addtreedim(cleaninventory(Paracou6_2016, PlotMask), volumeparameters = ForestZoneVolumeParametersTable)
 
-  testinventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
-                                                  fuel = "2", diversification = TRUE,
-                                                  specieslax = FALSE, objectivelax = TRUE,
-                                                  topography = DTMParacou, plotslope = PlotSlope,
+  testinventory <- suppressMessages(treeselection(inventory,
+                                                  topography = DTMParacou,
                                                   speciescriteria = SpeciesCriteria,
-                                                  advancedloggingparameters = loggingparameters(),
-                                                  MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory) # , MainTrail
-
-
-  advancedloggingparameters = loggingparameters()
+                                                  scenario = "manual", objective = 20, fuel = "2", diversification = TRUE,
+                                                  winching = "0", specieslax = FALSE, objectivelax = TRUE,
+                                                  plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                                  harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+                                                  advancedloggingparameters = loggingparameters())$inventory)
 
   # All alived
   if ("DeathCause" %in% names(inventory)) expect_true(all(is.null(DeathCause)))
@@ -82,11 +79,14 @@ test_that("treeselection", {
   # Objective Volume:
   objective <- 20
   expected <- objective * unique(inventory$PlotArea)
-  VO <- suppressMessages(treeselection(inventory, speciescriteria = SpeciesCriteria,
-                                       scenario ="manual", fuel = "2", objective = objective,
-                                       diversification = TRUE, specieslax = FALSE,
-                                       objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
-                                       MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons))$VO
+  VO <- suppressMessages(treeselection(inventory,
+                                       topography = DTMParacou,
+                                       speciescriteria = SpeciesCriteria,
+                                       scenario = "manual", objective = objective, fuel = "2", winching = "0",
+                                       diversification = TRUE, specieslax = FALSE, objectivelax = TRUE,
+                                       plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                       harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons
+                                       ))$VO
 
 
   expect_true(VO == expected)
