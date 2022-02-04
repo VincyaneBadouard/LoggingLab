@@ -7,3 +7,7 @@
 An R package to host a logging simulator.
 
 "Maria" is a provisional, easily replaceable name.
+
+
+ # Installation (development version)
+devtools::install_github("VincyaneBadouard/Maria", build_vignettes = TRUE)

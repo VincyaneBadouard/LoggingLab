@@ -36,7 +36,7 @@ Suggests:
     rmarkdown (>= 2.7),
     testthat (>= 3.0.4),
     pkgdown (>= 1.6.1)
-VignetteBuilder: knitr
+VignetteBuilder: knitr, rmarkdown
 Depends: 
     R (>= 3.6)
 Config/testthat/edition: 3

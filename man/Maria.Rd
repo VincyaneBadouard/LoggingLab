@@ -18,26 +18,39 @@ treeselection,  and .
 loggingsimulation
 
 loggingparameters
+
 scenariosparameters
 
 inventorycheckformat
+
 addtreedim
 
 treeselection
+
 commercialcriteriajoin
+
 harvestable
+
 selected
+
 futurereserve
 
 treefelling
+
 createcanopy
+
 treefromthesk
+
 directionalfellingsuccessdef
+
 felling1tree
+
 rotatepolygon
+
 getgeometry
 
 timberharvestedvolume
+
 exploitablefuelwoodvolume
 }
 

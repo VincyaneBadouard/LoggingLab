@@ -9,3 +9,5 @@ ToDo.md
 ^\.github$
 ^data-raw$
 ^R\.\\.Rmd$
+^doc$
+^Meta$

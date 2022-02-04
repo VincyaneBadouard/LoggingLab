@@ -33,6 +33,7 @@ knitr::opts_chunk$set(
 **Install Maria**
 ```{r, eval=F}
 install.packages("Maria")
+# devtools::install_github("VincyaneBadouard/Maria", build_vignettes = TRUE) # Development version
 ```
 **Load the package**
 ```{r setup}
