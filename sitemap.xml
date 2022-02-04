@@ -67,6 +67,9 @@
     <loc>/reference/addtreedim.html</loc>
   </url>
   <url>
+    <loc>/reference/adjtopolcp.html</loc>
+  </url>
+  <url>
     <loc>/reference/cleaninventory.html</loc>
   </url>
   <url>
@@ -85,6 +88,9 @@
     <loc>/reference/felling1tree.html</loc>
   </url>
   <url>
+    <loc>/reference/filteraccesexplarea.html</loc>
+  </url>
+  <url>
     <loc>/reference/futurereserve.html</loc>
   </url>
   <url>
@@ -92,6 +98,9 @@
   </url>
   <url>
     <loc>/reference/harvestable.html</loc>
+  </url>
+  <url>
+    <loc>/reference/harvestableareadefinition.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
@@ -131,6 +140,9 @@
   </url>
   <url>
     <loc>/reference/selected.html</loc>
+  </url>
+  <url>
+    <loc>/reference/sloperdcond.html</loc>
   </url>
   <url>
     <loc>/reference/smoothtrails.html</loc>
