@@ -85,7 +85,9 @@ createcanopy <- function(inventory){
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
-#' dat <- inventory[679,]
+#'
+#' dat <- inventory %>%
+#'   filter(CrownDiameter == max(CrownDiameter))
 #'
 #' Crown <- treefromthesky(dat)
 #'

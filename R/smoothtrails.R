@@ -4,9 +4,6 @@
 #'
 #'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame)
 #'
-#'@param smthfact A positive number controlling the smoothness and level of
-#'  generalization (numeric)
-#'
 #'@param verbose return message on second trails density criteria (boolean)
 #'
 #'
@@ -18,7 +15,11 @@
 #'  st_combine
 #'@importFrom smoothr smooth
 #'
-#'@return A list with : 1: Smoothed secondary trails polygons.; 2: Second trails density
+#'@return A list with :
+#'   1) SmoothedTrails: Smoothed trails polygons;
+#'   2) Smoothed second trails polygons;
+#'   3) Smoothed main trails polygons;
+#'   4) smoothed trail density.
 #'
 #'
 #'
@@ -77,20 +78,45 @@
 smoothtrails <- function(
   paths,
   plotmask,
-  smthfact = 5,
   verbose = FALSE,
   advancedloggingparameters = loggingparameters()
 ){
 
-  SmoothedSecondTrails <- paths %>%
-    st_as_sf() %>% filter(st_is_empty(paths %>%
-                                        st_as_sf()) == FALSE)  %>%
-    smoothr::smooth(method = "ksmooth", smoothness = smthfact) %>%
+  # Global Variables
+  n.overlaps <- NULL
+
+  RawSecondTrails <- paths %>%
+    st_as_sf() %>% filter(!st_is_empty(paths %>%
+                                        st_as_sf()))
+
+  SmoothedSecondTrails <- RawSecondTrails %>% st_intersection() %>% filter(n.overlaps < 20) %>%
+    st_union() %>% st_cast("LINESTRING") %>%
+    smoothr::smooth(method = "ksmooth", smoothness = advancedloggingparameters$SmoothingFact) %>%
     st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2) %>%
     st_union() %>%
     st_intersection(st_as_sf(plotmask) %>% st_union())
 
-  TrailsDensity <- (SmoothedSecondTrails %>% st_area / advancedloggingparameters$ScndTrailWidth)/(plotmask %>% st_as_sf() %>% st_area() /10000)
+  RawMainTrails <- RawSecondTrails %>% st_intersection() %>% filter(n.overlaps >= 20)
+
+  if (dim(RawMainTrails)[1] > 0) {
+    SmoothedMainTrails <- RawMainTrails %>%
+      st_union() %>% st_cast("LINESTRING") %>%
+      smoothr::smooth(method = "ksmooth", smoothness = advancedloggingparameters$SmoothingFact) %>%
+      st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2) %>%
+      st_union() %>%
+      st_intersection(st_as_sf(plotmask) %>% st_union())
+
+    SmoothedTrails <- st_union(SmoothedSecondTrails,SmoothedMainTrails)
+  }else{
+    SmoothedMainTrails <- NULL
+
+    SmoothedTrails <- SmoothedSecondTrails
+  }
+
+
+
+
+  TrailsDensity <- (SmoothedTrails %>% st_area / advancedloggingparameters$ScndTrailWidth)/(plotmask %>% st_as_sf() %>% st_area() /10000)
   if (verbose) {
     if (as.numeric(TrailsDensity) <= 200) {
       message(paste0("The second trails density criteria is validated (", round(TrailsDensity, digits = 1)," m/ha <= 200 m/ha)"))
@@ -101,8 +127,10 @@ smoothtrails <- function(
 
 
 
-secondtrails <- list(SmoothedSecondTrails = SmoothedSecondTrails,
-                     TrailsDensity = TrailsDensity)
+  smoothedtrails <- list("SmoothedTrails" = SmoothedTrails,
+                     "SmoothedSecondTrails" = SmoothedSecondTrails,
+                     "SmoothedMainTrails" = SmoothedMainTrails,
+                     "TrailsDensity" = TrailsDensity)
 
-  return(secondtrails)
+  return(smoothedtrails)
 }

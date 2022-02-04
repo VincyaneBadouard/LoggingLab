@@ -48,7 +48,17 @@ data(SpeciesCriteria)
 data(DTMParacou)
 data(PlotSlope)
 data(MainTrails)
-data(HarvestablePolygons)
+
+scenario <- "RIL2"
+
+HarvestableAreaOutputs <- harvestableareadefinition(
+  topography = DTMParacou,
+  creekdistances = CreekDistances,
+  plotmask = PlotMask,
+  scenario = scenario,
+  advancedloggingparameters = loggingparameters()
+  )
+
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -57,9 +67,9 @@ inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, diversification = TRUE,
  specieslax = FALSE,
-topography = DTMParacou, plotslope = PlotSlope,
-harvestablepolygons = HarvestablePolygons,
-MainTrails = MainTrails,
+topography = DTMParacou, plotslope = HarvestableAreaOutputs$PlotSlope,
+harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
+MainTrails = MainTrails,scenario = scenario,
 advancedloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory

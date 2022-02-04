@@ -32,9 +32,10 @@ loggingsimulation1(
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer)}
 
-\item{creekdistances}{Vertical creek height (in m) of the inventoried
-plot (1 m resolution) (Default: \code{\link{CreekDistances}})
-(Large RasterLayer). To generate vertical creek height:
+\item{creekdistances}{Relative distances (vertical and horizontal) (1 m
+resolution) from nearest channel network (list of 2 large RasterLayers)
+(Default: \code{\link{CreekDistances}})
+To generate vertical creek height:
 \code{\link{CreekDistances}} in 'docs' folder of the package}
 
 \item{speciescriteria}{Table of species exploitability criteria : species

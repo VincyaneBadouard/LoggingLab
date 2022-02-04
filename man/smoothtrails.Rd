@@ -7,7 +7,6 @@
 smoothtrails(
   paths,
   plotmask,
-  smthfact = 5,
   verbose = FALSE,
   advancedloggingparameters = loggingparameters()
 )
@@ -17,16 +16,19 @@ smoothtrails(
 
 \item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame)}
 
-\item{smthfact}{A positive number controlling the smoothness and level of
-generalization (numeric)}
-
 \item{verbose}{return message on second trails density criteria (boolean)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-A list with : 1: Smoothed secondary trails polygons.; 2: Second trails density
+A list with :
+\enumerate{
+\item SmoothedTrails: Smoothed trails polygons;
+\item Smoothed second trails polygons;
+\item Smoothed main trails polygons;
+\item smoothed trail density.
+}
 }
 \description{
 Trails smoothing

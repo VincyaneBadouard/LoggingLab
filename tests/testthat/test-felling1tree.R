@@ -2,8 +2,7 @@ test_that("felling1tree", {
 
   #### Test data ####
   data(Paracou6_2016)
-  data("HarvestablePolygons")
-  data(MainTrails)
+  data(HarvestableAreaOutputsCable)
   # Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
   MatrixInventory <- as.matrix(Paracou6_2016)
   MainTrails_no_sf <- MainTrails
@@ -33,13 +32,17 @@ test_that("felling1tree", {
 
   inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
                           volumeparameters = ForestZoneVolumeParametersTable)
-  inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
-                                              fuel = "0", diversification = TRUE, specieslax = FALSE,
-                                              objectivelax = TRUE, topography = DTMParacou,
-                                              MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons,
-                                              plotslope = PlotSlope,
+
+  inventory <- suppressMessages(treeselection(inventory, topography = DTMParacou,
                                               speciescriteria = SpeciesCriteria,
-                                              advancedloggingparameters = loggingparameters())$inventory)
+                                              scenario ="manual", objective = 20,
+                                              fuel = "2", diversification = TRUE,
+                                              winching = "0",
+                                              specieslax = FALSE, objectivelax = TRUE,
+                                              harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+                                              plotslope =  HarvestableAreaOutputsCable$PlotSlope,
+                                              advancedloggingparameters = loggingparameters()
+  )$inventory)
 
   FutureReserveCrowns <- inventory %>% # create an object with future/reserve crowns only
     dplyr::filter(LoggingStatus == "future" | LoggingStatus == "reserve") %>%
@@ -79,12 +82,12 @@ test_that("felling1tree", {
   expect_error(felling1tree(dat,
                             fuel = "2", winching = "0", directionalfelling = "2",
                             advancedloggingparameters = loggingparameters(),
-                            MainTrails =  MainTrails_no_sf, ScndTrail = ScndTrail_no_sf),
-               regexp = "The 'MainTrails' and 'ScndTrail' arguments of the 'felling1tree' function must be sf")
+                            maintrailsaccess = ScndTrail, scndtrail = ScndTrail_no_sf),
+               regexp = "The 'maintrailsaccess' and 'scndtrail'arguments of the 'felling1tree' function must be sf")
 
 
   expect_error(felling1tree(dat, fuel = "2", winching = "0",
-                            directionalfelling = "2", MainTrails = MainTrails, ScndTrail = ScndTrail,
+                            directionalfelling = "2", maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
                             advancedloggingparameters = as.matrix(loggingparameters())),
                regexp = "The 'advancedloggingparameters' argument of the 'felling1tree' function must be a list")
 
@@ -93,7 +96,7 @@ test_that("felling1tree", {
   # Only to direct the foot of the tree towards the trail
   Rslt0 <- felling1tree(dat,
                         fuel = "0", winching = "0", directionalfelling = "0",
-                        MainTrails = MainTrails, ScndTrail = ScndTrail,
+                        maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
                         FutureReserveCrowns = FutureReserveCrowns,
                         advancedloggingparameters = loggingparameters())
 
@@ -101,7 +104,7 @@ test_that("felling1tree", {
   # To direct the foot of the tree towards the trail + to avoid damage to future and reserve trees if possible
   Rslt1 <- felling1tree(dat,
                         fuel = "0", winching = "0", directionalfelling = "1",
-                        MainTrails = MainTrails, ScndTrail = ScndTrail,
+                        maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
                         FutureReserveCrowns = FutureReserveCrowns,
                         advancedloggingparameters = loggingparameters())
 
@@ -111,7 +114,7 @@ test_that("felling1tree", {
 
   Rslt2 <- felling1tree(dat,
                         fuel = "0", winching = "1", directionalfelling = "2",
-                        MainTrails = MainTrails, ScndTrail = ScndTrail,
+                        maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
                         FutureReserveCrowns = FutureReserveCrowns,
                         advancedloggingparameters = loggingparameters())
 
@@ -122,7 +125,7 @@ test_that("felling1tree", {
 
   Rslt2grapple <- felling1tree(dat,
                                fuel = "0", winching = "2", directionalfelling = "2",
-                               MainTrails = MainTrails, ScndTrail = ScndTrail,
+                               maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
                                FutureReserveCrowns = FutureReserveCrowns,
                                advancedloggingparameters = loggingparameters())
 
@@ -132,7 +135,7 @@ test_that("felling1tree", {
 
   Rslt2cable <- felling1tree(dat,
                              fuel = "0", winching = "2", directionalfelling = "2",
-                             MainTrails = MainTrails, ScndTrail = ScndTrail,
+                             maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
                              FutureReserveCrowns = FutureReserveCrowns,
                              advancedloggingparameters = loggingparameters())
 
@@ -145,7 +148,7 @@ test_that("felling1tree", {
 
   Rslt2fuelgrapple <- felling1tree(dat,
                                    fuel = "2", winching = "2", directionalfelling = "2",
-                                   MainTrails = MainTrails, ScndTrail = ScndTrail,
+                                   maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
                                    FutureReserveCrowns = FutureReserveCrowns,
                                    advancedloggingparameters = loggingparameters())
 
@@ -155,7 +158,7 @@ test_that("felling1tree", {
 
   Rslt2fuelcable <- felling1tree(dat,
                                  fuel = "2", winching = "2", directionalfelling = "2",
-                                 MainTrails = MainTrails, ScndTrail = ScndTrail,
+                                 maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
                                  FutureReserveCrowns = FutureReserveCrowns,
                                  advancedloggingparameters = loggingparameters())
 

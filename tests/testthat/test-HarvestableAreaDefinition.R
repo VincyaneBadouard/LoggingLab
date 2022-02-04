@@ -2,19 +2,49 @@ test_that("harvestableareadefinition",{
 
   data(DTMParacou)
   data(CreekDistances)
-
-  test_Harvestable <- harvestableareadefinition(topography = DTMParacou,
-                                                creekdistances = CreekDistances)
-  test_HarvestablePolygons <- test_Harvestable[[1]]
-  test_PlotSlope <- test_Harvestable[[2]]
-  test_HarvestableArea <- test_Harvestable[[3]]
+  data(MainTrails)
+  data(PlotMask)
 
 
-  expect_s3_class(test_HarvestablePolygons, class = 'sf')
-  expect_true((all(0 <= test_HarvestablePolygons$Harvestable & test_HarvestablePolygons$Harvestable <= 1)))
+  test_Harvestable0 <- harvestableareadefinition(topography = DTMParacou,
+                                                creekdistances = CreekDistances,
+                                                maintrails = MainTrails,
+                                                plotmask = PlotMask,
+                                                scenario = "manual",
+                                                winching = "0")
+
+  test_HarvestablePolygons0 <- test_Harvestable0$HarvestablePolygons
+  test_PlotSlope0 <- test_Harvestable0$PlotSlope
+  test_HarvestableArea0 <- test_Harvestable0$HarvestableArea
+
+  test_Harvestable1 <- harvestableareadefinition(topography = DTMParacou,
+                                                 creekdistances = CreekDistances,
+                                                 maintrails = MainTrails,
+                                                 plotmask = PlotMask,
+                                                 scenario = "RIL2")
+
+  test_HarvestablePolygons1 <- test_Harvestable1$HarvestablePolygons
+  test_PlotSlope1 <- test_Harvestable1$PlotSlope
+  test_HarvestableArea1 <- test_Harvestable1$HarvestableArea
+
+  test_Harvestable2 <- harvestableareadefinition(topography = DTMParacou,
+                                                 creekdistances = CreekDistances,
+                                                 maintrails = MainTrails,
+                                                 plotmask = PlotMask,
+                                                 scenario = "manual",
+                                                 winching = "2")
+
+  test_HarvestablePolygons2 <- test_Harvestable2$HarvestablePolygons
+  test_PlotSlope2 <- test_Harvestable2$PlotSlope
+  test_HarvestableArea2 <- test_Harvestable2$HarvestableArea
 
 
-  expect_s4_class(test_PlotSlope, class = 'RasterLayer')
-  expect_type(test_HarvestableArea, 'double')
+
+  expect_s3_class(test_HarvestablePolygons0, class = 'sfc_MULTIPOLYGON')
+  expect_s3_class(test_HarvestablePolygons1, class = 'sfc_MULTIPOLYGON')
+  expect_s3_class(test_HarvestablePolygons2, class = 'sfc_MULTIPOLYGON')
+
+  expect_s4_class(test_PlotSlope1, class = 'RasterLayer')
+  expect_type(test_HarvestableArea2, 'double')
 
 })

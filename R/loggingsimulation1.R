@@ -14,10 +14,11 @@
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer)
 #'
-#'@param creekdistances Vertical creek height (in m) of the inventoried
-#' plot (1 m resolution) (Default: \code{\link{CreekDistances}})
-#' (Large RasterLayer). To generate vertical creek height:
-#'  \code{\link{CreekDistances}} in 'docs' folder of the package
+#' @param creekdistances Relative distances (vertical and horizontal) (1 m
+#'   resolution) from nearest channel network (list of 2 large RasterLayers)
+#'   (Default: \code{\link{CreekDistances}})
+#'   To generate vertical creek height:
+#'   \code{\link{CreekDistances}} in 'docs' folder of the package
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the
@@ -160,9 +161,13 @@ loggingsimulation1 <- function(
   if(!inherits(plotmask, "SpatialPolygonsDataFrame"))
     stop("The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygonsDataFrame")
 
-  # topography, creekdistances
-  if(!all(unlist(lapply(list(topography, creekdistances), inherits, "RasterLayer"))))
-    stop("The 'topography' and 'creekdistances' arguments of the 'loggingsimulation' function must be RasterLayers")
+  # topography
+  if(!inherits(topography, "RasterLayer"))
+    stop("The 'topography' argument of the 'loggingsimulation' function must be a RasterLayer")
+
+  # creekdistances
+  if(!inherits(creekdistances, "list"))
+    stop("The 'creekdistances' argument of the 'loggingsimulation' function must be a list")
 
   # scenario
   if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"|| scenario == "RIL3"||
@@ -238,23 +243,34 @@ loggingsimulation1 <- function(
 
   #### Main trails layout ####
 
-  data(MainTrails) # A SUPPRIMER
+  MainTrails <- maintrailextract(topography = topography, advancedloggingparameters = advancedloggingparameters)
 
   ##### Harvestable area definition: ####
-  HarvestableAreaOutputs <- harvestableareadefinition(topography = topography,
-                                                      creekdistances = creekdistances,
-                                                      advancedloggingparameters = advancedloggingparameters)
+  HarvestableAreaOutputs <- harvestableareadefinition(
+    topography = topography,
+    creekdistances = creekdistances,
+    maintrails = MainTrails,
+    plotmask = plotmask,
+    scenario = scenario, winching = winching,
+    advancedloggingparameters = advancedloggingparameters
+  )
 
   HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
   PlotSlope <- HarvestableAreaOutputs$PlotSlope
   HarvestableArea <- HarvestableAreaOutputs$HarvestableArea
+  MachinePolygons <- HarvestableAreaOutputs$MachinePolygons
+
 
   #### Tree selection (harvestable, future and reserve trees + defects trees): ####
-  treeselectionoutputs <- treeselection(inventory, topography = topography, plotslope = PlotSlope,
-                                        scenario = scenario, objective = objective, fuel = fuel,
-                                        diversification = diversification, specieslax = specieslax,
-                                        harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails,
-                                        objectivelax = objectivelax, speciescriteria = speciescriteria,
+  treeselectionoutputs <- treeselection(inventory,
+                                        topography = topography,
+                                        speciescriteria = speciescriteria,
+                                        scenario = scenario, objective = objective,
+                                        fuel = fuel, winching = winching,
+                                        diversification = diversification,
+                                        specieslax = specieslax, objectivelax = objectivelax,
+                                        plotslope = PlotSlope,
+                                        harvestablepolygons = HarvestablePolygons,
                                         advancedloggingparameters = advancedloggingparameters)
 
   inventory <- treeselectionoutputs$inventory
@@ -302,7 +318,7 @@ loggingsimulation1 <- function(
   #### Tree felling ####
   inventory <- treefelling(inventory, scenario = scenario, fuel = fuel,
                            winching = winching, directionalfelling = directionalfelling,
-                           MainTrails = MainTrails, ScndTrail = ScndTrail,
+                           maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
                            advancedloggingparameters = advancedloggingparameters)
 
 

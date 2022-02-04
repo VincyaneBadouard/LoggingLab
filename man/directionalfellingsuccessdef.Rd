@@ -44,17 +44,19 @@ data(Paracou6_2016)
 data(DTMParacou)
 data(PlotSlope)
 data(MainTrails)
-data(HarvestablePolygons)
+data(HarvestableAreaOutputsCable)
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
 
-inventory <- treeselection(inventory, objective = 20, scenario ="manual",
- fuel = "2", diversification = TRUE, specieslax = FALSE,
- objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
- speciescriteria = SpeciesCriteria, MainTrails = MainTrails,
- harvestablepolygons = HarvestablePolygons,
- advancedloggingparameters = loggingparameters())$inventory
+inventory <- treeselection(inventory,
+topography = DTMParacou,
+speciescriteria = SpeciesCriteria,
+scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
+winching = "0", specieslax = FALSE, objectivelax = TRUE,
+plotslope = HarvestableAreaOutputsCable$PlotSlope,
+harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+advancedloggingparameters = loggingparameters())$inventory
 
 new <- directionalfellingsuccessdef(inventory, fuel = "2",
 directionalfelling = "2",

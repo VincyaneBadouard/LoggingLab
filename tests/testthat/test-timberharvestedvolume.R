@@ -2,18 +2,21 @@ test_that("timberharvestedvolume", {
 
   # Data loading
   data(Paracou6_2016)
-  data("MainTrails")
-  data("HarvestablePolygons")
+  data(HarvestableAreaOutputsCable)
 
   inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
                           volumeparameters = ForestZoneVolumeParametersTable)
 
-  inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
-                                              fuel = "2", diversification = TRUE, specieslax = FALSE,
-                                              objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
+  inventory <- suppressMessages(treeselection(inventory, topography = DTMParacou,
                                               speciescriteria = SpeciesCriteria,
-                                              advancedloggingparameters = loggingparameters(),
-                                              MainTrails = MainTrails, harvestablepolygons = HarvestablePolygons)$inventory)
+                                              scenario ="manual", objective = 20,
+                                              fuel = "2", diversification = TRUE,
+                                              winching = "0",
+                                              specieslax = FALSE, objectivelax = TRUE,
+                                              harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+                                              plotslope =  HarvestableAreaOutputsCable$PlotSlope,
+                                              advancedloggingparameters = loggingparameters()
+  )$inventory)
 
 
 
@@ -62,8 +65,8 @@ test_that("timberharvestedvolume", {
 
   if(nrow(HollowTable) > 0)
     expect_true(RsltHollow$TimberLoggedVolume == sum(RsltHollow$NoHollowTimberLoggedVolume +
-                                                 (1-advancedloggingparameters$TreeHollowPartForFuel) *
-                                                 sum(HollowTable$TreeHarvestableVolume)))
+                                                       (1-advancedloggingparameters$TreeHollowPartForFuel) *
+                                                       sum(HollowTable$TreeHarvestableVolume)))
 
   if(nrow(HollowTable) == 0)
     expect_true(RsltHollow$TimberLoggedVolume == RsltHollow$NoHollowTimberLoggedVolume) # no probed hollow trees
