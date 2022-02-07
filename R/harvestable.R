@@ -17,7 +17,7 @@
 #'  default (logical)
 #'
 #'@param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
+#'  (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)
 #'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)

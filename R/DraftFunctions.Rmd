@@ -89,6 +89,55 @@ HarvestableAreaOutputsCable <- harvestableareadefinition(
 # usethis::use_data(HarvestableAreaOutputsCable, overwrite = TRUE)
 ```
 
+# Secondary trails in Data
+```{r}
+scenario <- "manual"
+winching <- "2"
+objective <- 10
+fuel <- "2"
+diversification <- TRUE
+
+inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
+                        volumeparameters = ForestZoneVolumeParametersTable)
+
+treeselectionoutputs <- suppressWarnings(treeselection(inventory,
+                                                       topography = DTMParacou,
+                                                       speciescriteria = SpeciesCriteria, objective = objective,
+                                                       scenario = "manual", fuel = fuel,
+                                                       diversification = diversification,
+                                                       winching = winching, specieslax = FALSE,
+                                                       objectivelax = TRUE, plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                                       harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+                                                       advancedloggingparameters = loggingparameters()))
+
+SecondaryTrails <- secondtrailsopening(
+  topography = DTMParacou,
+  plotmask = PlotMask,
+  maintrails = MainTrails,
+  plotslope = HarvestableAreaOutputsCable$PlotSlope,
+  harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+  machinepolygons = HarvestableAreaOutputsCable$MachinePolygons,
+  treeselectionoutputs = treeselectionoutputs,
+  CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 22, Cost = 60),
+                         list(Slope = 35, Cost = 1000),
+                         list(Slope = Inf, Cost = Inf)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = Inf),
+                         list(CostType = "BigTrees", CostValue = 500),
+                         list(CostType = "Reserves", CostValue = 500),
+                         list(CostType = "Futures", CostValue = 50),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = 0.1))),
+  scenario = "manual",
+  winching = winching,
+  advancedloggingparameters = loggingparameters())
+
+# usethis::use_data(SecondaryTrails, overwrite = TRUE)
+```
+
 # Data loading
 ```{r}
 data(Paracou6_2016) #data inventory in the global environment

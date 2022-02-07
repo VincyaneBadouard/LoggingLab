@@ -210,7 +210,8 @@ loggingsimulation1 <- function(
   if(!inherits(advancedloggingparameters, "list"))
     stop("The 'advancedloggingparameters' argument of the 'loggingsimulation' function must be a list")
 
-  options("rgdal_show_exportToProj4_warnings"="none")
+  # Options
+  options("rgdal_show_exportToProj4_warnings"="none") # to avoid gdal warnings
 
   #### Global variables ####
   DeathCause <- AGB <- ParamCrownDiameterAllometry <- NULL
@@ -285,6 +286,17 @@ loggingsimulation1 <- function(
   EnergywoodTreesPoints <- treeselectionoutputs$EnergywoodTreesPoints
 
   #### Secondary trails layout (preliminaries for fuel wood harvesting) ####
+  ScndTrailOutputs <- secondtrailsopening(topography = topography,
+                                          plotmask = plotmask,
+                                          maintrails = MainTrails, plotslope = PlotSlope,
+                                          harvestablepolygons = HarvestablePolygons,
+                                          machinepolygons = MachinePolygons,
+                                          treeselectionoutputs = treeselectionoutputs,
+                                          CostMatrix = CostMatrix,
+                                          scenario = scenario, winching = winching,
+                                          advancedloggingparameters = advancedloggingparameters
+  )
+
   pol1 <- list(matrix(c(286503, 582925,
                         286503, 583240,
                         286507, 583240,
@@ -302,21 +314,15 @@ loggingsimulation1 <- function(
   ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
   ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails)) # A SUPPRIMER
 
-  # ScndTrailOutputs <- secondtrailsopening(
-  #   topography = topography,
-  #   plotmask = PlotMask,
-  #   treeselectionoutputs = treeselectionoutputs,
-  #   creekdistances = creekdistances,
-  #   CostMatrix = CostMatrix,
-  #   scenario = scenario, winching = winching,
-  #   fact = 3,
-  #   advancedloggingparameters = advancedloggingparameters)
+  # RawSecondTrails <- ScndTrailOutputs$RawSecondTrails
+  # TrailsIdentity <- ScndTrailOutputs$TrailsIdentity
+  # SmoothedTrails <- ScndTrailOutputs$SmoothedTrails
+  # MainTrailsAccess <- ScndTrailOutputs$MainTrailsAccess
+  # TrailsDensity <- ScndTrailOutputs$TrailsDensity
+  # inventory <- ScndTrailOutputs$inventory
+  # CostRasterAgg <- ScndTrailOutputs$CostRasterAgg
 
-  # ScndTrail <- ScndTrailOutputs$ScndTrail
-  # TrailsDensity <- ScndTrailOutputs$TrailsDensity # A AJOUTER A LA FCT
-
-
-  #### Tree felling ####
+    #### Tree felling ####
   inventory <- treefelling(inventory, scenario = scenario, fuel = fuel,
                            winching = winching, directionalfelling = directionalfelling,
                            maintrailsaccess = ScndTrail, scndtrail = ScndTrail,

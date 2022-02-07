@@ -14,14 +14,11 @@
 #' @importFrom sf st_as_sf st_cast
 #'
 #' @examples
-#' \dontrun{
 #' data(DTMParacou)
 #' MainTrails <- maintrailextract(DTMParacou)
 #'
 #' plot(DTMParacou)
 #' plot(MainTrails, add = T)
-#'
-#' }
 #'
 maintrailextract <- function(topography,
                              advancedloggingparameters = loggingparameters()){

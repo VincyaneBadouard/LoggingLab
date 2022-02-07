@@ -61,7 +61,6 @@ plot (Large RasterLayer)
 Harvestable area definition
 }
 \examples{
-\dontrun{
 data(PlotMask)
 data(DTMParacou)
 data(CreekDistances)
@@ -89,6 +88,5 @@ ggplot() +
   scale_colour_manual(values = c("Harvestable area" = "olivedrab"))
 
 HarvestableAreaOutputs$PlotSlope
-}
 
 }

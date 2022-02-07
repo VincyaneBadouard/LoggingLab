@@ -81,9 +81,10 @@ the nearest water source. Default = 2, in m (double)}
 50, in cm (double)}
 
 \item{ResamplDistDTM}{Distance of DTM resampling to erase microtopographic
-variation (integer).}
+variation. Default = 5, in m (integer).}
 
-\item{SmoothingFact}{A unitless factor used to smooth second trails (double)}
+\item{SmoothingFact}{Secondary trails smoothing factor. Default =
+5 (unitless) (double)}
 
 \item{CableLength}{Cable length. Default = 40, in m (double)}
 

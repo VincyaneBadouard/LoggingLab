@@ -30,7 +30,7 @@
 #'  objective volume (if stand too poor), = FALSE by default (logical)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
-#'  \code{\link{loggingparameters}} (list) MainTrails (multiline)
+#'  \code{\link{loggingparameters}} (list)
 #'
 #'@return Input inventory with
 #'- The trees selected for harvesting ("Selected")
@@ -78,8 +78,7 @@
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(PlotSlope)
-#' data(HarvestablePolygons)
-#' data(MainTrails)
+#' data(HarvestableAreaOutputsCable)
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -87,8 +86,10 @@
 #' inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 #'
 #' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
-#' diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
-#' harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails,
+#' diversification = TRUE, specieslax = FALSE,
+#' plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+#' scenario = "manual", winching = "0",
 #' advancedloggingparameters = loggingparameters())
 #'
 #' inventory <- harvestableOutputs$inventory

@@ -73,48 +73,15 @@ success is by default 60\%, and can be changed with the
 \code{advancedloggingparameters} argument.
 }
 \examples{
-data(Paracou6_2016)
-data(DTMParacou)
-data(PlotSlope)
-data(SpeciesCriteria)
-data(HarvestablePolygons)
-data(MainTrails)
+data(SecondaryTrails)
 
-# maintrailsaccess <- secondtrails$MainTrailsAccess
-
-pol1 <- list(matrix(c(286503, 582925,
-                      286503, 583240,
-                      286507, 583240,
-                      286507, 582925,
-                      286503, 582925) # the return
-                   ,ncol=2, byrow=TRUE))
-pol2 <- list(matrix(c(286650, 582925,
-                      286650, 583240,
-                      286654, 583240,
-                      286654, 582925,
-                      286650, 582925) # the return
-                   ,ncol=2, byrow=TRUE))
-
-PolList = list(pol1,pol2) #list of lists of numeric matrices
-scndtrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
-scndtrail <- sf::st_set_crs(ScndTrail, sf::st_crs(maintrailsaccess))
-
-inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
-volumeparameters = ForestZoneVolumeParametersTable)
-
-inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
- fuel = "2", diversification = TRUE, specieslax = FALSE,
- objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
- speciescriteria = SpeciesCriteria,  MainTrails = MainTrails,
- harvestablepolygons = HarvestablePolygons,
- advancedloggingparameters = loggingparameters())$inventory)
-
-FutureReserveCrowns <- inventory \%>\% # create an object with future/reserve crowns only
+# create an object with future/reserve crowns only
+FutureReserveCrowns <- SecondaryTrails$inventory \%>\%
  dplyr::filter(LoggingStatus == "future" | LoggingStatus == "reserve") \%>\%
  createcanopy() \%>\% # create all inventory crowns in the 'Crowns' column
  getgeometry(Crowns)
 
-dat <- inventory \%>\%
+dat <- SecondaryTrails$inventory \%>\%
   dplyr::filter(Selected == "1") \%>\%
   dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
                 CrownDiameter,Selected, Xutm, Yutm) \%>\%
@@ -124,18 +91,25 @@ dat <- inventory \%>\%
 
 rslt <- felling1tree(dat,
  fuel = "0", winching = "0", directionalfelling = "0",
- maintrailsaccess = maintrailsaccess, scndtrail = scndtrail,
+ maintrailsaccess = SecondaryTrails$MainTrailsAccess,
+ scndtrail = SecondaryTrails$SmoothedTrails,
  FutureReserveCrowns = FutureReserveCrowns,
  advancedloggingparameters = loggingparameters())
 
 library(ggplot2)
 ggplot() +
-  geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$Foot), sf::st_crs(maintrailsaccess))) +
-  geom_sf(data = sf::st_set_crs(sf::st_as_sf(rslt$Trail), sf::st_crs(maintrailsaccess))) +
+  geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$Foot),
+                                sf::st_crs(SecondaryTrails$MainTrailsAccess))) +
+  geom_sf(data = sf::st_set_crs(sf::st_as_sf(rslt$Trail),
+                                sf::st_crs(SecondaryTrails$MainTrailsAccess))) +
   geom_sf(data = rslt$NearestPoints) +
-  geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$TrailPt), sf::st_crs(maintrailsaccess))) +
-  geom_sf(data = sf::st_set_crs(rslt$FallenTree, sf::st_crs(maintrailsaccess))) +
-  geom_sf(data = sf::st_set_crs(FutureReserveCrowns, sf::st_crs(maintrailsaccess))) # set a crs
+  geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$TrailPt),
+                                sf::st_crs(SecondaryTrails$MainTrailsAccess))) +
+  geom_sf(data = sf::st_set_crs(rslt$FallenTree,
+                                sf::st_crs(SecondaryTrails$MainTrailsAccess))) +
+  geom_sf(data = sf::st_set_crs(FutureReserveCrowns,
+                                sf::st_crs(SecondaryTrails$MainTrailsAccess))) # set a crs
+
 }
 \seealso{
 \code{\link{loggingparameters}}

@@ -91,74 +91,28 @@
 #'@importFrom stats runif
 #'
 #' @examples
-#' data(Paracou6_2016)
-#' data(DTMParacou)
-#' data(PlotMask)
-#' data(SpeciesCriteria)
-#' data(CreekDistances)
-#' data(HarvestableAreaOutputsCable)
-#' data(MainTrails)
+#' data(SecondaryTrails)
+#' data(SecondaryTrails)
 #'
-#' scenariosparameters <- scenariosparameters(scenario = "manual",
-#'  winching = "2",
-#'  objective = 10,
-#'  fuel = "0",
-#'  diversification = TRUE,
-#'  directionalfelling = "0")
+#' scenario <- "manual"
+#' winching <- "2"
+#' fuel <- "0"
+#' directionalfelling <- "0"
 #'
 #'
-#' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
-#' volumeparameters = ForestZoneVolumeParametersTable)
-#'
-#' treeselectionoutputs <- suppressWarnings(treeselection(inventory,
-#'   topography = DTMParacou,
-#'   speciescriteria = SpeciesCriteria,
-#'   scenario = "manual", objective = scenariosparameters$objective,
-#'   fuel = scenariosparameters$fuel,
-#'   diversification = scenariosparameters$diversification,
-#'   winching = scenariosparameters$winching,
-#'   specieslax = FALSE, objectivelax = TRUE,
-#'   plotslope = HarvestableAreaOutputsCable$PlotSlope,
-#'   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
-#'   advancedloggingparameters = loggingparameters()))
-#'
-#' secondtrails <- secondtrailsopening(
-#'   topography = DTMParacou,
-#'   plotmask = PlotMask,
-#'   plotslope = HarvestableAreaOutputsCable$PlotSlope,
-#'   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
-#'   machinepolygons = HarvestableAreaOutputsCable$MachinePolygons,
-#'   treeselectionoutputs = treeselectionoutputs,
-#'   CostMatrix = list(list(list(Slope = 3, Cost = 3),
-#'   list(Slope = 5, Cost = 5),
-#'   list(Slope = 12, Cost = 20),
-#'   list(Slope = 22, Cost = 60),
-#'   list(Slope = 35, Cost = 1000),
-#'   list(Slope = Inf, Cost = Inf)),
-#'   list(list(CostType = "Initial", CostValue = 1000),
-#'   list(CostType = "Access", CostValue = Inf),
-#'   list(CostType = "BigTrees", CostValue = 500),
-#'   list(CostType = "Reserves", CostValue = 500),
-#'   list(CostType = "Futures", CostValue = 50),
-#'   list(CostType = "MainTrails", CostValue = 1E-4),
-#'   list(CostType = "SecondTrails", CostValue = 0.1))),
-#'   scenario = "manual",
-#'   winching = scenariosparameters$winching,
-#'   advancedloggingparameters = loggingparameters())
-#'
-#' NewInventory <- treefelling(secondtrails$inventory,
-#'   scenario = "manual", fuel = scenariosparameters$fuel,
-#'   winching = scenariosparameters$winching,
-#'   directionalfelling = scenariosparameters$directionalfelling,
-#'   maintrailsaccess = secondtrails$MainTrailsAccess,
-#'   scndtrail = secondtrails$SmoothedTrails,
+#' NewInventory <- treefelling(SecondaryTrails$inventory,
+#'   scenario = scenario, fuel = fuel,
+#'   winching = winching,
+#'   directionalfelling = directionalfelling,
+#'   maintrailsaccess = SecondaryTrails$MainTrailsAccess,
+#'   scndtrail = SecondaryTrails$SmoothedTrails,
 #'   advancedloggingparameters = loggingparameters())
 #'
 #' NewInventory_crs <- NewInventory %>%
 #' getgeometry(TreePolygon) %>%
 #' sf::st_set_crs(sf::st_crs(MainTrails)) # set a crs
 #'
-#' Inventory_crs <- sf::st_as_sf(inventory, coords = c("Xutm", "Yutm")) # as sf
+#' Inventory_crs <- sf::st_as_sf(SecondaryTrails$inventory, coords = c("Xutm", "Yutm")) # as sf
 #' Inventory_crs <- sf::st_set_crs(Inventory_crs, sf::st_crs(MainTrails)) # set a crs
 #'
 #' Treefall <- sf::st_as_sf(
@@ -215,9 +169,9 @@
 #'   geom_sf(data = Selected, aes(colour = "Selected"), show.legend = "point") +
 #'   geom_sf(data = ProbedHollow,
 #'   aes(colour = "Probed hollow"), show.legend = "point") +
-#'   geom_sf(data = maintrailsaccess,
+#'   geom_sf(data = SecondaryTrails$maintrailsaccess,
 #'   alpha = 0.5, fill = "black") +
-#'   geom_sf(data = ScndTrail,
+#'   geom_sf(data = SecondaryTrails$SmoothedTrails,
 #'   alpha = 0.5, fill = "black") +
 #'
 #'   scale_colour_manual(values = c("Non-harvestable" = "grey",
@@ -226,7 +180,7 @@
 #'   "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
 #'   labs(color = "Logging status")
 #'
-#'
+#' # The trees under the fallen trees
 #' suppressWarnings(sf::st_intersection( # trees under the fallen trees
 #'   getgeometry (NewInventory, TreePolygon),
 #'   sf::st_as_sf(NewInventory, coords = c("Xutm", "Yutm"))
@@ -262,8 +216,8 @@ treefelling <- function(
   if (!any(directionalfelling == "0" || directionalfelling == "1" || directionalfelling == "2" || is.null(directionalfelling)))
     stop("The 'directionalfelling' argument of the 'treefelling' function must be '0', '1', '2' or NULL")
 
-  if(!all(unlist(lapply(list(maintrailsaccess, scndtrail), inherits, "sf"))))
-    stop("The 'maintrailsaccess' and 'scndtrail'arguments of the 'treefelling' function must be sf")
+  if(!all(unlist(lapply(list(maintrailsaccess, scndtrail), inherits, c("sf", "sfc")))))
+    stop("The 'maintrailsaccess' and 'scndtrail'arguments of the 'treefelling' function must be sf or sfc")
 
   if(!inherits(advancedloggingparameters, "list"))
     stop("The 'advancedloggingparameters' argument of the 'treefelling' function must be a list")
@@ -531,13 +485,13 @@ directionalfellingsuccessdef <- function(
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
 #' inventory <- suppressMessages(treeselection(inventory,
-#'  topography = DTMParacou,
-#'  objective = 20, scenario ="manual", fuel = "2", diversification = TRUE,
-#'  specieslax = FALSE, objectivelax = TRUE,
-#'  speciescriteria = SpeciesCriteria,
-#'  MainTrails = MainTrails, plotslope = PlotSlope,
-#'  harvestablepolygons = HarvestablePolygons,
-#'  advancedloggingparameters = loggingparameters())$inventory)
+#' topography = DTMParacou,
+#' speciescriteria = SpeciesCriteria,
+#' scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
+#' winching = "0", specieslax = FALSE, objectivelax = TRUE,
+#' plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+#' advancedloggingparameters = loggingparameters())$inventory)
 #'
 #' inventory <- inventory %>%
 #'      dplyr::filter(Selected == "1") %>%
@@ -675,48 +629,15 @@ rotatepolygon <- function(
 #'@importFrom matlib angle
 #'
 #' @examples
-#' data(Paracou6_2016)
-#' data(DTMParacou)
-#' data(PlotSlope)
-#' data(SpeciesCriteria)
-#' data(HarvestablePolygons)
-#' data(MainTrails)
+#' data(SecondaryTrails)
 #'
-#' # maintrailsaccess <- secondtrails$MainTrailsAccess
-#'
-#' pol1 <- list(matrix(c(286503, 582925,
-#'                       286503, 583240,
-#'                       286507, 583240,
-#'                       286507, 582925,
-#'                       286503, 582925) # the return
-#'                    ,ncol=2, byrow=TRUE))
-#' pol2 <- list(matrix(c(286650, 582925,
-#'                       286650, 583240,
-#'                       286654, 583240,
-#'                       286654, 582925,
-#'                       286650, 582925) # the return
-#'                    ,ncol=2, byrow=TRUE))
-#'
-#' PolList = list(pol1,pol2) #list of lists of numeric matrices
-#' scndtrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
-#' scndtrail <- sf::st_set_crs(ScndTrail, sf::st_crs(maintrailsaccess))
-#'
-#' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
-#' volumeparameters = ForestZoneVolumeParametersTable)
-#'
-#' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
-#'  fuel = "2", diversification = TRUE, specieslax = FALSE,
-#'  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
-#'  speciescriteria = SpeciesCriteria,  MainTrails = MainTrails,
-#'  harvestablepolygons = HarvestablePolygons,
-#'  advancedloggingparameters = loggingparameters())$inventory)
-#'
-#' FutureReserveCrowns <- inventory %>% # create an object with future/reserve crowns only
+#' # create an object with future/reserve crowns only
+#' FutureReserveCrowns <- SecondaryTrails$inventory %>%
 #'  dplyr::filter(LoggingStatus == "future" | LoggingStatus == "reserve") %>%
 #'  createcanopy() %>% # create all inventory crowns in the 'Crowns' column
 #'  getgeometry(Crowns)
 #'
-#' dat <- inventory %>%
+#' dat <- SecondaryTrails$inventory %>%
 #'   dplyr::filter(Selected == "1") %>%
 #'   dplyr::select(idTree,DBH,TrunkHeight,TreeHeight,CrownHeight,
 #'                 CrownDiameter,Selected, Xutm, Yutm) %>%
@@ -726,18 +647,25 @@ rotatepolygon <- function(
 #'
 #' rslt <- felling1tree(dat,
 #'  fuel = "0", winching = "0", directionalfelling = "0",
-#'  maintrailsaccess = maintrailsaccess, scndtrail = scndtrail,
+#'  maintrailsaccess = SecondaryTrails$MainTrailsAccess,
+#'  scndtrail = SecondaryTrails$SmoothedTrails,
 #'  FutureReserveCrowns = FutureReserveCrowns,
 #'  advancedloggingparameters = loggingparameters())
 #'
 #' library(ggplot2)
 #' ggplot() +
-#'   geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$Foot), sf::st_crs(maintrailsaccess))) +
-#'   geom_sf(data = sf::st_set_crs(sf::st_as_sf(rslt$Trail), sf::st_crs(maintrailsaccess))) +
+#'   geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$Foot),
+#'                                 sf::st_crs(SecondaryTrails$MainTrailsAccess))) +
+#'   geom_sf(data = sf::st_set_crs(sf::st_as_sf(rslt$Trail),
+#'                                 sf::st_crs(SecondaryTrails$MainTrailsAccess))) +
 #'   geom_sf(data = rslt$NearestPoints) +
-#'   geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$TrailPt), sf::st_crs(maintrailsaccess))) +
-#'   geom_sf(data = sf::st_set_crs(rslt$FallenTree, sf::st_crs(maintrailsaccess))) +
-#'   geom_sf(data = sf::st_set_crs(FutureReserveCrowns, sf::st_crs(maintrailsaccess))) # set a crs
+#'   geom_sf(data = sf::st_set_crs(sf::st_sfc(rslt$TrailPt),
+#'                                 sf::st_crs(SecondaryTrails$MainTrailsAccess))) +
+#'   geom_sf(data = sf::st_set_crs(rslt$FallenTree,
+#'                                 sf::st_crs(SecondaryTrails$MainTrailsAccess))) +
+#'   geom_sf(data = sf::st_set_crs(FutureReserveCrowns,
+#'                                 sf::st_crs(SecondaryTrails$MainTrailsAccess))) # set a crs
+#'
 felling1tree <- function(
   dat,
   fuel,
@@ -765,8 +693,8 @@ felling1tree <- function(
            || directionalfelling == "2" || is.null(directionalfelling)))
     stop("The 'directionalfelling' argument of the 'felling1tree' function must be '0', '1', '2' or NULL")
 
-  if(!all(unlist(lapply(list(maintrailsaccess, scndtrail), inherits, "sf"))))
-    stop("The 'maintrailsaccess' and 'scndtrail'arguments of the 'felling1tree' function must be sf")
+  if(!all(unlist(lapply(list(maintrailsaccess, scndtrail), inherits, c("sf", "sfc")))))
+    stop("The 'maintrailsaccess' and 'scndtrail'arguments of the 'felling1tree' function must be sf or sfc")
 
   if(!inherits(advancedloggingparameters, "list"))
     stop("The 'advancedloggingparameters' argument of the 'felling1tree' function must be a list")

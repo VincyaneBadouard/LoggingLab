@@ -36,10 +36,11 @@
 #'@param BigTrees Minimum DBH of trees to be avoided by trails. Default =
 #'  50, in cm (double)
 #'
-#'@param SmoothingFact A unitless factor used to smooth second trails (double)
+#'@param SmoothingFact Secondary trails smoothing factor. Default =
+#'  5 (unitless) (double)
 #'
 #'@param ResamplDistDTM Distance of DTM resampling to erase microtopographic
-#'  variation (integer).
+#'  variation. Default = 5, in m (integer).
 #'
 #'@param CableLength Cable length. Default = 40, in m (double)
 #'

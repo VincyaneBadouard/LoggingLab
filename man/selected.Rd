@@ -48,7 +48,7 @@ objective volume without diversification, = FALSE by default (logical)}
 objective volume (if stand too poor), = FALSE by default (logical)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
-\code{\link{loggingparameters}} (list) MainTrails (multiline)}
+\code{\link{loggingparameters}} (list)}
 }
 \value{
 Input inventory with
@@ -91,8 +91,7 @@ an unreached objective volume, or be abandoned ('objectivelax')
 data(Paracou6_2016)
 data(DTMParacou)
 data(PlotSlope)
-data(HarvestablePolygons)
-data(MainTrails)
+data(HarvestableAreaOutputsCable)
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -100,8 +99,10 @@ volumeparameters = ForestZoneVolumeParametersTable)
 inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
-diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
-harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails,
+diversification = TRUE, specieslax = FALSE,
+plotslope = HarvestableAreaOutputsCable$PlotSlope,
+harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+scenario = "manual", winching = "0",
 advancedloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory

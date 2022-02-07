@@ -2,7 +2,6 @@ test_that("futurereserve", {
 
   data(Paracou6_2016)
   data(DTMParacou)
-  data(HarvestablePolygons)
 
   inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask), volumeparameters = ForestZoneVolumeParametersTable)
   inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)

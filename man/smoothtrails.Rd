@@ -34,10 +34,9 @@ A list with :
 Trails smoothing
 }
 \examples{
-\dontrun{
 data(DTMParacou)
 data(Paracou6_2016)
-data(HarvestablePolygons)
+data(HarvestableAreaOutputsCable)
 data(MainTrails)
 data(PlotMask)
 data(PlotSlope)
@@ -48,21 +47,17 @@ scenarios <- scenariosparameters(scenario = "RIL3", objective = 15)
 inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
-AccessPolygons <- filteraccesexplarea(harvestablepolygons = HarvestablePolygons,
-MainTrails = MainTrails,
-winching = scenarios$winching,
-advancedloggingparameters = loggingparameters())
-
 treeselectionoutputs <- treeselection(inventory,
 topography = DTMParacou,
-speciescriteria = SpeciesCriteria, objective = scenarios$objective,
-scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
-objectivelax = TRUE, MainTrails = MainTrails, plotslope = PlotSlope,
-harvestablepolygons = AccessPolygons,
+speciescriteria = SpeciesCriteria,
+scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
+winching = "0", specieslax = FALSE, objectivelax = TRUE,
+plotslope = HarvestableAreaOutputsCable$PlotSlope,
+harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 advancedloggingparameters = loggingparameters())
 
 SecondTrailsRaw <- secondtrailsopening(DTM = DTMParacou, plotslope =  PlotSlope,plotmask = PlotMask,
-  harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails, treeselectionoutputs,
+  harvestablepolygons = HarvestablePolygons, maintrails = MainTrails, treeselectionoutputs,
   CostMatrix = list(list(list(Slope = 3, Cost = 3),
                            list(Slope = 5, Cost = 5),
                            list(Slope = 12, Cost = 20),
@@ -83,6 +78,5 @@ SecondTrailsRaw <- secondtrailsopening(DTM = DTMParacou, plotslope =  PlotSlope,
  SecondTrailsSmth <- smoothtrails(paths = SecondTrailsRaw[[1]],
                                  plotmask = PlotMask,
                                    )
-}
 
 }

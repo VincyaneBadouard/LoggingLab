@@ -83,7 +83,7 @@ test_that("felling1tree", {
                             fuel = "2", winching = "0", directionalfelling = "2",
                             advancedloggingparameters = loggingparameters(),
                             maintrailsaccess = ScndTrail, scndtrail = ScndTrail_no_sf),
-               regexp = "The 'maintrailsaccess' and 'scndtrail'arguments of the 'felling1tree' function must be sf")
+               regexp = "The 'maintrailsaccess' and 'scndtrail'arguments of the 'felling1tree' function must be sf or sfc")
 
 
   expect_error(felling1tree(dat, fuel = "2", winching = "0",

@@ -20,7 +20,7 @@
 #'   harvestable, selected, future and reserve, hollow and fuel wood trees
 #'
 #' @param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
+#'  (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)
 #'
 #' @param machinepolygons Accessible for machine area of the inventoried plot
 #'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
@@ -85,21 +85,19 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(PlotMask)
 #' data(SpeciesCriteria)
-#' data(CreekDistances)
 #' data(HarvestableAreaOutputsCable)
 #' data(MainTrails)
 #'
-#' scenariosparameters <- scenariosparameters(scenario = "manual",
-#'  winching = "2",
-#'  objective = 30,
-#'  fuel = "0",
-#'  diversification = TRUE,
-#'  directionalfelling = "0")
+#' scenario <- "manual"
+#' winching <- "2"
+#' objective <- 10
+#' fuel <- "0"
+#' diversification <- TRUE
+#' directionalfelling <- "0"
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -107,10 +105,10 @@
 #' treeselectionoutputs <- suppressWarnings(treeselection(inventory,
 #'   topography = DTMParacou,
 #'   speciescriteria = SpeciesCriteria,
-#'   scenario = "manual", objective = scenariosparameters$objective,
-#'   fuel = scenariosparameters$fuel,
-#'   diversification = scenariosparameters$diversification,
-#'   winching = scenariosparameters$winching,
+#'   scenario = "manual", objective = objective,
+#'   fuel = fuel,
+#'   diversification = diversification,
+#'   winching = winching,
 #'   specieslax = FALSE, objectivelax = TRUE,
 #'   plotslope = HarvestableAreaOutputsCable$PlotSlope,
 #'   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
@@ -119,6 +117,7 @@
 #' secondtrails <- secondtrailsopening(
 #'   topography = DTMParacou,
 #'   plotmask = PlotMask,
+#'   maintrails = MainTrails,
 #'   plotslope = HarvestableAreaOutputsCable$PlotSlope,
 #'   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #'   machinepolygons = HarvestableAreaOutputsCable$MachinePolygons,
@@ -137,7 +136,7 @@
 #'   list(CostType = "MainTrails", CostValue = 1E-4),
 #'   list(CostType = "SecondTrails", CostValue = 0.1))),
 #'   scenario = "manual",
-#'   winching = scenariosparameters$winching,
+#'   winching = winching,
 #'   advancedloggingparameters = loggingparameters())
 #'
 #'
@@ -206,8 +205,6 @@
 #'   geom_sf(data = ProbedHollow,
 #'   aes(colour = "Probed hollow"), show.legend = "point") +
 #'
-#'
-#'
 #'   # 2ndary trails
 #'     geom_sf(data = st_as_sf(secondtrails$SmoothedTrails), col = "darkgreen") +
 #'     geom_sf(data = st_as_sf(secondtrails$MainTrailsAccess), col = "black") +
@@ -218,7 +215,6 @@
 #'   "Second trails" = "darkgreen", "Harvestable area" = "olivedrab"))
 #'
 #' secondtrails$TrailsIdentity
-#'   }
 #'
 secondtrailsopening <- function(
   topography,
@@ -270,7 +266,9 @@ secondtrailsopening <- function(
          tree.")
   }
 
-  options("rgdal_show_exportToProj4_warnings"="none")
+  # Options
+  options("rgdal_show_exportToProj4_warnings"="none") # to avoid gdal warnings
+  # gc() # remove intermediary files (to avoid gdal warnings)
 
   # Global Variables
   slope <- x <- y <- Harvestable <- idTree <- ID <- type <- ptAcc  <- NULL

@@ -78,7 +78,7 @@ test_that("treefelling", {
                            scenario = "manual", fuel = "2", winching = "0", directionalfelling = "2",
                            advancedloggingparameters = loggingparameters(),
                            maintrailsaccess = ScndTrail, scndtrail = ScndTrail_no_sf),
-               regexp = "The 'maintrailsaccess' and 'scndtrail'arguments of the 'treefelling' function must be sf")
+               regexp = "The 'maintrailsaccess' and 'scndtrail'arguments of the 'treefelling' function must be sf or sfc")
 
 
   expect_error(treefelling(Paracou6_2016, scenario = "manual", winching = "0", fuel = "2",

@@ -44,7 +44,7 @@
 #'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
 #'
 #'@param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
+#'  (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)

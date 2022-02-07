@@ -32,7 +32,7 @@ commercial species (2 levels of commercial species in the
 default (logical)}
 
 \item{harvestablepolygons}{Accessible area of the inventoried plot
-(default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
+(default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
