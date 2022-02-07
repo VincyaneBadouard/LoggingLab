@@ -52,7 +52,7 @@ Imports:
     sf (>= 0.9.8),
     nngeo (>= 0.4.3),
     fasterize (>= 1.0.3), 
-    terra (>= 1.5.17),
+    terra (>= 1.4-22),
     methods (>= 3.6.1),
     utils (>= 3.6.1),
     matlib (>= 0.9.4),
