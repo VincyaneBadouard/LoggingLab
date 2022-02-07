@@ -20,13 +20,11 @@ The maintrails outside of the topography raster (sf LINESTRING object)
 Generating maintrails function
 }
 \examples{
-\dontrun{
 data(DTMParacou)
 MainTrails <- maintrailextract(DTMParacou)
 
+library(raster)
 plot(DTMParacou)
-plot(MainTrails, add = T)
-
-}
+plot(MainTrails, add = TRUE)
 
 }

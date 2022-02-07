@@ -18,7 +18,7 @@ test_that("loggingsummary1", {
   #                       volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
   #                       objective = 20, fuel = "2", diversification = TRUE, winching = "2",
   #                       directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE, harvestablepolygons = HarvestablePolygons,
-  #                       crowndiameterparameters = ParamCrownDiameterAllometry, MainTrails = MainTrails,
+  #                       crowndiameterparameters = ParamCrownDiameterAllometry,
   #                       advancedloggingparameters = loggingparameters())
   #   )
   #

@@ -25,56 +25,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' data(DTMParacou)
-#' data(Paracou6_2016)
-#' data(HarvestablePolygons)
-#' data(MainTrails)
-#' data(PlotMask)
-#' data(PlotSlope)
-#' data("SpeciesCriteria")
-#'
-#' scenarios <- scenariosparameters(scenario = "RIL3", objective = 15)
-#'
-#' inventory <- commercialcriteriajoin(addtreedim(cleaninventory(Paracou6_2016, PlotMask),
-#'  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
-#'
-#' AccessPolygons <- filteraccesexplarea(harvestablepolygons = HarvestablePolygons,
-#' MainTrails = MainTrails,
-#' winching = scenarios$winching,
-#' advancedloggingparameters = loggingparameters())
-#'
-#' treeselectionoutputs <- treeselection(inventory,
-#' topography = DTMParacou,
-#' speciescriteria = SpeciesCriteria, objective = scenarios$objective,
-#' scenario ="manual", fuel = "2", diversification = TRUE, specieslax = FALSE,
-#' objectivelax = TRUE, MainTrails = MainTrails, plotslope = PlotSlope,
-#' harvestablepolygons = AccessPolygons,
-#' advancedloggingparameters = loggingparameters())
-#'
-#' SecondTrailsRaw <- secondtrailsopening(DTM = DTMParacou, plotslope =  PlotSlope,plotmask = PlotMask,
-#'   harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails, treeselectionoutputs,
-#'   CostMatrix = list(list(list(Slope = 3, Cost = 3),
-#'                            list(Slope = 5, Cost = 5),
-#'                            list(Slope = 12, Cost = 20),
-#'                            list(Slope = 22, Cost = 60),
-#'                            list(Slope = 27, Cost = 600),
-#'                            list(Slope = Inf, Cost = 1000)),
-#'                       list(list(CostType = "Initial", CostValue = 1000),
-#'                            list(CostType = "Access", CostValue = 1000),
-#'                            list(CostType = "BigTrees", CostValue = 500),
-#'                            list(CostType = "Reserves", CostValue = 500),
-#'                            list(CostType = "Futures", CostValue = 50),
-#'                            list(CostType = "MainTrails", CostValue = 1E-4),
-#'                            list(CostType = "SecondTrails", CostValue = 0.1))),
-#'  scenarios = scenarios,
-#'  fact = 3,
-#'  advancedloggingparameters = loggingparameters())
-#'
-#'  SecondTrailsSmth <- smoothtrails(paths = SecondTrailsRaw[[1]],
+#' data(SecondaryTrails)
+#' SecondTrailsSmth <- smoothtrails(paths = SecondaryTrails$RawSecondTrails,
 #'                                  plotmask = PlotMask,
 #'                                    )
-#'}
-#'
+#'         }
 smoothtrails <- function(
   paths,
   plotmask,

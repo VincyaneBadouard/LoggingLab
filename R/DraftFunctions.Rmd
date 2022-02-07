@@ -89,6 +89,42 @@ HarvestableAreaOutputsCable <- harvestableareadefinition(
 # usethis::use_data(HarvestableAreaOutputsCable, overwrite = TRUE)
 ```
 
+# Secondary trails in Data
+```{r}
+scenario <- "manual"
+winching <- "2"
+objective <- 10
+fuel <- "2"
+diversification <- TRUE
+
+inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
+                        volumeparameters = ForestZoneVolumeParametersTable)
+
+treeselectionoutputs <- suppressWarnings(treeselection(inventory,
+                                                       topography = DTMParacou,
+                                                       speciescriteria = SpeciesCriteria, objective = objective,
+                                                       scenario = scenario, fuel = fuel,
+                                                       diversification = diversification,
+                                                       winching = winching, specieslax = FALSE,
+                                                       objectivelax = TRUE, plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                                       harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+                                                       advancedloggingparameters = loggingparameters()))
+
+SecondaryTrails <- secondtrailsopening(
+  topography = DTMParacou,
+  plotmask = PlotMask,
+  maintrails = MainTrails,
+  plotslope = HarvestableAreaOutputsCable$PlotSlope,
+  harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+  machinepolygons = HarvestableAreaOutputsCable$MachinePolygons,
+  treeselectionoutputs = treeselectionoutputs,
+  scenario = scenario,
+  winching = winching,
+  advancedloggingparameters = loggingparameters())
+
+usethis::use_data(SecondaryTrails, overwrite = TRUE)
+```
+
 # Data loading
 ```{r}
 data(Paracou6_2016) #data inventory in the global environment

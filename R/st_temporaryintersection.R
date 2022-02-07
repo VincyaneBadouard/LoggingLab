@@ -78,7 +78,7 @@ st_temporaryintersection <- function(
     stop("The 'advancedloggingparameters' argument of the 'st_temporaryintersection' function must be a list")
 
   # Global Variables
-  # layer <- NULL
+  layer <- NULL
 
   # Generate a raster
   RasterAccum <- raster(extent(topography), resolution = res(topography)/5, crs = crs(topography))

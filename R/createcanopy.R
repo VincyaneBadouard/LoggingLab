@@ -87,7 +87,7 @@ createcanopy <- function(inventory){
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
 #' dat <- inventory %>%
-#'   filter(CrownDiameter == max(CrownDiameter))
+#'   dplyr::filter(CrownDiameter == max(CrownDiameter))
 #'
 #' Crown <- treefromthesky(dat)
 #'

@@ -61,10 +61,11 @@ default (logical)}
 objective volume (if stand too poor), = FALSE by default (logical)}
 
 \item{harvestablepolygons}{Accessible area of the inventoried plot
-(default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
+(default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
-neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
+neighbourhood of 8 cells) (default:
+\code{\link{HarvestableAreaOutputsCable}}) (RasterLayer)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -120,11 +121,13 @@ included in the objective volume. If fuel = 0 or 1, the hollow trees will
 not be exploited, so the function looks for other trees to reach the
 objective volume (if possible).
 
-If the harvestable volume is higher than the objective volume, MinFD of
-the 1st economic rank species is increased. If this is not enough and if
-diversification is allowed, MinFD of 2nd economic level species is increased.
-Then, the trees to be harvested are chosen in decreasing order
-of volume, until the objective volume is reached.
+If the harvestable volume is higher than the objective volume, and that
+diversification was not chosen, MinFD of the 1st economic rank species only
+is increased.
+If the diversification is allowed, MinFD of 1st and 2nd economic level
+species is increased.
+Then, the trees to be harvested are chosen in
+decreasing order of volume, until the objective volume is reached.
 
 If the harvestable volume is lower than the objective volume, diversification
 can be applied if it
@@ -222,6 +225,6 @@ ggplot() +
 }
 \seealso{
 \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
-\code{\link{DTMParacou}}, \code{\link{PlotSlope}},
+\code{\link{DTMParacou}}, \code{\link{HarvestableAreaOutputsCable}},
 \code{\link{loggingparameters}}
 }

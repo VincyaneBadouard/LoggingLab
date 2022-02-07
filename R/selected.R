@@ -30,7 +30,7 @@
 #'  objective volume (if stand too poor), = FALSE by default (logical)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
-#'  \code{\link{loggingparameters}} (list) MainTrails (multiline)
+#'  \code{\link{loggingparameters}} (list)
 #'
 #'@return Input inventory with
 #'- The trees selected for harvesting ("Selected")
@@ -50,11 +50,13 @@
 #'  1, the hollow trees will not be exploited, so the function looks for other
 #'  trees to reach the objective volume (if possible).
 #'
-#'  If the harvestable volume is higher than the objective volume, MinFD of the
-#'  1st economic rank species is increased.
-#'  If this is not enough and if diversification is allowed, MinFD of 2nd
-#'  economic level species is increased. Then, the trees to be harvested are
-#'  chosen in decreasing order of volume, until the objective volume is reached.
+#'  If the harvestable volume is higher than the objective volume, and that
+#'  diversification was not chosen, MinFD of the 1st economic rank species only
+#'  is increased.
+#'  If the diversification is allowed, MinFD of 1st and 2nd economic level
+#'  species is increased.
+#'  Then, the trees to be harvested are chosen in
+#'  decreasing order of volume, until the objective volume is reached.
 #'
 #'  If the harvestable volume is lower than the objective volume,
 #'  diversification can be applied if it was not already applied ('specieslax')
@@ -77,9 +79,7 @@
 #' @examples
 #' data(Paracou6_2016)
 #' data(DTMParacou)
-#' data(PlotSlope)
-#' data(HarvestablePolygons)
-#' data(MainTrails)
+#' data(HarvestableAreaOutputsCable)
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -87,8 +87,10 @@
 #' inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 #'
 #' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
-#' diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
-#' harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails,
+#' diversification = TRUE, specieslax = FALSE,
+#' plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+#' scenario = "manual", winching = "2",
 #' advancedloggingparameters = loggingparameters())
 #'
 #' inventory <- harvestableOutputs$inventory
@@ -241,6 +243,7 @@ selected <- function(
         ungroup() %>%
         mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>%
         select(-Condition, -VolumeCumSum)
+
     }
 
     if (!diversification && !specieslax && objectivelax)
@@ -268,7 +271,7 @@ selected <- function(
 
     inventory <- inventory %>%
       mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" &
-                                      CommercialLevel == "1" & (DBH >= UpMinFD & DBH <= MaxFD), #designate preferred individuals of first economic rank species, when the plot is species-rich.
+                                      CommercialLevel == "1" & (DBH >= UpMinFD & DBH <= MaxFD), #designate the bigger individuals, when the plot is species-rich.
                                     "harvestableUp", LoggingStatus))
 
     if (!diversification) {
@@ -336,20 +339,28 @@ selected <- function(
 
     if (diversification) {
 
+      # Increase the MinFD of the other economic species
+      inventory <- inventory %>%
+        mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" & CommercialLevel == "2" &
+                                        (DBH >= UpMinFD & DBH <= MaxFD), #designate preferred individuals of 2nd economic rank species too, when the plot is species-rich.
+                                      "harvestableUp", LoggingStatus))
+
       HarvestableTable <- inventory %>%
-        filter(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable") #the upgraded 1st rank and normal 2nd rank.
+        filter(LoggingStatus == "harvestableUp") #the upgraded 1st & 2nd ranks
 
-      HVupCommercial1 <- sum(HarvestableTable$TreeHarvestableVolume) #173.334 m3
+      HVupCommercial12 <- sum(HarvestableTable$TreeHarvestableVolume)
 
-      if (HVupCommercial1 == VO){
+      if (HVupCommercial12 == VO){
         inventory <- inventory %>%
 
-          mutate(Selected = ifelse(LoggingStatus == "harvestableUp" | LoggingStatus == "harvestable",
+          mutate(Selected = ifelse(LoggingStatus == "harvestableUp",
                                    "1", NA))# if we have our volume, harvestable ind = selected ind
-        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st economic rank species were increased. The objective volume has now been reached. It was not necessary to increase the MinFD of the other economic species")
-      }
+        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3) was higher
+                (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume,
+                the Minimum Falling Diameter (MinFD) of the 1st and 2nd economic ranks species were increased to UpMinFD.
+                The objective volume has now been reached.")
 
-      if (HVupCommercial1 < VO){
+      } else if (HVupCommercial12 != VO){
 
         inventory <- inventory %>%
           mutate(Condition = ifelse(LoggingStatus == "harvestableUp"|LoggingStatus == "harvestable",TRUE,FALSE)) %>%
@@ -362,54 +373,26 @@ selected <- function(
 
         HarvestableTable <- inventory %>%
           filter(Selected == "1")
-        HVupCommercial1adjust <- sum(HarvestableTable$TreeHarvestableVolume) #49.69643 Harvestable volume, with "1" rank species and upgraded FD individuals, and 2nd rank no upgraded FD individuals
+        HVupCommercial12adjust <- sum(HarvestableTable$TreeHarvestableVolume) #Harvestable volume, with upgraded FD individuals
 
-        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3)
+
+        if (HVupCommercial12 < VO){
+
+          message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3)
                 was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3) than the objective volume,
-                the Minimum Falling Diameters (MinFD) of the 1st economic rank species were increased to UpMinFD.
+                the Minimum Falling Diameters (MinFD) of the 1st and 2nd economic ranks species were increased to UpMinFD.
                 Some trees with DBH lower than the UpMinFD were however selected to ensure that the objective
-                volume was reached. It was not necessary to raise the MinFDs of other economic species.")
-      }
-
-      if (HVupCommercial1 > VO){
-
-        inventory <- inventory %>%
-          mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" & CommercialLevel == "2" & DBH >= UpMinFD & DBH <= MaxFD, #designate preferred individuals of 2nd economic rank species too, when the plot is species-rich.
-                                        "harvestableUp", LoggingStatus))
-
-        HarvestableTable <- inventory %>%
-          filter(LoggingStatus == "harvestableUp")
-
-        HVupCommercial12 <- sum(HarvestableTable$TreeHarvestableVolume) #271.2342 Harvestable volume, with upgraded FD individuals
-
-        if (HVupCommercial12 == VO){
-          inventory <- inventory %>%
-            mutate(Selected = ifelse(LoggingStatus == "harvestableUp",
-                                     "1", NA))# if we have our volume, harvestable ind = selected ind
-
-        }
-        if (HVupCommercial12 != VO){
-
-          inventory <- inventory %>%
-            mutate(Condition = ifelse(LoggingStatus == "harvestableUp"|LoggingStatus == "harvestable",TRUE,FALSE)) %>%
-            group_by(Condition) %>%
-            arrange(desc(TreeHarvestableVolume)) %>%
-            mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
-            ungroup() %>%
-            mutate(Selected = ifelse(Condition & VolumeCumSum <= VO, "1", NA)) %>%
-            select(-Condition, -VolumeCumSum)
-
-          HarvestableTable <- inventory %>%
-            filter(Selected == "1")
-          HVupCommercial12adjust <- sum(HarvestableTable$TreeHarvestableVolume) #Harvestable volume, with upgraded FD individuals
+                volume was reached.")
         }
 
-        message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3)
+        if (HVupCommercial12 > VO){
+
+          message("As the harvestable volume (= ",paste(round(HVinit, digits = 1)),"m^3)
                 was higher (by ",paste(round(HVinit-VO, digits = 1)),"m^3)
-                than the objective volume, it was necessary to increase the Minimum Falling Diameter (MinFD)
-                of all species. The objective volume has now been reached.")
-
-      }
+                than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st and 2nd economic ranks species
+                  were increased to UpMinFD. The objective volume has now been reached.")
+        }
+      } # end : HVupCommercial12 != VO
     }
   }
 
@@ -426,7 +409,7 @@ selected <- function(
   }
 
   # No NA in Selected colomn
-  inventory <-mutate(inventory, Selected = ifelse(is.na(Selected) , "0", Selected))
+  inventory <- mutate(inventory, Selected = ifelse(is.na(Selected) , "0", Selected))
 
   # Complete to reach the objective volume 'with crumbs'
   HarvestableTable <- inventory %>%
@@ -443,7 +426,15 @@ selected <- function(
     arrange(desc(TreeHarvestableVolume))
 
   if(any(inventory$Crumbs)){
-    inventory$Selected[1] <- "1" # the most important remaining volume able to reach the objective
+
+    Crumbsdf <- inventory %>%
+      filter(Crumbs %in% TRUE)
+
+    MaxCrumbsV <- max(Crumbsdf$TreeHarvestableVolume)  # the most important remaining volume able to reach the objective
+
+    inventory <- inventory %>%
+      mutate(Selected = ifelse(Crumbs %in% TRUE & TreeHarvestableVolume == MaxCrumbsV, "1", Selected))
+
   }
 
   inventory <- inventory %>%
@@ -456,7 +447,7 @@ selected <- function(
   }
 
   # No NA in Selected colomn
-  inventory <-mutate(inventory, Selected = ifelse(is.na(Selected) , "0", Selected))
+  inventory <- mutate(inventory, Selected = ifelse(is.na(Selected) , "0", Selected))
 
   # Upgraded MinFD species:
   # to inform for each individual if its species have been FD upgraded

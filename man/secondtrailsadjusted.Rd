@@ -11,15 +11,8 @@ secondtrailsadjusted(
   plotslope,
   harvestablepolygons,
   machinepolygons,
-  postlogginginventory,
+  inventory,
   accesspts = NULL,
-  CostMatrix = list(list(list(Slope = 3, Cost = 3), list(Slope = 5, Cost = 5),
-    list(Slope = 12, Cost = 20), list(Slope = 20, Cost = 60), list(Slope = 35, Cost =
-    1000), list(Slope = Inf, Cost = Inf)), list(list(CostType = "Initial", CostValue =
-    1000), list(CostType = "Access", CostValue = Inf), list(CostType = "BigTrees",
-    CostValue = 1000), list(CostType = "Reserves", CostValue = 1000), list(CostType =
-    "Futures", CostValue = 500), list(CostType = "MainTrails", CostValue = 1e-04),
-    list(CostType = "SecondTrails",      CostValue = 0.1))),
   scenario,
   winching = NULL,
   verbose = FALSE,
@@ -36,15 +29,16 @@ or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 linestring)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
-neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
+neighbourhood of 8 cells) (default:
+\code{\link{HarvestableAreaOutputsCable}}) (RasterLayer)}
 
 \item{harvestablepolygons}{Accessible area of the inventoried plot
-(default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
+(default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)}
 
 \item{machinepolygons}{Accessible for machine area of the inventoried plot
 (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
 
-\item{postlogginginventory}{Input inventory with new columns:
+\item{inventory}{Input inventory with new columns:
 \itemize{
 \item The tree felling success or fail("TreeFellingOrientationSuccess")
 \item The crowns of the future/reserve trees (Polygon)
@@ -55,9 +49,6 @@ according to the chosen scenario
 
 \item{accesspts}{Random access point of maintrail for each PU
 (sfc_MULTIPOLYGON)}
-
-\item{CostMatrix}{List of list defining conditional weight over binned slopes
-values}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -79,19 +70,19 @@ Avoidance of future/reserves if chosen.}
 \value{
 A list with :
 \itemize{
-\item RawSecondTrails : non-smoothed secondary trails
-\item TrailsIdentity: information on sections of the trails with:
+\item inventory: Updated inventory
+\item SmoothedTrails: Smoothed main and secondary trails polygons
+(sfc_MULTIPOLYGON)
+\item TrailsDensity: Second trails density (in m/ha)
+\item TrailsIdentity: information on sections of the trails (matrix) with:
 \itemize{
 \item LineID:
 \item LoggedTrees: idTree of trees reached by the trails
 \item TypeExpl: type of winching
 }
-\item SmoothedTrails: Smoothed main and secondary trails polygons
-(sfc_MULTIPOLYGON)
 \item MainTrailsAccess : Random access point of maintrail for each PU
 (sfc_MULTIPOLYGON)
-\item TrailsDensity: Second trails density (in m/ha)
-\item inventory: Updated inventory
+\item RawSecondTrails : non-smoothed secondary trails (SpatialLines)
 \item CostRasterAgg: A cost Raster (RasterLayer)
 }
 }
@@ -99,107 +90,42 @@ A list with :
 Second trails adjusted
 }
 \examples{
-\dontrun{
-data(Paracou6_2016)
 data(DTMParacou)
 data(PlotMask)
-data(SpeciesCriteria)
-data(CreekDistances)
-data(MainTrails)
+data(HarvestableAreaOutputsCable)
+data(SecondaryTrails)
 
-scenariosparameters <- scenariosparameters(scenario = "manual",
- winching = "2",
- objective = 10,
- fuel = "0",
- diversification = TRUE,
- directionalfelling = "0")
+scenario <- "manual"
+winching <- "2"
+fuel <- "0"
+directionalfelling <- "0"
 
-
-HarvestableAreaOutputs <- harvestableareadefinition(
-  topography = DTMParacou,
-  creekdistances = CreekDistances,
-  maintrails = MainTrails,
-  plotmask = PlotMask,
-  scenario = "manual",winching = scenariosparameters$winching,
-  advancedloggingparameters = loggingparameters()
-  )
-
-
-inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
-volumeparameters = ForestZoneVolumeParametersTable)
-
-treeselectionoutputs <- suppressWarnings(treeselection(inventory,
-topography = DTMParacou,
-speciescriteria = SpeciesCriteria, objective = scenariosparameters$objective,
-scenario = "manual", fuel = scenariosparameters$fuel,
-diversification = scenariosparameters$diversification,
-winching = scenariosparameters$winching, specieslax = FALSE,
-objectivelax = TRUE, plotslope = HarvestableAreaOutputs$PlotSlope,
-harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
-advancedloggingparameters = loggingparameters()))
-
-secondtrails <- secondtrailsopening(
-  topography = DTMParacou,
-  plotmask = PlotMask,
-  plotslope = HarvestableAreaOutputs$PlotSlope,
-  harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
-  machinepolygons = HarvestableAreaOutputs$MachinePolygons,
-  treeselectionoutputs = treeselectionoutputs,
-  CostMatrix = list(list(list(Slope = 3, Cost = 3),
-  list(Slope = 5, Cost = 5),
-  list(Slope = 12, Cost = 20),
-  list(Slope = 22, Cost = 60),
-  list(Slope = 35, Cost = 1000),
-  list(Slope = Inf, Cost = Inf)),
-  list(list(CostType = "Initial", CostValue = 1000),
-  list(CostType = "Access", CostValue = Inf),
-  list(CostType = "BigTrees", CostValue = 500),
-  list(CostType = "Reserves", CostValue = 500),
-  list(CostType = "Futures", CostValue = 50),
-  list(CostType = "MainTrails", CostValue = 1E-4),
-  list(CostType = "SecondTrails", CostValue = 0.1))),
-  scenario = "manual",
-  winching = scenariosparameters$winching,
-  advancedloggingparameters = loggingparameters())
-
-PostLogInventory <- treefelling(secondtrails$inventory, scenario = "manual",
-fuel = scenariosparameters$fuel,
-winching = scenariosparameters$winching,
-directionalfelling = scenariosparameters$directionalfelling,
-maintrailsaccess = secondtrails$MainTrailsAccess,
-scndtrail = secondtrails$SmoothedTrails,
+PostLogInventory <- treefelling(SecondaryTrails$inventory, scenario = "manual",
+fuel = fuel,
+winching = winching,
+directionalfelling = directionalfelling,
+maintrailsaccess = SecondaryTrails$MainTrailsAccess,
+scndtrail = SecondaryTrails$SmoothedTrails,
 advancedloggingparameters = loggingparameters())
 
 ScdTrailsAdj <- secondtrailsadjusted(
   topography = DTMParacou,
   plotmask = PlotMask,
-  plotslope = HarvestableAreaOutputs$PlotSlope,
-  harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
-  machinepolygons = HarvestableAreaOutputs$MachinePolygons,
-  postlogginginventory = PostLogInventory,
-  accesspts = secondtrails$MainTrailsAccess,
-  CostMatrix = list(list(list(Slope = 3, Cost = 1),
-   list(Slope = 5, Cost = 3),
-   list(Slope = 12, Cost = 20),
-   list(Slope = 20, Cost = 60),
-   list(Slope = 35, Cost = 1000),
-   list(Slope = Inf, Cost = Inf)),
-   list(list(CostType = "Initial", CostValue = 1000),
-   list(CostType = "Access", CostValue = Inf),
-   list(CostType = "BigTrees", CostValue = 1000),
-   list(CostType = "Reserves", CostValue = 1000),
-   list(CostType = "Futures", CostValue = 500),
-   list(CostType = "MainTrails", CostValue = 1E-4),
-   list(CostType = "SecondTrails", CostValue = 1E-3))),
+  maintrails = MainTrails,
+  plotslope = HarvestableAreaOutputsCable$PlotSlope,
+  harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+  machinepolygons = HarvestableAreaOutputsCable$MachinePolygons,
+  inventory = PostLogInventory,
+  accesspts = SecondaryTrails$MainTrailsAccess,
   scenario = "manual",
-  winching = scenariosparameters$winching,
+  winching = winching,
   advancedloggingparameters = loggingparameters())
 
 
 library(ggplot2)
 library(sf)
 
-NewInventory <- treeselectionoutputs$inventory
+NewInventory <- PostLogInventory
 NewInventory_crs <- PostLogInventory \%>\%
 getgeometry(TreePolygon) \%>\%
 sf::st_set_crs(sf::st_crs(MainTrails)) # set a crs
@@ -242,9 +168,9 @@ st_set_crs(st_crs(MainTrails))
 
 ggplot() +
   # Harvestable zones
-  geom_sf(data = HarvestableAreaOutputs$HarvestablePolygons,
+  geom_sf(data = HarvestableAreaOutputsCable$HarvestablePolygons,
         fill = "olivedrab", alpha = 0.1) +
-   geom_sf(data = HarvestableAreaOutputs$MachinePolygons,
+   geom_sf(data = HarvestableAreaOutputsCable$MachinePolygons,
         fill = "olivedrab", alpha = 0.5) +
   labs(alpha = "Harvestable") +
   labs(title = "P6 zones exploitables") +
@@ -268,9 +194,9 @@ ggplot() +
     alpha = 0.5, fill = "red") +
 
   # 2ndary trails
-    geom_sf(data = st_as_sf(secondtrails$SmoothedTrails),
+    geom_sf(data = st_as_sf(SecondaryTrails$SmoothedTrails),
     aes(color = "Initial-trails"),alpha = 0.5) +
-    geom_sf(data = st_as_sf(secondtrails$RawSecondTrails),
+    geom_sf(data = st_as_sf(SecondaryTrails$RawSecondTrails),
     color = "green",alpha = 0.5) +
 
   # 2ndary trails adjusted
@@ -287,6 +213,5 @@ ggplot() +
    "Adjusted-trails" = "darkred"))
 
 ScdTrailsAdj$TrailsIdentity
-  }
 
 }

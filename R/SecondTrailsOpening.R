@@ -20,16 +20,14 @@
 #'   harvestable, selected, future and reserve, hollow and fuel wood trees
 #'
 #' @param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
+#'  (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)
 #'
 #' @param machinepolygons Accessible for machine area of the inventoried plot
 #'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
 #'
 #' @param plotslope Slopes (in radians) of the inventoried plot (with a
-#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
-#'
-#' @param CostMatrix List of list defining conditional weight over binned slopes
-#'   values
+#'  neighbourhood of 8 cells) (default:
+#'  \code{\link{HarvestableAreaOutputsCable}}) (RasterLayer)
 #'
 #'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -50,17 +48,17 @@
 #'   \code{\link{loggingparameters}} (list)
 #'
 #' @return A list with :
-#' - RawSecondTrails : non-smoothed secondary trails
-#' - TrailsIdentity: information on sections of the trails with:
+#' - inventory: Updated inventory
+#' - SmoothedTrails: Smoothed main and secondary trails polygons
+#' - TrailsDensity: Second trails density (in m/ha)
+#' - TrailsIdentity: information on sections of the trails (matrix) with:
 #'     - LineID:
 #'     - LoggedTrees: idTree of trees reached by the trails
 #'     - TypeExpl: type of winching
-#' - SmoothedTrails: Smoothed main and secondary trails polygons
 #' (sfc_MULTIPOLYGON)
 #' - MainTrailsAccess : Random access point of maintrail for each PU
 #' (sfc_MULTIPOLYGON)
-#' - TrailsDensity: Second trails density (in m/ha)
-#' - inventory: Updated inventory
+#' - RawSecondTrails : non-smoothed secondary trails (SpatialLines)
 #' - CostRasterAgg: A cost Raster (RasterLayer)
 #'
 #' @importFrom sf st_cast st_as_sf st_intersection st_union st_sample st_join
@@ -85,21 +83,19 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(PlotMask)
 #' data(SpeciesCriteria)
-#' data(CreekDistances)
 #' data(HarvestableAreaOutputsCable)
 #' data(MainTrails)
 #'
-#' scenariosparameters <- scenariosparameters(scenario = "manual",
-#'  winching = "2",
-#'  objective = 30,
-#'  fuel = "0",
-#'  diversification = TRUE,
-#'  directionalfelling = "0")
+#' scenario <- "manual"
+#' winching <- "2"
+#' objective <- 10
+#' fuel <- "0"
+#' diversification <- TRUE
+#' directionalfelling <- "0"
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -107,10 +103,10 @@
 #' treeselectionoutputs <- suppressWarnings(treeselection(inventory,
 #'   topography = DTMParacou,
 #'   speciescriteria = SpeciesCriteria,
-#'   scenario = "manual", objective = scenariosparameters$objective,
-#'   fuel = scenariosparameters$fuel,
-#'   diversification = scenariosparameters$diversification,
-#'   winching = scenariosparameters$winching,
+#'   scenario = "manual", objective = objective,
+#'   fuel = fuel,
+#'   diversification = diversification,
+#'   winching = winching,
 #'   specieslax = FALSE, objectivelax = TRUE,
 #'   plotslope = HarvestableAreaOutputsCable$PlotSlope,
 #'   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
@@ -119,25 +115,13 @@
 #' secondtrails <- secondtrailsopening(
 #'   topography = DTMParacou,
 #'   plotmask = PlotMask,
+#'   maintrails = MainTrails,
 #'   plotslope = HarvestableAreaOutputsCable$PlotSlope,
 #'   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #'   machinepolygons = HarvestableAreaOutputsCable$MachinePolygons,
 #'   treeselectionoutputs = treeselectionoutputs,
-#'   CostMatrix = list(list(list(Slope = 3, Cost = 3),
-#'   list(Slope = 5, Cost = 5),
-#'   list(Slope = 12, Cost = 20),
-#'   list(Slope = 22, Cost = 60),
-#'   list(Slope = 35, Cost = 1000),
-#'   list(Slope = Inf, Cost = Inf)),
-#'   list(list(CostType = "Initial", CostValue = 1000),
-#'   list(CostType = "Access", CostValue = Inf),
-#'   list(CostType = "BigTrees", CostValue = 500),
-#'   list(CostType = "Reserves", CostValue = 500),
-#'   list(CostType = "Futures", CostValue = 50),
-#'   list(CostType = "MainTrails", CostValue = 1E-4),
-#'   list(CostType = "SecondTrails", CostValue = 0.1))),
 #'   scenario = "manual",
-#'   winching = scenariosparameters$winching,
+#'   winching = winching,
 #'   advancedloggingparameters = loggingparameters())
 #'
 #'
@@ -206,8 +190,6 @@
 #'   geom_sf(data = ProbedHollow,
 #'   aes(colour = "Probed hollow"), show.legend = "point") +
 #'
-#'
-#'
 #'   # 2ndary trails
 #'     geom_sf(data = st_as_sf(secondtrails$SmoothedTrails), col = "darkgreen") +
 #'     geom_sf(data = st_as_sf(secondtrails$MainTrailsAccess), col = "black") +
@@ -218,7 +200,6 @@
 #'   "Second trails" = "darkgreen", "Harvestable area" = "olivedrab"))
 #'
 #' secondtrails$TrailsIdentity
-#'   }
 #'
 secondtrailsopening <- function(
   topography,
@@ -228,19 +209,6 @@ secondtrailsopening <- function(
   harvestablepolygons,
   machinepolygons,
   treeselectionoutputs,
-  CostMatrix = list(list(list(Slope = 3, Cost = 3),
-                         list(Slope = 5, Cost = 5),
-                         list(Slope = 12, Cost = 20),
-                         list(Slope = 20, Cost = 60),
-                         list(Slope = 35, Cost = 1000),
-                         list(Slope = Inf, Cost = Inf)),
-                    list(list(CostType = "Initial", CostValue = 1000),
-                         list(CostType = "Access", CostValue = Inf),
-                         list(CostType = "BigTrees", CostValue = 500),
-                         list(CostType = "Reserves", CostValue = 500),
-                         list(CostType = "Futures", CostValue = 50),
-                         list(CostType = "MainTrails", CostValue = 1E-4),
-                         list(CostType = "SecondTrails", CostValue = 0.1))),
   scenario,
   winching = NULL,
   verbose = FALSE,
@@ -270,7 +238,9 @@ secondtrailsopening <- function(
          tree.")
   }
 
-  options("rgdal_show_exportToProj4_warnings"="none")
+  # Options
+  options("rgdal_show_exportToProj4_warnings"="none") # to avoid gdal warnings
+  # gc() # remove intermediary files (to avoid gdal warnings)
 
   # Global Variables
   slope <- x <- y <- Harvestable <- idTree <- ID <- type <- ptAcc  <- NULL
@@ -287,6 +257,7 @@ secondtrailsopening <- function(
 
   sf_use_s2(FALSE) # to deal with actual unresolved s2 issues in sf
 
+  CostMatrix <- advancedloggingparameters$CostMatrix
 
   factagg <-  floor(advancedloggingparameters$SlopeDistance/res(topography)[1])
 
@@ -1488,20 +1459,20 @@ secondtrailsopening <- function(
   #
 
   if (WinchingInit == "2") {
-    secondtrails <- list("RawSecondTrails" = paths,
-                         "TrailsIdentity" = lines,        # "LineID","LoggedTrees", "TypeExpl"
+    secondtrails <- list("inventory" =  inventory,
                          "SmoothedTrails" =  SmoothedTrails,
-                         "MainTrailsAccess" = MainTrailsAccess,
                          "TrailsDensity" =  TrailsDensity,
-                         "inventory" =  inventory,
+                         "TrailsIdentity" = lines,        # "LineID","LoggedTrees", "TypeExpl"
+                         "MainTrailsAccess" = MainTrailsAccess,
+                         "RawSecondTrails" = paths,
                          "CostRasterAgg" = list("CostRasterMean" = CostRasterMean,"CostRasterMeanGrpl" = CostRasterMeanGrpl))
   }else{
-    secondtrails <- list("RawSecondTrails" = paths,
-                         "TrailsIdentity" = lines,        # "LineID","LoggedTrees", "TypeExpl"
+    secondtrails <- list("inventory" =  inventory,
                          "SmoothedTrails" =  SmoothedTrails,
-                         "MainTrailsAccess" = MainTrailsAccess,
                          "TrailsDensity" =  TrailsDensity,
-                         "inventory" =  inventory,
+                         "TrailsIdentity" = lines,        # "LineID","LoggedTrees", "TypeExpl"
+                         "MainTrailsAccess" = MainTrailsAccess,
+                         "RawSecondTrails" = paths,
                          "CostRasterAgg" = list("CostRasterMean" = CostRasterMean,"CostRasterMeanGrpl" = NULL))
   }
 

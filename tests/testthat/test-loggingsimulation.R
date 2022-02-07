@@ -5,7 +5,6 @@ test_that("loggingsimulation", {
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000) # data reduction
 
   # data(PlotMask) # inventoried plot mask
-  # data(PlotSlope)
   # data(DTMParacou) # topography
   # data(CreekDistances) # relative elevation
   # data(SpeciesCriteria) # species exploitability criteria

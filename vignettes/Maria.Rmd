@@ -41,6 +41,8 @@ library(Maria)
 library(knitr)
 library(kableExtra)
 library(ggplot2)
+library(raster)
+library(dplyr)
 ```
 **Load the data stored in the package**
 ```{r}
@@ -201,18 +203,20 @@ kable(ScenariosTable)
 *Numeric values*
 
 + **Minimum DBH for inclusion in the forest inventory** = 10 cm 
-+ **Maximum harvestable area slope** = 27 % 
 + **Maximum main & 2nd trail centerline slope** = 22 % 
 + **Maximum main & 2nd trail cross slope** = 4 % 
 + **Maximum slope accessible by the grapple** = 20 % 
-+ **Maximum tree slope** = 22 % 
++ **Maximum slope around the tree to access it with cable** = 22 % 
 + **Plateau maximum slope** = 5 % 
 + **Distance to compute slope** = 6 m (3m for each side) 
 + **Water sources buffer zone** = 30 m
++ **Buffer zone** based on **relative elevation to the nearest water source** = 2 m
 + **Minimum main trail width** = 5 m 
 + **Maximum main trail width** = 6 m 
-+ **2nd trail width** = 4 m 
-+ **Minimum DBH of trees to be avoided by trails** = 50 cm 
++ **Secondary trail width** = 4 m 
++ **Minimum DBH of trees to be avoided by trails** = 50 cm
++ **Secondary trails smoothing factor** = 5 (unitless)
++ **Distance of DTM resampling to erase microtopographic variation**  = 5 m
 + **Cable length** = 40 m 
 + **Grapple length** = 6 m 
 + **Minimum distance to consider a tree "isolated"** from other trees of its species, in the aggregative species case
@@ -227,6 +231,8 @@ kable(ScenariosTable)
 A message will be sent to inform if this threshold has been exceeded)
 + **Maximum landing area** = 1500 square meters (has no impact on the simulation.
 A message will be sent to inform if this threshold has been exceeded)
+
++ **Cost matrix for optimized trail layout**. Gives an increasing cost according to a slope gradient, and different costs on  cases to avoid.
 
 *Models*   
 
@@ -369,6 +375,14 @@ inventory <- addtreedim(inventory, volumeparameters = ForestZoneVolumeParameters
 ## Main trails opening
 ```{r}
 MainTrails <- maintrailextract(DTMParacou)
+
+# # To map a raster with ggplot : https://erinbecker.github.io/r-raster-vector-geospatial/02-raster-plot/index.html
+# ## convert to a df for plotting in two steps,
+# ## First, to a SpatialPointsDataFrame
+# DTMParacou_pts <- rasterToPoints(DTMParacou, spatial = TRUE)
+# ## Then to a 'conventional' dataframe
+# DTMParacou_df  <- data.frame(DTMParacou_pts)
+
 
 plot(DTMParacou)
 plot(MainTrails, add = T)

@@ -42,7 +42,6 @@ is by default 60\%, and can be changed with the
 \examples{
 data(Paracou6_2016)
 data(DTMParacou)
-data(PlotSlope)
 data(MainTrails)
 data(HarvestableAreaOutputsCable)
 

@@ -48,7 +48,7 @@ objective volume without diversification, = FALSE by default (logical)}
 objective volume (if stand too poor), = FALSE by default (logical)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
-\code{\link{loggingparameters}} (list) MainTrails (multiline)}
+\code{\link{loggingparameters}} (list)}
 }
 \value{
 Input inventory with
@@ -75,11 +75,13 @@ harvested and are therefore included in the objective volume. If fuel = 0 or
 1, the hollow trees will not be exploited, so the function looks for other
 trees to reach the objective volume (if possible).
 
-If the harvestable volume is higher than the objective volume, MinFD of the
-1st economic rank species is increased.
-If this is not enough and if diversification is allowed, MinFD of 2nd
-economic level species is increased. Then, the trees to be harvested are
-chosen in decreasing order of volume, until the objective volume is reached.
+If the harvestable volume is higher than the objective volume, and that
+diversification was not chosen, MinFD of the 1st economic rank species only
+is increased.
+If the diversification is allowed, MinFD of 1st and 2nd economic level
+species is increased.
+Then, the trees to be harvested are chosen in
+decreasing order of volume, until the objective volume is reached.
 
 If the harvestable volume is lower than the objective volume,
 diversification can be applied if it was not already applied ('specieslax')
@@ -90,9 +92,7 @@ an unreached objective volume, or be abandoned ('objectivelax')
 \examples{
 data(Paracou6_2016)
 data(DTMParacou)
-data(PlotSlope)
-data(HarvestablePolygons)
-data(MainTrails)
+data(HarvestableAreaOutputsCable)
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -100,8 +100,10 @@ volumeparameters = ForestZoneVolumeParametersTable)
 inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
-diversification = TRUE, specieslax = FALSE, plotslope = PlotSlope,
-harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails,
+diversification = TRUE, specieslax = FALSE,
+plotslope = HarvestableAreaOutputsCable$PlotSlope,
+harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+scenario = "manual", winching = "2",
 advancedloggingparameters = loggingparameters())
 
 inventory <- harvestableOutputs$inventory

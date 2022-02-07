@@ -35,31 +35,23 @@
 #' data(ForestZoneVolumeParametersTable) # The volume parameters data in the global environment
 #' data(SpeciesCriteria)
 #' data(DTMParacou)
-#' data(PlotSlope)
-#' data(MainTrails)
+#' data(HarvestableAreaOutputsCable)
 #'
 #' scenario <- "RIL2"
-#'
-#' HarvestableAreaOutputs <- harvestableareadefinition(
-#'   topography = DTMParacou,
-#'   creekdistances = CreekDistances,
-#'   plotmask = PlotMask,
-#'   scenario = scenario,
-#'   advancedloggingparameters = loggingparameters()
-#'   )
-#'
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
 #' inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 #'
-#' harvestableOutputs <- harvestable(inventory, diversification = TRUE,
+#' harvestableOutputs <- harvestable(inventory,
+#'  topography = DTMParacou,
+#'  diversification = TRUE,
 #'  specieslax = FALSE,
-#' topography = DTMParacou, plotslope = HarvestableAreaOutputs$PlotSlope,
-#' harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
-#' MainTrails = MainTrails,scenario = scenario,
-#' advancedloggingparameters = loggingparameters())
+#'  plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#'  harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+#'  scenario = scenario,
+#'  advancedloggingparameters = loggingparameters())
 #'
 #' inventory <- harvestableOutputs$inventory
 #' HVinit <- harvestableOutputs$HVinit

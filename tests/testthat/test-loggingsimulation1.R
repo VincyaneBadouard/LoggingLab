@@ -23,7 +23,7 @@ test_that("loggingsimulation1", {
   #                           objective = 20, fuel = "2", diversification = TRUE, winching = "2",
   #                           directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
   #                           crowndiameterparameters = ParamCrownDiameterAllometry,
-  #                           advancedloggingparameters = loggingparameters(), plotslope = PlotSlope)
+  #                           advancedloggingparameters = loggingparameters())
 
   # Check the function arguments
 

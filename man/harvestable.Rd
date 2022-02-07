@@ -32,10 +32,11 @@ commercial species (2 levels of commercial species in the
 default (logical)}
 
 \item{harvestablepolygons}{Accessible area of the inventoried plot
-(default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
+(default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
-neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)}
+neighbourhood of 8 cells) (default:
+\code{\link{HarvestableAreaOutputsCable}}) (RasterLayer)}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -109,6 +110,6 @@ new <- harvestableOutputs$inventory
 }
 \seealso{
 \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
-\code{\link{DTMParacou}}, \code{\link{PlotSlope}},
+\code{\link{DTMParacou}}, \code{\link{HarvestableAreaOutputsCable}},
 \code{\link{loggingparameters}}
 }

@@ -36,10 +36,11 @@
 #'@param BigTrees Minimum DBH of trees to be avoided by trails. Default =
 #'  50, in cm (double)
 #'
-#'@param SmoothingFact A unitless factor used to smooth second trails (double)
+#'@param SmoothingFact Secondary trails smoothing factor. Default =
+#'  5 (unitless) (double)
 #'
 #'@param ResamplDistDTM Distance of DTM resampling to erase microtopographic
-#'  variation (integer).
+#'  variation. Default = 5, in m (integer).
 #'
 #'@param CableLength Cable length. Default = 40, in m (double)
 #'
@@ -76,6 +77,17 @@
 #'  (double) (has no impact on the simulation. A message will be sent to inform if
 #'  this threshold has been exceeded)
 #'
+#'@param CostMatrix Cost matrix for optimized trail layout (list of 2 lists).
+#'  Gives an increasing cost according to a slope gradient (1st sub-list), and
+#'  different costs on certain cases (2nd sub-list):
+#'    - "Initial" (default = 1000)
+#'    - "Access" (default = Inf)
+#'    - "BigTrees" (default = 500)
+#'    - "Reserves" (default = 500)
+#'    - "Futures" (default = 50)
+#'    - "MainTrails" (default = 1E-4)
+#'    - "SecondTrails" (default = 0.1)
+#'
 #'@param TreeHarvestableVolumeAllometry By default, allometry of tree
 #'  harvestable volume, French Guiana ONF formula: aCoef + bCoef * (DBH/100)^2,
 #'  aCoef and bCoef depend on the forest location, stored in
@@ -101,7 +113,7 @@
 #'  defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 #'  (function)
 #'
-#'@return A named list of 32 objects.
+#'@return A named list of 33 objects.
 #'
 #'@export
 #'
@@ -138,6 +150,20 @@ loggingparameters <- function(
   Purge = 0.14, # in m^3 of fuel wood/m^3 of logged trees
   MaxTrailDensity = 200, #in m/ha
   MaxLandingArea = 1500, #in square meters
+
+  CostMatrix = list(list(list(Slope = 3, Cost = 3),
+                         list(Slope = 5, Cost = 5),
+                         list(Slope = 12, Cost = 20),
+                         list(Slope = 20, Cost = 60),
+                         list(Slope = 35, Cost = 1000),
+                         list(Slope = Inf, Cost = Inf)),
+                    list(list(CostType = "Initial", CostValue = 1000),
+                         list(CostType = "Access", CostValue = Inf),
+                         list(CostType = "BigTrees", CostValue = 500),
+                         list(CostType = "Reserves", CostValue = 500),
+                         list(CostType = "Futures", CostValue = 50),
+                         list(CostType = "MainTrails", CostValue = 1E-4),
+                         list(CostType = "SecondTrails", CostValue = 0.1))),
 
   ### Models (peut-etre mettre les modèles dans un fichier .R chacun ac leure propre doc)
 
@@ -200,10 +226,14 @@ loggingparameters <- function(
         stop("You have assigned a non-numerical value to one of the arguments of the 'loggingparameters' function
          expects a numerical value. Look at the help page for the 'loggingparameters' function (?loggingparameters)"))
 
-  if(!all(unlist(lapply(list(ResamplDistDTM,SlopeDistance), inherits, "integer"))))
-    stop("You have assigned a non-integer value to ResamplDistDTM parameters of the 'loggingparameters' function
-         expects an integer value. Look at the help page for the 'loggingparameters' function (?loggingparameters)")
+  if(!all(unlist(lapply(list(ResamplDistDTM, SlopeDistance), inherits, "integer"))))
+    stop("You have assigned a non-integer value to 'ResamplDistDTM' and/or 'SlopeDistance' parameter(s)
+    of the 'loggingparameters' function expects an integer value.
+         Look at the help page for the 'loggingparameters' function (?loggingparameters)")
 
+  if(!inherits(CostMatrix, "list"))
+    stop("You must assign a list to the 'CostMatrix' argument of the 'loggingparameters' function.
+             Look at the help page for the 'loggingparameters' function (?loggingparameters)")
   lapply(c(
     TreeHarvestableVolumeAllometry,
     TrunkHeightAllometry,
@@ -246,6 +276,9 @@ loggingparameters <- function(
     Purge = Purge,
     MaxTrailDensity = MaxTrailDensity,
     MaxLandingArea = MaxLandingArea,
+
+    ### Cost matrix
+    CostMatrix = CostMatrix,
 
     ### Models
     TreeHarvestableVolumeAllometry = TreeHarvestableVolumeAllometry,

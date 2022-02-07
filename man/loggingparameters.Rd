@@ -31,6 +31,13 @@ loggingparameters(
   Purge = 0.14,
   MaxTrailDensity = 200,
   MaxLandingArea = 1500,
+  CostMatrix = list(list(list(Slope = 3, Cost = 3), list(Slope = 5, Cost = 5),
+    list(Slope = 12, Cost = 20), list(Slope = 20, Cost = 60), list(Slope = 35, Cost =
+    1000), list(Slope = Inf, Cost = Inf)), list(list(CostType = "Initial", CostValue =
+    1000), list(CostType = "Access", CostValue = Inf), list(CostType = "BigTrees",
+    CostValue = 500), list(CostType = "Reserves", CostValue = 500), list(CostType =
+    "Futures", CostValue = 50), list(CostType = "MainTrails", CostValue = 1e-04),
+    list(CostType = "SecondTrails", CostValue = 0.1))),
   TreeHarvestableVolumeAllometry = function(DBH, aCoef, bCoef) aCoef + bCoef *
     (DBH/100)^2,
   TrunkHeightAllometry = function(DBH, TreeHarvestableVolume) TreeHarvestableVolume/(pi
@@ -81,9 +88,10 @@ the nearest water source. Default = 2, in m (double)}
 50, in cm (double)}
 
 \item{ResamplDistDTM}{Distance of DTM resampling to erase microtopographic
-variation (integer).}
+variation. Default = 5, in m (integer).}
 
-\item{SmoothingFact}{A unitless factor used to smooth second trails (double)}
+\item{SmoothingFact}{Secondary trails smoothing factor. Default =
+5 (unitless) (double)}
 
 \item{CableLength}{Cable length. Default = 40, in m (double)}
 
@@ -120,6 +128,19 @@ this threshold has been exceeded)}
 (double) (has no impact on the simulation. A message will be sent to inform if
 this threshold has been exceeded)}
 
+\item{CostMatrix}{Cost matrix for optimized trail layout (list of 2 lists).
+Gives an increasing cost according to a slope gradient (1st sub-list), and
+different costs on certain cases (2nd sub-list):
+\itemize{
+\item "Initial" (default = 1000)
+\item "Access" (default = Inf)
+\item "BigTrees" (default = 500)
+\item "Reserves" (default = 500)
+\item "Futures" (default = 50)
+\item "MainTrails" (default = 1E-4)
+\item "SecondTrails" (default = 0.1)
+}}
+
 \item{TreeHarvestableVolumeAllometry}{By default, allometry of tree
 harvestable volume, French Guiana ONF formula: aCoef + bCoef * (DBH/100)^2,
 aCoef and bCoef depend on the forest location, stored in
@@ -146,7 +167,7 @@ defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
 (function)}
 }
 \value{
-A named list of 32 objects.
+A named list of 33 objects.
 }
 \description{
 Advanced parameters of the logging simulator

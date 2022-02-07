@@ -230,6 +230,13 @@ test_that("selected", {
     expect_true(any(testinventory$DeathCause == "hollowfuel"))
   }
 
+
+  # Selected trees are harvestable trees
+  SelectedTrees <- testinventory %>%
+    dplyr::filter(Selected %in% "1")
+
+  expect_true(!any(SelectedTrees$LoggingStatus == "non-harvestable"))
+
   # # 2 points vectors with coordinates of the probed hollow trees: "HollowTreesPoints" and "EnergywoodTreesPoints"
 
 })

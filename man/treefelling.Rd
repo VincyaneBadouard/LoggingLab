@@ -113,74 +113,28 @@ Secondary windfall: all trees under the felled tree (timber or energy)
 will be considered dead.
 }
 \examples{
-data(Paracou6_2016)
-data(DTMParacou)
-data(PlotMask)
-data(SpeciesCriteria)
-data(CreekDistances)
-data(HarvestableAreaOutputsCable)
-data(MainTrails)
+data(SecondaryTrails)
+data(SecondaryTrails)
 
-scenariosparameters <- scenariosparameters(scenario = "manual",
- winching = "2",
- objective = 10,
- fuel = "0",
- diversification = TRUE,
- directionalfelling = "0")
+scenario <- "manual"
+winching <- "2"
+fuel <- "0"
+directionalfelling <- "0"
 
 
-inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
-volumeparameters = ForestZoneVolumeParametersTable)
-
-treeselectionoutputs <- suppressWarnings(treeselection(inventory,
-  topography = DTMParacou,
-  speciescriteria = SpeciesCriteria,
-  scenario = "manual", objective = scenariosparameters$objective,
-  fuel = scenariosparameters$fuel,
-  diversification = scenariosparameters$diversification,
-  winching = scenariosparameters$winching,
-  specieslax = FALSE, objectivelax = TRUE,
-  plotslope = HarvestableAreaOutputsCable$PlotSlope,
-  harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
-  advancedloggingparameters = loggingparameters()))
-
-secondtrails <- secondtrailsopening(
-  topography = DTMParacou,
-  plotmask = PlotMask,
-  plotslope = HarvestableAreaOutputsCable$PlotSlope,
-  harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
-  machinepolygons = HarvestableAreaOutputsCable$MachinePolygons,
-  treeselectionoutputs = treeselectionoutputs,
-  CostMatrix = list(list(list(Slope = 3, Cost = 3),
-  list(Slope = 5, Cost = 5),
-  list(Slope = 12, Cost = 20),
-  list(Slope = 22, Cost = 60),
-  list(Slope = 35, Cost = 1000),
-  list(Slope = Inf, Cost = Inf)),
-  list(list(CostType = "Initial", CostValue = 1000),
-  list(CostType = "Access", CostValue = Inf),
-  list(CostType = "BigTrees", CostValue = 500),
-  list(CostType = "Reserves", CostValue = 500),
-  list(CostType = "Futures", CostValue = 50),
-  list(CostType = "MainTrails", CostValue = 1E-4),
-  list(CostType = "SecondTrails", CostValue = 0.1))),
-  scenario = "manual",
-  winching = scenariosparameters$winching,
-  advancedloggingparameters = loggingparameters())
-
-NewInventory <- treefelling(secondtrails$inventory,
-  scenario = "manual", fuel = scenariosparameters$fuel,
-  winching = scenariosparameters$winching,
-  directionalfelling = scenariosparameters$directionalfelling,
-  maintrailsaccess = secondtrails$MainTrailsAccess,
-  scndtrail = secondtrails$SmoothedTrails,
+NewInventory <- treefelling(SecondaryTrails$inventory,
+  scenario = scenario, fuel = fuel,
+  winching = winching,
+  directionalfelling = directionalfelling,
+  maintrailsaccess = SecondaryTrails$MainTrailsAccess,
+  scndtrail = SecondaryTrails$SmoothedTrails,
   advancedloggingparameters = loggingparameters())
 
 NewInventory_crs <- NewInventory \%>\%
 getgeometry(TreePolygon) \%>\%
 sf::st_set_crs(sf::st_crs(MainTrails)) # set a crs
 
-Inventory_crs <- sf::st_as_sf(inventory, coords = c("Xutm", "Yutm")) # as sf
+Inventory_crs <- sf::st_as_sf(SecondaryTrails$inventory, coords = c("Xutm", "Yutm")) # as sf
 Inventory_crs <- sf::st_set_crs(Inventory_crs, sf::st_crs(MainTrails)) # set a crs
 
 Treefall <- sf::st_as_sf(
@@ -237,9 +191,9 @@ ggplot() +
   geom_sf(data = Selected, aes(colour = "Selected"), show.legend = "point") +
   geom_sf(data = ProbedHollow,
   aes(colour = "Probed hollow"), show.legend = "point") +
-  geom_sf(data = maintrailsaccess,
+  geom_sf(data = SecondaryTrails$maintrailsaccess,
   alpha = 0.5, fill = "black") +
-  geom_sf(data = ScndTrail,
+  geom_sf(data = SecondaryTrails$SmoothedTrails,
   alpha = 0.5, fill = "black") +
 
   scale_colour_manual(values = c("Non-harvestable" = "grey",
@@ -248,7 +202,7 @@ ggplot() +
   "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
   labs(color = "Logging status")
 
-
+# The trees under the fallen trees
 suppressWarnings(sf::st_intersection( # trees under the fallen trees
   getgeometry (NewInventory, TreePolygon),
   sf::st_as_sf(NewInventory, coords = c("Xutm", "Yutm"))

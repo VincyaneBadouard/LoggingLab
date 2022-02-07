@@ -34,19 +34,21 @@
 #' data(Paracou6_2016) # inventory
 #' data(DTMParacou) # topography
 #' data(MainTrails)  # MainTrails
-#' data(HarvestablePolygons) # HarvestablePolygons
+#' data(HarvestableAreaOutputsCable)
 #' data(SpeciesCriteria) # species exploitability criteria
 #' data(ForestZoneVolumeParametersTable) # volume parameters
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
 #'
-#' inventory <- suppressMessages(treeselection(inventory, objective = 20, scenario ="manual",
-#'  fuel = "2", diversification = TRUE, specieslax = FALSE,
-#'  harvestablepolygons = HarvestablePolygons, MainTrails = MainTrails,
-#'  objectivelax = TRUE, topography = DTMParacou, plotslope = PlotSlope,
-#'  speciescriteria = SpeciesCriteria,
-#'  advancedloggingparameters = loggingparameters())$inventory)
+#' inventory <- suppressMessages(treeselection(inventory,
+#' topography = DTMParacou,
+#' speciescriteria = SpeciesCriteria,
+#' scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
+#' winching = "0", specieslax = FALSE, objectivelax = TRUE,
+#' plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+#' advancedloggingparameters = loggingparameters())$inventory)
 #'
 #' timberharvestedvolume(inventory, scenario = "manual", fuel = "2",
 #' advancedloggingparameters = loggingparameters())
@@ -119,8 +121,8 @@ timberharvestedvolume <- function(
     if(nrow(HollowTable) > 0){
       # heathy + (1 -part for fuel) * hollow's volume)
       TimberLoggedVolume <- sum(NoHollowTimberLoggedVolume +
-                            (1-advancedloggingparameters$TreeHollowPartForFuel) *
-                              sum(HollowTable$TreeHarvestableVolume))
+                                  (1-advancedloggingparameters$TreeHollowPartForFuel) *
+                                  sum(HollowTable$TreeHarvestableVolume))
     }else if(nrow(HollowTable) == 0){
 
       TimberLoggedVolume <- NoHollowTimberLoggedVolume # no probed hollow trees

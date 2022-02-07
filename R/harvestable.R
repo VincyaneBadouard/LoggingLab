@@ -17,10 +17,11 @@
 #'  default (logical)
 #'
 #'@param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
+#'  (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)
 #'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
-#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
+#'  neighbourhood of 8 cells) (default:
+#'  \code{\link{HarvestableAreaOutputsCable}}) (RasterLayer)
 #'
 #'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -62,7 +63,7 @@
 #'criteria and are therefore considered 'non-harvestable'.
 #'
 #'@seealso  \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
-#'  \code{\link{DTMParacou}}, \code{\link{PlotSlope}},
+#'  \code{\link{DTMParacou}}, \code{\link{HarvestableAreaOutputsCable}},
 #'  \code{\link{loggingparameters}}
 #'
 #'@export
@@ -229,10 +230,12 @@ harvestable <- function(
    proj4string(SpatInventoryAll) <- crs(topography) # allocate the Paracou crs to our spatial inventory
 
 
-   PUSpatInventory<- st_as_sf(SpatInventoryAll) %>% mutate(PU = as.vector(st_contains(AccessPolygons %>% st_union(), st_as_sf(SpatInventoryAll),sparse = F))) %>% # check if trees are contained in PUs
+   PUSpatInventory<- st_as_sf(SpatInventoryAll) %>%
+     mutate(PU = as.vector(st_contains(AccessPolygons %>%
+                                         st_union(), st_as_sf(SpatInventoryAll),sparse = F))) %>% # check if trees are contained in PUs
      dplyr::select(idTree , PU)
 
-   inventory<- inventory %>% left_join(PUSpatInventory, by = "idTree")%>%
+   inventory <- inventory %>% left_join(PUSpatInventory, by = "idTree")%>%
      dplyr::select(-geometry)
 
   # Essences selection

@@ -8,7 +8,7 @@
 #' @param maintrails Main trails defined at the entire harvestable area (sf
 #'   linestring)
 #'
-#' @param postlogginginventory Input inventory with new columns:
+#' @param inventory Input inventory with new columns:
 #'- The tree felling success or fail("TreeFellingOrientationSuccess")
 #'- The crowns of the future/reserve trees (Polygon)
 #'- The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
@@ -16,26 +16,17 @@
 #'- The dead trees under felled trees (DeathCause = "treefall2nd")
 #'
 #' @param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
+#'  (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)
 #'
 #' @param machinepolygons Accessible for machine area of the inventoried plot
 #'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
-#'
-#' @param postlogginginventory Input inventory with new columns:
-#' - The tree felling success or fail("TreeFellingOrientationSuccess")
-#' - The crowns of the future/reserve trees (Polygon)
-#' - The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
-#'   according to the chosen scenario
-#' - The dead trees under felled trees (DeathCause = "treefall2nd")
 #'
 #' @param accesspts Random access point of maintrail for each PU
 #'   (sfc_MULTIPOLYGON)
 #'
 #' @param plotslope Slopes (in radians) of the inventoried plot (with a
-#'  neighbourhood of 8 cells) (default: \code{\link{PlotSlope}}) (RasterLayer)
-#'
-#' @param CostMatrix List of list defining conditional weight over binned slopes
-#'   values
+#'  neighbourhood of 8 cells) (default:
+#'  \code{\link{HarvestableAreaOutputsCable}}) (RasterLayer)
 #'
 #'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -56,17 +47,17 @@
 #'   \code{\link{loggingparameters}} (list)
 #'
 #' @return A list with :
-#' - RawSecondTrails : non-smoothed secondary trails
-#' - TrailsIdentity: information on sections of the trails with:
+#' - inventory: Updated inventory
+#' - SmoothedTrails: Smoothed main and secondary trails polygons
+#' (sfc_MULTIPOLYGON)
+#' - TrailsDensity: Second trails density (in m/ha)
+#' - TrailsIdentity: information on sections of the trails (matrix) with:
 #'     - LineID:
 #'     - LoggedTrees: idTree of trees reached by the trails
 #'     - TypeExpl: type of winching
-#' - SmoothedTrails: Smoothed main and secondary trails polygons
-#' (sfc_MULTIPOLYGON)
 #' - MainTrailsAccess : Random access point of maintrail for each PU
 #' (sfc_MULTIPOLYGON)
-#' - TrailsDensity: Second trails density (in m/ha)
-#' - inventory: Updated inventory
+#' - RawSecondTrails : non-smoothed secondary trails (SpatialLines)
 #' - CostRasterAgg: A cost Raster (RasterLayer)
 #'
 #' @importFrom sf st_cast st_as_sf st_intersection st_union st_sample st_join
@@ -92,109 +83,42 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(PlotMask)
-#' data(SpeciesCriteria)
-#' data(CreekDistances)
-#' data(MainTrails)
+#' data(HarvestableAreaOutputsCable)
+#' data(SecondaryTrails)
 #'
-#' scenariosparameters <- scenariosparameters(scenario = "manual",
-#'  winching = "2",
-#'  objective = 10,
-#'  fuel = "0",
-#'  diversification = TRUE,
-#'  directionalfelling = "0")
+#' scenario <- "manual"
+#' winching <- "2"
+#' fuel <- "0"
+#' directionalfelling <- "0"
 #'
-#'
-#' HarvestableAreaOutputs <- harvestableareadefinition(
-#'   topography = DTMParacou,
-#'   creekdistances = CreekDistances,
-#'   maintrails = MainTrails,
-#'   plotmask = PlotMask,
-#'   scenario = "manual",winching = scenariosparameters$winching,
-#'   advancedloggingparameters = loggingparameters()
-#'   )
-#'
-#'
-#' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
-#' volumeparameters = ForestZoneVolumeParametersTable)
-#'
-#' treeselectionoutputs <- suppressWarnings(treeselection(inventory,
-#' topography = DTMParacou,
-#' speciescriteria = SpeciesCriteria, objective = scenariosparameters$objective,
-#' scenario = "manual", fuel = scenariosparameters$fuel,
-#' diversification = scenariosparameters$diversification,
-#' winching = scenariosparameters$winching, specieslax = FALSE,
-#' objectivelax = TRUE, plotslope = HarvestableAreaOutputs$PlotSlope,
-#' harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
-#' advancedloggingparameters = loggingparameters()))
-#'
-#' secondtrails <- secondtrailsopening(
-#'   topography = DTMParacou,
-#'   plotmask = PlotMask,
-#'   maintrails = MainTrails,
-#'   plotslope = HarvestableAreaOutputs$PlotSlope,
-#'   harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
-#'   machinepolygons = HarvestableAreaOutputs$MachinePolygons,
-#'   treeselectionoutputs = treeselectionoutputs,
-#'   CostMatrix = list(list(list(Slope = 3, Cost = 3),
-#'   list(Slope = 5, Cost = 5),
-#'   list(Slope = 12, Cost = 20),
-#'   list(Slope = 22, Cost = 60),
-#'   list(Slope = 35, Cost = 1000),
-#'   list(Slope = Inf, Cost = Inf)),
-#'   list(list(CostType = "Initial", CostValue = 1000),
-#'   list(CostType = "Access", CostValue = Inf),
-#'   list(CostType = "BigTrees", CostValue = 500),
-#'   list(CostType = "Reserves", CostValue = 500),
-#'   list(CostType = "Futures", CostValue = 50),
-#'   list(CostType = "MainTrails", CostValue = 1E-4),
-#'   list(CostType = "SecondTrails", CostValue = 0.1))),
-#'   scenario = "manual",
-#'   winching = scenariosparameters$winching,
-#'   advancedloggingparameters = loggingparameters())
-#'
-#' PostLogInventory <- treefelling(secondtrails$inventory, scenario = "manual",
-#' fuel = scenariosparameters$fuel,
-#' winching = scenariosparameters$winching,
-#' directionalfelling = scenariosparameters$directionalfelling,
-#' maintrailsaccess = secondtrails$MainTrailsAccess,
-#' scndtrail = secondtrails$SmoothedTrails,
+#' PostLogInventory <- treefelling(SecondaryTrails$inventory, scenario = "manual",
+#' fuel = fuel,
+#' winching = winching,
+#' directionalfelling = directionalfelling,
+#' maintrailsaccess = SecondaryTrails$MainTrailsAccess,
+#' scndtrail = SecondaryTrails$SmoothedTrails,
 #' advancedloggingparameters = loggingparameters())
 #'
 #' ScdTrailsAdj <- secondtrailsadjusted(
 #'   topography = DTMParacou,
 #'   plotmask = PlotMask,
 #'   maintrails = MainTrails,
-#'   plotslope = HarvestableAreaOutputs$PlotSlope,
-#'   harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
-#'   machinepolygons = HarvestableAreaOutputs$MachinePolygons,
-#'   postlogginginventory = PostLogInventory,
-#'   accesspts = secondtrails$MainTrailsAccess,
-#'   CostMatrix = list(list(list(Slope = 3, Cost = 1),
-#'    list(Slope = 5, Cost = 3),
-#'    list(Slope = 12, Cost = 20),
-#'    list(Slope = 20, Cost = 60),
-#'    list(Slope = 35, Cost = 1000),
-#'    list(Slope = Inf, Cost = Inf)),
-#'    list(list(CostType = "Initial", CostValue = 1000),
-#'    list(CostType = "Access", CostValue = Inf),
-#'    list(CostType = "BigTrees", CostValue = 1000),
-#'    list(CostType = "Reserves", CostValue = 1000),
-#'    list(CostType = "Futures", CostValue = 500),
-#'    list(CostType = "MainTrails", CostValue = 1E-4),
-#'    list(CostType = "SecondTrails", CostValue = 1E-3))),
+#'   plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#'   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+#'   machinepolygons = HarvestableAreaOutputsCable$MachinePolygons,
+#'   inventory = PostLogInventory,
+#'   accesspts = SecondaryTrails$MainTrailsAccess,
 #'   scenario = "manual",
-#'   winching = scenariosparameters$winching,
+#'   winching = winching,
 #'   advancedloggingparameters = loggingparameters())
 #'
 #'
 #' library(ggplot2)
 #' library(sf)
 #'
-#' NewInventory <- treeselectionoutputs$inventory
+#' NewInventory <- PostLogInventory
 #' NewInventory_crs <- PostLogInventory %>%
 #' getgeometry(TreePolygon) %>%
 #' sf::st_set_crs(sf::st_crs(MainTrails)) # set a crs
@@ -237,9 +161,9 @@
 #'
 #' ggplot() +
 #'   # Harvestable zones
-#'   geom_sf(data = HarvestableAreaOutputs$HarvestablePolygons,
+#'   geom_sf(data = HarvestableAreaOutputsCable$HarvestablePolygons,
 #'         fill = "olivedrab", alpha = 0.1) +
-#'    geom_sf(data = HarvestableAreaOutputs$MachinePolygons,
+#'    geom_sf(data = HarvestableAreaOutputsCable$MachinePolygons,
 #'         fill = "olivedrab", alpha = 0.5) +
 #'   labs(alpha = "Harvestable") +
 #'   labs(title = "P6 zones exploitables") +
@@ -263,9 +187,9 @@
 #'     alpha = 0.5, fill = "red") +
 #'
 #'   # 2ndary trails
-#'     geom_sf(data = st_as_sf(secondtrails$SmoothedTrails),
+#'     geom_sf(data = st_as_sf(SecondaryTrails$SmoothedTrails),
 #'     aes(color = "Initial-trails"),alpha = 0.5) +
-#'     geom_sf(data = st_as_sf(secondtrails$RawSecondTrails),
+#'     geom_sf(data = st_as_sf(SecondaryTrails$RawSecondTrails),
 #'     color = "green",alpha = 0.5) +
 #'
 #'   # 2ndary trails adjusted
@@ -282,7 +206,6 @@
 #'    "Adjusted-trails" = "darkred"))
 #'
 #' ScdTrailsAdj$TrailsIdentity
-#'   }
 #'
 secondtrailsadjusted <- function(
   topography,
@@ -291,21 +214,8 @@ secondtrailsadjusted <- function(
   plotslope,
   harvestablepolygons,
   machinepolygons,
-  postlogginginventory,
+  inventory, # à mettre en 1er arg
   accesspts = NULL,
-  CostMatrix = list(list(list(Slope = 3, Cost = 3),
-                         list(Slope = 5, Cost = 5),
-                         list(Slope = 12, Cost = 20),
-                         list(Slope = 20, Cost = 60),
-                         list(Slope = 35, Cost = 1000),
-                         list(Slope = Inf, Cost = Inf)),
-                    list(list(CostType = "Initial", CostValue = 1000),
-                         list(CostType = "Access", CostValue = Inf),
-                         list(CostType = "BigTrees", CostValue = 1000),
-                         list(CostType = "Reserves", CostValue = 1000),
-                         list(CostType = "Futures", CostValue = 500),
-                         list(CostType = "MainTrails", CostValue = 1E-4),
-                         list(CostType = "SecondTrails", CostValue = 0.1))),
   scenario,
   winching = NULL,
   verbose = FALSE,
@@ -314,28 +224,29 @@ secondtrailsadjusted <- function(
 
   # Arguments check
 
-  if(!inherits(postlogginginventory, "data.frame"))
-    stop("The 'postlogginginventory'argument of the 'secondtrailsadjusted' function must be data.frame")
+  if(!inherits(inventory, "data.frame"))
+    stop("The 'inventory'argument of the 'secondtrailsadjusted' function must be data.frame")
 
   if(!inherits(plotmask, "SpatialPolygonsDataFrame"))
     stop("The 'plotmask' argument of the 'secondtrailsadjusted' function must be
          SpatialPolygonsDataFrame")
 
-  # if(!any(unlist(lapply(list(MainTrails), inherits, "sf" ))))
-  #   stop("The 'MainTrails' argument of the 'secondtrailsopening' function must be sf polygon")
+  # if(!any(unlist(lapply(list(maintrails), inherits, "sf" ))))
+  #   stop("The 'maintrails' argument of the 'secondtrailsopening' function must be sf polygon")
 
   if(!inherits(topography, "RasterLayer"))
     stop("The 'topography' argument of the 'secondtrailsadjusted' function must
          be RasterLayer")
 
-  options("rgdal_show_exportToProj4_warnings"="none")
+  # Options
+  options("rgdal_show_exportToProj4_warnings"="none") # to avoid gdal warnings
 
 
   # Global Variables
   slope <- x <- y <- Harvestable <- idTree <- ID <- type <- ptAcc  <- NULL
   EstCost <- n.overlaps <- TypeAcc <- IDpts <- Logged <- AccessPolygons <- NULL
   Selected <- DeathCause <- ID_Acc <- isEmpty <- gprlAcc <- cblAcc <- NULL
-  MainTrails <- LoggingStatus <- TreePolygon <- DBH <- ID.y <- IdPU <- NULL
+  LoggingStatus <- TreePolygon <- DBH <- ID.y <- IdPU <- NULL
   IdPU.y <- IdPU.x <- NULL
 
 
@@ -348,10 +259,11 @@ secondtrailsadjusted <- function(
 
   sf_use_s2(FALSE) # to deal with actual unresolved s2 issues in sf
 
+  CostMatrix <- advancedloggingparameters$CostMatrix
 
   factagg <-  floor(advancedloggingparameters$SlopeDistance/res(topography)[1])
 
-  # Transformation of the DTM so that the MainTrails are outside the plot
+  # Transformation of the DTM so that the maintrails are outside the plot
 
 
   DTMExtExtended <- raster::extend(topography, c(factagg,factagg)) # extend the extent
@@ -382,7 +294,7 @@ secondtrailsadjusted <- function(
       st_as_sf() %>% st_join(accesspts) %>%
       select(ID)
 
-    PartMainTrails <- st_intersection(st_geometry(MainTrails %>%
+    PartMainTrails <- st_intersection(st_geometry(maintrails %>%
                                                     st_buffer(dist = 2*factagg)),
                                       st_geometry(AccessMainTrails %>%
                                                     st_buffer(dist = -0.5*factagg))) %>%
@@ -405,8 +317,8 @@ secondtrailsadjusted <- function(
       mutate(ID = paste0("ID_",row_number()))
 
 
-    # Generate intersections between accessible area and MainTrails (ID = accessible area index)
-    PartMainTrails <- st_intersection(st_geometry(MainTrails %>%
+    # Generate intersections between accessible area and maintrails (ID = accessible area index)
+    PartMainTrails <- st_intersection(st_geometry(maintrails %>%
                                                     st_buffer(dist = 2*factagg)),
                                       st_geometry(AccessMainTrails %>%
                                                     st_buffer(dist = -0.5*factagg))) %>%
@@ -421,7 +333,7 @@ secondtrailsadjusted <- function(
       filter(duplicated(PartMainTrails$ID) == FALSE)
 
 
-    # Generate point access in the intersections between accessible area and MainTrails (ID = accessible area index)
+    # Generate point access in the intersections between accessible area and maintrails (ID = accessible area index)
     AccessPointAll <- PartMainTrails %>%
       st_sample(rep(1,dim(PartMainTrails)[1]) ,type = "random", by_polygon=TRUE) %>% as_Spatial() %>%
       st_as_sf() %>%
@@ -439,10 +351,10 @@ secondtrailsadjusted <- function(
 
 
 
-  # Generate spatial objects from postlogginginventory
+  # Generate spatial objects from inventory
 
   # Points vector with coordinates of the harvestable trees:
-  HarvestableTreesPoints <- postlogginginventory %>%
+  HarvestableTreesPoints <- inventory %>%
     filter(LoggingStatus == "harvestable"|LoggingStatus == "harvestableUp"|LoggingStatus == "harvestable2nd") # harvestableUp = DBH > MinFD individuals, harvestable2nd = eco2 individuals is specieslax
 
 
@@ -457,7 +369,7 @@ secondtrailsadjusted <- function(
   } else {HarvestableTreesPoints = st_point(x = c(NA_real_, NA_real_))} # empty
 
   # Points vector with coordinates of the selected trees:
-  SelectedTreesPoints <- postlogginginventory %>%
+  SelectedTreesPoints <- inventory %>%
     filter(Selected == "1")
 
   if (dim(SelectedTreesPoints)[1] != 0) {
@@ -469,22 +381,22 @@ secondtrailsadjusted <- function(
 
   } else {SelectedTreesPoints = st_point(x = c(NA_real_, NA_real_))} # empty
 
-  postlogginginventory_sf <- postlogginginventory %>%
+  inventory_sf <- inventory %>%
     filter(Selected == "1") %>% st_as_sf(coords = c("Xutm", "Yutm")) %>%
     sf::st_set_crs(sf::st_crs(topography)) %>% # set a crs
     mutate("CrownGeom" = st_point(x = c(NA_real_, NA_real_)) %>% st_as_text())
-  postlogginginventory_Tr <- postlogginginventory %>%  getgeometry(TreePolygon)
+  inventory_Tr <- inventory %>%  getgeometry(TreePolygon)
 
-  Trunks <- st_cast(postlogginginventory_Tr$TreePolygon , "POLYGON")[seq(1, by = 2, len = nrow(postlogginginventory))]
+  Trunks <- st_cast(inventory_Tr$TreePolygon , "POLYGON")[seq(1, by = 2, len = nrow(inventory))]
 
 
   Trunks <- Trunks %>% sf::st_set_crs(sf::st_crs(topography))
-  postlogginginventory_Tr <- postlogginginventory_sf
+  inventory_Tr <- inventory_sf
 
-  for (h in 1:nrow(postlogginginventory)) {
+  for (h in 1:nrow(inventory)) {
     if (!st_is_empty(Trunks[h])) {
-      postlogginginventory_Tr$CrownGeom[h] <- st_difference(Trunks[h],postlogginginventory_sf[h,] %>%
-                                                          st_buffer(dist = (postlogginginventory_sf$TrunkHeight[h]-0.05))) %>%
+      inventory_Tr$CrownGeom[h] <- st_difference(Trunks[h],inventory_sf[h,] %>%
+                                                              st_buffer(dist = (inventory_sf$TrunkHeight[h]-0.05))) %>%
         st_centroid() %>% st_union()%>% st_as_text()
     }
 
@@ -496,14 +408,14 @@ secondtrailsadjusted <- function(
 
 
   # Points vector with coordinates of the selected trees:
-  SelectedCrownsPoints <- st_as_sfc(postlogginginventory_Tr$CrownGeom) %>%
+  SelectedCrownsPoints <- st_as_sfc(inventory_Tr$CrownGeom) %>%
     sf::st_set_crs(sf::st_crs(topography)) %>%  st_as_sf() %>% st_join(Trunks)
 
   SelectedCrownsPoints <- SelectedCrownsPoints %>% filter(!st_is_empty(SelectedCrownsPoints))
 
 
   # Points vector with coordinates of the future trees:
-  FutureTreesPoints <- postlogginginventory %>%
+  FutureTreesPoints <- inventory %>%
     filter(LoggingStatus == "future")
 
   if (dim(FutureTreesPoints)[1] != 0) {
@@ -516,7 +428,7 @@ secondtrailsadjusted <- function(
   } else {FutureTreesPoints = st_point(x = c(NA_real_, NA_real_))} # empty
 
   # Points vector with coordinates of the reserve trees:
-  ReserveTreesPoints <- postlogginginventory %>%
+  ReserveTreesPoints <- inventory %>%
     filter(LoggingStatus == "reserve")
 
   if (dim(ReserveTreesPoints)[1] != 0) {
@@ -529,7 +441,7 @@ secondtrailsadjusted <- function(
   } else {ReserveTreesPoints = st_point(x = c(NA_real_, NA_real_))} # empty
 
   # Points vector with coordinates of the big trees (DBH >= 50 cm):
-  BigTreesPoints <- postlogginginventory %>%
+  BigTreesPoints <- inventory %>%
     filter(DBH >= advancedloggingparameters$BigTrees) #  & (Selected != "1" & LoggingStatus != "harvestable") & LoggingStatus != "harvestableUp" & LoggingStatus != "harvestable2nd"
 
   if (dim(BigTreesPoints)[1] != 0) {
@@ -543,7 +455,7 @@ secondtrailsadjusted <- function(
 
   } else {BigTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 
-  treeselectionoutputs  <- list(inventory = postlogginginventory ,
+  treeselectionoutputs  <- list(inventory = inventory ,
                                 HarvestableTreesPoints = HarvestableTreesPoints,
                                 SelectedTreesPoints = SelectedTreesPoints,
                                 SelectedCrownsPoints = SelectedCrownsPoints,
@@ -2036,20 +1948,20 @@ secondtrailsadjusted <- function(
   #
 
   if (WinchingInit == "2") {
-    secondtrails <- list("RawSecondTrails" = paths,
-                         "TrailsIdentity" = lines,        # "LineID","LoggedTrees", "TypeExpl"
+    secondtrails <- list("inventory" =  inventory,
                          "SmoothedTrails" =  SmoothedTrails,
-                         "MainTrailsAccess" = MainTrailsAccess,
                          "TrailsDensity" =  TrailsDensity,
-                         "inventory" =  inventory,
+                         "TrailsIdentity" = lines,        # "LineID","LoggedTrees", "TypeExpl"
+                         "MainTrailsAccess" = MainTrailsAccess,
+                         "RawSecondTrails" = paths,
                          "CostRasterAgg" = list("CostRasterMean" = CostRasterMean,"CostRasterMeanGrpl" = CostRasterMeanGrpl))
   }else{
-    secondtrails <- list("RawSecondTrails" = paths,
-                         "TrailsIdentity" = lines,        # "LineID","LoggedTrees", "TypeExpl"
+    secondtrails <- list("inventory" =  inventory,
                          "SmoothedTrails" =  SmoothedTrails,
-                         "MainTrailsAccess" = MainTrailsAccess,
                          "TrailsDensity" =  TrailsDensity,
-                         "inventory" =  inventory,
+                         "TrailsIdentity" = lines,        # "LineID","LoggedTrees", "TypeExpl"
+                         "MainTrailsAccess" = MainTrailsAccess,
+                         "RawSecondTrails" = paths,
                          "CostRasterAgg" = list("CostRasterMean" = CostRasterMean,"CostRasterMeanGrpl" = NULL))
   }
 

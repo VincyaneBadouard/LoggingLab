@@ -25,7 +25,7 @@ inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
 
 dat <- inventory \%>\%
-  filter(CrownDiameter == max(CrownDiameter))
+  dplyr::filter(CrownDiameter == max(CrownDiameter))
 
 Crown <- treefromthesky(dat)
 

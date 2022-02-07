@@ -50,7 +50,6 @@
 #' @importFrom magrittr %>%
 #'
 #' @examples
-#' \dontrun{
 #' data(PlotMask)
 #' data(DTMParacou)
 #' data(CreekDistances)
@@ -78,7 +77,6 @@
 #'   scale_colour_manual(values = c("Harvestable area" = "olivedrab"))
 #'
 #' HarvestableAreaOutputs$PlotSlope
-#' }
 #'
 harvestableareadefinition <- function(
   topography,
@@ -112,7 +110,8 @@ harvestableareadefinition <- function(
   if(!inherits(maintrails$geometry,"sfc_LINESTRING"))
     stop("The 'maintrails' arguments of the 'harvestableareadefinition' function must be a sfc_LINESTRING object")
 
-  options("rgdal_show_exportToProj4_warnings"="none")
+  # Options
+  options("rgdal_show_exportToProj4_warnings"="none") # to avoid gdal warnings
 
   # Variables
   PlotSlope <- PlotSlopePoint <- CreekVHeightPlotPoint <- PlotTib <- CreekHDist <- NULL

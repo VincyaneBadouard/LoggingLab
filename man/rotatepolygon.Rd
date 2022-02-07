@@ -24,7 +24,6 @@ https://github.com/jeffreyevans/spatialEco/blob/master/R/rotate.polygon.R
 \examples{
 data(Paracou6_2016)
 data(DTMParacou)
-data(PlotSlope)
 data(SpeciesCriteria)
 data(MainTrails)
 
@@ -32,13 +31,13 @@ inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
 
 inventory <- suppressMessages(treeselection(inventory,
- topography = DTMParacou,
- objective = 20, scenario ="manual", fuel = "2", diversification = TRUE,
- specieslax = FALSE, objectivelax = TRUE,
- speciescriteria = SpeciesCriteria,
- MainTrails = MainTrails, plotslope = PlotSlope,
- harvestablepolygons = HarvestablePolygons,
- advancedloggingparameters = loggingparameters())$inventory)
+topography = DTMParacou,
+speciescriteria = SpeciesCriteria,
+scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
+winching = "0", specieslax = FALSE, objectivelax = TRUE,
+plotslope = HarvestableAreaOutputsCable$PlotSlope,
+harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+advancedloggingparameters = loggingparameters())$inventory)
 
 inventory <- inventory \%>\%
      dplyr::filter(Selected == "1") \%>\%
