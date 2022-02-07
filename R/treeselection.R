@@ -254,6 +254,8 @@ treeselection <- function(
     stop("If you choose the 'manual' mode, you must fill in the arguments
          'objective', 'fuel' , 'winching' and 'diversification'")
 
+  options("rgdal_show_exportToProj4_warnings"="none")
+
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <-  NULL
   Condition <- DBH <- NULL

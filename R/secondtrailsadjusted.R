@@ -328,6 +328,7 @@ secondtrailsadjusted <- function(
     stop("The 'topography' argument of the 'secondtrailsadjusted' function must
          be RasterLayer")
 
+  options("rgdal_show_exportToProj4_warnings"="none")
 
 
   # Global Variables

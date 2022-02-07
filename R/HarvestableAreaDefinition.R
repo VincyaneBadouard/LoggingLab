@@ -112,6 +112,7 @@ harvestableareadefinition <- function(
   if(!inherits(maintrails$geometry,"sfc_LINESTRING"))
     stop("The 'maintrails' arguments of the 'harvestableareadefinition' function must be a sfc_LINESTRING object")
 
+  options("rgdal_show_exportToProj4_warnings"="none")
 
   # Variables
   PlotSlope <- PlotSlopePoint <- CreekVHeightPlotPoint <- PlotTib <- CreekHDist <- NULL
