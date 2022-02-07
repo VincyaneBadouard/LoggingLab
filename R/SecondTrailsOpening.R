@@ -247,6 +247,7 @@ secondtrailsopening <- function(
   advancedloggingparameters = loggingparameters()
 ){
 
+
   # Arguments check
 
   if(!inherits(treeselectionoutputs, "list"))
@@ -269,13 +270,13 @@ secondtrailsopening <- function(
          tree.")
   }
 
+  options("rgdal_show_exportToProj4_warnings"="none")
+
   # Global Variables
   slope <- x <- y <- Harvestable <- idTree <- ID <- type <- ptAcc  <- NULL
   EstCost <- n.overlaps <- TypeAcc <- IDpts <- Logged <- AccessPolygons <- NULL
   Selected <- DeathCause <- ID_Acc <- isEmpty <- gprlAcc <- cblAcc <- NULL
   ID.y <- IdPU <- IdPU.y <- IdPU.x <- NULL
-
-
 
   #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, winching = winching)

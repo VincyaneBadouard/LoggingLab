@@ -210,6 +210,7 @@ loggingsimulation1 <- function(
   if(!inherits(advancedloggingparameters, "list"))
     stop("The 'advancedloggingparameters' argument of the 'loggingsimulation' function must be a list")
 
+  options("rgdal_show_exportToProj4_warnings"="none")
 
   #### Global variables ####
   DeathCause <- AGB <- ParamCrownDiameterAllometry <- NULL

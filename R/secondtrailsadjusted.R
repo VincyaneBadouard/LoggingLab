@@ -134,6 +134,7 @@
 #' secondtrails <- secondtrailsopening(
 #'   topography = DTMParacou,
 #'   plotmask = PlotMask,
+#'   maintrails = MainTrails,
 #'   plotslope = HarvestableAreaOutputs$PlotSlope,
 #'   harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
 #'   machinepolygons = HarvestableAreaOutputs$MachinePolygons,
@@ -166,6 +167,7 @@
 #' ScdTrailsAdj <- secondtrailsadjusted(
 #'   topography = DTMParacou,
 #'   plotmask = PlotMask,
+#'   maintrails = MainTrails,
 #'   plotslope = HarvestableAreaOutputs$PlotSlope,
 #'   harvestablepolygons = HarvestableAreaOutputs$HarvestablePolygons,
 #'   machinepolygons = HarvestableAreaOutputs$MachinePolygons,
@@ -326,6 +328,7 @@ secondtrailsadjusted <- function(
     stop("The 'topography' argument of the 'secondtrailsadjusted' function must
          be RasterLayer")
 
+  options("rgdal_show_exportToProj4_warnings"="none")
 
 
   # Global Variables
