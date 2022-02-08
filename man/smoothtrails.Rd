@@ -40,4 +40,5 @@ SecondTrailsSmth <- smoothtrails(paths = SecondaryTrails$RawSecondTrails,
                                  plotmask = PlotMask,
                                    )
         }
+
 }

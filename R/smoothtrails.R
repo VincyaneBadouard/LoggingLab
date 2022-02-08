@@ -30,6 +30,7 @@
 #'                                  plotmask = PlotMask,
 #'                                    )
 #'         }
+#'
 smoothtrails <- function(
   paths,
   plotmask,
