@@ -14,9 +14,9 @@
 #' @importFrom stats median quantile sd
 #'
 #' @examples
-#' data(LoggingSimulationOutputs) # Outputs of one logging simulation (2 iterations and 2 cores)
+#' data(LoggingSimulationOutputs_iter) # Outputs of one logging simulation (2 iterations and 2 cores)
 #'
-#' loggingsummary(LoggingSimulationOutputs)
+#' loggingsummary(LoggingSimulationOutputs_iter)
 #'
 loggingsummary <- function(x
 ){
@@ -45,7 +45,7 @@ loggingsummary <- function(x
   # Numeric values:
 
   var <- c("HarvestableArea", "VO", "HVinit", "TimberLoggedVolume", "NoHollowTimberLoggedVolume", "FuelVolume",
-           "DamageVolume", "LostBiomass")
+           "DamageVolume", "LostBiomass", "TrailsDensity", "AdjustTrailsDensity")
 
   statsvars <- function(v, x){
 
@@ -102,16 +102,23 @@ loggingsummary <- function(x
 
   cat('Damages volume (m3):\n')
   print(unlist(RsltStats[7]))
-  print(set_units(unlist(RsltStats[5])/PlotArea, m3/ha)) # only damages (without purge and hollow trees) (m3)
+  print(set_units(unlist(RsltStats[7])/PlotArea, m3/ha)) # only damages (without purge and hollow trees) (m3)
 
   cat('\n') # skip a line
 
   cat('Lost biomass (ton):\n')
   print(unlist(RsltStats[8])) # Lost biomass (ton)
 
-  # cat('\n') # skip a line
+  cat('\n') # skip a line
 
-  # cat('Trails density ():\n'), x$TrailsDensity, 'm/m^2\n') # Trails density (m/m^2)
+  cat('Trails density (m/m2):\n')
+  print(unlist(RsltStats[9])) # Trails density (m/m2)
+
+  cat('\n') # skip a line
+
+  cat('Adjusted trails density (m/m2):\n')
+  print(unlist(RsltStats[10])) # Adjusted trails density (m/m2)
+
 
   # The after simulation inventory (data.frame)
   # print(x$inventory)

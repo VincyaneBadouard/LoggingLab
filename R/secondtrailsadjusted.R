@@ -21,8 +21,8 @@
 #' @param machinepolygons Accessible for machine area of the inventoried plot
 #'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
 #'
-#' @param accesspts Random access point of maintrail for each PU
-#'   (sfc_MULTIPOLYGON)
+#' @param maintrailsaccess Access point of maintrail for each PU (prospection
+#'    unit) (sf or sfc)
 #'
 #' @param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default:
@@ -66,6 +66,7 @@
 #'   st_as_sfc
 #' @importFrom dplyr mutate row_number select as_tibble left_join if_else filter
 #'   arrange desc
+#' @importFrom tidyr unnest
 #' @importFrom raster raster extend extent focal res crs mask crop rasterize
 #'   rasterToPoints rasterToPolygons rasterFromXYZ aggregate values ncell
 #'   values<-
@@ -102,14 +103,14 @@
 #' advancedloggingparameters = loggingparameters())
 #'
 #' ScdTrailsAdj <- secondtrailsadjusted(
+#'   inventory = PostLogInventory,
 #'   topography = DTMParacou,
 #'   plotmask = PlotMask,
 #'   maintrails = MainTrails,
 #'   plotslope = HarvestableAreaOutputsCable$PlotSlope,
 #'   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #'   machinepolygons = HarvestableAreaOutputsCable$MachinePolygons,
-#'   inventory = PostLogInventory,
-#'   accesspts = SecondaryTrails$MainTrailsAccess,
+#'   maintrailsaccess = SecondaryTrails$MainTrailsAccess,
 #'   scenario = "manual",
 #'   winching = winching,
 #'   advancedloggingparameters = loggingparameters())
@@ -208,14 +209,14 @@
 #' ScdTrailsAdj$TrailsIdentity
 #'
 secondtrailsadjusted <- function(
+  inventory,
   topography,
   plotmask,
   maintrails,
   plotslope,
   harvestablepolygons,
   machinepolygons,
-  inventory, # à mettre en 1er arg
-  accesspts = NULL,
+  maintrailsaccess = NULL,
   scenario,
   winching = NULL,
   verbose = FALSE,
@@ -238,6 +239,10 @@ secondtrailsadjusted <- function(
     stop("The 'topography' argument of the 'secondtrailsadjusted' function must
          be RasterLayer")
 
+  if(!inherits(maintrailsaccess, c("sf", "sfc")))
+    stop("The 'maintrailsaccess' argument of the 'secondtrailsadjusted' function must be sf or sfc")
+
+
   # Options
   options("rgdal_show_exportToProj4_warnings"="none") # to avoid gdal warnings
 
@@ -247,7 +252,7 @@ secondtrailsadjusted <- function(
   EstCost <- n.overlaps <- TypeAcc <- IDpts <- Logged <- AccessPolygons <- NULL
   Selected <- DeathCause <- ID_Acc <- isEmpty <- gprlAcc <- cblAcc <- NULL
   LoggingStatus <- TreePolygon <- DBH <- ID.y <- IdPU <- NULL
-  IdPU.y <- IdPU.x <- NULL
+  IdPU.y <- IdPU.x <- LineID <- LoggedTrees <- TypeExpl <- NULL
 
 
   #### Redefinition of the parameters according to the chosen scenario ####
@@ -288,10 +293,10 @@ secondtrailsadjusted <- function(
 
   # Generate accessible area from HarvestablePolygones and winching == "0"
 
-  if (!is.null(accesspts)) {
+  if (!is.null(maintrailsaccess)) {
     AccessMainTrails <- AccessPolygons  %>% st_union() %>%
       st_cast("POLYGON") %>%
-      st_as_sf() %>% st_join(accesspts) %>%
+      st_as_sf() %>% st_join(maintrailsaccess) %>%
       select(ID)
 
     PartMainTrails <- st_intersection(st_geometry(maintrails %>%
@@ -308,7 +313,7 @@ secondtrailsadjusted <- function(
     PartMainTrails <- PartMainTrails %>% arrange(desc(st_area(PartMainTrails))) %>%
       filter(duplicated(PartMainTrails$ID) == FALSE)
 
-    AccessPointAll <- accesspts
+    AccessPointAll <- maintrailsaccess
   }else{
 
     AccessMainTrails <- AccessPolygons  %>% st_union() %>%
@@ -1945,7 +1950,21 @@ secondtrailsadjusted <- function(
       dplyr::select(-DeadTrees)
   }
 
-  #
+  # WinchingMachine info in the inventory
+  TrailsIdentity_df <- as.data.frame(lines) %>%
+    unnest(cols = c(LineID, LoggedTrees, TypeExpl, IdPU))
+
+
+  TrailsIdentity_df <- TrailsIdentity_df %>%
+    select(LoggedTrees, TypeExpl) %>%
+    rename(idTree = LoggedTrees) %>%
+    rename(WinchingMachineAdjust = TypeExpl) %>%
+    unique()
+
+  inventory <- inventory %>%
+    left_join(TrailsIdentity_df, by = "idTree")
+
+  # OUTPUTS
 
   if (WinchingInit == "2") {
     secondtrails <- list("inventory" =  inventory,

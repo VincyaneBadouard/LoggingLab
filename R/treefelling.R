@@ -36,7 +36,8 @@
 #' If the avoidance of future/reserve trees could not be performed,
 #' a message is returned.
 #'
-#'@param maintrailsaccess Main trails access points (sf)
+#' @param maintrailsaccess Access point of maintrail for each PU (prospection
+#'    unit) (sf or sfc)
 #'@param scndtrail main and second trails (sf)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
@@ -91,13 +92,13 @@
 #'@importFrom stats runif
 #'
 #' @examples
-#' data(SecondaryTrails)
+#' set.seed(1)
 #' data(SecondaryTrails)
 #'
 #' scenario <- "manual"
 #' winching <- "2"
-#' fuel <- "0"
-#' directionalfelling <- "0"
+#' fuel <- "2"
+#' directionalfelling <- "2"
 #'
 #'
 #' NewInventory <- treefelling(SecondaryTrails$inventory,
@@ -976,13 +977,11 @@ felling1tree <- function(
   #### Grapple + cable without fuel wood exploitation (always foot towards the trail) ####
   if(winching == "2" & fuel == "0"){
 
-    TrailDist <- st_distance(Foot, TrailPt) # distance between the tree foot and the Trail closest point
-
-    # ADD SLOPE CRITERIA !!!  TrailsIdentity$LoggedTrees TrailsIdentity$TypeExpl == "grpl"
+    # TrailDist <- st_distance(Foot, TrailPt) # distance between the tree foot and the Trail closest point
 
     if(dat$TreeFellingOrientationSuccess == "1"){
 
-      if(TrailDist <= advancedloggingparameters$GrappleLength){ # <= 6m (= GRAPPLE length) -> winching by grapple
+      if(dat$WinchingMachine %in% "Grpl"){ # accessible by grapple (slope and length) -> winching by grapple
 
         if(directionalfelling == "0"){
           Aangle <- as.numeric(sample(Aangle, size = 1))
@@ -1080,13 +1079,11 @@ felling1tree <- function(
   #### Fuel wood exploitation (including to avoid damage to future and reserve trees + trail orientation (if cable)) ####
   if(fuel =="1" || fuel =="2"){
 
-    TrailDist <- st_distance(Foot, TrailPt) # distance between the tree foot and the Trail closest point
-
-    # ADD SLOPE CRITERIA !!!
+    # TrailDist <- st_distance(Foot, TrailPt) # distance between the tree foot and the Trail closest point
 
     if(dat$TreeFellingOrientationSuccess == "1"){
 
-      if(TrailDist <= advancedloggingparameters$GrappleLength){ # <= 6m (= GRAPPLE length) -> winching by grapple -> crown to trail
+      if(dat$WinchingMachine %in% "Grpl"){ # accessible by grapple (slope and length) -> winching by grapple
 
         # No fut/res tree avoidance
         if(directionalfelling == "0"){

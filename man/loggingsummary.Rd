@@ -22,8 +22,8 @@ outgoing figures
 Summary of the outputs of the loggingsimulation function
 }
 \examples{
-data(LoggingSimulationOutputs) # Outputs of one logging simulation (2 iterations and 2 cores)
+data(LoggingSimulationOutputs_iter) # Outputs of one logging simulation (2 iterations and 2 cores)
 
-loggingsummary(LoggingSimulationOutputs)
+loggingsummary(LoggingSimulationOutputs_iter)
 
 }

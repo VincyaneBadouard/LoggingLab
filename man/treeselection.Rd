@@ -141,6 +141,7 @@ or be abandoned ('objectivelax')
 \item species of 1st economic rank
 \item DBH between 35cm (default) ('FutureTreesMinDiameter') and the species MinFD
 or UpMinFD if it has been raised for its species.
+\item in the prospection units (harvestable areas)
 }
 
 \strong{Reserve} trees are randomly chosen among future trees so that

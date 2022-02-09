@@ -1,4 +1,4 @@
-#' Logging Simulation Outputs
+#' Logging Simulation Outputs with iteration and parallelization
 #'
 #' Outputs of the logging simulation on the plot 6 of Paracou (French Guiana)
 #'
@@ -12,7 +12,9 @@
 #' specieslax : FALSE
 #' objectivelax : TRUE
 #'
+#' iter = 2
+#' cores = 2
 #'
 #' @format list
 #'
-"LoggingSimulationOutputs"
+"LoggingSimulationOutputs_iter"

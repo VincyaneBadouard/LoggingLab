@@ -262,15 +262,29 @@ with DBH in cm
 
 # Harvest in 1 function
 ```{r}
-# Rslt <- loggingsimulation(Paracou6_2016,
-#                           topography = DTMParacou, verticalcreekheight  = DTMParacou,
-#                           speciescriteria = SpeciesCriteria,
-#                           volumeparameters = ForestZoneVolumeParametersTable,
-#                           scenario = "manual", objective = 20,
-#                           fuel = "2", diversification = TRUE, winching = "2",
-#                           directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
-#                           crowndiameterparameters = ParamCrownDiameterAllometry,
-#                           advancedloggingparameters = loggingparameters(), iter = 1, cores = 1)
+Rslt <- loggingsimulation1(Paracou6_2016,
+                           plotmask = PlotMask, topography = DTMParacou,
+                           creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+                           volumeparameters = ForestZoneVolumeParametersTable,
+                           scenario = "manual", objective = 20,
+                           fuel = "2", winching = "2", directionalfelling = "2", 
+                           diversification = TRUE, specieslax = FALSE, objectivelax = TRUE,
+                           crowndiameterparameters = ParamCrownDiameterAllometry,
+                           advancedloggingparameters = loggingparameters())
+
+```
+With the ability to iterate and parallelize:
+```{r}
+Rslt_iter <- loggingsimulation(Paracou6_2016,
+                               plotmask = PlotMask, topography = DTMParacou,
+                               creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+                               volumeparameters = ForestZoneVolumeParametersTable,
+                               scenario = "manual", objective = 20,
+                               fuel = "2", winching = "2", directionalfelling = "2", 
+                               diversification = TRUE, specieslax = FALSE, objectivelax = TRUE,
+                               crowndiameterparameters = ParamCrownDiameterAllometry,
+                               advancedloggingparameters = loggingparameters(),
+                               iter = 2, cores = 2)
 ```
 The harvestable volume may change from one simulation to another because the identification of defect trees contains a random component.
 ```{r}
@@ -356,6 +370,7 @@ The harvestable volume may change from one simulation to another because the ide
 ## Results summary
 ```{r}
 # loggingsummary1(Rslt)
+# loggingsummary(Rslt_iter)
 ```
 
 # Decomposed harvesting
@@ -437,13 +452,16 @@ species in the aggregative species case (\code{\link{SpeciesCriteria}}, 'Aggrega
 - on slopes < 22% ('TreeMaxSlope'in \code{\link{loggingparameters}})
 - off the main trails.
 
-If the harvestable volume is higher than the objective volume, the MinFD of the 1st economic rank species is first increased, then that of the other species (if diversification), if this is not enough. The volume to be harvested is adjusted if necessary by taking the trees in decreasing order of volume, until the objective volume is reached.
+If the harvestable volume is higher than the objective volume, and that diversification was not chosen, MinFD of the 1st economic rank species only is increased.
+If the diversification is allowed, MinFD of 1st and 2nd economic level species is increased.
+Then, the trees to be harvested are chosen in decreasing order of volume, until the objective volume is reached.
 
 If the harvestable volume is too low, diversification can be applied if it was not already applied ('specieslax') (trees of all commercial ranks are selected in decreasing order of volume until the objective volume is reached), or harvesting can continue despite an unreached objective volume, or be abandoned ('objectivelax')
 
 **Future** trees will be:
 - species of 1st economic rank
-- DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD or UpMinFD if it has been raised for its species. 
+- DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD or UpMinFD if it has been raised for its species.
+- in the prospection units (harvestable areas)
 
 **Reserve** trees will be:
 - future trees
@@ -530,25 +548,43 @@ Damage :
 - on the edge of the trail: neglected.
 
 ```{r}
-pol1 <- list(matrix(c(286503, 582925,
-                      286503, 583240,
-                      286507, 583240,
-                      286507, 582925,
-                      286503, 582925) # the return
-                    ,ncol=2, byrow=TRUE))
-pol2 <- list(matrix(c(286650, 582925,
-                      286650, 583240,
-                      286654, 583240,
-                      286654, 582925,
-                      286650, 582925) # the return
-                    ,ncol=2, byrow=TRUE))
+ScndTrailOutputs <- secondtrailsopening(topography = DTMParacou,
+                                        plotmask = PlotMask,
+                                        maintrails = MainTrails,
+                                        plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                        harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+                                        machinepolygons = HarvestableAreaOutputsCable$MachinePolygons,
+                                        treeselectionoutputs = treeselectionoutputs,
+                                        scenario = "manual",
+                                        winching = "2",
+                                        advancedloggingparameters = loggingparameters())
 
-PolList = list(pol1,pol2) #list of lists of numeric matrices
-ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
-ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails))
+inventory <- ScndTrailOutputs$inventory
+SmoothedTrails <- ScndTrailOutputs$SmoothedTrails
+MainTrailsAccess <- ScndTrailOutputs$MainTrailsAccess
+TrailsDensity <- ScndTrailOutputs$TrailsDensity
+TrailsIdentity <- ScndTrailOutputs$TrailsIdentity
+RawSecondTrails <- ScndTrailOutputs$RawSecondTrails
+CostRasterAgg <- ScndTrailOutputs$CostRasterAgg
+
+
+# pol1 <- list(matrix(c(286503, 582925,
+#                       286503, 583240,
+#                       286507, 583240,
+#                       286507, 582925,
+#                       286503, 582925) # the return
+#                     ,ncol=2, byrow=TRUE))
+# pol2 <- list(matrix(c(286650, 582925,
+#                       286650, 583240,
+#                       286654, 583240,
+#                       286654, 582925,
+#                       286650, 582925) # the return
+#                     ,ncol=2, byrow=TRUE))
+# 
+# PolList = list(pol1,pol2) #list of lists of numeric matrices
+# ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
+# ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails))
 ```
-
-
 ## Tree felling
 
 The felling of the tree creates a tree (including crown) on the ground, with dimensions calculated with specific allometries ('advancedloggingparameters').
@@ -578,11 +614,32 @@ Secondary windfall: *all trees under the felled tree (timber or energy) will be 
 
 ### In 1 function
 ```{r}
-inventory <- treefelling(inventory, scenario = "manual", fuel = "0",
-                         winching = "1", directionalfelling = "2",
-                         maintrailsaccess = ScndTrail,
-                         scndtrail = ScndTrail,
+inventory <- treefelling(inventory, scenario = "manual", fuel = "2",
+                         winching = "2", directionalfelling = "2",
+                         maintrailsaccess = MainTrailsAccess,
+                         scndtrail = SmoothedTrails,
                          advancedloggingparameters = loggingparameters())
+```
+
+## Adjusted secondary trails layout (for fuel wood harvesting only (fuel = "1" or "2"))
+```{r}
+ScndTrailAdjustOutputs <- secondtrailsadjusted(inventory = inventory,
+                                               topography = DTMParacou,
+                                               plotmask = PlotMask,
+                                               maintrails = MainTrails,
+                                               plotslope = PlotSlope,
+                                               harvestablepolygons = HarvestablePolygons,
+                                               machinepolygons = MachinePolygons,
+                                               accesspts = MainTrailsAccess,
+                                               scenario = "manual",
+                                               winching = "2",
+                                               advancedloggingparameters = loggingparameters())
+
+inventory <- ScndTrailAdjustOutputs$inventory
+AdjustSmoothedTrails <- ScndTrailAdjustOutputs$SmoothedTrails
+AdjustTrailsDensity <- ScndTrailAdjustOutputs$TrailsDensity
+AdjustTrailsIdentity <- ScndTrailAdjustOutputs$TrailsIdentity
+AdjustRawSecondTrails <- ScndTrailAdjustOutputs$RawSecondTrails
 ```
 
 ## Quantify the volumes achieved

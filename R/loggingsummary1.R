@@ -11,27 +11,9 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' data(Paracou6_2016) # inventory
-#' data(PlotMask) # inventoried plot mask
-#' data(DTMParacou) # topography
-#' data(CreekDistances) # relative elevation
-#' data(SpeciesCriteria) # species exploitability criteria
-#' data(ForestZoneVolumeParametersTable) # volume parameters
-#' data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
+#' data(LoggingSimulationOutputs) # Outputs of one logging simulation
 #'
-#' Rslt <- suppressMessages(loggingsimulation1(
-#'  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-#'  creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
-#'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
-#'  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
-#'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
-#'  crowndiameterparameters = ParamCrownDiameterAllometry,
-#'  advancedloggingparameters = loggingparameters())
-#'  )
-#'
-#' loggingsummary1(Rslt)
-#' }
+#' loggingsummary1(LoggingSimulationOutputs)
 #'
 loggingsummary1 <- function(x
 ){
@@ -76,9 +58,12 @@ loggingsummary1 <- function(x
 
   cat('Lost biomass :', round(x$LostBiomass, digits = 1), 'ton\n') # Total lost biomass (ton)
 
-  # cat('Trails density :', x$TrailsDensity, 'm/m^2\n') # Trails density (m/m^2)
+  cat('Trails density :', round(x$TrailsDensity, digits = 1), 'm/m2\n') # Trails density (m/m^2) (Preliminary if fuel)
+
+  cat('Adjusted trails density :', round(x$AdjustTrailsDensity, digits = 1), 'm/m2\n') # Adjusted rails density (m/m^2) (for fuel)
+
 
   # The after simulation inventory (data.frame)
-  print(x$inventory)
+  # print(x$inventory)
 
 }

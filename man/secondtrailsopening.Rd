@@ -79,7 +79,7 @@ A list with :
 (sfc_MULTIPOLYGON)
 }
 \item MainTrailsAccess : Random access point of maintrail for each PU
-(sfc_MULTIPOLYGON)
+(sf, sfc_MULTIPOLYGON)
 \item RawSecondTrails : non-smoothed secondary trails (SpatialLines)
 \item CostRasterAgg: A cost Raster (RasterLayer)
 }
@@ -88,6 +88,7 @@ A list with :
 Second trails opening
 }
 \examples{
+set.seed(1)
 data(Paracou6_2016)
 data(DTMParacou)
 data(PlotMask)

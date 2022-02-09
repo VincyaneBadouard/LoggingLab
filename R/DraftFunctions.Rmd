@@ -35,7 +35,11 @@ Paracou6_2016 <- Paracou6_2016 %>%
 usethis::use_data(Paracou6_2016, overwrite = TRUE)
 
 # LoggingSimulationOutputs <- Rslt
-# usethis::use_data(LoggingSimulationOutputs)
+# usethis::use_data(LoggingSimulationOutputs, overwrite = TRUE)
+
+# LoggingSimulationOutputs_iter <- Rslt
+# usethis::use_data(LoggingSimulationOutputs_iter, overwrite = TRUE)
+
 
 ```
 

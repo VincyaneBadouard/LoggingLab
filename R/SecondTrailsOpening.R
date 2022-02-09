@@ -57,7 +57,7 @@
 #'     - TypeExpl: type of winching
 #' (sfc_MULTIPOLYGON)
 #' - MainTrailsAccess : Random access point of maintrail for each PU
-#' (sfc_MULTIPOLYGON)
+#' (sf, sfc_MULTIPOLYGON)
 #' - RawSecondTrails : non-smoothed secondary trails (SpatialLines)
 #' - CostRasterAgg: A cost Raster (RasterLayer)
 #'
@@ -66,6 +66,7 @@
 #'   st_geometry st_area st_is_empty st_set_crs st_crs sf_use_s2 st_geometry<-
 #' @importFrom dplyr mutate row_number select as_tibble left_join if_else filter
 #'   arrange desc
+#' @importFrom tidyr unnest
 #' @importFrom raster raster extend extent focal res crs mask crop rasterize
 #'   rasterToPoints rasterToPolygons rasterFromXYZ aggregate values ncell
 #'   values<-
@@ -80,9 +81,11 @@
 #'@importFrom utils txtProgressBar setTxtProgressBar
 #'@importFrom stats na.exclude
 #'
+#'
 #' @export
 #'
 #' @examples
+#' set.seed(1)
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(PlotMask)
@@ -246,7 +249,7 @@ secondtrailsopening <- function(
   slope <- x <- y <- Harvestable <- idTree <- ID <- type <- ptAcc  <- NULL
   EstCost <- n.overlaps <- TypeAcc <- IDpts <- Logged <- AccessPolygons <- NULL
   Selected <- DeathCause <- ID_Acc <- isEmpty <- gprlAcc <- cblAcc <- NULL
-  ID.y <- IdPU <- IdPU.y <- IdPU.x <- NULL
+  ID.y <- IdPU <- IdPU.y <- IdPU.x <- LineID <- LoggedTrees <- TypeExpl <- NULL
 
   #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, winching = winching)
@@ -1456,7 +1459,25 @@ secondtrailsopening <- function(
       dplyr::select(-DeadTrees)
   }
 
-  #
+  # WinchingMachine info in the inventory
+  TrailsIdentity_df <- as.data.frame(lines) %>%
+    unnest(cols = c(LineID, LoggedTrees, TypeExpl, IdPU)) #  unnesting flattens it back out into regular columns
+
+
+  TrailsIdentity_df <- TrailsIdentity_df %>%
+    select(LoggedTrees, TypeExpl) %>%
+    rename(idTree = LoggedTrees) %>%
+    rename(WinchingMachine = TypeExpl) %>%
+    unique()
+
+  if(any(duplicated(TrailsIdentity_df$idTree))) # trees logged several times?
+    print(TrailsIdentity_df[duplicated(TrailsIdentity_df$idTree)])
+
+
+  inventory <- inventory %>%
+    left_join(TrailsIdentity_df, by = "idTree")
+
+  # OUTPUTS
 
   if (WinchingInit == "2") {
     secondtrails <- list("inventory" =  inventory,

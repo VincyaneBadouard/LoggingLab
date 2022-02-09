@@ -107,7 +107,6 @@
 #'@importFrom methods as
 #'
 #' @examples
-#' \dontrun{
 #' data(Paracou6_2016) # inventory
 #' data(PlotMask) # inventoried plot mask
 #' data(DTMParacou) # topography
@@ -120,11 +119,10 @@
 #'  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
 #'  creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
-#'  objective = 20, fuel = "2", diversification = TRUE, winching = "2",
+#'  objective = 10, fuel = "2", diversification = TRUE, winching = "2",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
 #'  crowndiameterparameters = ParamCrownDiameterAllometry,
 #'  advancedloggingparameters = loggingparameters())
-#'  }
 #'
 loggingsimulation1 <- function(
   inventory,
@@ -247,7 +245,7 @@ loggingsimulation1 <- function(
 
   MainTrails <- maintrailextract(topography = topography, advancedloggingparameters = advancedloggingparameters)
 
-  ##### Harvestable area definition: ####
+  ##### Harvestable area definition ####
   HarvestableAreaOutputs <- harvestableareadefinition(
     topography = topography,
     creekdistances = creekdistances,
@@ -296,56 +294,44 @@ loggingsimulation1 <- function(
                                           advancedloggingparameters = advancedloggingparameters
   )
 
-  pol1 <- list(matrix(c(286503, 582925,
-                        286503, 583240,
-                        286507, 583240,
-                        286507, 582925,
-                        286503, 582925) # the return
-                      ,ncol=2, byrow=TRUE))
-  pol2 <- list(matrix(c(286650, 582925,
-                        286650, 583240,
-                        286654, 583240,
-                        286654, 582925,
-                        286650, 582925) # the return
-                      ,ncol=2, byrow=TRUE))
-
-  PolList = list(pol1,pol2) #list of lists of numeric matrices
-  ScndTrail <- sf::st_as_sf(sf::st_sfc(sf::st_multipolygon(PolList)))
-  ScndTrail <- sf::st_set_crs(ScndTrail, sf::st_crs(MainTrails)) # A SUPPRIMER
-
-  RawSecondTrails <- ScndTrailOutputs$RawSecondTrails
-  TrailsIdentity <- ScndTrailOutputs$TrailsIdentity
+  inventory <- ScndTrailOutputs$inventory
   SmoothedTrails <- ScndTrailOutputs$SmoothedTrails
   MainTrailsAccess <- ScndTrailOutputs$MainTrailsAccess
   TrailsDensity <- ScndTrailOutputs$TrailsDensity
-  inventory <- ScndTrailOutputs$inventory
+  TrailsIdentity <- ScndTrailOutputs$TrailsIdentity
+  RawSecondTrails <- ScndTrailOutputs$RawSecondTrails
   CostRasterAgg <- ScndTrailOutputs$CostRasterAgg
 
-    #### Tree felling ####
+  #### Tree felling ####
   inventory <- treefelling(inventory, scenario = scenario, fuel = fuel,
                            winching = winching, directionalfelling = directionalfelling,
-                           maintrailsaccess = ScndTrail, scndtrail = ScndTrail,
+                           maintrailsaccess = MainTrailsAccess, scndtrail = SmoothedTrails,
                            advancedloggingparameters = advancedloggingparameters)
 
 
-  #### Adjusted secondary trails layout (for fuel wood harvesting only) A FAIRE ####
-  ScndTrailAdjustOutputs <- secondtrailsadjusted(inventory = inventory,
-                       topography = topography, plotmask = plotmask, maintrails = MainTrails,
-                       plotslope = PlotSlope,
-                       harvestablepolygons = HarvestablePolygons,
-                       machinepolygons = MachinePolygons, accesspts = MainTrailsAccess,
-                       scenario = scenario, winching = winching,
-                       advancedloggingparameters = advancedloggingparameters
-                      )
+  #### Adjusted secondary trails layout (for fuel wood harvesting only) ####
+  if(fuel != "0"){
 
-  RawSecondTrails <- ScndTrailAdjustOutputs$RawSecondTrails
-  TrailsIdentity <- ScndTrailAdjustOutputs$TrailsIdentity
-  SmoothedTrails <- ScndTrailAdjustOutputs$SmoothedTrails
-  MainTrailsAccess <- ScndTrailAdjustOutputs$MainTrailsAccess
-  TrailsDensity <- ScndTrailAdjustOutputs$TrailsDensity
-  inventory <- ScndTrailAdjustOutputs$inventory
-  CostRasterAgg <- ScndTrailAdjustOutputs$CostRasterAgg
+    ScndTrailAdjustOutputs <- secondtrailsadjusted(inventory = inventory,
+                                                   topography = topography, plotmask = plotmask, maintrails = MainTrails,
+                                                   plotslope = PlotSlope,
+                                                   harvestablepolygons = HarvestablePolygons,
+                                                   machinepolygons = MachinePolygons, maintrailsaccess = MainTrailsAccess,
+                                                   scenario = scenario, winching = winching,
+                                                   advancedloggingparameters = advancedloggingparameters)
 
+    inventory <- ScndTrailAdjustOutputs$inventory
+    AdjustSmoothedTrails <- ScndTrailAdjustOutputs$SmoothedTrails
+    AdjustTrailsDensity <- ScndTrailAdjustOutputs$TrailsDensity
+    AdjustTrailsIdentity <- ScndTrailAdjustOutputs$TrailsIdentity
+    AdjustRawSecondTrails <- ScndTrailAdjustOutputs$RawSecondTrails
+
+  }else{
+    AdjustSmoothedTrails <- NULL
+    AdjustTrailsDensity <- NULL
+    AdjustTrailsIdentity <- NULL
+    AdjustRawSecondTrails <- NULL
+  }
 
   #### Landings implementation (only for ONF plots) ####
 
@@ -369,7 +355,7 @@ loggingsimulation1 <- function(
   FuelVolume <- Fueloutputs$FuelVolume
 
   DeadTrees <- inventory %>%
-    filter(!is.na(DeathCause))
+    dplyr::filter(!is.na(DeathCause))
 
   LostBiomass <- sum(DeadTrees$AGB) # in ton
 
@@ -386,9 +372,26 @@ loggingsimulation1 <- function(
                   FuelVolume = FuelVolume,
                   DamageVolume = DamageVolume, # only damage (without purge and hollow trees)
                   LostBiomass = LostBiomass,
-                  # TrailsDensity = TrailsDensity,
+                  TrailsDensity = TrailsDensity,
+                  AdjustTrailsDensity = AdjustTrailsDensity,
 
-                  # POINTS
+
+                  # Spatial objects
+                  MainTrails = MainTrails,
+                  HarvestablePolygons = HarvestablePolygons,
+                  MachinePolygons = MachinePolygons,
+                  PlotSlope = PlotSlope,
+                  SmoothedTrails = SmoothedTrails,
+                  MainTrailsAccess = MainTrailsAccess,
+                  TrailsIdentity = TrailsIdentity,
+                  RawSecondTrails = RawSecondTrails,
+                  CostRasterAgg = CostRasterAgg,
+
+                  AdjustSmoothedTrails = AdjustSmoothedTrails,
+                  AdjustTrailsIdentity = AdjustTrailsIdentity,
+                  AdjustRawSecondTrails = AdjustRawSecondTrails,
+
+                  ## POINTS
                   HarvestableTreesPoints = HarvestableTreesPoints,
                   SelectedTreesPoints = SelectedTreesPoints,
                   FutureTreesPoints = FutureTreesPoints,

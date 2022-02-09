@@ -18,6 +18,7 @@
 #'  - species of 1st economic rank
 #'  - DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD
 #'  or UpMinFD if it has been raised for its species.
+#'  - in the prospection units (harvestable areas)
 #'
 #'  **Reserve** trees are randomly chosen among future trees so that
 #'  the number of reserve trees is equal to the number of harvested trees.

@@ -5,14 +5,14 @@
 \title{Second trails adjusted}
 \usage{
 secondtrailsadjusted(
+  inventory,
   topography,
   plotmask,
   maintrails,
   plotslope,
   harvestablepolygons,
   machinepolygons,
-  inventory,
-  accesspts = NULL,
+  maintrailsaccess = NULL,
   scenario,
   winching = NULL,
   verbose = FALSE,
@@ -20,6 +20,15 @@ secondtrailsadjusted(
 )
 }
 \arguments{
+\item{inventory}{Input inventory with new columns:
+\itemize{
+\item The tree felling success or fail("TreeFellingOrientationSuccess")
+\item The crowns of the future/reserve trees (Polygon)
+\item The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
+according to the chosen scenario
+\item The dead trees under felled trees (DeathCause = "treefall2nd")
+}}
+
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
@@ -38,17 +47,8 @@ neighbourhood of 8 cells) (default:
 \item{machinepolygons}{Accessible for machine area of the inventoried plot
 (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
 
-\item{inventory}{Input inventory with new columns:
-\itemize{
-\item The tree felling success or fail("TreeFellingOrientationSuccess")
-\item The crowns of the future/reserve trees (Polygon)
-\item The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
-according to the chosen scenario
-\item The dead trees under felled trees (DeathCause = "treefall2nd")
-}}
-
-\item{accesspts}{Random access point of maintrail for each PU
-(sfc_MULTIPOLYGON)}
+\item{maintrailsaccess}{Access point of maintrail for each PU (prospection
+unit) (sf or sfc)}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -109,14 +109,14 @@ scndtrail = SecondaryTrails$SmoothedTrails,
 advancedloggingparameters = loggingparameters())
 
 ScdTrailsAdj <- secondtrailsadjusted(
+  inventory = PostLogInventory,
   topography = DTMParacou,
   plotmask = PlotMask,
   maintrails = MainTrails,
   plotslope = HarvestableAreaOutputsCable$PlotSlope,
   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
   machinepolygons = HarvestableAreaOutputsCable$MachinePolygons,
-  inventory = PostLogInventory,
-  accesspts = SecondaryTrails$MainTrailsAccess,
+  maintrailsaccess = SecondaryTrails$MainTrailsAccess,
   scenario = "manual",
   winching = winching,
   advancedloggingparameters = loggingparameters())

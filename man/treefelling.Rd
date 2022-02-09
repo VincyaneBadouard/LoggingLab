@@ -50,7 +50,8 @@ The angle to the trail is favoured to avoid future/reserve trees.
 If the avoidance of future/reserve trees could not be performed,
 a message is returned.}
 
-\item{maintrailsaccess}{Main trails access points (sf)}
+\item{maintrailsaccess}{Access point of maintrail for each PU (prospection
+unit) (sf or sfc)}
 
 \item{scndtrail}{main and second trails (sf)}
 
@@ -113,13 +114,13 @@ Secondary windfall: all trees under the felled tree (timber or energy)
 will be considered dead.
 }
 \examples{
-data(SecondaryTrails)
+set.seed(1)
 data(SecondaryTrails)
 
 scenario <- "manual"
 winching <- "2"
-fuel <- "0"
-directionalfelling <- "0"
+fuel <- "2"
+directionalfelling <- "2"
 
 
 NewInventory <- treefelling(SecondaryTrails$inventory,

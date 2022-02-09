@@ -2,7 +2,7 @@ test_that("felling1tree", {
 
   #### Test data ####
   data(Paracou6_2016)
-  data(HarvestableAreaOutputsCable)
+  data(SecondaryTrails)
   # Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
   MatrixInventory <- as.matrix(Paracou6_2016)
   MainTrails_no_sf <- MainTrails
@@ -30,19 +30,7 @@ test_that("felling1tree", {
 
 
 
-  inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
-                          volumeparameters = ForestZoneVolumeParametersTable)
-
-  inventory <- suppressMessages(treeselection(inventory, topography = DTMParacou,
-                                              speciescriteria = SpeciesCriteria,
-                                              scenario ="manual", objective = 20,
-                                              fuel = "2", diversification = TRUE,
-                                              winching = "0",
-                                              specieslax = FALSE, objectivelax = TRUE,
-                                              harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
-                                              plotslope =  HarvestableAreaOutputsCable$PlotSlope,
-                                              advancedloggingparameters = loggingparameters()
-  )$inventory)
+  inventory <- SecondaryTrails$inventory
 
   FutureReserveCrowns <- inventory %>% # create an object with future/reserve crowns only
     dplyr::filter(LoggingStatus == "future" | LoggingStatus == "reserve") %>%
@@ -122,6 +110,7 @@ test_that("felling1tree", {
   ## Grapple case (tree < 6 m from the trail)
   dat$Xutm <- 286508
   dat$Yutm <- 582950
+  dat <- dat %>% mutate(WinchingMachine = "Grpl")
 
   Rslt2grapple <- felling1tree(dat,
                                fuel = "0", winching = "2", directionalfelling = "2",
@@ -132,6 +121,8 @@ test_that("felling1tree", {
   ## Cable case (tree > 6 m from the trail)
   dat$Xutm <- 286537
   dat$Yutm <- 583070
+  dat <- dat %>% mutate(WinchingMachine = "Cbl")
+
 
   Rslt2cable <- felling1tree(dat,
                              fuel = "0", winching = "2", directionalfelling = "2",
@@ -145,6 +136,7 @@ test_that("felling1tree", {
   ## Grapple case (tree < 6 m from the trail)
   dat$Xutm <- 286508
   dat$Yutm <- 582950
+  dat <- dat %>% mutate(WinchingMachine = "Grpl")
 
   Rslt2fuelgrapple <- felling1tree(dat,
                                    fuel = "2", winching = "2", directionalfelling = "2",
@@ -155,6 +147,7 @@ test_that("felling1tree", {
   ## Cable case (tree > 6 m from the trail)
   dat$Xutm <- 286537
   dat$Yutm <- 583070
+  dat <- dat %>% mutate(WinchingMachine = "Cbl")
 
   Rslt2fuelcable <- felling1tree(dat,
                                  fuel = "2", winching = "2", directionalfelling = "2",
