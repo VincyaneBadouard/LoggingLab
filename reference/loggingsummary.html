@@ -72,13 +72,13 @@ outgoing figures</p></li>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">LoggingSimulationOutputs</span><span class="op">)</span> <span class="co"># Outputs of one logging simulation (2 iterations and 2 cores)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">LoggingSimulationOutputs_iter</span><span class="op">)</span> <span class="co"># Outputs of one logging simulation (2 iterations and 2 cores)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="fu">loggingsummary</span><span class="op">(</span><span class="va">LoggingSimulationOutputs</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu">loggingsummary</span><span class="op">(</span><span class="va">LoggingSimulationOutputs_iter</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> inventory : inventory </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Plot area : 6.25 ha</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> scenario : manual </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> objective : 20 m3/ha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> objective : 10 m3/ha</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> fuel : 2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> diversification : TRUE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> winching : 2 </span>
@@ -87,50 +87,58 @@ outgoing figures</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> objectivelax : TRUE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Harvestable area (ha):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    6.1     NA    6.1    6.0    6.1    6.0    6.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3.7     NA    3.7    4.0    3.7    4.0    3.7 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Objective volume (m3):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    125     NA    125    125    125    125    125 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   62.5     NA   62.5   62.0   62.5   62.0   62.5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial harvestable volume (m3):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   84.9    1.3   83.4   84.0   84.9   86.0   86.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  211.7    4.8  204.2  208.0  211.7  215.0  219.2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Units: [m3/ha]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13.584  0.208 13.344 13.440 13.584 13.760 13.824 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33.872  0.768 32.672 33.280 33.872 34.400 35.072 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Timber logged volume (m3):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   82.7    3.0   78.2   80.0   82.7   85.0   87.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   57.3    2.7   53.3   55.0   57.3   59.0   61.3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Units: [m3/ha]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13.232  0.480 12.512 12.800 13.232 13.600 13.952 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9.168  0.432  8.528  8.800  9.168  9.440  9.808 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> No hollow timber logged volume (m3):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   77.1    5.9   67.6   72.0   77.1   82.0   86.6 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   50.3    6.8   39.3   45.0   50.3   56.0   61.3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Units: [m3/ha]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12.336  0.944 10.816 11.520 12.336 13.120 13.856 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8.048  1.088  6.288  7.200  8.048  8.960  9.808 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fuel wood volume (m3):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  188.5    1.9  186.0  187.0  188.5  190.0  191.0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   10.1    1.3    8.6    9.0   10.1   11.0   11.6 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Units: [m3/ha]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30.160  0.304 29.760 29.920 30.160 30.400 30.560 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1.616  0.208  1.376  1.440  1.616  1.760  1.856 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Damages volume (m3):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  174.8    1.3  173.3  174.0  174.8  176.0  176.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      0     NA      0      0      0      0      0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Units: [m3/ha]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12.336  0.944 10.816 11.520 12.336 13.120 13.856 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      0     NA      0      0      0      0      0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lost biomass (ton):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  345.8    0.7  345.3  346.0  345.8  346.0  346.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  156.6    2.7  152.6  155.0  156.6  159.0  160.6 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Trails density (m/m2):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   86.4    1.6   84.4   85.0   86.4   87.0   88.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Adjusted trails density (m/m2):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean     Sd    Min Q1.25% Median Q3.75%    Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   85.7    1.6   83.7   85.0   85.7   87.0   87.7 </span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

@@ -103,7 +103,8 @@ The angle to the trail is favoured to avoid future/reserve trees.
 If the avoidance of future/reserve trees could not be performed,
 a message is returned.</p></dd>
 <dt>maintrailsaccess</dt>
-<dd><p>Main trails access points (sf)</p></dd>
+<dd><p>Access point of maintrail for each PU (prospection
+unit) (sf or sfc)</p></dd>
 <dt>scndtrail</dt>
 <dd><p>main and second trails (sf)</p></dd>
 <dt>advancedloggingparameters</dt>
@@ -148,13 +149,13 @@ will be considered dead.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">scenario</span> <span class="op">&lt;-</span> <span class="st">"manual"</span></span>
 <span class="r-in"><span class="va">winching</span> <span class="op">&lt;-</span> <span class="st">"2"</span></span>
-<span class="r-in"><span class="va">fuel</span> <span class="op">&lt;-</span> <span class="st">"0"</span></span>
-<span class="r-in"><span class="va">directionalfelling</span> <span class="op">&lt;-</span> <span class="st">"0"</span></span>
+<span class="r-in"><span class="va">fuel</span> <span class="op">&lt;-</span> <span class="st">"2"</span></span>
+<span class="r-in"><span class="va">directionalfelling</span> <span class="op">&lt;-</span> <span class="st">"2"</span></span>
 <span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">NewInventory</span> <span class="op">&lt;-</span> <span class="fu">treefelling</span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">inventory</span>,</span>
@@ -164,6 +165,7 @@ will be considered dead.</p>
 <span class="r-in">  maintrailsaccess <span class="op">=</span> <span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span>,</span>
 <span class="r-in">  scndtrail <span class="op">=</span> <span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">SmoothedTrails</span>,</span>
 <span class="r-in">  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> It was not possible to avoid future/reserve trees in the felling of a tree</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">NewInventory_crs</span> <span class="op">&lt;-</span> <span class="va">NewInventory</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span class="r-in"><span class="fu"><a href="getgeometry.html">getgeometry</a></span><span class="op">(</span><span class="va">TreePolygon</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
@@ -245,7 +247,7 @@ will be considered dead.</p>
 <span class="r-in"><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in CPL_geos_op2(op, x, y):</span> Evaluation error: TopologyException: Input geom 0 is invalid: Self-intersection at or near point 286641.41268533777 583192.57281713339 at 286641.41268533777 583192.57281713339.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in CPL_geos_op2(op, x, y):</span> Evaluation error: TopologyException: Input geom 0 is invalid: Self-intersection at or near point 286608.80000000005 583106.40000000002 at 286608.80000000005 583106.40000000002.</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
