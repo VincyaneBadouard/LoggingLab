@@ -97,10 +97,10 @@ data(SecondaryTrails)
 
 scenario <- "manual"
 winching <- "2"
-fuel <- "0"
-directionalfelling <- "0"
+fuel <- "2"
+directionalfelling <- "2"
 
-PostLogInventory <- treefelling(SecondaryTrails$inventory, scenario = "manual",
+PostLogInventory <- treefelling(SecondaryTrails$inventory, scenario = scenario,
 fuel = fuel,
 winching = winching,
 directionalfelling = directionalfelling,
@@ -117,7 +117,7 @@ ScdTrailsAdj <- secondtrailsadjusted(
   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
   machinepolygons = HarvestableAreaOutputsCable$MachinePolygons,
   maintrailsaccess = SecondaryTrails$MainTrailsAccess,
-  scenario = "manual",
+  scenario = scenario,
   winching = winching,
   advancedloggingparameters = loggingparameters())
 

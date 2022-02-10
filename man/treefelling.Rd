@@ -203,6 +203,7 @@ ggplot() +
   "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
   labs(color = "Logging status")
 
+\dontrun{
 # The trees under the fallen trees
 suppressWarnings(sf::st_intersection( # trees under the fallen trees
   getgeometry (NewInventory, TreePolygon),
@@ -210,5 +211,6 @@ suppressWarnings(sf::st_intersection( # trees under the fallen trees
 )) \%>\%
   ggplot() +
   geom_sf()
+}
 
 }

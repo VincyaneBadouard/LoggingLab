@@ -251,7 +251,7 @@ secondtrailsadjusted <- function(
   slope <- x <- y <- Harvestable <- idTree <- ID <- type <- ptAcc  <- NULL
   EstCost <- n.overlaps <- TypeAcc <- IDpts <- Logged <- AccessPolygons <- NULL
   Selected <- DeathCause <- ID_Acc <- isEmpty <- gprlAcc <- cblAcc <- NULL
-  LoggingStatus <- TreePolygon <- DBH <- ID.y <- IdMachineZone <- NULL
+  LoggingStatus <- TreePolygon <- DBH <- ID.y <- IdMachineZone <- Crownpts <- NULL
   IdMachineZone.y <- IdMachineZone.x <- LineID <- LoggedTrees <- TypeExpl <- NULL
 
 
