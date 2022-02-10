@@ -26,9 +26,6 @@ knitr::opts_chunk$set(
 7) Adjustment of secondary skidding trails in the case of Fuel Wood Exploitation (FWE)
 8) Moving the bole
 
-
-
-
 # Load Maria and datasets
 **Install Maria**
 ```{r, eval=F}

@@ -1,6 +1,7 @@
 Package: Maria
-Title: Simulate Different Forms of Logging on a Forest
+Title: An R Package to Simulate Forest Logging
 Version: 0.0.0.9003
+Date: 2022-02-10
 Authors@R: 
     c(person(given = "Vincyane",
            family = "Badouard",

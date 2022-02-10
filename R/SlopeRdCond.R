@@ -32,7 +32,7 @@ sloperdcond <- function(
 
   altDiff <- function(x){abs(x[2] - x[1] + 1E-12)} # set absolute elevation difference function
   s.dist <- gdistance::transition(topography, altDiff, 8, symm=FALSE) # compute adjacent matrix with absolute elevation difference weights
-  s.dist <- gdistance::geoCorrection(s.dist) # divide each link by the absolute distance between centroids
+  s.dist <- try(gdistance::geoCorrection(s.dist), silent=TRUE) # divide each link by the absolute distance between centroids
 
   # s.dist : adjacent matrix with abs(delta elevation)/dist = absolute slope weights
 
