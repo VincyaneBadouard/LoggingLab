@@ -85,9 +85,10 @@
 #'
 #'@export
 #'
+#'@importFrom sf st_as_sf st_as_text st_geometry st_intersection st_make_valid
+#'  st_buffer st_union
 #'@importFrom dplyr filter group_by do left_join mutate select
 #'@importFrom tibble add_column
-#'@importFrom sf st_as_sf st_as_text st_geometry st_intersection st_make_valid
 #'@importFrom tidyr unnest
 #'@importFrom stats runif
 #'
@@ -265,24 +266,24 @@ treefelling <- function(
     getgeometry(Crowns)
 
 
-  # Treefelling
-
+  # Main trails accesses with a width
   MainTrailsAccessBuff <- maintrailsaccess %>%
     st_buffer(dist = runif(1,
                            advancedloggingparameters$MinMainTrailWidth,
                            advancedloggingparameters$MaxMainTrailWidth)) %>%
     st_union() %>% st_as_sf()
 
+  # Treefelling
   felttrees <- inventory %>%
     filter(!is.na(TreeFellingOrientationSuccess)) %>%
-    group_by(idTree) %>% # for each tree
-    do(TreePolygon = # inform geometry. # Filling a column from a function whose input is a table
-         felling1tree(.,
-                      fuel = fuel, winching = winching, directionalfelling = directionalfelling,
-                      maintrailsaccess = MainTrailsAccessBuff, scndtrail = scndtrail,
-                      FutureReserveCrowns = FutureReserveCrowns,
-                      advancedloggingparameters = advancedloggingparameters)$FallenTree %>%
-         st_as_text()) %>% # as text to easy join with a non spacial table
+    dplyr::group_by(idTree) %>% # for each tree
+    dplyr::do(TreePolygon = # inform geometry. # Filling a column from a function whose input is a table
+                felling1tree(.,
+                             fuel = fuel, winching = winching, directionalfelling = directionalfelling,
+                             maintrailsaccess = MainTrailsAccessBuff, scndtrail = scndtrail,
+                             FutureReserveCrowns = FutureReserveCrowns,
+                             advancedloggingparameters = advancedloggingparameters)$FallenTree %>%
+                st_as_text()) %>% # as text to easy join with a non spacial table
     tidyr::unnest(TreePolygon) # here to pass from list to character
 
   inventory <- left_join(inventory, felttrees, by = "idTree") # join spatial filtered inventory and non spatial complete inventory

@@ -64,23 +64,22 @@
 #' @importFrom sf st_cast st_as_sf st_intersection st_union st_sample st_join
 #'   st_buffer as_Spatial st_centroid st_set_precision st_make_valid st_set_agr
 #'   st_geometry st_area st_is_empty st_set_crs st_crs sf_use_s2 st_geometry<-
+#'
 #' @importFrom dplyr mutate row_number select as_tibble left_join if_else filter
 #'   arrange desc
-#' @importFrom tidyr unnest
+#'
 #' @importFrom raster raster extend extent focal res crs mask crop rasterize
 #'   rasterToPoints rasterToPolygons rasterFromXYZ aggregate values ncell
-#'   values<-
+#'   values<- adjacent resample ncol
+#'
+#' @importFrom tidyr unnest
+#' @importFrom tibble add_column
 #' @importFrom sp proj4string<- coordinates<-
-#'
 #' @importFrom lwgeom  st_snap_to_grid
-#'
 #' @importFrom smoothr smooth
-#'
-#'@importFrom gdistance transition geoCorrection
-#'@importFrom raster adjacent aggregate resample ncol ncell
-#'@importFrom utils txtProgressBar setTxtProgressBar
-#'@importFrom stats na.exclude
-#'
+#' @importFrom gdistance transition geoCorrection
+#' @importFrom utils txtProgressBar setTxtProgressBar
+#' @importFrom stats na.exclude
 #'
 #' @export
 #'
@@ -96,9 +95,8 @@
 #' scenario <- "manual"
 #' winching <- "2"
 #' objective <- 10
-#' fuel <- "0"
+#' fuel <- "2"
 #' diversification <- TRUE
-#' directionalfelling <- "0"
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -249,7 +247,7 @@ secondtrailsopening <- function(
   slope <- x <- y <- Harvestable <- idTree <- ID <- type <- ptAcc  <- NULL
   EstCost <- n.overlaps <- TypeAcc <- IDpts <- Logged <- AccessPolygons <- NULL
   Selected <- DeathCause <- ID_Acc <- isEmpty <- gprlAcc <- cblAcc <- NULL
-  ID.y <- IdPU <- IdPU.y <- IdPU.x <- LineID <- LoggedTrees <- TypeExpl <- NULL
+  ID.y <- IdMachineZone <- IdMachineZone.y <- IdMachineZone.x <- LineID <- LoggedTrees <- TypeExpl <- NULL
 
   #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, winching = winching)
@@ -258,7 +256,7 @@ secondtrailsopening <- function(
 
   ##################################
 
-  sf_use_s2(FALSE) # to deal with actual unresolved s2 issues in sf
+  suppressMessages(sf_use_s2(FALSE)) # to deal with actual unresolved s2 issues in sf ("Spherical geometry (s2) switched off")
 
   CostMatrix <- advancedloggingparameters$CostMatrix
 
@@ -290,7 +288,7 @@ secondtrailsopening <- function(
 
   # Generate accessible area from HarvestablePolygones and winching == "0"
   AccessMainTrails <- AccessPolygons  %>% st_union() %>%
-    st_cast("POLYGON") %>%
+    st_cast("POLYGON", warn = FALSE) %>%
     st_as_sf() %>%
     mutate(ID = paste0("ID_",row_number()))
 
@@ -305,7 +303,7 @@ secondtrailsopening <- function(
     st_union(by_feature = T) %>%
     st_buffer(dist = 0.5) %>%
     st_intersection(st_as_sf(plotmask) %>% st_union()) %>%
-    st_cast("MULTIPOLYGON")  %>%
+    st_cast("MULTIPOLYGON", warn = FALSE)  %>% # "In st_cast.MULTIPOLYGON(X[[i]], ...) : polygon from first part only"
     st_as_sf() %>%
     st_set_agr(value = "constant") %>%
     st_join(AccessMainTrails)
@@ -519,7 +517,7 @@ secondtrailsopening <- function(
 
   ptsAllinit <- treeselectionoutputs$SelectedTreesPoints %>%
     dplyr::select(idTree) %>%
-    st_cast("POINT") %>%
+    st_cast("POINT", warn = FALSE) %>%
     mutate(ID = NA) %>%
     mutate(type = "Tree") %>%
     st_set_crs(st_crs(AccessPointAll)) %>%
@@ -540,7 +538,8 @@ secondtrailsopening <- function(
                               update = TRUE)
   if (winching == "2") {
     # Reassign Selected Tree values (= BigTrees) to the aggregated Cost raster (Grpl)
-    CostRasterMeanGrpl <- rasterize(x = as_Spatial(ptsAll %>% st_buffer(dist = factagg)),
+    CostRasterMeanGrpl <- rasterize(x = as_Spatial(ptsAll %>%
+                                                     st_buffer(dist = factagg)),
                                     y = CostRasterMeanGrpl ,
                                     field = CostMatrix[[2]][[3]]$CostValue,
                                     update = TRUE)
@@ -606,8 +605,7 @@ secondtrailsopening <- function(
     #Compute Cost between points and Access points
     CostDistEst <- adjtopolcp(costSurface = CondSurf,
                               topography = DTMmean ,
-                              pts = pts %>%
-                                as_Spatial(),
+                              pts = as_Spatial(pts),
                               slopeRdCond = SlopeCond,
                               paths = FALSE) [,1:dim(AccessPoint)[1]]
     CostDistEst <- CostDistEst[(length(PointAcc$ID)+1):length(CostDistEst)[1]]
@@ -929,7 +927,7 @@ secondtrailsopening <- function(
 
         PointTreeWIP <- ptsDirAcc %>% filter(type == "Tree")
 
-        Lines[[l]] <- list("LineID" = NA,"LoggedTrees" = PointTreeWIP$origins, "TypeExpl" = TmpTypeAcc,"IdPU" = ID_Access)
+        Lines[[l]] <- list("LineID" = NA,"LoggedTrees" = PointTreeWIP$origins, "TypeExpl" = TmpTypeAcc,"IdMachineZone" = ID_Access)
 
 
         l <- l+1
@@ -1005,7 +1003,7 @@ secondtrailsopening <- function(
           TmpPtsWIP <- ptsGrpl %>%
             filter(IDpts == PointTree$IDpts[1])  %>%
             st_union() %>%
-            st_cast("POINT") %>%
+            st_cast("POINT", warn = FALSE) %>%
             st_as_sf() %>%
             mutate(type = "Overlay") %>%
             mutate(ptsAcc = PointTree$ptsAcc[1]) %>%
@@ -1029,7 +1027,7 @@ secondtrailsopening <- function(
           TmpPtsWIP <- ptsCbl %>%
             filter(IDpts == PointTree$IDpts[1])  %>%
             st_union() %>%
-            st_cast("POINT") %>%
+            st_cast("POINT", warn = FALSE) %>%
             st_as_sf() %>%
             mutate(type = "Overlay") %>%
             mutate(ptsAcc = PointTree$ptsAcc[1]) %>%
@@ -1049,7 +1047,7 @@ secondtrailsopening <- function(
         TmpPtsWIP <- ptsCbl %>%
           filter(IDpts == PointTree$IDpts[1])  %>%
           st_union() %>%
-          st_cast("POINT") %>%
+          st_cast("POINT", warn = FALSE) %>%
           st_as_sf() %>%
           mutate(type = "Overlay") %>%
           mutate(ptsAcc = PointTree$ptsAcc[1]) %>%
@@ -1076,7 +1074,7 @@ secondtrailsopening <- function(
       #Reconstruct access points + selected points
       TmpPtsWIP <- rbind( PointAcc %>%
                             st_union() %>%
-                            st_cast("POINT")%>%
+                            st_cast("POINT", warn = FALSE)%>%
                             st_as_sf() %>%
                             mutate(type = "Access") %>%
                             mutate(ptsAcc = NA ) %>%
@@ -1145,7 +1143,7 @@ secondtrailsopening <- function(
                                                   collapse='-'),
                                             sep = ".")
 
-      Lines[[l]] <- list("LineID" = k,"LoggedTrees" = PointTreeWIP$origins[[1]], "TypeExpl" = TmpTypeAcc,"IdPU" = ID_Access)
+      Lines[[l]] <- list("LineID" = k,"LoggedTrees" = PointTreeWIP$origins[[1]], "TypeExpl" = TmpTypeAcc,"IdMachineZone" = ID_Access)
 
       k <- k +1
       l <- l+1
@@ -1375,26 +1373,6 @@ secondtrailsopening <- function(
 
   inventory <- treeselectionoutputs$inventory
 
-  if (!("IdPU" %in% names(inventory))){
-    inventory <- inventory %>%
-      add_column(IdPU = NA) # if "IdPU" column doesnt exist create it
-  }
-
-  PuInventory <- suppressWarnings(sf::st_intersection(
-    st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography)),
-    sf::st_make_valid(st_as_sf(AccessMainTrails)) # "make valid" to avoid self-intersection
-  )) %>% st_join(AccessMainTrails)  %>% mutate(IdPU =  ID.y) %>%
-    dplyr::select(idTree, IdPU)
-  sf::st_geometry(PuInventory) <- NULL # remove geometry column (sf to data.frame)
-  PuInventory <- unique(PuInventory)
-
-  inventory <- inventory %>%
-    left_join(PuInventory, by = "idTree") %>%
-    mutate(IdPU = IdPU.y) %>% dplyr::select(-IdPU.x,-IdPU.y)
-
-
-
-
   if (length(paths)> 0) {
 
     lines <- do.call(rbind, Lines)
@@ -1461,11 +1439,11 @@ secondtrailsopening <- function(
 
   # WinchingMachine info in the inventory
   TrailsIdentity_df <- as.data.frame(lines) %>%
-    unnest(cols = c(LineID, LoggedTrees, TypeExpl, IdPU)) #  unnesting flattens it back out into regular columns
+    unnest(cols = c(LineID, LoggedTrees, TypeExpl, IdMachineZone)) #  unnesting flattens it back out into regular columns
 
 
   TrailsIdentity_df <- TrailsIdentity_df %>%
-    select(LoggedTrees, TypeExpl) %>%
+    select(LoggedTrees, TypeExpl, IdMachineZone) %>%
     rename(idTree = LoggedTrees) %>%
     rename(WinchingMachine = TypeExpl) %>%
     unique()

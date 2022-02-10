@@ -82,7 +82,7 @@ futurereserve <- function(
 
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
-  Condition <- DBH <- PU <- NULL
+  Condition <- DBH <- HarvestableZone <- NULL
   DeathCause <- DistCriteria <- Family <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- NULL
@@ -102,7 +102,7 @@ futurereserve <- function(
   #Future: select essence and diameters
 
   inventory <- inventory %>%
-    mutate(LoggingStatus = ifelse(CommercialLevel == "1" & Selected != "1" & PU == TRUE &
+    mutate(LoggingStatus = ifelse(CommercialLevel == "1" & Selected != "1" & HarvestableZone == TRUE &
                                     ((Up == "0" &
                                         (DBH >= advancedloggingparameters$FutureTreesMinDiameter & DBH < MinFD))
                                      | (Up == "1" &

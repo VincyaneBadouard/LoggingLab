@@ -64,7 +64,7 @@ in \% (double)}
 = 20, in \% (double)}
 
 \item{CableTreesMaxSlope}{Maximum slope around the tree to access it with
-cable. Default = 22, in \% (double)}
+cable. Default = 35, in \% (double)}
 
 \item{PlateauMaxSlope}{Maximum slope to define an area as a plateau.
 Default = 5, in \% (double)}

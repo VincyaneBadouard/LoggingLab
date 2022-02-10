@@ -273,7 +273,6 @@ loggingsimulation1 <- function(
                                         harvestablepolygons = HarvestablePolygons,
                                         advancedloggingparameters = advancedloggingparameters)
 
-  inventory <- treeselectionoutputs$inventory
   VO <- treeselectionoutputs$VO
   HVinit <- treeselectionoutputs$HVinit
   HarvestableTreesPoints <- treeselectionoutputs$HarvestableTreesPoints
@@ -303,7 +302,7 @@ loggingsimulation1 <- function(
   CostRasterAgg <- ScndTrailOutputs$CostRasterAgg
 
   #### Tree felling ####
-  inventory <- treefelling(inventory, scenario = scenario, fuel = fuel,
+  inventory <- treefelling(inventory = inventory, scenario = scenario, fuel = fuel,
                            winching = winching, directionalfelling = directionalfelling,
                            maintrailsaccess = MainTrailsAccess, scndtrail = SmoothedTrails,
                            advancedloggingparameters = advancedloggingparameters)

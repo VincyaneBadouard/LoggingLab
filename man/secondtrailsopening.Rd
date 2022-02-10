@@ -99,9 +99,8 @@ data(MainTrails)
 scenario <- "manual"
 winching <- "2"
 objective <- 10
-fuel <- "0"
+fuel <- "2"
 diversification <- TRUE
-directionalfelling <- "0"
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)

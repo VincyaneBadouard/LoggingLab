@@ -84,7 +84,7 @@ st_temporaryintersection <- function(
   RasterAccum <- raster(extent(topography), resolution = res(topography)/5, crs = crs(topography))
   values(RasterAccum) <- 0
   RasterAccum <- mask(RasterAccum, plotmask)
-  RasterAccum <- crop(RasterAccum, plotmask)
+  RasterAccum <- suppressWarnings(crop(RasterAccum, plotmask)) # "Error in x$.self$finalize() : attempt to apply non-function"
 
   RasterOrigins <- RasterAccum
   values(RasterOrigins) <- NA

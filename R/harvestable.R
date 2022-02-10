@@ -136,7 +136,7 @@ harvestable <- function(
   UpMinFD.species <- NULL
   VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
-  beta.family <- beta.genus <- beta.species <- geometry <- idTree <- PU <- NULL
+  beta.family <- beta.genus <- beta.species <- geometry <- idTree <- HarvestableZone <- NULL
 
 
   #### Redefinition of the parameters according to the chosen scenario ####
@@ -198,9 +198,9 @@ harvestable <- function(
   }
 
  if (winching == "0") {
-   TreeMaxSlope <- advancedloggingparameters$MaxTrailCenterlineSlope
+   TreeMaxSlope <- advancedloggingparameters$MaxTrailCenterlineSlope # 22%
  }else{
-   TreeMaxSlope <- advancedloggingparameters$CableTreesMaxSlope
+   TreeMaxSlope <- advancedloggingparameters$CableTreesMaxSlope # 35%
  }
 
 
@@ -218,7 +218,7 @@ harvestable <- function(
     left_join(DistCriteriaInventory, by = "idTree") %>%
     dplyr::select(-geometry)
 
-  # Check that the trees are contained in a accessible area (PU)
+  # Check that the trees are contained in a accessible area (HarvestableZone)
 
    AccessPolygons <- harvestablepolygons
 
@@ -230,12 +230,12 @@ harvestable <- function(
    proj4string(SpatInventoryAll) <- crs(topography) # allocate the Paracou crs to our spatial inventory
 
 
-   PUSpatInventory<- st_as_sf(SpatInventoryAll) %>%
-     mutate(PU = as.vector(st_contains(AccessPolygons %>%
-                                         st_union(), st_as_sf(SpatInventoryAll),sparse = F))) %>% # check if trees are contained in PUs
-     dplyr::select(idTree , PU)
+   HarvestableZoneSpatInventory<- st_as_sf(SpatInventoryAll) %>%
+     mutate(HarvestableZone = as.vector(st_contains(AccessPolygons %>%
+                                         st_union(), st_as_sf(SpatInventoryAll),sparse = F))) %>% # check if trees are contained in HarvestableZones
+     dplyr::select(idTree , HarvestableZone)
 
-   inventory <- inventory %>% left_join(PUSpatInventory, by = "idTree")%>%
+   inventory <- inventory %>% left_join(HarvestableZoneSpatInventory, by = "idTree")%>%
      dplyr::select(-geometry)
 
   # Essences selection
@@ -254,8 +254,8 @@ harvestable <- function(
   HarverstableConditions <- HarverstableConditions & (
     (!inventory$DistCriteria %in% FALSE) & # take the TRUE and NA values
       inventory$SlopeCriteria %in% TRUE &
-      inventory$PU %in% TRUE ) # !is.null(ProspectionUnitCode) &
-  ## in a PU
+      inventory$HarvestableZone %in% TRUE ) # !is.null(ProspectionUnitCode) &
+  ## in a HarvestableZone
   ## slope
   ## isolement
   ## MainTrails out (only for ONF plots)
