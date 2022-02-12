@@ -16,14 +16,15 @@ devtools::install_github("VincyaneBadouard/Maria", build_vignettes = TRUE)
 # To cite package ‘Maria’ in publications use:
 citation("Maria")
 
-Vincyane Badouard, Sylvain Schmitt, Guillaume Salzet and Thomas Gaquiere (2022). Maria: An R Package to Simulate
-Forest Logging. R package version 0.0.0.9003. https://github.com/VincyaneBadouard/Maria.git
+Vincyane Badouard, Sylvain Schmitt, Guillaume Salzet, Thomas Gaquiere and Géraldine Derroire (2022).
+Maria: An R Package to Simulate Forest Logging. R package version 0.0.0.9003.
+https://github.com/VincyaneBadouard/Maria.git
 
 A BibTeX entry for LaTeX users is
 
 @Manual{,
 title = {Maria: An R Package to Simulate Forest Logging},
-author = {Vincyane Badouard and Sylvain Schmitt and Guillaume Salzet and Thomas Gaquiere},
+author = {Vincyane Badouard and Sylvain Schmitt and Guillaume Salzet and Thomas Gaquiere and Géraldine Derroire},
 year = {2022},
 note = {R package version 0.0.0.9003},
 url = {https://github.com/VincyaneBadouard/Maria.git},
