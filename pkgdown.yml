@@ -2,6 +2,6 @@ pandoc: 2.7.3
 pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
-  Maria: Maria.html
-last_built: 2022-02-14T21:31Z
+  LoggingLab: LoggingLab.html
+last_built: 2022-02-15T19:01Z
 

@@ -7,7 +7,7 @@
     <loc>/ToDo.html</loc>
   </url>
   <url>
-    <loc>/articles/Maria.html</loc>
+    <loc>/articles/LoggingLab.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
@@ -34,6 +34,9 @@
     <loc>/reference/HarvestableAreaOutputsCable.html</loc>
   </url>
   <url>
+    <loc>/reference/LoggingLab.html</loc>
+  </url>
+  <url>
     <loc>/reference/LoggingSimulationOutputs.html</loc>
   </url>
   <url>
@@ -41,9 +44,6 @@
   </url>
   <url>
     <loc>/reference/MainTrails.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Maria.html</loc>
   </url>
   <url>
     <loc>/reference/Paracou6_2016.html</loc>
