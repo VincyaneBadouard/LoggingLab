@@ -1,17 +1,17 @@
-#' Maria-package
+#' LoggingLab-package
 #'
 #' Logging simulator
 #'
 #' This package allows to simulate the different low impact logging versions in French Guiana.
 #'
-#' The Maria package provides n functions:
+#' The LoggingLab package provides n functions:
 #' treeselection,  and .
 #'
-#' @name Maria
+#' @name LoggingLab
 #' @docType package
 #'
 #'
-#' @section Maria functions:
+#' @section LoggingLab functions:
 #' loggingsimulation
 #'
 #' loggingparameters

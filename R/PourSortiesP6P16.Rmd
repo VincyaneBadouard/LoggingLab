@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 
-library(Maria)
+library(LoggingLab)
 library(sf)
 library(dplyr)
 
@@ -290,7 +290,7 @@ crs(HANDParacou16) <- crs(DTMParacou)
 crs(HANDParacou16)
 
 
-HADP16<- Maria::HarvestableAreaDefinition(topography = DemParacou,creekdistances = HANDParacou16)
+HADP16<- LoggingLab::HarvestableAreaDefinition(topography = DemParacou,creekdistances = HANDParacou16)
 
 harvestablepolygonsP16 <- HADP16[[1]]
 
@@ -313,7 +313,7 @@ inventory <- commercialcriteriajoin(addtreedim(cleaninventory(InvP16, Parcelle),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
 
-treeselectionoutputsP16RIL2broken<- Maria::treeselection(inventory,
+treeselectionoutputsP16RIL2broken<- LoggingLab::treeselection(inventory,
                                                        topography = DemParacou, plotslope = plotslopeP16, MainTrails = MainTrailsP16,
                                                        harvestablepolygons = harvestablepolygonsP16,
                                                        speciescriteria = SpeciesCriteria, objective = scenarios$objective,
@@ -321,7 +321,7 @@ treeselectionoutputsP16RIL2broken<- Maria::treeselection(inventory,
                                                        objectivelax = TRUE,
                                                        advancedloggingparameters = loggingparameters())
 
-secondtrailsP16RIL2broken <- Maria::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
+secondtrailsP16RIL2broken <- LoggingLab::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
                                                             creekdistances= HANDParacou16,  treeselectionoutputsP16RIL2broken, 
                                                            CostMatrix = list(list(list(Slope = 3, Cost = 3),
                          list(Slope = 5, Cost = 5),
@@ -356,7 +356,7 @@ inventory <- commercialcriteriajoin(addtreedim(cleaninventory(InvP16, Parcelle),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
 
-treeselectionoutputsP16RIL2<- Maria::treeselection(inventory,
+treeselectionoutputsP16RIL2<- LoggingLab::treeselection(inventory,
                                                        topography = DemParacou, plotslope = plotslopeP16, MainTrails = MainTrailsP16,
                                                        harvestablepolygons = harvestablepolygonsP16,
                                                        speciescriteria = SpeciesCriteria, objective = scenarios$objective,
@@ -364,7 +364,7 @@ treeselectionoutputsP16RIL2<- Maria::treeselection(inventory,
                                                        objectivelax = TRUE,
                                                        advancedloggingparameters = loggingparameters())
 
-secondtrailsP16RIL2broken <- Maria::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
+secondtrailsP16RIL2broken <- LoggingLab::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
                                                             creekdistances= HANDParacou16,  treeselectionoutputsP16RIL2, 
                                                           CostMatrix = list(list(list(Slope = 3, Cost = 3),
                          list(Slope = 5, Cost = 5),
@@ -398,7 +398,7 @@ inventory <- commercialcriteriajoin(addtreedim(cleaninventory(InvP16, Parcelle),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
 
-treeselectionoutputsP16RIL3<- Maria::treeselection(inventory,
+treeselectionoutputsP16RIL3<- LoggingLab::treeselection(inventory,
                                                        topography = DemParacou, plotslope = plotslopeP16, MainTrails = MainTrailsP16,
                                                        harvestablepolygons = harvestablepolygonsP16,
                                                        speciescriteria = SpeciesCriteria, objective = scenarios$objective,
@@ -406,7 +406,7 @@ treeselectionoutputsP16RIL3<- Maria::treeselection(inventory,
                                                        objectivelax = TRUE,
                                                        advancedloggingparameters = loggingparameters())
 
-secondtrailsP16RIL3 <- Maria::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
+secondtrailsP16RIL3 <- LoggingLab::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
                                                             creekdistances= HANDParacou16,  treeselectionoutputsP16RIL3, 
                                                           CostMatrix = list(list(list(Slope = 3, Cost = 3),
                          list(Slope = 5, Cost = 5),
@@ -440,7 +440,7 @@ inventory <- commercialcriteriajoin(addtreedim(cleaninventory(InvP16, Parcelle),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
 
-treeselectionoutputsP16RIL3fuel<- Maria::treeselection(inventory,
+treeselectionoutputsP16RIL3fuel<- LoggingLab::treeselection(inventory,
                                                        topography = DemParacou, plotslope = plotslopeP16, MainTrails = MainTrailsP16,
                                                        harvestablepolygons = harvestablepolygonsP16,
                                                        speciescriteria = SpeciesCriteria, objective = scenarios$objective,
@@ -448,7 +448,7 @@ treeselectionoutputsP16RIL3fuel<- Maria::treeselection(inventory,
                                                        objectivelax = TRUE,
                                                        advancedloggingparameters = loggingparameters())
 
-secondtrailsP16RIL3fuel <- Maria::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
+secondtrailsP16RIL3fuel <- LoggingLab::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
                                                             creekdistances= HANDParacou16,  treeselectionoutputsP16RIL3fuel, 
                                                          CostMatrix = list(list(list(Slope = 3, Cost = 3),
                          list(Slope = 5, Cost = 5),
@@ -483,7 +483,7 @@ inventory <- commercialcriteriajoin(addtreedim(cleaninventory(InvP16, Parcelle),
  volumeparameters = ForestZoneVolumeParametersTable),SpeciesCriteria)
 
 
-treeselectionoutputsP16RIL3fuelhollow<- Maria::treeselection(inventory,
+treeselectionoutputsP16RIL3fuelhollow<- LoggingLab::treeselection(inventory,
                                                        topography = DemParacou, plotslope = plotslopeP16, MainTrails = MainTrailsP16,
                                                        harvestablepolygons = harvestablepolygonsP16,
                                                        speciescriteria = SpeciesCriteria, objective = scenarios$objective,
@@ -491,7 +491,7 @@ treeselectionoutputsP16RIL3fuelhollow<- Maria::treeselection(inventory,
                                                        objectivelax = TRUE,
                                                        advancedloggingparameters = loggingparameters())
 
-secondtrailsP16RIL3fuelhollow <- Maria::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
+secondtrailsP16RIL3fuelhollow <- LoggingLab::secondtrailsopening(topography = DemParacou, plotmask = Parcelle,
                                                             creekdistances= HANDParacou16,  treeselectionoutputsP16RIL3fuelhollow, 
                                                           CostMatrix = list(list(list(Slope = 3, Cost = 3),
                          list(Slope = 5, Cost = 5),

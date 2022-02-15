@@ -2,7 +2,7 @@
 % Please edit documentation in R/inventorycheckformat.R
 \name{inventorycheckformat}
 \alias{inventorycheckformat}
-\title{Check the input inventory data for the "Maria" package}
+\title{Check the input inventory data for the "LoggingLab" package}
 \usage{
 inventorycheckformat(inventory)
 }
@@ -15,7 +15,7 @@ The inventory if the inventory is in the required format.
 Stop the function if the format is not the one required.
 }
 \description{
-Check if the input inventory data is compatible with the "Maria"
+Check if the input inventory data is compatible with the "LoggingLab"
 package (see 'Required format of the inventory' section of the vignette)
 }
 \examples{

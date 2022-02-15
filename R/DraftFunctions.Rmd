@@ -12,7 +12,7 @@ install.packages("withr")
 
 ```{r}
 library(EcoFoG)
-library(Maria)
+library(LoggingLab)
 library(readr)
 library(dplyr)
 library(tibble)
@@ -133,7 +133,7 @@ usethis::use_data(SecondaryTrails, overwrite = TRUE)
 ```{r}
 data(Paracou6_2016) #data inventory in the global environment
 data(ForestZoneVolumeParametersTable) # The volume parameters data in the global environment
-# load(system.file("extdata", "BrokenParacou6_2016.rda", package = "Maria")) # the test inventory in the global environment
+# load(system.file("extdata", "BrokenParacou6_2016.rda", package = "LoggingLab")) # the test inventory in the global environment
 data(ParamCrownDiameterAllometry)
 data(SpeciesCriteria)
 ```

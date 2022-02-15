@@ -29,6 +29,6 @@ reserve trees + trail orientation) (factor)}
 ScenariosTable
 }
 \description{
-Table showing the 6 logging scenarios proposed by the Maria package.
+Table showing the 6 logging scenarios proposed by the LoggingLab package.
 }
 \keyword{datasets}

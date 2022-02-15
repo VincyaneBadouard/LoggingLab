@@ -1,4 +1,4 @@
-Package: Maria
+Package: LoggingLab
 Title: An R Package to Simulate Forest Logging
 Version: 0.0.0.9003
 Date: 2022-02-10
@@ -25,7 +25,7 @@ Authors@R:
            email = "geraldine.derroire@cirad.fr")
            )
 Description: Allows to simulate different forms of logging on a forest.
-URL: https://github.com/VincyaneBadouard/Maria.git
+URL: https://github.com/VincyaneBadouard/LoggingLab.git
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -63,4 +63,4 @@ Imports:
     lwgeom(>= 0.2-8),
     units (>= 0.7.2),
     stats (>= 3.6.1)
-BugReports: https://github.com/VincyaneBadouard/Maria/issues
+BugReports: https://github.com/VincyaneBadouard/LoggingLab/issues

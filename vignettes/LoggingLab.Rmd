@@ -1,10 +1,10 @@
 ---
-title: "Maria"
+title: "LoggingLab"
 subtitle: "Logging simulator"
 output: rmarkdown::html_vignette
 df_print: kable
 vignette: >
-  %\VignetteIndexEntry{Maria}
+  %\VignetteIndexEntry{LoggingLab}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,15 +26,15 @@ knitr::opts_chunk$set(
 7) Adjustment of secondary skidding trails in the case of Fuel Wood Exploitation (FWE)
 8) Moving the bole
 
-# Load Maria and datasets
-**Install Maria**
+# Load LoggingLab and datasets
+**Install LoggingLab**
 ```{r, eval=F}
-install.packages("Maria")
-# devtools::install_github("VincyaneBadouard/Maria", build_vignettes = TRUE) # Development version
+install.packages("LoggingLab")
+# devtools::install_github("VincyaneBadouard/LoggingLab", build_vignettes = TRUE) # Development version
 ```
 **Load the package**
 ```{r setup}
-library(Maria)
+library(LoggingLab)
 library(knitr)
 library(kableExtra)
 library(ggplot2)
@@ -395,7 +395,7 @@ SimulTime <- microbenchmark::microbenchmark(
 
 # Decomposed harvesting
 
-## Check & format input inventory data for the "Maria" package
+## Check & format input inventory data for the "LoggingLab" package
 ```{r}
 inventory <- inventorycheckformat(Paracou6_2016)
 inventory <- cleaninventory(inventory, PlotMask, loggingparameters())
@@ -691,7 +691,7 @@ FuelVolume <- FuelV$FuelVolume
 
 # Tool functions
 
-'inventorycheckformat' check if the input inventory data is compatible with the "Maria" package (see 'Required format of the inventory' section of the vignette)
+'inventorycheckformat' check if the input inventory data is compatible with the "LoggingLab" package (see 'Required format of the inventory' section of the vignette)
 
 'addtreedim' compute tree dimensions with the 'advancedloggingparameters' argument:
 - Tree height (in m) ('TreeHeightAllometry')

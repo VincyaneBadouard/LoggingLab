@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Libraries
 ```{r}
-library(Maria)
+library(LoggingLab)
 library(ggplot2)
 library(sf)
 library(dplyr)
@@ -232,7 +232,7 @@ ggplot() +
   labs(title = "Paracou P6 EFI3")
 
 
-write.csv2(NewInventory, "C:/Users/Vincyane/Documents/Maria-pictures/ParacouP6_EFI3.csv") #  D:/VSC Kourou/Dataexemple
+write.csv2(NewInventory, "C:/Users/Vincyane/Documents/LoggingLab-pictures/ParacouP6_EFI3.csv") #  D:/VSC Kourou/Dataexemple
 
 ```
 
