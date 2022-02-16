@@ -2,15 +2,10 @@
 #'
 #' Logging simulator
 #'
-#' This package allows to simulate the different low impact logging versions in French Guiana.
-#'
-#' The LoggingLab package provides n functions:
-#' treeselection,  and .
+#' An R Package to Simulate Forest Logging
 #'
 #' @name LoggingLab
 #' @docType package
-#'
-#'
 #' @section LoggingLab functions:
 #' loggingsimulation
 #'
@@ -49,5 +44,10 @@
 #' timberharvestedvolume
 #'
 #' exploitablefuelwoodvolume
-NULL # indicate that there is no related R code
+#'
+#' @keywords internal
+"_PACKAGE"
 
+## usethis namespace: start
+## usethis namespace: end
+NULL # indicate that there is no related R code
