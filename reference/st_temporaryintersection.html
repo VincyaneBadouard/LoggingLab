@@ -82,7 +82,8 @@ or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer)</
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotMask</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span>
@@ -104,55 +105,11 @@ or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer)</
 <span class="r-in">  plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span>
 <span class="r-in">  harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span>
 <span class="r-in">  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The harvestable volume (= 40.6m^3) was lower</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>               (by 84.4m^3) than your objective volume.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>               You have chosen to continue logging without diversifying in this case.</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">treebuffers</span> <span class="op">&lt;-</span> <span class="va">treeselectionoutputs</span><span class="op">$</span><span class="va">SelectedTreesPoints</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fl">40</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">st_temporaryintersection</span><span class="op">(</span><span class="va">DTMParacou</span>, <span class="va">PlotMask</span>, <span class="va">treebuffers</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>polygon from first part only</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 3 features and 56 fields</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 286395.5 ymin: 582953 xmax: 286494.1 ymax: 583190.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CRS:           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n.overlaps origins  Forest Plot PlotArea SubPlot idTree Protocole Xfield</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1            1       3 Paracou    6     6.25       1 100689   Guyafor    5.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2            2    2, 4 Paracou    6     6.25       3 102824   Guyafor    5.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.1          2    2, 4 Paracou    6     6.25       3 102930   Guyafor   16.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Yfield UTMZone      Lat       Lon       Family        ScientificName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    244.0      22 5.273030 -52.92730 Vochysiaceae Ruizterania_albiflora</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     24.5      22 5.271096 -52.92680    Lauraceae        Sextonia_rubra</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.1   54.5      22 5.271383 -52.92678     Fabaceae  Dicorynia_guianensis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Genus    Species BotaSource BotaCertainty      VernName CensusYear</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   Ruizterania  albiflora       Bota             4  gonfolo gris       2016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      Sextonia      rubra       Bota             4 grignon franc       2016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.1   Dicorynia guianensis       Bota             4     angélique       2016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     CensusDateCertainty CodeAlive MeasCode  Circ CircCorr CorrCode      DBH</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                  TRUE      TRUE        4 195.0  216.875        4 69.03346</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                  TRUE      TRUE        0 231.0  231.000        0 73.52958</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.1                TRUE      TRUE        0 178.5  178.500        0 56.81831</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     TreesIn TreeHarvestableVolume TrunkHeight TreeHeight CrownHeight Taxo</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         1              4.140473    11.06218   35.01295    23.95076   sp</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         1              4.702191    11.07353   35.66952    24.59599   sp</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.1       1              2.793278    11.01660   32.85857    21.84197   sp</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     CrownDiameter WoodDensity levelWD      AGB CommercialName CommercialLevel</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        17.75217   0.5761250 species 4.912368   gonfolo gris               1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        13.35113   0.5522857 species 5.429291  grignon franc               1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.1      14.33434   0.5912000 species 3.237712      angélique               1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     MinFD UpMinFD MaxFD Aggregative DistCriteria     Slope SlopeCriteria</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      55      60   120       FALSE           NA 0.1320003          TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      55      60   120       FALSE           NA 0.1829179          TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.1    55      60   120        TRUE         TRUE 0.1637796          TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     HarvestableZone LoggingStatus   LogDBH VisibleDefectProba VisibleDefect</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1              TRUE   harvestable 4.234591          0.1323601             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2              TRUE   harvestable 4.297688          0.1349684             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.1            TRUE   harvestable 4.039859          0.1245784             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ProbedHollowProba ProbedHollow Selected Up                       geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1          0.09521199            0        1  0 POLYGON ((286437.9 583190.2...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2          0.11276964            0        1  0 POLYGON ((286453.7 583001.2...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.1        0.05926566            0        1  0 POLYGON ((286453.7 583001.2...</span>
+<span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
