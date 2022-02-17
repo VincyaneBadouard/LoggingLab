@@ -103,7 +103,8 @@ from other trees of its species, in the aggregative species case
 Default = 100, in m (double)}
 
 \item{FutureTreesMinDiameter}{Future trees minimum diameter. Default = 35, in
-cm (future trees are only commercial species of the 1st economic level) (double)}
+cm (future trees are only commercial species of the 1st economic level)
+(double)}
 
 \item{TreefallSuccessProportion}{Proportion of successful directional felling
 events. Default = 0.6 (double)}
@@ -125,8 +126,8 @@ Default = 0.14, in m3 of purge/m3 of volume of timber harvested. (double)}
 this threshold has been exceeded)}
 
 \item{MaxLandingArea}{Maximum landing area. Default = 1500) in square meters
-(double) (has no impact on the simulation. A message will be sent to inform if
-this threshold has been exceeded)}
+(double) (has no impact on the simulation. A message will be sent to inform
+if this threshold has been exceeded)}
 
 \item{CostMatrix}{Cost matrix for optimized trail layout (list of 2 lists).
 Gives an increasing cost according to a slope gradient (1st sub-list), and
@@ -162,9 +163,9 @@ and mean σ^2 = 0.0295966977 with the crown diameter (CD), the tree height
 \item{RottenModel}{Estimates the tree probability of being probed hollow
 (default: 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) with DBH in cm) (function)}
 
-\item{VisiblyDefectModel}{Estimates the commercial tree probability to have visible
-defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
-(function)}
+\item{VisiblyDefectModel}{Estimates the commercial tree probability to have
+visible defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with
+DBH in cm (function)}
 }
 \value{
 A named list of 33 objects.
@@ -175,4 +176,9 @@ Advanced parameters of the logging simulator
 \examples{
 loggingparameters(MinDBHValue = 5)
 
+}
+\references{
+Aubry-Kientz, Mélaine, et al. "A comparative assessment of the
+performance of individual tree crowns delineation algorithms from ALS data
+in tropical forests." Remote Sensing 11.9 (2019): 1086.
 }

@@ -7,7 +7,7 @@
 #'  volume and damages quantification.
 #'
 #'@param inventory Input inventory (see the inputs formats and metadata in the
-#'  \code{\link{vignette}}) (data.frame)
+#'  \code{\link{LoggingLab.html}}) (data.frame)
 #'
 #'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame)
 #'
@@ -32,7 +32,7 @@
 #'
 #'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-#'  \code{\link{vignette}})
+#'  \code{\link{LoggingLab.html}})
 #'
 #'@param objective Objective volume (m3/ha) (numeric)
 #'
@@ -84,7 +84,7 @@
 #'  \code{\link{loggingparameters}} (list)
 #'
 #'@return Input inventory (data.frame) with logging informations (list)
-#'(see the outputs metadata in the \code{\link{vignette}}).
+#'(see the outputs metadata in the \code{\link{LoggingLab.html}}).
 #'
 #'@seealso \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{ForestZoneVolumeParametersTable}},

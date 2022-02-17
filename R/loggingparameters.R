@@ -52,7 +52,8 @@
 #'  Default = 100, in m (double)
 #'
 #'@param FutureTreesMinDiameter Future trees minimum diameter. Default = 35, in
-#'  cm (future trees are only commercial species of the 1st economic level) (double)
+#'  cm (future trees are only commercial species of the 1st economic level)
+#'  (double)
 #'
 #'@param TreefallSuccessProportion Proportion of successful directional felling
 #'  events. Default = 0.6 (double)
@@ -74,8 +75,8 @@
 #'  this threshold has been exceeded)
 #'
 #'@param MaxLandingArea Maximum landing area. Default = 1500) in square meters
-#'  (double) (has no impact on the simulation. A message will be sent to inform if
-#'  this threshold has been exceeded)
+#'  (double) (has no impact on the simulation. A message will be sent to inform
+#'  if this threshold has been exceeded)
 #'
 #'@param CostMatrix Cost matrix for optimized trail layout (list of 2 lists).
 #'  Gives an increasing cost according to a slope gradient (1st sub-list), and
@@ -109,9 +110,13 @@
 #'@param RottenModel Estimates the tree probability of being probed hollow
 #'  (default: 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) with DBH in cm) (function)
 #'
-#'@param VisiblyDefectModel Estimates the commercial tree probability to have visible
-#'  defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with DBH in cm
-#'  (function)
+#'@param VisiblyDefectModel Estimates the commercial tree probability to have
+#'  visible defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with
+#'  DBH in cm (function)
+#'
+#'@references Aubry-Kientz, Mélaine, et al. "A comparative assessment of the
+#'   performance of individual tree crowns delineation algorithms from ALS data
+#'   in tropical forests." Remote Sensing 11.9 (2019): 1086.
 #'
 #'@return A named list of 33 objects.
 #'

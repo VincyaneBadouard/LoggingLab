@@ -13,7 +13,7 @@ directionalfellingsuccessdef(
 }
 \arguments{
 \item{inventory}{input inventory (see the inputs formats and metadata in the
-\code{\link{vignette}}) (data.frame)}
+\code{\link{LoggingLab.html}}) (data.frame)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of
@@ -31,7 +31,7 @@ to the trail}
 }
 \value{
 Input inventory with the "TreeFellingOrientationSuccess" new column (see
-the outputs metadata in the \code{\link{vignette}}).
+the outputs metadata in the \code{\link{LoggingLab.html}}).
 }
 \description{
 Defines whether the directed fall of the tree is successful or

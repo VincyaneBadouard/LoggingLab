@@ -12,7 +12,7 @@ cleaninventory(
 }
 \arguments{
 \item{inventory}{Input inventory (see the inputs formats and metadata in the
-\code{\link{vignette}}) (data.frame)}
+\code{\link{LoggingLab.html}}) (data.frame)}
 
 \item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame)}
 

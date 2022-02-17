@@ -1,11 +1,11 @@
 #'Tree felling
 #'
 #'@param inventory Input inventory (see the inputs formats and metadata in the
-#'  \code{\link{vignette}}) (data.frame)
+#'  \code{\link{LoggingLab.html}}) (data.frame)
 #'
 #'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-#'  \code{\link{vignette}})
+#'  \code{\link{LoggingLab.html}})
 #'
 #'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
@@ -337,7 +337,7 @@ treefelling <- function(
 #'  \code{advancedloggingparameters} argument.
 #'
 #'@param inventory input inventory (see the inputs formats and metadata in the
-#'  \code{\link{vignette}}) (data.frame)
+#'  \code{\link{LoggingLab.html}}) (data.frame)
 #'
 #'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
 #'   damage and unused part of logged trees for fuel = "1", exploitation of
@@ -354,7 +354,7 @@ treefelling <- function(
 #'  \code{\link{loggingparameters}} (list)
 #'
 #'@return Input inventory with the "TreeFellingOrientationSuccess" new column (see
-#'  the outputs metadata in the \code{\link{vignette}}).
+#'  the outputs metadata in the \code{\link{LoggingLab.html}}).
 #'@export
 #'
 #'@importFrom dplyr mutate rowwise

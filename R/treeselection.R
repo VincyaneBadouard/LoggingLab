@@ -1,7 +1,7 @@
 #'Tree selection (trees to be exploited, future and reserve trees)
 #'
 #'@param inventory input inventory (see the inputs formats and metadata in the
-#'  \code{\link{vignette}}) (data.frame)
+#'  \code{\link{LoggingLab.html}}) (data.frame)
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
@@ -12,7 +12,7 @@
 #'
 #'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-#'  \code{\link{vignette}})
+#'  \code{\link{LoggingLab.html}})
 #'
 #'@param objective Objective volume (m^3/ha) (numeric)
 #'
@@ -63,7 +63,7 @@
 #'     - The probability of a tree being probed hollow ("ProbedHollowProba")
 #'         and the probed hollow trees ("ProbedHollow").
 #'     - Future and reserve trees (LoggingStatus = "future"/"reserve")
-#'    (see the outputs metadata in the \code{\link{vignette}})
+#'    (see the outputs metadata in the \code{\link{LoggingLab.html}})
 #'  - the objective volume (VO) for the entire plot
 #'  - the harvestable volume with the initial
 #'  criteria (HVinit) for the entire plot

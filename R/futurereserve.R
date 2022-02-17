@@ -1,7 +1,7 @@
 #' Future & reserve trees designation
 #'
 #' @param inventory Input inventory (see the inputs formats and metadata in the
-#'   \code{\link{vignette}}) (data.frame)
+#'   \code{\link{LoggingLab.html}}) (data.frame)
 #'
 #' @param speciescriteria Table of species exploitability criteria : species
 #'   names, economic interest level, minimum and maximum felling diameter, in

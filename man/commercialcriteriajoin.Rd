@@ -8,7 +8,7 @@ commercialcriteriajoin(inventory, speciescriteria)
 }
 \arguments{
 \item{inventory}{input inventory (see the inputs formats and metadata in the
-\code{\link{vignette}}) (data.frame)}
+\code{\link{LoggingLab.html}}) (data.frame)}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in
