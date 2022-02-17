@@ -354,7 +354,7 @@ treefelling <- function(
 #'  \code{\link{loggingparameters}} (list)
 #'
 #'@return Input inventory with the "TreeFellingOrientationSuccess" new column (see
-#'  the outputs metadata in the \code{\link{LoggingLab.html}}).
+#'  the outputs metadata in the vignette).
 #'@export
 #'
 #'@importFrom dplyr mutate rowwise

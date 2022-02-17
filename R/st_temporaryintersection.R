@@ -22,6 +22,7 @@
 #'
 #' @export
 #' @examples
+#' \dontrun{
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(PlotMask)
@@ -48,6 +49,7 @@
 #' treebuffers <- treeselectionoutputs$SelectedTreesPoints %>% sf::st_buffer(40)
 #'
 #' st_temporaryintersection(DTMParacou, PlotMask, treebuffers)
+#' }
 #'
 st_temporaryintersection <- function(
   topography,

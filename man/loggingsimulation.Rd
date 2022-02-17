@@ -117,6 +117,7 @@ landings implementation (only for ONF plots), timber harvested, fuel wood
 volume and damages quantification.
 }
 \examples{
+\dontrun{
 data(Paracou6_2016) # inventory
 data(DTMParacou) # topography
 data(CreekDistances) # relative elevation
@@ -132,6 +133,7 @@ Rslt <- loggingsimulation(
  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
  crowndiameterparameters = ParamCrownDiameterAllometry,
  advancedloggingparameters = loggingparameters(), iter = 2, cores = 2)
+ }
 
 }
 \seealso{

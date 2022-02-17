@@ -105,6 +105,7 @@
 #'@importFrom parallel makePSOCKcluster clusterExport parLapply stopCluster
 #'
 #' @examples
+#' \dontrun{
 #' data(Paracou6_2016) # inventory
 #' data(DTMParacou) # topography
 #' data(CreekDistances) # relative elevation
@@ -120,6 +121,7 @@
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
 #'  crowndiameterparameters = ParamCrownDiameterAllometry,
 #'  advancedloggingparameters = loggingparameters(), iter = 2, cores = 2)
+#'  }
 #'
 loggingsimulation <- function(
   inventory,

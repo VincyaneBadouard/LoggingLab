@@ -107,6 +107,7 @@
 #'@importFrom methods as
 #'
 #' @examples
+#' \dontrun{
 #' data(Paracou6_2016) # inventory
 #' data(PlotMask) # inventoried plot mask
 #' data(DTMParacou) # topography
@@ -123,6 +124,7 @@
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
 #'  crowndiameterparameters = ParamCrownDiameterAllometry,
 #'  advancedloggingparameters = loggingparameters())
+#'  }
 #'
 loggingsimulation1 <- function(
   inventory,

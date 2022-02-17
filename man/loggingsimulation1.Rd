@@ -112,6 +112,7 @@ landings implementation (only for ONF plots), timber harvested, fuel wood
 volume and damages quantification.
 }
 \examples{
+\dontrun{
 data(Paracou6_2016) # inventory
 data(PlotMask) # inventoried plot mask
 data(DTMParacou) # topography
@@ -128,6 +129,7 @@ Rslt <- loggingsimulation1(
  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
  crowndiameterparameters = ParamCrownDiameterAllometry,
  advancedloggingparameters = loggingparameters())
+ }
 
 }
 \seealso{

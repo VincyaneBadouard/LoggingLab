@@ -22,7 +22,7 @@ treeselection(
 }
 \arguments{
 \item{inventory}{input inventory (see the inputs formats and metadata in the
-\code{\link{LoggingLab.html}}) (data.frame)}
+vignette) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
@@ -33,7 +33,7 @@ same format as \code{\link{SpeciesCriteria}} (data.frame)}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-\code{\link{LoggingLab.html}})}
+vignette)}
 
 \item{objective}{Objective volume (m^3/ha) (numeric)}
 
@@ -85,7 +85,7 @@ The cumulative harvestable volume of harvestable trees("VolumeCumSum").
 \item The probability of a tree being probed hollow ("ProbedHollowProba")
 and the probed hollow trees ("ProbedHollow").
 \item Future and reserve trees (LoggingStatus = "future"/"reserve")
-(see the outputs metadata in the \code{\link{LoggingLab.html}})
+(see the outputs metadata in the vignette)
 }
 \item the objective volume (VO) for the entire plot
 \item the harvestable volume with the initial

@@ -31,7 +31,7 @@ to the trail}
 }
 \value{
 Input inventory with the "TreeFellingOrientationSuccess" new column (see
-the outputs metadata in the \code{\link{LoggingLab.html}}).
+the outputs metadata in the vignette).
 }
 \description{
 Defines whether the directed fall of the tree is successful or

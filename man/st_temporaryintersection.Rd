@@ -29,6 +29,7 @@ sf_Polygons
 st_temporaryintersection
 }
 \examples{
+\dontrun{
 data(Paracou6_2016)
 data(DTMParacou)
 data(PlotMask)
@@ -55,5 +56,6 @@ treeselectionoutputs <- suppressWarnings(treeselection(
 treebuffers <- treeselectionoutputs$SelectedTreesPoints \%>\% sf::st_buffer(40)
 
 st_temporaryintersection(DTMParacou, PlotMask, treebuffers)
+}
 
 }
