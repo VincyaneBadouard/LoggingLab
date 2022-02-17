@@ -10,7 +10,7 @@ createcanopy(inventory)
 \item{inventory}{Input inventory containing the crown diameter (CrownDiameter,
 in m) (calculable with the addtreedim function) of each tree
 (data.frame)(see the inputs formats and metadata in the
-\code{\link{LoggingLab.html}})}
+vignette)}
 }
 \value{
 A dataframe with a column 'Crowns' containing the circles

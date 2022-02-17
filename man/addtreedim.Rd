@@ -14,7 +14,7 @@ addtreedim(
 }
 \arguments{
 \item{inventory}{Input inventory (see the inputs formats and metadata in the
-\code{\link{LoggingLab.html}}) (data.frame)}
+vignette) (data.frame)}
 
 \item{volumeparameters}{Parameters of the tree volume tables (in the same
 format of \code{\link{ForestZoneVolumeParametersTable}}) used to compute the

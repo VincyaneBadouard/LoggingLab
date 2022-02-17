@@ -1,7 +1,7 @@
 #' Clean inventory
 #'
 #' @param inventory Input inventory (see the inputs formats and metadata in the
-#'   \code{\link{LoggingLab.html}}) (data.frame)
+#'   vignette) (data.frame)
 #'
 #' @param plotmask Inventoried plot mask (SpatialPolygonsDataFrame)
 #'

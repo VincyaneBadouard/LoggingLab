@@ -8,7 +8,7 @@ inventorycheckformat(inventory)
 }
 \arguments{
 \item{inventory}{Input inventory (see the inputs formats and metadata in the
-\code{\link{LoggingLab.html}}) (data.frame)}
+vignette) (data.frame)}
 }
 \value{
 The inventory if the inventory is in the required format.
@@ -17,7 +17,7 @@ Stop the function if the format is not the one required.
 \description{
 Check if the input inventory data is compatible with the "LoggingLab"
 package (see 'Required format of the inventory' section of the vignette
-\code{\link{LoggingLab.html}})
+vignette)
 }
 \examples{
 

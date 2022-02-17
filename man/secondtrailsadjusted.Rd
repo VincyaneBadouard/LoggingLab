@@ -52,7 +52,7 @@ unit) (sf or sfc)}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-\code{\link{LoggingLab.html}})}
+vignette)}
 
 \item{winching}{"0": no cable or grapple (trail to tree foot)
 "1": only cable (default = 40m)

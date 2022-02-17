@@ -5,7 +5,7 @@
 #'@param inventory Input inventory containing the crown diameter (CrownDiameter,
 #'  in m) (calculable with the addtreedim function) of each tree
 #'  (data.frame)(see the inputs formats and metadata in the
-#'  \code{\link{LoggingLab.html}})
+#'  vignette)
 #'
 #'@return A dataframe with a column 'Crowns' containing the circles
 #'  (sfc_POLYGON) as trees crown, with their diameter filled in, representing

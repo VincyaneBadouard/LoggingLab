@@ -18,7 +18,7 @@ harvestable(
 }
 \arguments{
 \item{inventory}{Input inventory (see the inputs formats and metadata in the
-\code{\link{LoggingLab.html}}) (data.frame)}
+vignette) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
@@ -40,7 +40,7 @@ neighbourhood of 8 cells) (default:
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-\code{\link{LoggingLab.html}})}
+vignette)}
 
 \item{winching}{"0": no cable or grapple (trail to tree foot)
 "1": only cable (default = 40m)

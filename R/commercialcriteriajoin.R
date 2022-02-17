@@ -3,7 +3,7 @@
 #' @description Joins a commercial criteria table to a forest inventory
 #'
 #' @param inventory input inventory (see the inputs formats and metadata in the
-#'   \code{\link{LoggingLab.html}}) (data.frame)
+#'   vignette) (data.frame)
 #'
 #' @param speciescriteria Table of species exploitability criteria : species
 #'   names, economic interest level, minimum and maximum felling diameter, in

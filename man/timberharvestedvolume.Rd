@@ -13,11 +13,11 @@ timberharvestedvolume(
 }
 \arguments{
 \item{inventory}{Input inventory (see the inputs formats and metadata in the
-\code{\link{LoggingLab.html}}) (data.frame)}
+vignette) (data.frame)}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-\code{\link{LoggingLab.html}})}
+vignette)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of

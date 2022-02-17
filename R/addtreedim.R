@@ -2,7 +2,7 @@
 #'volume, wood density, and AGB)
 #'
 #'@param inventory Input inventory (see the inputs formats and metadata in the
-#'  \code{\link{LoggingLab.html}}) (data.frame)
+#'  vignette) (data.frame)
 #'
 #'
 #'@param volumeparameters Parameters of the tree volume tables (in the same

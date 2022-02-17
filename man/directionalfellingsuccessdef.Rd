@@ -13,7 +13,7 @@ directionalfellingsuccessdef(
 }
 \arguments{
 \item{inventory}{input inventory (see the inputs formats and metadata in the
-\code{\link{LoggingLab.html}}) (data.frame)}
+vignette) (data.frame)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of

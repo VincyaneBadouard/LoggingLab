@@ -42,7 +42,7 @@ neighbourhood of 8 cells) (default:
 \item your inventory with: "DistCriteria", "Slope", "SlopeCriteria",
 "LoggingStatus", "Selected", "Up", "VolumeCumSum",
 "ProbedHollowProba", "ProbedHollow" new columns
-(see the outputs metadata in the \code{\link{LoggingLab.html}}).
+(see the outputs metadata in the vignette).
 \item the objective volume with or without a bonus (if hollow trees exploitation)
 \item 6 sets of spatial points:
 harvestable, selected, future and reserve, hollow and fuel wood trees
@@ -50,7 +50,7 @@ harvestable, selected, future and reserve, hollow and fuel wood trees
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-\code{\link{LoggingLab.html}})}
+vignette)}
 
 \item{winching}{"0": no cable or grapple (trail to tree foot)
 "1": only cable (default = 40m)

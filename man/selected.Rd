@@ -19,14 +19,14 @@ selected(
 }
 \arguments{
 \item{inventory}{Input inventory (see the inputs formats and metadata in the
-\code{\link{LoggingLab.html}}) (data.frame)}
+vignette) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-\code{\link{LoggingLab.html}})}
+vignette)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of
@@ -59,7 +59,7 @@ Input inventory with
 \item The cumulative harvestable volume of harvestable trees("VolumeCumSum").
 \item The probability of a tree being probed hollow ("ProbedHollowProba") and the
 probed hollow trees ("ProbedHollow").
-See the outputs metadata in the \code{\link{LoggingLab.html}}
+See the outputs metadata in the vignette
 }
 
 2 sets of spatial points: (HollowTrees and EnergywoodTrees)

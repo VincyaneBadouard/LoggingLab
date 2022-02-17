@@ -25,7 +25,7 @@ loggingsimulation1(
 }
 \arguments{
 \item{inventory}{Input inventory (see the inputs formats and metadata in the
-\code{\link{LoggingLab.html}}) (data.frame)}
+vignette) (data.frame)}
 
 \item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame)}
 
@@ -50,7 +50,7 @@ volume of each tree, depend to its geographic zone if several locations
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-\code{\link{LoggingLab.html}})}
+vignette)}
 
 \item{objective}{Objective volume (m3/ha) (numeric)}
 
@@ -102,7 +102,7 @@ and its species, genus or family. (data.frame)}
 }
 \value{
 Input inventory (data.frame) with logging informations (list)
-(see the outputs metadata in the \code{\link{LoggingLab.html}}).
+(see the outputs metadata in the vignette).
 }
 \description{
 This function allows to simulate a timber and wood energy logging
