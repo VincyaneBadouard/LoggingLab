@@ -456,12 +456,20 @@ selected <- function(
     mutate(Up = ifelse(any(LoggingStatus == "harvestableUp"), "1", Up)) %>%
     ungroup()
 
+  if (!any(inventory$Selected == "1")) { # no selected trees
+
   # if there are "deselected" trees and not of 'selected = 1'
-  if (any(inventory$ProbedHollow == "1") & !any(inventory$Selected == "1")) # probed hollow trees and no selected trees
+  if (any(inventory$ProbedHollow == "1")){ # probed hollow trees and no selected trees
     stop("No trees were selected because they were all probed hollow
          (",paste(round(sum(as.numeric(inventory$ProbedHollow == "1"), na.rm = TRUE),  digits = 1)),
          " probed hollow trees). Your objective volume may be too low (the few trees selected were found to be
          hollow).")
+
+  }else if (all(inventory$LoggingStatus == "non-harvestable")) {
+    stop("No trees selected, you have no harvestable trees (according to your criteria (SpeciesCriteria))
+         in your inventory.")
+    }
+  }
 
   # Create a POINTS VECTOR with coordinates of the probed hollow trees:
   if (any(inventory$ProbedHollow == "1", na.rm = TRUE)) {

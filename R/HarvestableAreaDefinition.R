@@ -194,7 +194,7 @@ harvestableareadefinition <- function(
       false = 0
     )) -> PlotSlopeCreekDist # Identify harvestable area (1) /  non-harvestable area (0) by slope and Creek Vertical Height
   RasterHarvestableFoT <-
-    rasterFromXYZ(PlotSlopeCreekDist, crs = raster::crs(topography))
+    try(rasterFromXYZ(PlotSlopeCreekDist, crs = raster::crs(topography)), silent=TRUE)
 
   PolygonHarvestableFoT <- rasterToPolygons(x = RasterHarvestableFoT$Harvestable,
                                           n = 16,

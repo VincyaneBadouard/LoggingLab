@@ -238,6 +238,8 @@ loggingsimulation <- function(
   # For Windows
   cl <- makePSOCKcluster(getOption("cl.cores", cores)) # create a cluster
 
+  # clusterEvalQ(cl, set.seed(41)) # https://stackoverflow.com/questions/58631433/how-to-set-seeds-when-using-parallel-package-in-r
+
   clusterExport(cl, varlist = c("inventory", "plotmask","topography","creekdistances",
                                 "speciescriteria","volumeparameters","scenario","objective",
                                 "fuel","diversification","winching","directionalfelling",
