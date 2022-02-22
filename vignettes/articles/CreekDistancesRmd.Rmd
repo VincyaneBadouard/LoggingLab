@@ -5,6 +5,13 @@ date: "17/12/2021"
 output: html_document
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", echo = T, eval = F
+)
+```
+
 ```{r setup, include=FALSE}
 library(Rsagacmd)
 library(raster)
@@ -13,7 +20,7 @@ library(sf)
 library(tidyverse)
 ```
 
-# Prenons un MNT (1m de résolution si possible) ----
+# Prenons un MNT (1m de résolution si possible)
 
 ```{r}
 data("PlotMask")
@@ -24,28 +31,31 @@ DTM <- paste0(DATA_paracou_path,"Dem.sgrd")
 ```
 
 
-# Création de réseau Hydro ----
-## lien R - Saga-gis (saga-gis doit être installé sur la machine) ----
+# Création de réseau Hydro
+
+Lien R - Saga-gis (saga-gis doit être installé sur la machine)
 
 ```{r}
 Saga <- Rsagacmd::saga_gis(verbose=TRUE)
 ```
 
-## 1 - Fill sinks xxl (Wang & Liu) (on comble les trous) ----
+## 1 - Fill sinks xxl (Wang & Liu) (on comble les trous)
 
 ```{r}
 FilledSinks <- Saga$ta_preprocessor$fill_sinks_xxl_wang_liu(elev = DTM, 
                                                             minslope = .01)
 ```
 
-## 2 - Flow accumulation (top-down) (la composante flow de TotalCatchmentArea nous servira de grille d'initiation pour le réseau Hydro) ----
+## 2 - Flow accumulation (top-down)
+
+La composante flow de TotalCatchmentArea nous servira de grille d'initiation pour le réseau Hydro)  
 
 ```{r}
 TotalCatchmentArea <- Saga$ta_hydrology$flow_accumulation_top_down(elevation = FilledSinks, 
                                                                    method = 'Multiple Flow Direction')
 ```
 
-## 3 - Channel Network ----
+## 3 - Channel Network
 
 ```{r}
 ChannelNetwork <- Saga$ta_channels$channel_network(elevation = FilledSinks,
@@ -55,11 +65,11 @@ ChannelNetwork <- Saga$ta_channels$channel_network(elevation = FilledSinks,
 
 ```
 
-On a maintenant un réseau hydro à partir du DEM de Paracou, je fabrique mon raster de distance verticale à la crique 
-(indispensable pour le modèle HAND dans la fonction de definition d'UP) à la suite,
-je pense qu'il est preferable que l'utilisateur rentre un DTM + un raster de distance verticale à la crique qui sera impérativement réalisé à partir de ce même DEM, sinon les x et y pourraient ne pas correspondre plus tard 
+On a maintenant un réseau hydro à partir du DEM de Paracou, je fabrique mon raster de distance verticale à la crique  
+(indispensable pour le modèle HAND dans la fonction de definition d'UP) à la suite,  
+je pense qu'il est preferable que l'utilisateur rentre un DTM + un raster de distance verticale à la crique qui sera impérativement réalisé à partir de ce même DEM, sinon les x et y pourraient ne pas correspondre plus tard  
 
-# Distance Verticale à la crique ----
+# Distance Verticale à la crique
 
 ```{r}
 DistancesCrique <- Saga$ta_channels$overland_flow_distance_to_channel_network(elevation = FilledSinks,
@@ -67,9 +77,9 @@ DistancesCrique <- Saga$ta_channels$overland_flow_distance_to_channel_network(el
 ```
 
                                                                  
-# Cet outil nous sort les distances verticale et horizontale à la crique de chacune des cellules de notre dtm
+Cet outil nous sort les distances verticale et horizontale à la crique de chacune des cellules de notre dtm
 
-## Selection de la distance verticale à la crique ----
+## Selection de la distance verticale à la crique
 
 ```{r}
   DistancesCrique$distvert <- mask(DistancesCrique$distvert, PlotMask)
