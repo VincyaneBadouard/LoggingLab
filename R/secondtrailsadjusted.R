@@ -1899,7 +1899,7 @@ secondtrailsadjusted <- function(
 
 
     DeadTrees <- suppressWarnings(sf::st_intersection(
-      st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography)),
+      sf::st_make_valid(st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography))),
       sf::st_make_valid(st_as_sf(SmoothedTrails)) # "make valid" to avoid self-intersection
     )) %>%
       add_column(DeadTrees = "1") %>%
@@ -1920,7 +1920,7 @@ secondtrailsadjusted <- function(
     TrailsDensity <- 0
 
     DeadTrees <- suppressWarnings(sf::st_intersection(
-      st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography)),
+      sf::st_make_valid(st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography))),
       sf::st_make_valid(st_as_sf(SmoothedTrails)) # "make valid" to avoid self-intersection
     )) %>%
       add_column(DeadTrees = "1") %>%

@@ -310,7 +310,7 @@ treefelling <- function(
   felttrees <- felttrees %>% dplyr::select(-idTree) # remove pol infos to keep the information of the points
 
   DeadTrees <- suppressWarnings(sf::st_intersection(
-    st_as_sf(inventory, coords = c("Xutm", "Yutm")),
+    sf::st_make_valid(st_as_sf(inventory, coords = c("Xutm", "Yutm"))),
     sf::st_make_valid(getgeometry(felttrees, TreePolygon)) # "make valid" to avoid self-intersection
   )) %>%
     add_column(DeadTrees = "1") %>%

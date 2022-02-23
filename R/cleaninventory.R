@@ -14,7 +14,7 @@
 #'
 #' @importFrom dplyr filter mutate select left_join
 #' @importFrom tibble add_column
-#' @importFrom sf st_as_sf st_geometry st_intersection st_set_crs st_crs
+#' @importFrom sf st_as_sf st_geometry st_intersection st_set_crs st_crs st_make_valid
 #'
 #' @examples
 #' data(Paracou6_2016) # inventory
@@ -62,7 +62,9 @@ cleaninventory <- function(
     st_set_crs(st_crs(plotmask)) # set crs
 
 
-  TreesIn <- suppressWarnings(st_intersection(inventory, plotmask)) %>%
+  TreesIn <- suppressWarnings(st_intersection(sf::st_make_valid(inventory),
+                                              sf::st_make_valid(plotmask) # "make valid" to avoid self-intersection
+  )) %>%
     tibble::add_column(TreesIn = "1") %>% # trees in the plot
     dplyr::select(idTree, TreesIn)
 
