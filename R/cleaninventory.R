@@ -61,7 +61,6 @@ cleaninventory <- function(
   inventory <- st_as_sf(inventory, coords = c("Xutm", "Yutm")) %>% # as sf
     st_set_crs(st_crs(plotmask)) # set crs
 
-
   TreesIn <- suppressWarnings(st_intersection(sf::st_make_valid(inventory),
                                               sf::st_make_valid(plotmask) # "make valid" to avoid self-intersection
   )) %>%
