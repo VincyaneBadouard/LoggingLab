@@ -1,9 +1,9 @@
 #' st_temporaryintersection
 #'
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs**)
 #'
-#' @param plotmask Inventoried plot mask (SpatialPolygonsDataFrame)
+#' @param plotmask Inventoried plot mask (SpatialPolygonsDataFrame **with a crs**)
 #'
 #' @param treebuffers Polygons vector
 #'

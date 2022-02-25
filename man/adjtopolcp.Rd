@@ -17,7 +17,7 @@ adjtopolcp(
 }
 \arguments{
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})}
 
 \item{costSurface}{A RasterLayer for the conductance (inverse of resistance)
 values for each cell.}

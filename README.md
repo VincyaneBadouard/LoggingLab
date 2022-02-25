@@ -8,7 +8,7 @@ LoggingLab: An R Package to Simulate Forest Logging
 
 # Installation (development version)
 
-devtools::install_github("VincyaneBadouard/LoggingLab", build_vignettes = TRUE)
+devtools::install_github("VincyaneBadouard/LoggingLab")
 
 # To cite package ‘LoggingLab’ in publications use:
 citation("LoggingLab")

@@ -1,12 +1,12 @@
 #' Generating maintrails function
 #'
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs**)
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
 #'
-#' @return The maintrails outside of the topography raster (sf LINESTRING object)
+#' @return The maintrails (**without crs**) outside of the topography raster (sf LINESTRING object)
 #'
 #' @export
 #'
@@ -31,13 +31,13 @@ maintrailextract <- function(topography,
 
   # Variables
   fact <- DTMExtExtended <- DTMExtended <- preMainTrails <- NULL
-  MainTrails <- NULL
+  # MainTrails <- NULL
 
   #function
 
   fact <- floor(advancedloggingparameters$SlopeDistance/res(topography)[1])
 
-    DTMExtExtended <- extend(topography, c(fact,fact)) # extend the extent
+    DTMExtExtended <- raster::extend(x = topography,y =  fact) # extend the extent
 
     fill.boundaries <- function(x) {
       center = 0.5 + (fact*fact/2)

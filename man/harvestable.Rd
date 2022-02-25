@@ -21,7 +21,7 @@ harvestable(
 vignette) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})
 #'}
 
 \item{diversification}{Taking of other species in addition to the main
@@ -36,7 +36,7 @@ default (logical)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default:
-\code{\link{HarvestableAreaOutputsCable}}) (RasterLayer)}
+\code{\link{HarvestableAreaOutputsCable}}) (RasterLayer \strong{with a crs})}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the

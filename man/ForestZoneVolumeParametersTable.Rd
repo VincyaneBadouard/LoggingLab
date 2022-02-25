@@ -5,7 +5,7 @@
 \alias{ForestZoneVolumeParametersTable}
 \title{Table of tree volume parameters by forest zone in French Guiana}
 \format{
-A tibble with 12 rows and 4 variables:
+A tibble with 14 rows and 4 variables:
 \describe{
 \item{Forest}{Guyafor site name (character)}
 \item{Zone}{Geographic zone (character)}

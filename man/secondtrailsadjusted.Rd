@@ -30,16 +30,16 @@ according to the chosen scenario
 }}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})}
 
-\item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame)}
+\item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame \strong{with a crs})}
 
 \item{maintrails}{Main trails defined at the entire harvestable area (sf
-linestring)}
+linestring \strong{without crs})}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default:
-\code{\link{HarvestableAreaOutputsCable}}) (RasterLayer)}
+\code{\link{HarvestableAreaOutputsCable}}) (RasterLayer \strong{with a crs})}
 
 \item{harvestablepolygons}{Accessible area of the inventoried plot
 (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)}

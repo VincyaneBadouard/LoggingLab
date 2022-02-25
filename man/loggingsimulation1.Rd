@@ -27,16 +27,15 @@ loggingsimulation1(
 \item{inventory}{Input inventory (see the inputs formats and metadata in the
 vignette) (data.frame)}
 
-\item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame)}
+\item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame \strong{with a crs})}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer)}
+or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})}
 
 \item{creekdistances}{Relative distances (vertical and horizontal) (1 m
-resolution) from nearest channel network (list of 2 large RasterLayers)
-(Default: \code{\link{CreekDistances}})
-To generate vertical creek height:
-\code{\link{CreekDistances}} in 'docs' folder of the package}
+resolution) from nearest channel network (list of 2 large RasterLayers
+\strong{with a crs}) (Default: \code{\link{CreekDistances}}) To generate vertical
+creek height: \code{\link{CreekDistances}} in 'Articles'.}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the

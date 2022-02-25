@@ -9,16 +9,15 @@
 #'@param inventory Input inventory (see the inputs formats and metadata in the
 #'  vignette) (data.frame)
 #'
-#'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame)
+#'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame **with a crs**)
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer)
+#'  or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer **with a crs**)
 #'
-#' @param creekdistances Relative distances (vertical and horizontal) (1 m
-#'   resolution) from nearest channel network (list of 2 large RasterLayers)
-#'   (Default: \code{\link{CreekDistances}})
-#'   To generate vertical creek height:
-#'   \code{\link{CreekDistances}} in 'docs' folder of the package
+#'@param creekdistances Relative distances (vertical and horizontal) (1 m
+#'  resolution) from nearest channel network (list of 2 large RasterLayers
+#'  **with a crs**) (Default: \code{\link{CreekDistances}}) To generate vertical
+#'  creek height: \code{\link{CreekDistances}} in 'Articles'.
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the
@@ -214,7 +213,7 @@ loggingsimulation1 <- function(
   options("rgdal_show_exportToProj4_warnings"="none") # to avoid gdal warnings
 
   #### Global variables ####
-  DeathCause <- AGB <- ParamCrownDiameterAllometry <- NULL
+  DeathCause <- AGB  <- NULL
 
   #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, objective = objective, fuel = fuel,

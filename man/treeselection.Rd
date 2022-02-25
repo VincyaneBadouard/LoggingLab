@@ -25,7 +25,7 @@ treeselection(
 vignette) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the
@@ -65,7 +65,7 @@ objective volume (if stand too poor), = FALSE by default (logical)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default:
-\code{\link{HarvestableAreaOutputsCable}}) (RasterLayer)}
+\code{\link{HarvestableAreaOutputsCable}}) (RasterLayer \strong{with a crs})}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}

@@ -4,7 +4,7 @@
 #'  vignette) (data.frame)
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs**)
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the
@@ -42,7 +42,7 @@
 #'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default:
-#'  \code{\link{HarvestableAreaOutputsCable}}) (RasterLayer)
+#'  \code{\link{HarvestableAreaOutputsCable}}) (RasterLayer **with a crs**)
 #'
 #'@param harvestablepolygons Accessible area of the inventoried plot
 #'  (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)

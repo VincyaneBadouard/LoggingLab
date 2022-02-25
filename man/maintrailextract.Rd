@@ -8,13 +8,13 @@ maintrailextract(topography, advancedloggingparameters = loggingparameters())
 }
 \arguments{
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (\code{\link{DTMParacou}}) (RasterLayer)}
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-The maintrails outside of the topography raster (sf LINESTRING object)
+The maintrails (\strong{without crs}) outside of the topography raster (sf LINESTRING object)
 }
 \description{
 Generating maintrails function
