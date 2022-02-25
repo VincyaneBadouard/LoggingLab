@@ -98,16 +98,15 @@ volume and damages quantification.</p>
 <dd><p>Input inventory (see the inputs formats and metadata in the
 vignette) (data.frame)</p></dd>
 <dt>plotmask</dt>
-<dd><p>Inventoried plot mask (SpatialPolygonsDataFrame)</p></dd>
+<dd><p>Inventoried plot mask (SpatialPolygonsDataFrame <strong>with a crs</strong>)</p></dd>
 <dt>topography</dt>
 <dd><p>Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (Default: <code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer)</p></dd>
+or SRTM) (Default: <code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer <strong>with a crs</strong>)</p></dd>
 <dt>creekdistances</dt>
 <dd><p>Relative distances (vertical and horizontal) (1 m
-resolution) from nearest channel network (list of 2 large RasterLayers)
-(Default: <code><a href="CreekDistances.html">CreekDistances</a></code>)
-To generate vertical creek height:
-<code><a href="CreekDistances.html">CreekDistances</a></code> in 'docs' folder of the package</p></dd>
+resolution) from nearest channel network (list of 2 large RasterLayers
+<strong>with a crs</strong>) (Default: <code><a href="CreekDistances.html">CreekDistances</a></code>) To generate vertical
+creek height: <code><a href="CreekDistances.html">CreekDistances</a></code> in 'Articles'.</p></dd>
 <dt>speciescriteria</dt>
 <dd><p>Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in the

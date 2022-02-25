@@ -75,17 +75,16 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>topography</dt>
 <dd><p>Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer)</p></dd>
+or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer <strong>with a crs</strong>)</p></dd>
 <dt>creekdistances</dt>
 <dd><p>Relative distances (vertical and horizontal) (1 m
-resolution) from nearest channel network (list of 2 large RasterLayers)
-(Default: <code><a href="CreekDistances.html">CreekDistances</a></code>)
-To generate vertical creek height:
-<code><a href="CreekDistances.html">CreekDistances</a></code> in 'docs' folder of the package</p></dd>
+resolution) from nearest channel network (list of 2 large RasterLayers
+<strong>with a crs</strong>) (Default: <code><a href="CreekDistances.html">CreekDistances</a></code>) To generate
+vertical creek height: <code><a href="CreekDistances.html">CreekDistances</a></code> in 'Articles'.</p></dd>
 <dt>maintrails</dt>
-<dd><p>Main trails defined at the entire harvestable area (sf linestring)</p></dd>
+<dd><p>Main trails defined at the entire harvestable area (sf linestring <strong>without crs</strong>)</p></dd>
 <dt>plotmask</dt>
-<dd><p>Inventoried plot mask (SpatialPolygonsDataFrame)</p></dd>
+<dd><p>Inventoried plot mask (SpatialPolygonsDataFrame <strong>with a crs</strong>)</p></dd>
 <dt>scenario</dt>
 <dd><p>Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
