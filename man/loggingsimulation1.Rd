@@ -30,7 +30,9 @@ vignette) (data.frame)}
 \item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame \strong{with a crs})}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})}
+or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})
+We advise you to generate your raster with Qgis rather than with the
+'raster' package on R.}
 
 \item{creekdistances}{Relative distances (vertical and horizontal) (1 m
 resolution) from nearest channel network (list of 2 large RasterLayers

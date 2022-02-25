@@ -22,7 +22,8 @@ vignette) (data.frame)}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})
-#'}
+We advise you to generate your raster with Qgis rather than with the
+'raster' package on R.}
 
 \item{diversification}{Taking of other species in addition to the main
 commercial species (2 levels of commercial species in the
