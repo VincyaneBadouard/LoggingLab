@@ -171,29 +171,35 @@ loggingsimulation1 <- function(
     stop("The 'creekdistances' argument of the 'loggingsimulation' function must be a list")
 
   # scenario
-  if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"|| scenario == "RIL3"||
+  if (length(scenario) != 1 |
+      !any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"|| scenario == "RIL3"||
            scenario == "RIL3fuel"|| scenario == "RIL3fuelhollow"|| scenario =="manual"))
     stop("The 'scenario' argument of the 'loggingsimulation' function must be
          'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
   # objective
-  if(!any(inherits(objective, "numeric") || is.null(objective)))
+  if(length(objective) != 1 |
+     !any(inherits(objective, "numeric") || is.null(objective)))
     stop("The 'objective' argument of the 'loggingsimulation' function must be numeric or NULL")
 
   # fuel
-  if (!any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
+  if (length(fuel) != 1 |
+      !any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
     stop("The 'fuel' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
 
   # diversification
-  if(!any(inherits(diversification, "logical") || is.null(diversification)))
+  if(length(diversification) != 1 |
+     !any(inherits(diversification, "logical") || is.null(diversification)))
     stop("The 'diversification' argument of the 'loggingsimulation' function must be logical or NULL")
 
   # winching
-  if (!any(winching == "0" || winching == "1"|| winching == "2"|| is.null(winching)))
+  if (length(winching) != 1 |
+      !any(winching == "0" || winching == "1"|| winching == "2"|| is.null(winching)))
     stop("The 'winching' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
 
   # directionalfelling
-  if (!any(directionalfelling == "0" || directionalfelling == "1" || directionalfelling == "2" || is.null(directionalfelling)))
+  if (length(directionalfelling) != 1 |
+      !any(directionalfelling == "0" || directionalfelling == "1" || directionalfelling == "2" || is.null(directionalfelling)))
     stop("The 'directionalfelling' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
 
   # manual mode
