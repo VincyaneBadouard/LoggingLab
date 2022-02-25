@@ -159,7 +159,7 @@ loggingsimulation1 <- function(
          of the 'loggingsimulation' function must be data.frames")
 
   # plotmask
-  if(!inherits(plotmask, "SpatialPolygonsDataFrame"))
+  if(length(plotmask) != 1 | !inherits(plotmask, "SpatialPolygonsDataFrame"))
     stop("The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygonsDataFrame")
 
   # topography
@@ -167,8 +167,9 @@ loggingsimulation1 <- function(
     stop("The 'topography' argument of the 'loggingsimulation' function must be a RasterLayer")
 
   # creekdistances
-  if(!inherits(creekdistances, "list"))
-    stop("The 'creekdistances' argument of the 'loggingsimulation' function must be a list")
+  if(length(creekdistances) < 2 |
+     !inherits(creekdistances, "list"))
+    stop("The 'creekdistances' argument of the 'loggingsimulation' function must be a list of 2 elements")
 
   # scenario
   if (length(scenario) != 1 |
@@ -178,27 +179,27 @@ loggingsimulation1 <- function(
          'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
   # objective
-  if(length(objective) != 1 |
+  if(length(objective) > 1 |
      !any(inherits(objective, "numeric") || is.null(objective)))
     stop("The 'objective' argument of the 'loggingsimulation' function must be numeric or NULL")
 
   # fuel
-  if (length(fuel) != 1 |
+  if (length(fuel) > 1 |
       !any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
     stop("The 'fuel' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
 
   # diversification
-  if(length(diversification) != 1 |
+  if(length(diversification) > 1 |
      !any(inherits(diversification, "logical") || is.null(diversification)))
     stop("The 'diversification' argument of the 'loggingsimulation' function must be logical or NULL")
 
   # winching
-  if (length(winching) != 1 |
-      !any(winching == "0" || winching == "1"|| winching == "2"|| is.null(winching)))
+  if (length(winching) > 1 |
+    !any(winching == "0" || winching == "1"|| winching == "2"|| is.null(winching)))
     stop("The 'winching' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
 
   # directionalfelling
-  if (length(directionalfelling) != 1 |
+  if (length(directionalfelling) > 1 |
       !any(directionalfelling == "0" || directionalfelling == "1" || directionalfelling == "2" || is.null(directionalfelling)))
     stop("The 'directionalfelling' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
 

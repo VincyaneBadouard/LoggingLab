@@ -58,7 +58,7 @@ test_that("loggingsimulation1", {
                                   scenario = "RIL1",
                                   topography = DTMParacou,
                                   creekdistances  = DTMParacou),
-               regexp = "The 'creekdistances' argument of the 'loggingsimulation' function must be a list")
+               regexp = "The 'creekdistances' argument of the 'loggingsimulation' function must be a list of 2 elements")
 
   # scenario
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
