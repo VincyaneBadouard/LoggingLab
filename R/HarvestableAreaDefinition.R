@@ -42,10 +42,11 @@
 #'
 #' @export
 #'
-#' @importFrom sf st_as_sf st_cast st_area st_buffer
+#' @importFrom sf st_as_sf st_cast st_area st_buffer st_drop_geometry
 #' @importFrom raster mask terrain rasterFromXYZ rasterToPolygons
 #'   rasterToPoints extend aggregate focal disaggregate res
 #' @importFrom dplyr as_tibble left_join rename mutate if_else
+#' @importFrom tibble tibble
 #' @importFrom magrittr %>%
 #' @importFrom sp coordinates proj4string
 #'
