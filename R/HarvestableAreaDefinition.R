@@ -47,6 +47,7 @@
 #'   rasterToPoints extend aggregate focal disaggregate res
 #' @importFrom dplyr as_tibble left_join rename mutate if_else
 #' @importFrom magrittr %>%
+#' @importFrom sp coordinates proj4string
 #'
 #' @examples
 #' data(PlotMask)
@@ -144,9 +145,9 @@ harvestableareadefinition <- function(
     }
 
     DTMExtended <- focal(DTMExtExtended,
-                                 matrix(1,fact,fact),
-                                 fun=fill.boundaries,
-                                 na.rm=F, pad=T)
+                         matrix(1,fact,fact),
+                         fun=fill.boundaries,
+                         na.rm=F, pad=T)
 
     PlotSlope <- disaggregate(terrain(DTMExtended,
                                       opt = "slope",
@@ -169,23 +170,25 @@ harvestableareadefinition <- function(
   PlotSlopePoint <-
     as_tibble(rasterToPoints(PlotSlope))
 
-  CreekVHeightPlotPoint <-
-    as_tibble(rasterToPoints(creekdistances$distvert))
+  PlotTib <- tibble(x = PlotSlopePoint$x)
+  PlotTib$y <- PlotSlopePoint$y
 
-  CreekHDistPlotPoint <-
-    as_tibble(rasterToPoints(creekdistances$disthorz))
+  coordinates(PlotSlopePoint) <- ~ x + y
+  proj4string(PlotSlopePoint) <- crs(topography)
 
-  # Join tibbles by x and y
-  PlotTib <-
-    left_join(PlotSlopePoint, CreekVHeightPlotPoint, by = c('x', 'y')) %>%
-  left_join(CreekHDistPlotPoint, by = c('x', 'y'))
+
+  PlotSlopePoint$CreekVHeight <- raster::extract(creekdistances$distvert,PlotSlopePoint)
+
+  PlotSlopePoint$CreekHDist <- raster::extract(creekdistances$disthorz,PlotSlopePoint)
+
+  PlotTib <- cbind(PlotTib,PlotSlopePoint %>% st_as_sf() %>% st_drop_geometry())
 
   SlpCrit <- atan(advancedloggingparameters$MaxTrailCenterlineSlope/100)
 
   CreekHDistCrit <- advancedloggingparameters$WaterSourcesBufferZone
   CreekVDistCrit <- advancedloggingparameters$WaterSourcesRelativeHeight
 
-  PlotTib %>% rename("CreekVHeight" = names(PlotTib[4]),"CreekHDist" = names(PlotTib[5]))  %>%
+  PlotTib  %>%
     mutate(Harvestable = if_else(
       condition = CreekVHeight > CreekVDistCrit &
         CreekHDist > CreekHDistCrit &
@@ -197,8 +200,8 @@ harvestableareadefinition <- function(
     try(rasterFromXYZ(PlotSlopeCreekDist, crs = raster::crs(topography)), silent=TRUE)
 
   PolygonHarvestableFoT <- rasterToPolygons(x = RasterHarvestableFoT$Harvestable,
-                                          n = 16,
-                                          dissolve = TRUE)
+                                            n = 16,
+                                            dissolve = TRUE)
 
 
 
@@ -269,7 +272,7 @@ harvestableareadefinition <- function(
 
 
   # transform tibble to raster
- # set crs to WGS84 UTM 22N
+  # set crs to WGS84 UTM 22N
 
   # raster to polygon
 
