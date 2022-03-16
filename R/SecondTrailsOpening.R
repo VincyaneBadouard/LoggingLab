@@ -113,7 +113,7 @@
 #'   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #'   advancedloggingparameters = loggingparameters()))
 #'
-#' secondtrails <- secondtrailsopening(
+#' secondtrails <- try(secondtrailsopening(
 #'   topography = DTMParacou,
 #'   plotmask = PlotMask,
 #'   maintrails = MainTrails,
@@ -123,7 +123,7 @@
 #'   treeselectionoutputs = treeselectionoutputs,
 #'   scenario = "manual",
 #'   winching = winching,
-#'   advancedloggingparameters = loggingparameters())
+#'   advancedloggingparameters = loggingparameters()), silent=TRUE)
 #'
 #'
 #' library(ggplot2)

@@ -117,7 +117,7 @@ treeselectionoutputs <- suppressWarnings(treeselection(inventory,
   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
   advancedloggingparameters = loggingparameters()))
 
-secondtrails <- secondtrailsopening(
+secondtrails <- try(secondtrailsopening(
   topography = DTMParacou,
   plotmask = PlotMask,
   maintrails = MainTrails,
@@ -127,7 +127,7 @@ secondtrails <- secondtrailsopening(
   treeselectionoutputs = treeselectionoutputs,
   scenario = "manual",
   winching = winching,
-  advancedloggingparameters = loggingparameters())
+  advancedloggingparameters = loggingparameters()), silent=TRUE)
 
 
 library(ggplot2)

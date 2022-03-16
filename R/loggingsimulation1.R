@@ -222,7 +222,7 @@ loggingsimulation1 <- function(
   options("rgdal_show_exportToProj4_warnings"="none") # to avoid gdal warnings
 
   #### Global variables ####
-  DeathCause <- AGB  <- NULL
+  DeathCause <- AGB <- ParamCrownDiameterAllometry <- NULL
 
   #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, objective = objective, fuel = fuel,
@@ -293,7 +293,7 @@ loggingsimulation1 <- function(
   EnergywoodTreesPoints <- treeselectionoutputs$EnergywoodTreesPoints
 
   #### Secondary trails layout (preliminaries for fuel wood harvesting) ####
-  ScndTrailOutputs <- secondtrailsopening(topography = topography,
+  ScndTrailOutputs <- try(secondtrailsopening(topography = topography,
                                           plotmask = plotmask,
                                           maintrails = MainTrails, plotslope = PlotSlope,
                                           harvestablepolygons = HarvestablePolygons,
@@ -301,7 +301,7 @@ loggingsimulation1 <- function(
                                           treeselectionoutputs = treeselectionoutputs,
                                           scenario = scenario, winching = winching,
                                           advancedloggingparameters = advancedloggingparameters
-  )
+  ), silent=TRUE)
 
   inventory <- ScndTrailOutputs$inventory
   SmoothedTrails <- ScndTrailOutputs$SmoothedTrails
@@ -321,13 +321,13 @@ loggingsimulation1 <- function(
   #### Adjusted secondary trails layout (for fuel wood harvesting only) ####
   if(fuel != "0"){
 
-    ScndTrailAdjustOutputs <- secondtrailsadjusted(inventory = inventory,
+    ScndTrailAdjustOutputs <- try(secondtrailsadjusted(inventory = inventory,
                                                    topography = topography, plotmask = plotmask, maintrails = MainTrails,
                                                    plotslope = PlotSlope,
                                                    harvestablepolygons = HarvestablePolygons,
                                                    machinepolygons = MachinePolygons, maintrailsaccess = MainTrailsAccess,
                                                    scenario = scenario, winching = winching,
-                                                   advancedloggingparameters = advancedloggingparameters)
+                                                   advancedloggingparameters = advancedloggingparameters), silent=TRUE)
 
     inventory <- ScndTrailAdjustOutputs$inventory
     AdjustSmoothedTrails <- ScndTrailAdjustOutputs$SmoothedTrails

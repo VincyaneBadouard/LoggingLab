@@ -55,7 +55,7 @@ adjtopolcp <- function(
 
   pts <- SpatialPoints(pts) # Set spatial points in sp format
 
-  h.dist <- transition(topography, transitionFunction = function(x){1}, directions = directions, symm = TRUE) # Horizontal distance from DTM to transition layer format
+  h.dist <- try(transition(topography, transitionFunction = function(x){1}, directions = directions, symm = TRUE), silent=TRUE) # Horizontal distance from DTM to transition layer format
   h.dist <- geoCorrection(h.dist, scl = FALSE) # Divide weights by centroïds distance
   adj <- adjacent(topography, cells = 1:ncell(topography), pairs = TRUE, directions = directions, sorted = TRUE) # Compute adjacent matrix from DTM raster
   h.dist[adj] <- 1/h.dist[adj] # Convert horizontal distance resistance into conductance
