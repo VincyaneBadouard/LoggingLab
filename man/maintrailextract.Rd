@@ -8,7 +8,7 @@ maintrailextract(topography, advancedloggingparameters = loggingparameters())
 }
 \arguments{
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs in UTM})
 We advise you to generate your raster with Qgis rather than with the
 'raster' package on R.}
 
@@ -17,7 +17,7 @@ We advise you to generate your raster with Qgis rather than with the
 }
 \value{
 The maintrails outside of the topography raster (sf LINESTRING object
-\strong{without crs})
+\strong{with a crs in UTM})
 }
 \description{
 Generating maintrails function

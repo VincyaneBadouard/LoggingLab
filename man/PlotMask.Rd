@@ -5,7 +5,7 @@
 \alias{PlotMask}
 \title{PlotMask}
 \format{
-SpatialPolygonsDataFrame \strong{with a crs}
+SpatialPolygonsDataFrame \strong{with a crs in UTM}
 }
 \usage{
 PlotMask

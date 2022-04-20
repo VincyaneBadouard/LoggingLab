@@ -1,12 +1,13 @@
 #' Second trails opening
 #'
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs**)
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs in UTM**)
 #'
-#' @param plotmask Inventoried plot mask (SpatialPolygonsDataFrame **with a crs**)
+#' @param plotmask Inventoried plot mask
+#' (SpatialPolygonsDataFrame **with a crs in UTM**)
 #'
 #' @param maintrails Main trails defined at the entire harvestable area (sf
-#'   linestring **without crs**)
+#'   linestring **with a crs in UTM**)
 #'
 #' @param treeselectionoutputs A list with:
 #' - your inventory with: "DistCriteria", "Slope", "SlopeCriteria",
@@ -27,7 +28,8 @@
 #'
 #' @param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default:
-#'  \code{\link{HarvestableAreaOutputsCable}}) (RasterLayer **with a crs**)
+#'  \code{\link{HarvestableAreaOutputsCable}})
+#'  (RasterLayer **with a crs in UTM**)
 #'
 #'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the

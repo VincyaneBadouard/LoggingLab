@@ -13,9 +13,10 @@ st_temporaryintersection(
 }
 \arguments{
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})}
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs in UTM})}
 
-\item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame \strong{with a crs})}
+\item{plotmask}{Inventoried plot mask
+(SpatialPolygonsDataFrame \strong{with a crs in UTM})}
 
 \item{treebuffers}{Polygons vector}
 

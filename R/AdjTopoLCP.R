@@ -4,7 +4,7 @@
 #' adjacent matrix
 #'
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs**)
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs in UTM**)
 #'
 #' @param costSurface A RasterLayer for the conductance (inverse of resistance)
 #'   values for each cell.

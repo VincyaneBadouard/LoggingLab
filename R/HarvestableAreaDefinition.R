@@ -1,16 +1,18 @@
 #' Harvestable area definition
 #'
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs**)
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs in UTM**)
 #'
 #' @param creekdistances Relative distances (vertical and horizontal) (1 m
 #'   resolution) from nearest channel network (list of 2 large RasterLayers
-#'   **with a crs**) (Default: \code{\link{CreekDistances}}) To generate
+#'   **with a crs in UTM**) (Default: \code{\link{CreekDistances}}) To generate
 #'   vertical creek height: \code{\link{CreekDistances}} in 'Articles'.
 #'
-#' @param maintrails Main trails defined at the entire harvestable area (sf linestring **without crs**)
+#' @param maintrails Main trails defined at the entire harvestable area (sf
+#'   linestring **with a crs in UTM**)
 #'
-#' @param plotmask Inventoried plot mask (SpatialPolygonsDataFrame **with a crs**)
+#' @param plotmask Inventoried plot mask
+#' (SpatialPolygonsDataFrame **with a crs in UTM**)
 #'
 #' @param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the

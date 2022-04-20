@@ -20,16 +20,18 @@ secondtrailsopening(
 }
 \arguments{
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})}
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs in UTM})}
 
-\item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame \strong{with a crs})}
+\item{plotmask}{Inventoried plot mask
+(SpatialPolygonsDataFrame \strong{with a crs in UTM})}
 
 \item{maintrails}{Main trails defined at the entire harvestable area (sf
-linestring \strong{without crs})}
+linestring \strong{with a crs in UTM})}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default:
-\code{\link{HarvestableAreaOutputsCable}}) (RasterLayer \strong{with a crs})}
+\code{\link{HarvestableAreaOutputsCable}})
+(RasterLayer \strong{with a crs in UTM})}
 
 \item{harvestablepolygons}{Accessible area of the inventoried plot
 (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)}

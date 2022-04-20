@@ -6,7 +6,7 @@
 #' (1 m resolution, 2016)
 #'
 #'
-#' @format A list of 2 large RasterLayers **with a crs**
+#' @format A list of 2 large RasterLayers **with a crs  in UTM**
 #'
 #' To generate vertical creek height of any plot:
 #'  \code{\link{CreekDistances}} in 'docs' folder of the package

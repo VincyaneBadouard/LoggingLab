@@ -6,7 +6,7 @@
 \title{Relative vertical and horizontal distances from nearest channel network
 ( Paracou plot 6)}
 \format{
-A list of 2 large RasterLayers \strong{with a crs}
+A list of 2 large RasterLayers \strong{with a crs  in UTM}
 
 To generate vertical creek height of any plot:
 \code{\link{CreekDistances}} in 'docs' folder of the package

@@ -4,7 +4,7 @@
 #'  vignette) (data.frame)
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs**)
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs in UTM**)
 #'  We advise you to generate your raster with Qgis rather than with the
 #'  'raster' package on R.
 #'
@@ -44,7 +44,8 @@
 #'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default:
-#'  \code{\link{HarvestableAreaOutputsCable}}) (RasterLayer **with a crs**)
+#'  \code{\link{HarvestableAreaOutputsCable}})
+#'  (RasterLayer **with a crs in UTM**)
 #'
 #'@param harvestablepolygons Accessible area of the inventoried plot
 #'  (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)

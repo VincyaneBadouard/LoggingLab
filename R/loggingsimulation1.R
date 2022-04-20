@@ -9,17 +9,20 @@
 #'@param inventory Input inventory (see the inputs formats and metadata in the
 #'  vignette) (data.frame)
 #'
-#'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame **with a crs**)
+#'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame
+#'  **with a crs in UTM**)
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (Default: \code{\link{DTMParacou}}) (RasterLayer **with a crs**)
+#'  or SRTM) (Default: \code{\link{DTMParacou}})
+#'  (RasterLayer **with a crs in UTM**)
 #'  We advise you to generate your raster with Qgis rather than with the
 #'  'raster' package on R.
 #'
 #'@param creekdistances Relative distances (vertical and horizontal) (1 m
 #'  resolution) from nearest channel network (list of 2 large RasterLayers
-#'  **with a crs**) (Default: \code{\link{CreekDistances}}) To generate vertical
-#'  creek height: \code{\link{CreekDistances}} in 'Articles'.
+#'  **with a crs in UTM**) (Default: \code{\link{CreekDistances}})
+#'  To generate vertical creek height: \code{\link{CreekDistances}} in
+#'  'Articles'.
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the

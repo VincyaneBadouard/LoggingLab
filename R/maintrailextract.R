@@ -1,7 +1,7 @@
 #' Generating maintrails function
 #'
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs**)
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs in UTM**)
 #'  We advise you to generate your raster with Qgis rather than with the
 #'  'raster' package on R.
 #'
@@ -9,7 +9,7 @@
 #'   \code{\link{loggingparameters}} (list)
 #'
 #' @return The maintrails outside of the topography raster (sf LINESTRING object
-#'   **without crs**)
+#'   **with a crs in UTM**)
 #'
 #' @export
 #'

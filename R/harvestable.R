@@ -7,7 +7,7 @@
 #'  vignette) (data.frame)
 #'
 #'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs**)
+#'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs  in UTM**)
 #'  We advise you to generate your raster with Qgis rather than with the
 #'  'raster' package on R.
 #'
@@ -23,7 +23,8 @@
 #'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default:
-#'  \code{\link{HarvestableAreaOutputsCable}}) (RasterLayer **with a crs**)
+#'  \code{\link{HarvestableAreaOutputsCable}})
+#'  (RasterLayer **with a crs in UTM**)
 #'
 #'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -232,10 +233,10 @@ harvestable <- function(
    proj4string(SpatInventoryAll) <- crs(topography) # allocate the Paracou crs to our spatial inventory
 
 
-   HarvestableZoneSpatInventory<- st_as_sf(SpatInventoryAll) %>%
+   HarvestableZoneSpatInventory <- st_as_sf(SpatInventoryAll) %>%
      mutate(HarvestableZone = as.vector(st_contains(AccessPolygons %>%
                                          st_union(), st_as_sf(SpatInventoryAll),sparse = F))) %>% # check if trees are contained in HarvestableZones
-     dplyr::select(idTree , HarvestableZone)
+     dplyr::select(idTree, HarvestableZone)
 
    inventory <- inventory %>% left_join(HarvestableZoneSpatInventory, by = "idTree")%>%
      dplyr::select(-geometry)

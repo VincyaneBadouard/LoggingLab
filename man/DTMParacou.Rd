@@ -5,7 +5,7 @@
 \alias{DTMParacou}
 \title{Paracou Digital terrain model (DTM)}
 \format{
-A Large RasterLayer \strong{with a crs}
+A Large RasterLayer \strong{with a crs  in UTM}
 }
 \source{
 This study benefited from funding by the Centre National

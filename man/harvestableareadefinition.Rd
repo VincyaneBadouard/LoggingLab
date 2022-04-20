@@ -16,16 +16,18 @@ harvestableareadefinition(
 }
 \arguments{
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs})}
+or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs in UTM})}
 
 \item{creekdistances}{Relative distances (vertical and horizontal) (1 m
 resolution) from nearest channel network (list of 2 large RasterLayers
-\strong{with a crs}) (Default: \code{\link{CreekDistances}}) To generate
+\strong{with a crs in UTM}) (Default: \code{\link{CreekDistances}}) To generate
 vertical creek height: \code{\link{CreekDistances}} in 'Articles'.}
 
-\item{maintrails}{Main trails defined at the entire harvestable area (sf linestring \strong{without crs})}
+\item{maintrails}{Main trails defined at the entire harvestable area (sf
+linestring \strong{with a crs in UTM})}
 
-\item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame \strong{with a crs})}
+\item{plotmask}{Inventoried plot mask
+(SpatialPolygonsDataFrame \strong{with a crs in UTM})}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
