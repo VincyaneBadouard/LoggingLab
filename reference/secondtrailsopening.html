@@ -79,16 +79,18 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>topography</dt>
 <dd><p>Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer <strong>with a crs</strong>)</p></dd>
+or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer <strong>with a crs in UTM</strong>)</p></dd>
 <dt>plotmask</dt>
-<dd><p>Inventoried plot mask (SpatialPolygonsDataFrame <strong>with a crs</strong>)</p></dd>
+<dd><p>Inventoried plot mask
+(SpatialPolygonsDataFrame <strong>with a crs in UTM</strong>)</p></dd>
 <dt>maintrails</dt>
 <dd><p>Main trails defined at the entire harvestable area (sf
-linestring <strong>without crs</strong>)</p></dd>
+linestring <strong>with a crs in UTM</strong>)</p></dd>
 <dt>plotslope</dt>
 <dd><p>Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default:
-<code><a href="HarvestableAreaOutputsCable.html">HarvestableAreaOutputsCable</a></code>) (RasterLayer <strong>with a crs</strong>)</p></dd>
+<code><a href="HarvestableAreaOutputsCable.html">HarvestableAreaOutputsCable</a></code>)
+(RasterLayer <strong>with a crs in UTM</strong>)</p></dd>
 <dt>harvestablepolygons</dt>
 <dd><p>Accessible area of the inventoried plot
 (default: <code><a href="harvestableareadefinition.html">harvestableareadefinition</a></code>) (sfc_MULTIPOLYGON)</p></dd>
