@@ -42,6 +42,7 @@ Depends:
     R (>= 3.6)
 Config/testthat/edition: 3
 Imports: 
+    devtools (>= 2.4.3),
     magrittr (>= 2.0.1),
     dplyr (>= 1.0.7),
     tibble (>= 3.1.0),
