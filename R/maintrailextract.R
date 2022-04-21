@@ -18,8 +18,10 @@
 #'
 #' @examples
 #' data(DTMParacou)
+#' \dontrun{
 #' MainTrails <- maintrailextract(DTMParacou)
-#'
+#' }
+#' data(MainTrails)
 #' library(raster)
 #' plot(DTMParacou)
 #' plot(MainTrails, add = TRUE)

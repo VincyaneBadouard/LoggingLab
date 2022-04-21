@@ -119,6 +119,7 @@ treeselectionoutputs <- suppressWarnings(treeselection(inventory,
   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
   advancedloggingparameters = loggingparameters()))
 
+\dontrun{
 secondtrails <- try(secondtrailsopening(
   topography = DTMParacou,
   plotmask = PlotMask,
@@ -130,8 +131,9 @@ secondtrails <- try(secondtrailsopening(
   scenario = "manual",
   winching = winching,
   advancedloggingparameters = loggingparameters()), silent=TRUE)
+  }
 
-
+data(SecondaryTrails)
 library(ggplot2)
 library(sf)
 
@@ -141,36 +143,36 @@ NewInventory <- treeselectionoutputs$inventory
 Harvestable <- sf::st_as_sf(
 dplyr::filter(NewInventory, LoggingStatus == "harvestable"),
 coords = c("Xutm", "Yutm")) \%>\%
-st_set_crs(st_crs(secondtrails$MainTrailsAccess))
+st_set_crs(st_crs(SecondaryTrails$MainTrailsAccess))
 
 HarvestableUp <- sf::st_as_sf(
 dplyr::filter(NewInventory, LoggingStatus == "harvestableUp"),
 coords = c("Xutm", "Yutm")) \%>\%
-st_set_crs(st_crs(secondtrails$MainTrailsAccess))
+st_set_crs(st_crs(SecondaryTrails$MainTrailsAccess))
 
 Selected <- sf::st_as_sf(
 dplyr::filter(NewInventory, Selected == "1"), coords = c("Xutm", "Yutm")) \%>\%
-st_set_crs(st_crs(secondtrails$MainTrailsAccess))
+st_set_crs(st_crs(SecondaryTrails$MainTrailsAccess))
 
 Reserve <- sf::st_as_sf(
 dplyr::filter(NewInventory, LoggingStatus == "reserve"),
 coords = c("Xutm", "Yutm")) \%>\%
-st_set_crs(st_crs(secondtrails$MainTrailsAccess))
+st_set_crs(st_crs(SecondaryTrails$MainTrailsAccess))
 
 Future <- sf::st_as_sf(
 dplyr::filter(NewInventory, LoggingStatus == "future"),
 coords = c("Xutm", "Yutm")) \%>\%
-st_set_crs(st_crs(secondtrails$MainTrailsAccess))
+st_set_crs(st_crs(SecondaryTrails$MainTrailsAccess))
 
 ProbedHollow <- sf::st_as_sf(
 dplyr::filter(NewInventory, ProbedHollow == "1"),
  coords = c("Xutm", "Yutm")) \%>\%
-st_set_crs(st_crs(secondtrails$MainTrailsAccess))
+st_set_crs(st_crs(SecondaryTrails$MainTrailsAccess))
 
 VisibleDefect <- sf::st_as_sf(
 dplyr::filter(NewInventory, VisibleDefect == "1"),
  coords = c("Xutm", "Yutm")) \%>\%
-st_set_crs(st_crs(secondtrails$MainTrailsAccess))
+st_set_crs(st_crs(SecondaryTrails$MainTrailsAccess))
 
 
 ggplot() +
@@ -198,14 +200,14 @@ ggplot() +
   aes(colour = "Probed hollow"), show.legend = "point") +
 
   # 2ndary trails
-    geom_sf(data = st_as_sf(secondtrails$SmoothedTrails), col = "darkgreen") +
-    geom_sf(data = st_as_sf(secondtrails$MainTrailsAccess), col = "black") +
+    geom_sf(data = st_as_sf(SecondaryTrails$SmoothedTrails), col = "darkgreen") +
+    geom_sf(data = st_as_sf(SecondaryTrails$MainTrailsAccess), col = "black") +
 
     scale_colour_manual(values = c("Visible defect" = "pink",
    "Harvestable" = "skyblue", "HarvestableUp" = "blue", "Selected" = "red",
    "Future" = "orange", "Reserve" = "purple", "Probed hollow" = "forestgreen",
   "Second trails" = "darkgreen", "Harvestable area" = "olivedrab"))
 
-secondtrails$TrailsIdentity
+SecondaryTrails$TrailsIdentity
 
 }

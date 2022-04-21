@@ -62,12 +62,13 @@ plot (Large RasterLayer)
 Harvestable area definition
 }
 \examples{
+\dontrun{
 data(PlotMask)
 data(DTMParacou)
 data(CreekDistances)
 data(MainTrails)
 
-HarvestableAreaOutputs <- harvestableareadefinition(
+HarvestableAreaOutputsCable <- harvestableareadefinition(
   topography = DTMParacou,
   creekdistances = CreekDistances,
   maintrails = MainTrails,
@@ -75,19 +76,20 @@ HarvestableAreaOutputs <- harvestableareadefinition(
   scenario = "manual", winching = "1",
   advancedloggingparameters = loggingparameters()
   )
-
+}
+data(HarvestableAreaOutputsCable)
 library(ggplot2)
 library(sf)
 ggplot() +
   # Harvestable zones
-  geom_sf(data = HarvestableAreaOutputs$HarvestablePolygons,
+  geom_sf(data = HarvestableAreaOutputsCable$HarvestablePolygons,
         fill = "olivedrab", alpha = 0.1) +
-   geom_sf(data = HarvestableAreaOutputs$MachinePolygons,
+   geom_sf(data = HarvestableAreaOutputsCable$MachinePolygons,
         fill = "olivedrab", alpha = 0.5) +
   labs(alpha = "Harvestable") +
   labs(title = "Paracou P6 - Harvestable zones") +
   scale_colour_manual(values = c("Harvestable area" = "olivedrab"))
 
-HarvestableAreaOutputs$PlotSlope
+HarvestableAreaOutputsCable$PlotSlope
 
 }
