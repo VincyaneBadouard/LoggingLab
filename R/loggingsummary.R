@@ -47,9 +47,12 @@ loggingsummary <- function(x
   var <- c("HarvestableArea", "VO", "HVinit", "TimberLoggedVolume", "NoHollowTimberLoggedVolume", "FuelVolume",
            "DamageVolume", "LostBiomass", "TrailsDensity", "AdjustTrailsDensity")
 
-  statsvars <- function(v, x){
+  statsvars <- function(v, x){ # x the list, v the var
 
-    itervalues <- c(as.numeric(x[[1]][v]) : as.numeric(x[[length(x)]][v]))
+    itervalues <- vector("numeric") # empty vector
+    for(i in 1:length(x)){
+      itervalues <- c(itervalues, as.numeric(x[[i]][v]))
+    }
 
     Mean <- round(mean(itervalues), digits = 1)
     Sd <- round(sd(itervalues), digits = 1)
