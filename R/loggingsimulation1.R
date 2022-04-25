@@ -198,7 +198,7 @@ loggingsimulation1 <- function(
 
   # winching
   if (length(winching) > 1 |
-    !any(winching == "0" || winching == "1"|| winching == "2"|| is.null(winching)))
+      !any(winching == "0" || winching == "1"|| winching == "2"|| is.null(winching)))
     stop("The 'winching' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
 
   # directionalfelling
@@ -258,21 +258,28 @@ loggingsimulation1 <- function(
 
   MainTrails <- maintrailextract(topography = topography, advancedloggingparameters = advancedloggingparameters)
 
+  if(is.null(MainTrails) | MainTrails$layer == 0 | is.null(MainTrails$geometry))
+    stop("The main trails could not be calculated. There is probably a problem with the inputs: 'topography'")
+
   ##### Harvestable area definition ####
-  HarvestableAreaOutputs <- harvestableareadefinition(
+  HarvestableAreaOutputs <- try(harvestableareadefinition(
     topography = topography,
     creekdistances = creekdistances,
     maintrails = MainTrails,
     plotmask = plotmask,
     scenario = scenario, winching = winching,
     advancedloggingparameters = advancedloggingparameters
-  )
+  ), silent=TRUE)
 
   HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
   PlotSlope <- HarvestableAreaOutputs$PlotSlope
   HarvestableArea <- HarvestableAreaOutputs$HarvestableArea
   MachinePolygons <- HarvestableAreaOutputs$MachinePolygons
 
+  if(is.null(HarvestableArea) | HarvestableArea == 0)
+    stop("The havestable area is equal to 0 or NULL.
+    Either your plot is not exploitable at all according to your criteria, or there is probably a problem with the inputs:
+    'topography', 'creekdistances', and/or 'plotmask'")
 
   #### Tree selection (harvestable, future and reserve trees + defects trees): ####
   treeselectionoutputs <- treeselection(inventory,
@@ -295,15 +302,20 @@ loggingsimulation1 <- function(
   HollowTreesPoints <- treeselectionoutputs$HollowTreesPoints
   EnergywoodTreesPoints <- treeselectionoutputs$EnergywoodTreesPoints
 
+  if(!any(treeselectionoutputs$inventory$Selected == 1)){
+    print(inventory)
+    stop("No trees have been selected. Check the printed inventory")
+  }
+
   #### Secondary trails layout (preliminaries for fuel wood harvesting) ####
   ScndTrailOutputs <- try(secondtrailsopening(topography = topography,
-                                          plotmask = plotmask,
-                                          maintrails = MainTrails, plotslope = PlotSlope,
-                                          harvestablepolygons = HarvestablePolygons,
-                                          machinepolygons = MachinePolygons,
-                                          treeselectionoutputs = treeselectionoutputs,
-                                          scenario = scenario, winching = winching,
-                                          advancedloggingparameters = advancedloggingparameters
+                                              plotmask = plotmask,
+                                              maintrails = MainTrails, plotslope = PlotSlope,
+                                              harvestablepolygons = HarvestablePolygons,
+                                              machinepolygons = MachinePolygons,
+                                              treeselectionoutputs = treeselectionoutputs,
+                                              scenario = scenario, winching = winching,
+                                              advancedloggingparameters = advancedloggingparameters
   ), silent=TRUE)
 
   inventory <- ScndTrailOutputs$inventory
@@ -314,29 +326,44 @@ loggingsimulation1 <- function(
   RawSecondTrails <- ScndTrailOutputs$RawSecondTrails
   CostRasterAgg <- ScndTrailOutputs$CostRasterAgg
 
+  if(is.null(TrailsDensity) | as.numeric(TrailsDensity) == 0){
+    print(inventory)
+    stop("No trails have been traced. There is probably a problem. Check your inputs:
+         'topography' and 'plotmask' and the printed inventory")
+  }
+
   #### Tree felling ####
   inventory <- treefelling(inventory = inventory, scenario = scenario, fuel = fuel,
                            winching = winching, directionalfelling = directionalfelling,
                            maintrailsaccess = MainTrailsAccess, scndtrail = SmoothedTrails,
                            advancedloggingparameters = advancedloggingparameters)
 
-
+  if(all(is.na(inventory$TreePolygon))){
+    print(inventory)
+    stop("The 'treefelling' function did not work: no polygon of tree on the ground was created. Check the printed inventory")
+  }
   #### Adjusted secondary trails layout (for fuel wood harvesting only) ####
   if(fuel != "0"){
 
     ScndTrailAdjustOutputs <- try(secondtrailsadjusted(inventory = inventory,
-                                                   topography = topography, plotmask = plotmask, maintrails = MainTrails,
-                                                   plotslope = PlotSlope,
-                                                   harvestablepolygons = HarvestablePolygons,
-                                                   machinepolygons = MachinePolygons, maintrailsaccess = MainTrailsAccess,
-                                                   scenario = scenario, winching = winching,
-                                                   advancedloggingparameters = advancedloggingparameters), silent=TRUE)
+                                                       topography = topography, plotmask = plotmask, maintrails = MainTrails,
+                                                       plotslope = PlotSlope,
+                                                       harvestablepolygons = HarvestablePolygons,
+                                                       machinepolygons = MachinePolygons, maintrailsaccess = MainTrailsAccess,
+                                                       scenario = scenario, winching = winching,
+                                                       advancedloggingparameters = advancedloggingparameters), silent=TRUE)
 
     inventory <- ScndTrailAdjustOutputs$inventory
     AdjustSmoothedTrails <- ScndTrailAdjustOutputs$SmoothedTrails
     AdjustTrailsDensity <- ScndTrailAdjustOutputs$TrailsDensity
     AdjustTrailsIdentity <- ScndTrailAdjustOutputs$TrailsIdentity
     AdjustRawSecondTrails <- ScndTrailAdjustOutputs$RawSecondTrails
+
+    if(is.null(AdjustTrailsDensity) | as.numeric(AdjustTrailsDensity) == 0){
+      print(inventory)
+      stop("No adjusted trails have been traced. Check the printed inventory")
+    }
+
 
   }else{
     AdjustSmoothedTrails <- NULL
@@ -355,6 +382,12 @@ loggingsimulation1 <- function(
   TimberLoggedVolume <- Timberoutputs$TimberLoggedVolume
   NoHollowTimberLoggedVolume <- Timberoutputs$NoHollowTimberLoggedVolume
 
+  if(is.null(TimberLoggedVolume) |TimberLoggedVolume == 0){
+    print(inventory)
+    stop("No TimberLoggedVolume. Check the printed inventory")
+  }
+
+
 
   #### Exploitable fuel wood volume quantification ####
   Fueloutputs <- exploitablefuelwoodvolume(inventory,
@@ -366,10 +399,26 @@ loggingsimulation1 <- function(
   DamageVolume <- Fueloutputs$DamageVolume # only damage (without purge and hollow trees)
   FuelVolume <- Fueloutputs$FuelVolume
 
+  if(is.null(DamageVolume) | DamageVolume == 0){
+    print(inventory)
+    message("No DamageVolume. Check if it's normal in the printed inventory")
+  }
+
+
   DeadTrees <- inventory %>%
     dplyr::filter(!is.na(DeathCause))
 
+  if(nrow(DeadTrees)==0){
+    print(inventory)
+    stop("No DeadTrees. Check the printed inventory")
+  }
+
   LostBiomass <- sum(DeadTrees$AGB) # in ton
+
+  if(is.null(LostBiomass) | LostBiomass == 0){
+    print(inventory)
+    message("No LostBiomass. Check if the printed inventory")
+  }
 
 
   #### Outputs ####

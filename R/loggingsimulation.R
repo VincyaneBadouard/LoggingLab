@@ -251,7 +251,8 @@ loggingsimulation <- function(
                                 "specieslax","objectivelax","crowndiameterparameters","advancedloggingparameters"),
                 envir = environment()) # cluster environment
 
-  output <- parLapply(cl, seq_len(iter), function(x) loggingsimulation1(inventory = inventory,
+  # try() to catch the error and continue
+  output <- parLapply(cl, seq_len(iter), function(x) try(loggingsimulation1(inventory = inventory,
                                                               plotmask = plotmask,
                                                               topography = topography,
                                                               creekdistances = creekdistances,
@@ -266,7 +267,7 @@ loggingsimulation <- function(
                                                               specieslax = specieslax,
                                                               objectivelax = objectivelax,
                                                               crowndiameterparameters = crowndiameterparameters,
-                                                              advancedloggingparameters = advancedloggingparameters))
+                                                              advancedloggingparameters = advancedloggingparameters)))
 
   stopCluster(cl) # stop the cluster
 
