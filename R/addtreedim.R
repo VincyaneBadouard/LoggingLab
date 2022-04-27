@@ -180,7 +180,9 @@ addtreedim <- function(
     # Tree Above-Ground Biomass (AGB) (in ton!) (with DBH in cm, WoodDensity in in g/cm3, TreeHeight in m)
     mutate(AGB = computeAGB(DBH, WoodDensity, TreeHeight))
 
-
+  if(all(is.na(inventory$TreeHarvestableVolume)))
+    stop("No harvestable volume per tree could be calculated.
+         Check that the name of your 'Forest' is in the table in 'volumeparameters'")
 
   return(inventory)
 }
