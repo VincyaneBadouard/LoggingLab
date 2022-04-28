@@ -108,6 +108,9 @@
 #'@export
 #'
 #'@importFrom parallel makePSOCKcluster clusterExport parLapply stopCluster
+#'@importFrom doSNOW registerDoSNOW
+#'@importFrom foreach foreach %dopar%
+#'@importFrom utils setTxtProgressBar txtProgressBar
 #'
 #' @examples
 #' \dontrun{
@@ -241,35 +244,35 @@ loggingsimulation <- function(
   #
   # Parallelization version
   # For Windows
-  cl <- makePSOCKcluster(getOption("cl.cores", cores)) # create a cluster
-
-  # clusterEvalQ(cl, set.seed(41)) # https://stackoverflow.com/questions/58631433/how-to-set-seeds-when-using-parallel-package-in-r
-
-  clusterExport(cl, varlist = c("inventory", "plotmask","topography","creekdistances",
-                                "speciescriteria","volumeparameters","scenario","objective",
-                                "fuel","diversification","winching","directionalfelling",
-                                "specieslax","objectivelax","crowndiameterparameters","advancedloggingparameters"),
-                envir = environment()) # cluster environment
-
-  # try() to catch the error and continue
-  output <- parLapply(cl, seq_len(iter), function(x) try(loggingsimulation1(inventory = inventory,
-                                                              plotmask = plotmask,
-                                                              topography = topography,
-                                                              creekdistances = creekdistances,
-                                                              speciescriteria = speciescriteria,
-                                                              volumeparameters = volumeparameters,
-                                                              scenario = scenario,
-                                                              objective = objective,
-                                                              fuel = fuel,
-                                                              diversification = diversification,
-                                                              winching = winching,
-                                                              directionalfelling = directionalfelling,
-                                                              specieslax = specieslax,
-                                                              objectivelax = objectivelax,
-                                                              crowndiameterparameters = crowndiameterparameters,
-                                                              advancedloggingparameters = advancedloggingparameters)))
-
-  stopCluster(cl) # stop the cluster
+  # cl <- makePSOCKcluster(getOption("cl.cores", cores)) # create a cluster
+  #
+  # # clusterEvalQ(cl, set.seed(41)) # https://stackoverflow.com/questions/58631433/how-to-set-seeds-when-using-parallel-package-in-r
+  #
+  # clusterExport(cl, varlist = c("inventory", "plotmask","topography","creekdistances",
+  #                               "speciescriteria","volumeparameters","scenario","objective",
+  #                               "fuel","diversification","winching","directionalfelling",
+  #                               "specieslax","objectivelax","crowndiameterparameters","advancedloggingparameters"),
+  #               envir = environment()) # cluster environment
+  #
+  # # try() to catch the error and continue
+  # output <- parLapply(cl, seq_len(iter), function(x) try(loggingsimulation1(inventory = inventory,
+  #                                                                           plotmask = plotmask,
+  #                                                                           topography = topography,
+  #                                                                           creekdistances = creekdistances,
+  #                                                                           speciescriteria = speciescriteria,
+  #                                                                           volumeparameters = volumeparameters,
+  #                                                                           scenario = scenario,
+  #                                                                           objective = objective,
+  #                                                                           fuel = fuel,
+  #                                                                           diversification = diversification,
+  #                                                                           winching = winching,
+  #                                                                           directionalfelling = directionalfelling,
+  #                                                                           specieslax = specieslax,
+  #                                                                           objectivelax = objectivelax,
+  #                                                                           crowndiameterparameters = crowndiameterparameters,
+  #                                                                           advancedloggingparameters = advancedloggingparameters)))
+  #
+  # stopCluster(cl) # stop the cluster
 
   # For other OS
   # parallel::mclapply(seq_len(iter), function(x) loggingsimulation1(inventory = inventory,
@@ -290,6 +293,36 @@ loggingsimulation <- function(
   #                                                        advancedloggingparameters = advancedloggingparameters),
   #                    mc.cores = cores)
 
+  # foreach version
+  i <- NULL
+  cl <- parallel::makeCluster(cores)
+  doSNOW::registerDoSNOW(cl)
+  pb <- txtProgressBar(max = iter, style = 3)
+  progress <- function(n) setTxtProgressBar(pb, n)
+  opts <- list(progress = progress)
+  output <- foreach::foreach(i=1:iter,
+                                .options.snow = opts) %dopar% {
+                                  sim <- iter[i]
+                                  try(loggingsimulation1(inventory = inventory,
+                                                         plotmask = plotmask,
+                                                         topography = topography,
+                                                         creekdistances = creekdistances,
+                                                         speciescriteria = speciescriteria,
+                                                         volumeparameters = volumeparameters,
+                                                         scenario = scenario,
+                                                         objective = objective,
+                                                         fuel = fuel,
+                                                         diversification = diversification,
+                                                         winching = winching,
+                                                         directionalfelling = directionalfelling,
+                                                         specieslax = specieslax,
+                                                         objectivelax = objectivelax,
+                                                         crowndiameterparameters = crowndiameterparameters,
+                                                         advancedloggingparameters = advancedloggingparameters))
+                                }
+  close(pb)
+  stopCluster(cl)
+  names(output) <- iter
 
   return(output)
 
