@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 # The different stages of Reduced Impact Logging (RIL) described by the ONF (Office National des Forêts) of French Guiana
+
 1) Definition of the area to be logged
 2) The layout of the main skidding trails
 3) Tree selection
