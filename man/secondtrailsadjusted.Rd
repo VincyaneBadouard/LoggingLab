@@ -2,7 +2,7 @@
 % Please edit documentation in R/secondtrailsadjusted.R
 \name{secondtrailsadjusted}
 \alias{secondtrailsadjusted}
-\title{Second trails adjusted}
+\title{Adjusted secondary skidding trails layout}
 \usage{
 secondtrailsadjusted(
   inventory,
@@ -26,7 +26,7 @@ secondtrailsadjusted(
 \item The crowns of the future/reserve trees (Polygon)
 \item The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
 according to the chosen scenario
-\item The dead trees under felled trees (DeathCause = "treefall2nd")
+\item The dead trees under felled trees (\emph{DeathCause} = "treefall2nd")
 }}
 
 \item{topography}{Digital terrain model (DTM) of the inventoried plot (LiDAR
@@ -43,16 +43,16 @@ neighbourhood of 8 cells) (default:
 \code{\link{HarvestableAreaOutputsCable}})
 (RasterLayer \strong{with a crs in UTM})}
 
-\item{harvestablepolygons}{Accessible area of the inventoried plot
+\item{harvestablepolygons}{Accessible zones of the inventoried plot
 (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)}
 
-\item{machinepolygons}{Accessible for machine area of the inventoried plot
+\item{machinepolygons}{Accessible zones for machines of the inventoried plot
 (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
 
 \item{maintrailsaccess}{Access point of maintrail for each PU (prospection
 unit) (sf or sfc)}
 
-\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+\item{scenario}{Logging scenario among: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 vignette)}
 
@@ -72,24 +72,25 @@ Avoidance of future/reserves if chosen.}
 \value{
 A list with :
 \itemize{
-\item inventory: Updated inventory
-\item SmoothedTrails: Smoothed main and secondary trails polygons
-(sfc_MULTIPOLYGON)
-\item TrailsDensity: Second trails density (in m/ha)
-\item TrailsIdentity: information on sections of the trails (matrix) with:
+\item \emph{inventory}: Updated inventory
+\item \emph{SmoothedTrails}: Smoothed secondary trails (MULTIPOLYGON with crs)
+\item \emph{TrailsDensity}: Secondary trails density (in m/ha)
+\item \emph{TrailsIdentity}: Information on sections of the trails (matrix) with:
 \itemize{
-\item LineID:
-\item LoggedTrees: idTree of trees reached by the trails
-\item TypeExpl: type of winching
+\item \emph{LineID}:
+\item \emph{LoggedTrees}: idTree of trees reached by the trails
+\item \emph{TypeExpl}: type of winching
 }
-\item MainTrailsAccess : Random access point of maintrail for each PU
-(sfc_MULTIPOLYGON)
-\item RawSecondTrails : non-smoothed secondary trails (SpatialLines)
-\item CostRasterAgg: A cost Raster (RasterLayer)
+\item \emph{MainTrailsAccess}: Random access point of main trail for each harvestable
+zone (sfc_POINT with crs)
+\item \emph{RawSecondTrails}: Non-smoothed secondary trails (SpatialLines with crs)
+\item \emph{CostRasterAgg}: The cost raster (RasterLayer  with crs)
 }
 }
 \description{
-Second trails adjusted
+In the FWE (Fuel Wood Exploitation) case, the layout of the
+skidding trails is redefined to favour the recovery of trees through the
+crown (only with a grapple) in order to use the crowns for fuel wood.
 }
 \examples{
 data(DTMParacou)

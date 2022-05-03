@@ -114,13 +114,13 @@ loggingsummary <- function(x
 
   cat('\n') # skip a line
 
-  cat('Trails density (m/m2):\n')
-  print(unlist(RsltStats[9])) # Trails density (m/m2)
+  cat('Trails density (m/ha):\n')
+  print(unlist(RsltStats[9])) # Trails density (m/ha)
 
   cat('\n') # skip a line
 
-  cat('Adjusted trails density (m/m2):\n')
-  print(unlist(RsltStats[10])) # Adjusted trails density (m/m2)
+  cat('Adjusted trails density (m/ha):\n')
+  print(unlist(RsltStats[10])) # Adjusted trails density (m/ha)
 
 
   # The after simulation inventory (data.frame)

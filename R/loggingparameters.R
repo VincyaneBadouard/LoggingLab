@@ -3,10 +3,10 @@
 #'@param MinDBHValue Minimum DBH for inclusion in the forest inventory.
 #'   Default = 10, in cm (double)
 #'
-#'@param MaxTrailCenterlineSlope Maximum main & 2nd trail centerline slope.
+#'@param MaxTrailCenterlineSlope Maximum trail centerline slope.
 #'  Default = 22, in % (double)
 #'
-#'@param MaxTrailCrossSlope Maximum main & 2nd trail cross slope. Default = 4,
+#'@param MaxTrailCrossSlope Maximum trail cross slope. Default = 4,
 #'  in % (double)
 #'
 #'@param GrappleMaxslope Maximum slope accessible by the grapple. Default
@@ -19,7 +19,7 @@
 #'   Default = 5, in % (double)
 #'
 #'@param SlopeDistance Distance over which the slope is calculated.
-#'  Default = 6, in m (3m each side) (integer)
+#'  Default = 3, in m (3m each side) (integer)
 #'
 #'@param WaterSourcesBufferZone Buffer zone based on relative horizontal
 #'  distance to the nearest water source. Default = 30, in m (double)
@@ -74,9 +74,9 @@
 #'  (has no impact on the simulation. A message will be sent to inform if
 #'  this threshold has been exceeded)
 #'
-#'@param MaxLandingArea Maximum landing area. Default = 1500) in square meters
-#'  (double) (has no impact on the simulation. A message will be sent to inform
-#'  if this threshold has been exceeded)
+#'@param MaxLandingArea Maximum landing area. Default = 1500) in m2 (double)
+#'  (has no impact on the simulation. A message will be sent to inform if this
+#'  threshold has been exceeded)
 #'
 #'@param CostMatrix Cost matrix for optimized trail layout (list of 2 lists).
 #'  Gives an increasing cost according to a slope gradient (1st sub-list), and
@@ -108,11 +108,12 @@
 #'  (H) in m, and the DBH in cm. (Aubry-Kientz et al.2019)(function)
 #'
 #'@param RottenModel Estimates the tree probability of being probed hollow
-#'  (default: 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) with DBH in cm) (function)
+#'  (default: 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) with DBH in cm (developed
+#'  by S.Schmitt)) (function)
 #'
 #'@param VisiblyDefectModel Estimates the commercial tree probability to have
 #'  visible defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with
-#'  DBH in cm (function)
+#'  DBH in cm (developed by V.Badouard) (function)
 #'
 #'@references Aubry-Kientz, Mélaine, et al. "A comparative assessment of the
 #'   performance of individual tree crowns delineation algorithms from ALS data
@@ -134,7 +135,7 @@ loggingparameters <- function(
   GrappleMaxslope = 20, #in %
   CableTreesMaxSlope = 35, #in %
   PlateauMaxSlope = 5, #in %
-  SlopeDistance = 3L, #in m (3m for each side)
+  SlopeDistance = 3L, #in m (for each side)
   WaterSourcesBufferZone = 30, #in m
   WaterSourcesRelativeHeight = 2, #in m
   MinMainTrailWidth = 5, #in m

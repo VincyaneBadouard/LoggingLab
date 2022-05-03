@@ -1,5 +1,9 @@
 #' Future & reserve trees designation
 #'
+#' @description designates which trees will be harvested in future seasons:
+#'   "future trees", and which should be protected as seed trees: "reserve
+#'   trees".
+#'
 #' @param inventory Input inventory (see the inputs formats and metadata in the
 #'   vignette) (data.frame)
 #'
@@ -10,15 +14,15 @@
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
 #'
-#' @return input inventory with selected future and reserve trees
-#' (LoggingStatus = "future"/"reserve"),
+#' @return Input inventory with selected future and reserve trees
+#' (*LoggingStatus* = "*future*"/"*reserve*"),
 #' for your logging criteria (\code{\link{SpeciesCriteria}})
 #'
 #' @details **Future** trees are all trees satisfying the following conditions:
 #'  - species of 1st economic rank
-#'  - DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD
-#'  or UpMinFD if it has been raised for its species.
-#'  - in the prospection units (harvestable areas)
+#'  - DBH between 35cm ('FutureTreesMinDiameter') and the species *MinFD*
+#'  or *UpMinFD* if it has been raised for its species.
+#'  - in the harvestable zones
 #'
 #'  **Reserve** trees are randomly chosen among future trees so that
 #'  the number of reserve trees is equal to the number of harvested trees.

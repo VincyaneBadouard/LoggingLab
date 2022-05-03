@@ -2,7 +2,7 @@
 % Please edit documentation in R/cleaninventory.R
 \name{cleaninventory}
 \alias{cleaninventory}
-\title{Clean inventory}
+\title{Clean inventory (only alive trees within the inventoried plot)}
 \usage{
 cleaninventory(
   inventory,
@@ -20,14 +20,16 @@ vignette) (data.frame)}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-The inventory (data.frame) with only alive trees within the inventoried plot.
+The inventory (data.frame) with only alive trees within the
+inventoried plot ('TreesIn' = "1").
 }
 \description{
-Clean inventory
+Clean inventory (only alive trees within the inventoried plot)
 }
 \examples{
 data(Paracou6_2016) # inventory
 data(PlotMask) # the inventoried plot mask
-new <- cleaninventory(Paracou6_2016, PlotMask, loggingparameters(MinDBHValue = 5))
+new <- cleaninventory(Paracou6_2016,
+                      PlotMask, loggingparameters(MinDBHValue = 5))
 
 }

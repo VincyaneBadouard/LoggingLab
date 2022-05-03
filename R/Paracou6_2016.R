@@ -3,6 +3,17 @@
 #' Tree inventory of plot 6 of Paracou research station (French Guiana) for 2016
 #' Public dataset extracted from the Guyafor database.
 #'
+#' The columns required for the package are:
+#' - *Forest* (to apply the corresponding volume formula)
+#' - *Plot* (1 value)
+#' - *CensusYear* (1 value)
+#' - *PlotArea*
+#' - *idTree*
+#' - *Xutm* and *Yutm*
+#' - *CodeAlive*
+#' - *Family*, *Genus*, *Species* and *VernName*
+#' - *Circ* or *CircCorr*
+#'
 #' @format A tibble with 3620 rows and 26 variables:
 #' \describe{
 #'   \item{Forest}{Forest name (character)}
@@ -28,14 +39,13 @@
 #'   for the botanical identification (numeric)}
 #'   \item{VernName}{Vernacular name (character)}
 #'   \item{CensusYear}{Census year (integer)}
-#'   \item{CensusDate}{Census Day (when available) (character)}
 #'   \item{CensusDateCertainty}{Is the CensusDate precise (TRUE) or not (FALSE)?
 #'   If FALSE, this information must not be considered for calculation (logical)}
 #'   \item{CodeAlive}{Is the tree alive (TRUE) or dead (FALSE)? (logical)}
 #'   \item{MeasCode}{Information on the method for measuring the circumference
 #'   or on the state of the tree (integer)}
-#'   \item{Circ}{Circumference of the tree at 1.30m above ground (DBH level),
-#'   in cm (numeric)}
+#'   \item{Circ}{Circumference of the tree at 1.30m above ground (breast height
+#'   level), in cm (numeric)}
 #'   \item{CircCorr}{Corrected circumference
 #'   (mathematical correction of abnormal circumferences), in cm (numeric)}
 #'   \item{CorrCode}{Information on the reason why and how the circumference has

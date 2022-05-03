@@ -19,7 +19,7 @@ treefelling(
 \item{inventory}{Input inventory (see the inputs formats and metadata in the
 vignette) (data.frame)}
 
-\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+\item{scenario}{Logging scenario among: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 vignette)}
 
@@ -32,8 +32,8 @@ If not, recovery at the foot with a cable at an angle to the trail.
 Avoid future/reserve trees if chosen.}
 
 \item{winching}{"0": no cable or grapple (trail to tree foot)
-"1": only cable (default = 40m)
-"2": grapple (default = 6m) + cable (grapple priority)
+"1": only cable (default = 40 m)
+"2": grapple (default = 6 m) + cable (grapple priority)
 If grapple + cable (winching = "2") without fuel wood (fuel = "0")
 recovery of the tree foot with grapple if possible (respected grapple
 conditions) otherwise with cable with angle to the trail.
@@ -50,10 +50,9 @@ The angle to the trail is favoured to avoid future/reserve trees.
 If the avoidance of future/reserve trees could not be performed,
 a message is returned.}
 
-\item{maintrailsaccess}{Access point of maintrail for each PU (prospection
-unit) (sf or sfc)}
+\item{maintrailsaccess}{Access point of main trail for each harvestable zone (sf or sfc)}
 
-\item{scndtrail}{main and second trails (sf)}
+\item{scndtrail}{Secondary trails (sf)}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -61,28 +60,31 @@ unit) (sf or sfc)}
 \value{
 Input inventory with new columns:
 \itemize{
-\item The tree felling success or fail("TreeFellingOrientationSuccess")
-\item The crowns of the future/reserve trees (Polygon)
-\item The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
+\item The tree felling success or fail("\emph{TreeFellingOrientationSuccess}")
+\item The fallen trees ("\emph{TreePolygon}"): a MULTIPOLYGON of the tree oriented
 according to the chosen scenario
-\item The dead trees under felled trees (DeathCause = "treefall2nd")
+\item The dead trees under felled trees (\emph{DeathCause} = "\emph{treefall2nd}")
 }
 }
 \description{
-Tree felling
+Simulates the tree felling, with the success or failure of the
+direction of the tree fall, foot to the trail, with an angle to the trail
+and avoiding the trees to protect, as desired. If FWE (Fuel Wood
+Exploitation), the tree will be directed with its crown towards the trail
+(if the orientation is successful) if it can be retrieved with a grapple.
 }
 \details{
 The felling of the tree creates a tree (including crown) on the
 ground, with dimensions calculated with specific allometries
 ('advancedloggingparameters').
 
-The crowns (fuel wood exploitation case) can only be retrieved with a grapple
+The crowns (fuel wood exploitation case) can only be retrieved with a grapple.
 
 RIL1/RIL2broken/RIL2:
 \itemize{
 \item at 40\%: random fall
 \item at 60\% ('TreefallSuccessProportion'):
-\emph{base of the tree towards the nearest trail} (main or 2ndary)
+\emph{base of the tree towards the nearest trail} (main or secondary)
 }
 
 RIL3/RIL3 timber + fuel wood:

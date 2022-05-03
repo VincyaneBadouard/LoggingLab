@@ -1,4 +1,8 @@
-#' Second trails adjusted
+#' Adjusted secondary skidding trails layout
+#'
+#' @description In the FWE (Fuel Wood Exploitation) case, the layout of the
+#'   skidding trails is redefined to favour the recovery of trees through the
+#'   crown (only with a grapple) in order to use the crowns for fuel wood.
 #'
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs in UTM**)
@@ -14,12 +18,12 @@
 #'- The crowns of the future/reserve trees (Polygon)
 #'- The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
 #'   according to the chosen scenario
-#'- The dead trees under felled trees (DeathCause = "treefall2nd")
+#'- The dead trees under felled trees (*DeathCause* = "treefall2nd")
 #'
-#' @param harvestablepolygons Accessible area of the inventoried plot
+#' @param harvestablepolygons Accessible zones of the inventoried plot
 #'  (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)
 #'
-#' @param machinepolygons Accessible for machine area of the inventoried plot
+#' @param machinepolygons Accessible zones for machines of the inventoried plot
 #'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
 #'
 #' @param maintrailsaccess Access point of maintrail for each PU (prospection
@@ -30,7 +34,7 @@
 #'  \code{\link{HarvestableAreaOutputsCable}})
 #'  (RasterLayer **with a crs in UTM**)
 #'
-#'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#'@param scenario Logging scenario among: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  vignette)
 #'
@@ -49,18 +53,23 @@
 #'   \code{\link{loggingparameters}} (list)
 #'
 #' @return A list with :
-#' - inventory: Updated inventory
-#' - SmoothedTrails: Smoothed main and secondary trails polygons
-#' (sfc_MULTIPOLYGON)
-#' - TrailsDensity: Second trails density (in m/ha)
-#' - TrailsIdentity: information on sections of the trails (matrix) with:
-#'     - LineID:
-#'     - LoggedTrees: idTree of trees reached by the trails
-#'     - TypeExpl: type of winching
-#' - MainTrailsAccess : Random access point of maintrail for each PU
-#' (sfc_MULTIPOLYGON)
-#' - RawSecondTrails : non-smoothed secondary trails (SpatialLines)
-#' - CostRasterAgg: A cost Raster (RasterLayer)
+#' - *inventory*: Updated inventory
+#'
+#' - *SmoothedTrails*: Smoothed secondary trails (MULTIPOLYGON with crs)
+#'
+#' - *TrailsDensity*: Secondary trails density (in m/ha)
+#'
+#' - *TrailsIdentity*: Information on sections of the trails (matrix) with:
+#'     - *LineID*:
+#'     - *LoggedTrees*: idTree of trees reached by the trails
+#'     - *TypeExpl*: type of winching
+#'
+#' - *MainTrailsAccess*: Random access point of main trail for each harvestable
+#'   zone (sfc_POINT with crs)
+#'
+#' - *RawSecondTrails*: Non-smoothed secondary trails (SpatialLines with crs)
+#'
+#' - *CostRasterAgg*: The cost raster (RasterLayer  with crs)
 #'
 #' @importFrom sf st_cast st_as_sf st_intersection st_union st_sample st_join
 #'   st_buffer as_Spatial st_centroid st_set_precision st_make_valid st_set_agr

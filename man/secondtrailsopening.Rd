@@ -2,7 +2,7 @@
 % Please edit documentation in R/SecondTrailsOpening.R
 \name{secondtrailsopening}
 \alias{secondtrailsopening}
-\title{Second trails opening}
+\title{Secondary skidding trails layout}
 \usage{
 secondtrailsopening(
   topography,
@@ -33,10 +33,10 @@ neighbourhood of 8 cells) (default:
 \code{\link{HarvestableAreaOutputsCable}})
 (RasterLayer \strong{with a crs in UTM})}
 
-\item{harvestablepolygons}{Accessible area of the inventoried plot
+\item{harvestablepolygons}{Accessible zones of the inventoried plot
 (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)}
 
-\item{machinepolygons}{Accessible for machine area of the inventoried plot
+\item{machinepolygons}{Accessible zones for machines of the inventoried plot
 (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
 
 \item{treeselectionoutputs}{A list with:
@@ -45,12 +45,12 @@ neighbourhood of 8 cells) (default:
 "LoggingStatus", "Selected", "Up", "VolumeCumSum",
 "ProbedHollowProba", "ProbedHollow" new columns
 (see the outputs metadata in the vignette).
-\item the objective volume with or without a bonus (if hollow trees exploitation)
+\item the objective volume
 \item 6 sets of spatial points:
 harvestable, selected, future and reserve, hollow and fuel wood trees
 }}
 
-\item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+\item{scenario}{Logging scenario among: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 vignette)}
 
@@ -70,24 +70,27 @@ Avoidance of future/reserves if chosen.}
 \value{
 A list with :
 \itemize{
-\item inventory: Updated inventory
-\item SmoothedTrails: Smoothed main and secondary trails polygons
-\item TrailsDensity: Second trails density (in m/ha)
-\item TrailsIdentity: information on sections of the trails (matrix) with:
+\item \emph{inventory}: Updated inventory
+\item \emph{SmoothedTrails}: Smoothed secondary trails (MULTIPOLYGON with crs)
+\item \emph{TrailsDensity}: Secondary trails density (in m/ha)
+\item \emph{TrailsIdentity}: Information on sections of the trails (matrix) with:
 \itemize{
-\item LineID:
-\item LoggedTrees: idTree of trees reached by the trails
-\item TypeExpl: type of winching
-(sfc_MULTIPOLYGON)
+\item \emph{LineID}:
+\item \emph{LoggedTrees}: idTree of trees reached by the trails
+\item \emph{TypeExpl}: type of winching
 }
-\item MainTrailsAccess : Random access point of maintrail for each PU
-(sf, sfc_MULTIPOLYGON)
-\item RawSecondTrails : non-smoothed secondary trails (SpatialLines)
-\item CostRasterAgg: A cost Raster (RasterLayer)
+\item \emph{MainTrailsAccess}: Random access point of main trail for each harvestable
+zone (sfc_POINT with crs)
+\item \emph{RawSecondTrails}: Non-smoothed secondary trails (SpatialLines with crs)
+\item \emph{CostRasterAgg}: The cost raster (RasterLayer  with crs)
 }
 }
 \description{
-Second trails opening
+Starting from the main skidding trails, draw secondary skidding
+trails on the zones accessible to the machines, allowing to collect the
+selected trees with the chosen machines ("winching" argument). The layout
+is optimised to reduce the distance covered while respecting topographical
+constraints and avoiding trees to protect.
 }
 \examples{
 set.seed(1)

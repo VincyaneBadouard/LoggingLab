@@ -54,10 +54,10 @@ loggingparameters(
 \item{MinDBHValue}{Minimum DBH for inclusion in the forest inventory.
 Default = 10, in cm (double)}
 
-\item{MaxTrailCenterlineSlope}{Maximum main & 2nd trail centerline slope.
+\item{MaxTrailCenterlineSlope}{Maximum trail centerline slope.
 Default = 22, in \% (double)}
 
-\item{MaxTrailCrossSlope}{Maximum main & 2nd trail cross slope. Default = 4,
+\item{MaxTrailCrossSlope}{Maximum trail cross slope. Default = 4,
 in \% (double)}
 
 \item{GrappleMaxslope}{Maximum slope accessible by the grapple. Default
@@ -70,7 +70,7 @@ cable. Default = 35, in \% (double)}
 Default = 5, in \% (double)}
 
 \item{SlopeDistance}{Distance over which the slope is calculated.
-Default = 6, in m (3m each side) (integer)}
+Default = 3, in m (3m each side) (integer)}
 
 \item{WaterSourcesBufferZone}{Buffer zone based on relative horizontal
 distance to the nearest water source. Default = 30, in m (double)}
@@ -125,9 +125,9 @@ Default = 0.14, in m3 of purge/m3 of volume of timber harvested. (double)}
 (has no impact on the simulation. A message will be sent to inform if
 this threshold has been exceeded)}
 
-\item{MaxLandingArea}{Maximum landing area. Default = 1500) in square meters
-(double) (has no impact on the simulation. A message will be sent to inform
-if this threshold has been exceeded)}
+\item{MaxLandingArea}{Maximum landing area. Default = 1500) in m2 (double)
+(has no impact on the simulation. A message will be sent to inform if this
+threshold has been exceeded)}
 
 \item{CostMatrix}{Cost matrix for optimized trail layout (list of 2 lists).
 Gives an increasing cost according to a slope gradient (1st sub-list), and
@@ -161,11 +161,12 @@ and mean σ^2 = 0.0295966977 with the crown diameter (CD), the tree height
 (H) in m, and the DBH in cm. (Aubry-Kientz et al.2019)(function)}
 
 \item{RottenModel}{Estimates the tree probability of being probed hollow
-(default: 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) with DBH in cm) (function)}
+(default: 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) with DBH in cm (developed
+by S.Schmitt)) (function)}
 
 \item{VisiblyDefectModel}{Estimates the commercial tree probability to have
 visible defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with
-DBH in cm (function)}
+DBH in cm (developed by V.Badouard) (function)}
 }
 \value{
 A named list of 33 objects.

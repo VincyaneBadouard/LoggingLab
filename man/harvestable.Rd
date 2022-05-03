@@ -56,10 +56,11 @@ Avoidance of future/reserves if chosen.}
 (\code{\link{loggingparameters}}) (list)}
 }
 \value{
-input inventory with new columns:
+Input inventory with new columns:
 \itemize{
-\item The exploitability criteria ("DistCriteria", "Slope"(in radians), "SlopeCriteria"), and if
-they are validated for each of the trees ("LoggingStatus").
+\item The exploitability criteria ("DistCriteria", "Slope"(in radians),
+"SlopeCriteria"), and if they are validated for each of the trees
+("LoggingStatus").
 \item The probability of a tree having visible defects ("VisibleDefectProba")
 and the visible defect trees ("VisibleDefect").
 }
@@ -69,19 +70,19 @@ plot for these criteria.
 }
 \description{
 The function tells you the harvestable volume in the plot, and
-which trees are harvestable according to your harvestability criteria
+which trees are harvestable according to your harvestability criteria.
 }
 \details{
 Trees will be designated as "\strong{harvestable}" if they:
 \itemize{
 \item belonging to species of 1st economic rank or more if diversification
-\item DBH between the MinFD and the MaxFD.
+\item DBH between the \emph{MinFD} and the \emph{MaxFD}.
 \item not isolated ( >100m ('IsolateTreeMinDistance' in
 \code{\link{loggingparameters}})) from other individuals of the same
 species in the aggregative species case (\code{\link{SpeciesCriteria}},
-'Aggregative' column).
-\item on slopes < 22\% ('TreeMaxSlope'in \code{\link{loggingparameters}})
-\item off the main trails.
+\emph{Aggregative} column).
+\item on slopes < 22\% ('MaxTrailCenterlineSlope') or < 35\% if winching by cable is
+allowed ('CableTreesMaxSlope'in \code{\link{loggingparameters}})
 }
 
 Trees with visible defects are identified ('VisiblyDefectModel' in

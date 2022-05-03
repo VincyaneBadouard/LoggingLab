@@ -2,7 +2,7 @@
 % Please edit documentation in R/maintrailextract.R
 \name{maintrailextract}
 \alias{maintrailextract}
-\title{Generating maintrails function}
+\title{Generate main skidding trail of the inventoried plot}
 \usage{
 maintrailextract(topography, advancedloggingparameters = loggingparameters())
 }
@@ -16,11 +16,15 @@ We advise you to generate your raster with Qgis rather than with the
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-The maintrails outside of the topography raster (sf LINESTRING object
-\strong{with a crs in UTM})
+The main trail at the edge and outside of the topography raster (sf
+LINESTRING object \strong{with a crs in UTM})
 }
 \description{
-Generating maintrails function
+Generate main skidding trail of the inventoried plot
+}
+\details{
+The main trails are defined as lines at the edge and outside of the
+plot.
 }
 \examples{
 data(DTMParacou)

@@ -3,7 +3,7 @@
 \docType{data}
 \name{PlotMask}
 \alias{PlotMask}
-\title{PlotMask}
+\title{Paracou P6 plot mask}
 \format{
 SpatialPolygonsDataFrame \strong{with a crs in UTM}
 }

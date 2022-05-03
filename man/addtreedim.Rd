@@ -2,8 +2,8 @@
 % Please edit documentation in R/addtreedim.R
 \name{addtreedim}
 \alias{addtreedim}
-\title{Compute tree dimensions (tree and crown height and diameter, harvestable
-volume, wood density, and AGB)}
+\title{Compute tree dimensions (tree, trunk and crown height, crown diameter,
+harvestable volume, wood density, and AGB)}
 \usage{
 addtreedim(
   inventory,
@@ -36,21 +36,25 @@ TreeHarvestableVolume (m^3), TrunkHeight (m), CrownHeight (m), CrownDiameter
 (in Mg)
 }
 \description{
-Compute tree dimensions (tree and crown height and diameter, harvestable
-volume, wood density, and AGB)
+Compute tree dimensions (tree, trunk and crown height, crown diameter,
+harvestable volume, wood density, and AGB)
 }
 \details{
 'addtreedim' compute some tree dimensions with the
 'advancedloggingparameters' argument:
 \itemize{
 \item Tree height (in m) ('TreeHeightAllometry')
-\item Tree Harvestable Volume (m^3) ('TreeHarvestableVolumeAllometry')
+\item Tree harvestable volume (m3) ('TreeHarvestableVolumeAllometry')
 \item Trunk height (in m) ('TrunkHeightAllometry')
 \item Crown height (in m)
 \item Crown diameter (in m) ('CrownDiameterAllometry')
-\item Wood density (g/cm^3) (by BIOMASS package)
-\item Tree above-ground biomass (AGB) (in ton) (by BIOMASS package)
+\item Wood density (g/cm3) (by the BIOMASS package)
+\item Tree above-ground biomass (AGB) (in ton) (by the BIOMASS package)
 }
+
+'Taxo': the level at which the CrownDiameter was calculated.
+'levelWD': the level at which the WoodDensity was assigned by the BIOMASS
+package.
 }
 \examples{
 data(Paracou6_2016)

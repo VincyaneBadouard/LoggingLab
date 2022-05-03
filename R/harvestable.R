@@ -1,7 +1,7 @@
 #'Harvestable trees identification
 #'
 #'@description The function tells you the harvestable volume in the plot, and
-#'  which trees are harvestable according to your harvestability criteria
+#'  which trees are harvestable according to your harvestability criteria.
 #'
 #'@param inventory Input inventory (see the inputs formats and metadata in the
 #'  vignette) (data.frame)
@@ -42,24 +42,25 @@
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  (\code{\link{loggingparameters}}) (list)
 #'
-#'@return input inventory with new columns:
-#' - The exploitability criteria ("DistCriteria", "Slope"(in radians), "SlopeCriteria"), and if
-#'        they are validated for each of the trees ("LoggingStatus").
+#'@return Input inventory with new columns:
+#' - The exploitability criteria ("DistCriteria", "Slope"(in radians),
+#'       "SlopeCriteria"), and if they are validated for each of the trees
+#'       ("LoggingStatus").
 #' - The probability of a tree having visible defects ("VisibleDefectProba")
-#'         and the visible defect trees ("VisibleDefect").
+#'       and the visible defect trees ("VisibleDefect").
 #'
 #' The function returns the harvestable volume too, in the
 #'  plot for these criteria.
 #'
 #'@details Trees will be designated as "**harvestable**" if they:
 #'- belonging to species of 1st economic rank or more if diversification
-#'- DBH between the MinFD and the MaxFD.
+#'- DBH between the *MinFD* and the *MaxFD*.
 #'- not isolated ( >100m ('IsolateTreeMinDistance' in
 #'   \code{\link{loggingparameters}})) from other individuals of the same
 #'   species in the aggregative species case (\code{\link{SpeciesCriteria}},
-#'   'Aggregative' column).
-#'- on slopes < 22% ('TreeMaxSlope'in \code{\link{loggingparameters}})
-#'- off the main trails.
+#'   *Aggregative* column).
+#'- on slopes < 22% ('MaxTrailCenterlineSlope') or < 35% if winching by cable is
+#'   allowed ('CableTreesMaxSlope'in \code{\link{loggingparameters}})
 #'
 #'Trees with visible defects are identified ('VisiblyDefectModel' in
 #''advancedloggingparameters' argument) among the trees with harvestable

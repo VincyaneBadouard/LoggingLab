@@ -3,7 +3,7 @@
 \docType{data}
 \name{DTMParacou}
 \alias{DTMParacou}
-\title{Paracou Digital terrain model (DTM)}
+\title{Paracou P6 Digital Terrain Model (DTM)}
 \format{
 A Large RasterLayer \strong{with a crs  in UTM}
 }
@@ -16,7 +16,7 @@ to compute the DTM
 DTMParacou
 }
 \description{
-Digital terrain model (DTM) of plot 6 of Paracou (French Guiana) (1 m
+Digital terrain model (DTM) of plot 6 of Paracou (French Guiana) (LiDAR, 1 m
 resolution, 2016)
 }
 \keyword{datasets}

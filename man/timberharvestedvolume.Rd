@@ -27,18 +27,20 @@ hollow trees, damage and and unused part of the log for fuel = "2"}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-A list with the logged volume (TimberLoggedVolume)
+A list with the logged volume (\emph{TimberLoggedVolume})
 and when fuel = "2", the logged volume without the hollow trees
-(NoHollowTimberLoggedVolume).
-NoHollowTimberLoggedVolume is the logged volume (TimberLoggedVolume)
+(\emph{NoHollowTimberLoggedVolume}).
+\emph{NoHollowTimberLoggedVolume} is the logged volume (\emph{TimberLoggedVolume})
 when fuel = "0" or "1".
 }
 \description{
-Compute the timber harvested volume
+Computes the timber harvested volume in healthy trees exploited
+for timber, and in the hollow trees if they are also harvested for fuel
+wood.
 }
 \details{
 When fuel is "2", by default, 2/3 of the log of a hollow tree will
-be usable as timber and 1/3 as fuel wood ('TreeHollowPartForFuel'). When
+be usable as timber and 1/3 as fuel wood ('\emph{TreeHollowPartForFuel}'). When
 fuel is not "2", hollow trees are not used for timber nor fuel wood. Dead
 trees from the operation (trails, secondary windfall) are never exploited
 as timber, but as fuel wood if chosen.

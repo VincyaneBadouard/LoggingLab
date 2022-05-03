@@ -1,4 +1,4 @@
-#' Harvestable area definition
+#' Harvestable zones definition within the plot
 #'
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs in UTM**)
@@ -14,7 +14,7 @@
 #' @param plotmask Inventoried plot mask
 #' (SpatialPolygonsDataFrame **with a crs in UTM**)
 #'
-#' @param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#' @param scenario Logging scenario among: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  vignette)
 #'
@@ -31,15 +31,17 @@
 #'   \code{\link{loggingparameters}} (list)
 #'
 #' @return A list with:
-#' - 'HarvestablePolygons': a collection of polygons (sfc_MULTIPOLYGON) defined as:
-#'    1 : harvestable area,
-#'    0 : non-harvestable area
-#' - 'PlotSlope': a raster with slope (in radians) characteristic of the studied
-#'    plot (Large RasterLayer)
+#' - 'HarvestablePolygons': a collection of polygons (sfc_MULTIPOLYGON, with
+#'   crs) defined as:
+#'    1 : harvestable zone,
+#'    0 : non-harvestable zone
+#' - 'PlotSlope': Slopes of the plot (in radians) characteristic of the studied
+#'    plot (Large RasterLayer with crs)
 #' - HarvestableArea : the harvestable area in hectares (double)
-#' - MachinePolygons : a collection of polygons (sf (sfc_POLYGON)) defined as:
-#'    1 : accessible machine area,
-#'    0 : non-accessible machine area
+#' - MachinePolygons : a collection of polygons (sf (sfc_POLYGON with crs))
+#'   defined as:
+#'    1 : accessible machine zone,
+#'    0 : non-accessible machine zone
 #'
 #'
 #' @export

@@ -1,8 +1,8 @@
 #' Check the input inventory data for the "LoggingLab" package
 #'
-#' @description Check if the input inventory data is compatible with the "LoggingLab"
-#'   package (see 'Required format of the inventory' section of the vignette
-#'   vignette)
+#' @description Check if the input inventory data is compatible with the
+#'   "LoggingLab" package (see 'Required format of the inventory' section of the
+#'   vignette vignette)
 #'
 #' @param inventory Input inventory (see the inputs formats and metadata in the
 #'   vignette) (data.frame)
@@ -103,14 +103,14 @@ inventorycheckformat <- function(
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop, "VernName variable is not found.")
   }
-  if(!('Xfield' %in% names(inventory))) {
-    GoodData <- FALSE
-    GeneralStop <- paste (GeneralStop, "Xfield variable is not found.")
-  }
-  if(!('Yfield' %in% names(inventory))) {
-    GoodData <- FALSE
-    GeneralStop <- paste (GeneralStop, "Yfield variable is not found.")
-  }
+  # if(!('Xfield' %in% names(inventory))) {
+  #   GoodData <- FALSE
+  #   GeneralStop <- paste (GeneralStop, "Xfield variable is not found.")
+  # }
+  # if(!('Yfield' %in% names(inventory))) {
+  #   GoodData <- FALSE
+  #   GeneralStop <- paste (GeneralStop, "Yfield variable is not found.")
+  # }
   if(!('Xutm' %in% names(inventory))) {
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop, "Xutm variable is not found.")

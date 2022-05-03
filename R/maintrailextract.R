@@ -1,4 +1,4 @@
-#' Generating maintrails function
+#' Generate main skidding trail of the inventoried plot
 #'
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs in UTM**)
@@ -8,8 +8,11 @@
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
 #'
-#' @return The maintrails outside of the topography raster (sf LINESTRING object
-#'   **with a crs in UTM**)
+#' @details The main trails are defined as lines at the edge and outside of the
+#'   plot.
+#'
+#' @return The main trail at the edge and outside of the topography raster (sf
+#'   LINESTRING object **with a crs in UTM**)
 #'
 #' @export
 #'

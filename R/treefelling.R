@@ -1,9 +1,15 @@
 #'Tree felling
 #'
+#'@description Simulates the tree felling, with the success or failure of the
+#'  direction of the tree fall, foot to the trail, with an angle to the trail
+#'  and avoiding the trees to protect, as desired. If FWE (Fuel Wood
+#'  Exploitation), the tree will be directed with its crown towards the trail
+#'  (if the orientation is successful) if it can be retrieved with a grapple.
+#'
 #'@param inventory Input inventory (see the inputs formats and metadata in the
 #'  vignette) (data.frame)
 #'
-#'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#'@param scenario Logging scenario among: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  vignette)
 #'
@@ -17,8 +23,8 @@
 #'
 #'@param winching
 #' "0": no cable or grapple (trail to tree foot)
-#' "1": only cable (default = 40m)
-#' "2": grapple (default = 6m) + cable (grapple priority)
+#' "1": only cable (default = 40 m)
+#' "2": grapple (default = 6 m) + cable (grapple priority)
 #' If grapple + cable (winching = "2") without fuel wood (fuel = "0")
 #'  recovery of the tree foot with grapple if possible (respected grapple
 #'  conditions) otherwise with cable with angle to the trail.
@@ -36,31 +42,29 @@
 #' If the avoidance of future/reserve trees could not be performed,
 #' a message is returned.
 #'
-#' @param maintrailsaccess Access point of maintrail for each PU (prospection
-#'    unit) (sf or sfc)
-#'@param scndtrail main and second trails (sf)
+#'@param maintrailsaccess Access point of main trail for each harvestable zone (sf or sfc)
+#'@param scndtrail Secondary trails (sf)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
 #'
 #'@return Input inventory with new columns:
-#'- The tree felling success or fail("TreeFellingOrientationSuccess")
-#'- The crowns of the future/reserve trees (Polygon)
-#'- The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
+#'- The tree felling success or fail("*TreeFellingOrientationSuccess*")
+#'- The fallen trees ("*TreePolygon*"): a MULTIPOLYGON of the tree oriented
 #'   according to the chosen scenario
-#'- The dead trees under felled trees (DeathCause = "treefall2nd")
+#'- The dead trees under felled trees (*DeathCause* = "*treefall2nd*")
 #'
 #'@details The felling of the tree creates a tree (including crown) on the
 #' ground, with dimensions calculated with specific allometries
 #' ('advancedloggingparameters').
 #'
-#'The crowns (fuel wood exploitation case) can only be retrieved with a grapple
+#'The crowns (fuel wood exploitation case) can only be retrieved with a grapple.
 #'
 #'RIL1/RIL2broken/RIL2:
 #' - at 40%: random fall
 #' - at 60% ('TreefallSuccessProportion'):
-#' *base of the tree towards the nearest trail* (main or 2ndary)
+#' *base of the tree towards the nearest trail* (main or secondary)
 #'
 #'RIL3/RIL3 timber + fuel wood:
 #' - at 40%: random fall

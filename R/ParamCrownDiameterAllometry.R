@@ -1,8 +1,8 @@
-#' ParamCrownDiameterAllometry
+#' Parameters of the crown-diameter allometry (Species, Genus, Family levels)
 #'
-#' Parameters of crown diameter allometry used to compute the crown diameter of
-#' each tree, depending on its DBH (Diameter at Breast Height) and its species,
-#' genus or family (Aubry-Kientz et al.2019).
+#' Parameters of crown-diameter allometry used to compute the crown diameter of
+#' each tree, depending on its DBH (Diameter at Breast Height) and its Species,
+#' Genus or Family names (Aubry-Kientz et al.2019).
 #'
 #' @references Aubry-Kientz, Mélaine, et al. "A comparative assessment of the
 #'   performance of individual tree crowns delineation algorithms from ALS data

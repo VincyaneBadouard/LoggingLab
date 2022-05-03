@@ -38,9 +38,10 @@ hollow trees, damage and and unused part of the log for fuel = "2"}
 main commercial species (species with a value of 2  for commercial in the
 \code{\link{SpeciesCriteria}} table) (logical)}
 
-\item{VO}{Objective volume for the entire area of the plot (numeric value)}
+\item{VO}{Objective volume for the entire area of the plot (m3) (numeric
+value)}
 
-\item{HVinit}{Harvestable volume in the plot for the chosen scenario
+\item{HVinit}{Harvestable volume(m3) in the plot for the chosen scenario
 (\code{\link{SpeciesCriteria}}) (numeric value)}
 
 \item{specieslax}{Allow diversification if the stand is too poor to reach the
@@ -53,21 +54,21 @@ objective volume (if stand too poor), = FALSE by default (logical)}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-Input inventory with
+Input inventory with:
 \itemize{
-\item The trees selected for harvesting ("Selected")
-\item if the Minimum Felling Diameter (MinFD) of their species has been raised
-("Up")
-\item The cumulative harvestable volume of harvestable trees("VolumeCumSum").
-\item The probability of a tree being probed hollow ("ProbedHollowProba") and the
-probed hollow trees ("ProbedHollow").
-See the outputs metadata in the vignette
+\item The trees selected for harvesting (\emph{Selected})
+\item if the Minimum Felling Diameter (\emph{MinFD}) of their species has been raised
+(\emph{Up})
+\item The probability of a tree being probed hollow (\emph{ProbedHollowProba}) and
+the probed hollow trees (\emph{ProbedHollow}).
+See the outputs metadata in the vignette.
 }
 
-2 sets of spatial points: (HollowTrees and EnergywoodTrees)
+2 sets of spatial points: (\emph{HollowTrees} and \emph{EnergywoodTrees})
 }
 \description{
-Selection of trees to log
+Selection of trees to log among the exploitable trees, according
+to the objective volume and the exploitable volume on the plot.
 }
 \details{
 This function allows the selection of trees to be exploited among the
@@ -78,9 +79,9 @@ harvested and are therefore included in the objective volume. If fuel = 0 or
 trees to reach the objective volume (if possible).
 
 If the harvestable volume is higher than the objective volume, and that
-diversification was not chosen, MinFD of the 1st economic rank species only
-is increased.
-If the diversification is allowed, MinFD of 1st and 2nd economic level
+diversification was not chosen, \emph{MinFD} of the 1st economic rank species
+only is increased.
+If the diversification is allowed, \emph{MinFD} of 1st and 2nd economic level
 species is increased.
 Then, the trees to be harvested are chosen in
 decreasing order of volume, until the objective volume is reached.

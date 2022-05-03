@@ -1,5 +1,8 @@
 #'Selection of trees to log
 #'
+#'@description Selection of trees to log among the exploitable trees, according
+#'  to the objective volume and the exploitable volume on the plot.
+#'
 #'@param inventory Input inventory (see the inputs formats and metadata in the
 #'  vignette) (data.frame)
 #'
@@ -23,9 +26,10 @@
 #'@param specieslax Allow diversification if the stand is too poor to reach the
 #'  objective volume without diversification, = FALSE by default (logical)
 #'
-#'@param VO Objective volume for the entire area of the plot (numeric value)
+#'@param VO Objective volume for the entire area of the plot (m3) (numeric
+#'  value)
 #'
-#'@param HVinit Harvestable volume in the plot for the chosen scenario
+#'@param HVinit Harvestable volume(m3) in the plot for the chosen scenario
 #'  (\code{\link{SpeciesCriteria}}) (numeric value)
 #'
 #'@param objectivelax Allow exploitation in case of non-achievement of the
@@ -34,16 +38,15 @@
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
-#'@return Input inventory with
-#'- The trees selected for harvesting ("Selected")
-#'- if the Minimum Felling Diameter (MinFD) of their species has been raised
-#'  ("Up")
-#'- The cumulative harvestable volume of harvestable trees("VolumeCumSum").
-#'- The probability of a tree being probed hollow ("ProbedHollowProba") and the
-#'   probed hollow trees ("ProbedHollow").
-#'See the outputs metadata in the vignette
+#'@return Input inventory with:
+#'  - The trees selected for harvesting (*Selected*)
+#'  - if the Minimum Felling Diameter (*MinFD*) of their species has been raised
+#'      (*Up*)
+#'  - The probability of a tree being probed hollow (*ProbedHollowProba*) and
+#'      the probed hollow trees (*ProbedHollow*).
+#'See the outputs metadata in the vignette.
 #'
-#'2 sets of spatial points: (HollowTrees and EnergywoodTrees)
+#'2 sets of spatial points: (*HollowTrees* and *EnergywoodTrees*)
 #'
 #'@details This function allows the selection of trees to be exploited among the
 #'  exploitable trees. It also informs about the trees that were finally found
@@ -53,9 +56,9 @@
 #'  trees to reach the objective volume (if possible).
 #'
 #'  If the harvestable volume is higher than the objective volume, and that
-#'  diversification was not chosen, MinFD of the 1st economic rank species only
-#'  is increased.
-#'  If the diversification is allowed, MinFD of 1st and 2nd economic level
+#'  diversification was not chosen, *MinFD* of the 1st economic rank species
+#'  only is increased.
+#'  If the diversification is allowed, *MinFD* of 1st and 2nd economic level
 #'  species is increased.
 #'  Then, the trees to be harvested are chosen in
 #'  decreasing order of volume, until the objective volume is reached.

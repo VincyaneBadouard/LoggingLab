@@ -22,20 +22,22 @@ the same format as \code{\link{SpeciesCriteria}} (data.frame)}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-input inventory with selected future and reserve trees
-(LoggingStatus = "future"/"reserve"),
+Input inventory with selected future and reserve trees
+(\emph{LoggingStatus} = "\emph{future}"/"\emph{reserve}"),
 for your logging criteria (\code{\link{SpeciesCriteria}})
 }
 \description{
-Future & reserve trees designation
+designates which trees will be harvested in future seasons:
+"future trees", and which should be protected as seed trees: "reserve
+trees".
 }
 \details{
 \strong{Future} trees are all trees satisfying the following conditions:
 \itemize{
 \item species of 1st economic rank
-\item DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD
-or UpMinFD if it has been raised for its species.
-\item in the prospection units (harvestable areas)
+\item DBH between 35cm ('FutureTreesMinDiameter') and the species \emph{MinFD}
+or \emph{UpMinFD} if it has been raised for its species.
+\item in the harvestable zones
 }
 
 \strong{Reserve} trees are randomly chosen among future trees so that

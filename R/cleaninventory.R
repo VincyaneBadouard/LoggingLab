@@ -1,4 +1,4 @@
-#' Clean inventory
+#' Clean inventory (only alive trees within the inventoried plot)
 #'
 #' @param inventory Input inventory (see the inputs formats and metadata in the
 #'   vignette) (data.frame)
@@ -8,18 +8,21 @@
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
-#' @return The inventory (data.frame) with only alive trees within the inventoried plot.
+#' @return The inventory (data.frame) with only alive trees within the
+#'   inventoried plot ('TreesIn' = "1").
 #'
 #' @export
 #'
 #' @importFrom dplyr filter mutate select left_join
 #' @importFrom tibble add_column
-#' @importFrom sf st_as_sf st_geometry st_intersection st_set_crs st_crs st_make_valid
+#' @importFrom sf st_as_sf st_geometry st_intersection st_set_crs st_crs
+#'   st_make_valid
 #'
 #' @examples
 #' data(Paracou6_2016) # inventory
 #' data(PlotMask) # the inventoried plot mask
-#' new <- cleaninventory(Paracou6_2016, PlotMask, loggingparameters(MinDBHValue = 5))
+#' new <- cleaninventory(Paracou6_2016,
+#'                       PlotMask, loggingparameters(MinDBHValue = 5))
 #'
 cleaninventory <- function(
   inventory,
