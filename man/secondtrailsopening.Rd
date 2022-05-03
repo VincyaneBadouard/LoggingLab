@@ -71,19 +71,18 @@ Avoidance of future/reserves if chosen.}
 A list with :
 \itemize{
 \item inventory: Updated inventory
-\item SmoothedTrails: Smoothed main and secondary trails polygons
+\item SmoothedTrails: Smoothed secondary trails (MULTIPOLYGON with crs)
 \item TrailsDensity: Second trails density (in m/ha)
-\item TrailsIdentity: information on sections of the trails (matrix) with:
+\item TrailsIdentity: Information on sections of the trails (matrix) with:
 \itemize{
 \item LineID:
 \item LoggedTrees: idTree of trees reached by the trails
 \item TypeExpl: type of winching
-(sfc_MULTIPOLYGON)
 }
-\item MainTrailsAccess : Random access point of maintrail for each PU
-(sf, sfc_MULTIPOLYGON)
-\item RawSecondTrails : non-smoothed secondary trails (SpatialLines)
-\item CostRasterAgg: A cost Raster (RasterLayer)
+\item MainTrailsAccess : Random access point of main trail for each harvestable
+zone (sfc_POINT with crs)
+\item RawSecondTrails : Non-smoothed secondary trails (SpatialLines with crs)
+\item CostRasterAgg: The cost raster (RasterLayer  with crs)
 }
 }
 \description{

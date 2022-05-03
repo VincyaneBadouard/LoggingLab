@@ -3,7 +3,7 @@
 \docType{data}
 \name{ParamCrownDiameterAllometry}
 \alias{ParamCrownDiameterAllometry}
-\title{ParamCrownDiameterAllometry}
+\title{Parameters of the crown-diameter allometry (Species, Genus, Family levels)}
 \format{
 A tibble with 371 rows and 7 variables: \describe{
 
@@ -29,9 +29,9 @@ height, CD: tree crown diameter. Mean sigma^2 = 0.0295966977 (double)}
 ParamCrownDiameterAllometry
 }
 \description{
-Parameters of crown diameter allometry used to compute the crown diameter of
-each tree, depending on its DBH (Diameter at Breast Height) and its species,
-genus or family (Aubry-Kientz et al.2019).
+Parameters of crown-diameter allometry used to compute the crown diameter of
+each tree, depending on its DBH (Diameter at Breast Height) and its Species,
+Genus or Family names (Aubry-Kientz et al.2019).
 }
 \references{
 Aubry-Kientz, Mélaine, et al. "A comparative assessment of the

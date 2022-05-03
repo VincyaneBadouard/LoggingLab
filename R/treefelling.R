@@ -36,8 +36,8 @@
 #' If the avoidance of future/reserve trees could not be performed,
 #' a message is returned.
 #'
-#' @param maintrailsaccess Access point of maintrail for each PU (prospection
-#'    unit) (sf or sfc)
+#'@param maintrailsaccess Access point of maintrail for each PU (prospection
+#'    unit = harvestable zone) (sf or sfc)
 #'@param scndtrail main and second trails (sf)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
@@ -46,7 +46,6 @@
 #'
 #'@return Input inventory with new columns:
 #'- The tree felling success or fail("TreeFellingOrientationSuccess")
-#'- The crowns of the future/reserve trees (Polygon)
 #'- The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
 #'   according to the chosen scenario
 #'- The dead trees under felled trees (DeathCause = "treefall2nd")

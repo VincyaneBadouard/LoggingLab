@@ -31,13 +31,15 @@
 #'   \code{\link{loggingparameters}} (list)
 #'
 #' @return A list with:
-#' - 'HarvestablePolygons': a collection of polygons (sfc_MULTIPOLYGON) defined as:
+#' - 'HarvestablePolygons': a collection of polygons (sfc_MULTIPOLYGON, with
+#'   crs) defined as:
 #'    1 : harvestable area,
 #'    0 : non-harvestable area
-#' - 'PlotSlope': a raster with slope (in radians) characteristic of the studied
-#'    plot (Large RasterLayer)
+#' - 'PlotSlope': Slopes of the plot (in radians) characteristic of the studied
+#'    plot (Large RasterLayer with crs)
 #' - HarvestableArea : the harvestable area in hectares (double)
-#' - MachinePolygons : a collection of polygons (sf (sfc_POLYGON)) defined as:
+#' - MachinePolygons : a collection of polygons (sf (sfc_POLYGON with crs))
+#'   defined as:
 #'    1 : accessible machine area,
 #'    0 : non-accessible machine area
 #'

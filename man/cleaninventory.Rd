@@ -20,7 +20,8 @@ vignette) (data.frame)}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-The inventory (data.frame) with only alive trees within the inventoried plot.
+The inventory (data.frame) with only alive trees within the
+inventoried plot ('TreesIn' = "1").
 }
 \description{
 Clean inventory

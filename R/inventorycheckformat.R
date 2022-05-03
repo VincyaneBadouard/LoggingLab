@@ -103,14 +103,14 @@ inventorycheckformat <- function(
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop, "VernName variable is not found.")
   }
-  if(!('Xfield' %in% names(inventory))) {
-    GoodData <- FALSE
-    GeneralStop <- paste (GeneralStop, "Xfield variable is not found.")
-  }
-  if(!('Yfield' %in% names(inventory))) {
-    GoodData <- FALSE
-    GeneralStop <- paste (GeneralStop, "Yfield variable is not found.")
-  }
+  # if(!('Xfield' %in% names(inventory))) {
+  #   GoodData <- FALSE
+  #   GeneralStop <- paste (GeneralStop, "Xfield variable is not found.")
+  # }
+  # if(!('Yfield' %in% names(inventory))) {
+  #   GoodData <- FALSE
+  #   GeneralStop <- paste (GeneralStop, "Yfield variable is not found.")
+  # }
   if(!('Xutm' %in% names(inventory))) {
     GoodData <- FALSE
     GeneralStop <- paste (GeneralStop, "Xutm variable is not found.")

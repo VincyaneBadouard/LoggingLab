@@ -61,6 +61,17 @@ data(CreekDistances)
 
 # Required format of the inventory
 \code{\link{Paracou6_2016}}
+
+The columns required for the package are:
+  - *Forest* (to apply the corresponding volume formula)
+  - *Plot* (1 value)
+  - *CensusYear* (1 value)
+  - *PlotArea*
+  - *idTree*
+  - *Xutm* and *Yutm*
+  - *CodeAlive*
+  - *Family*, *Genus*, *Species* and *VernName*
+  - *Circ* or *CircCorr*
 ```{r}
 # inventory class
 class(Paracou6_2016)
@@ -124,16 +135,31 @@ exploitablefuelwoodvolume
 
 # Arguments presentation
 
-+ **inventory** : Input inventory (see the inputs formats and metadata in the
-vignette) (data.frame)
++ **inventory** : Input forest inventory for 1 plot and 1 census year (see the inputs formats and metadata in the
+vignette or in \code{\link{Paracou6_2016}}) (data.frame)
+
+The columns required for the package are:
+  - *Forest* (to apply the corresponding volume formula)  
+  - *Plot* (1 value)  
+  - *CensusYear* (1 value)  
+  - *PlotArea*  
+  - *idTree*  
+  - *Xutm* and *Yutm*  
+  - *CodeAlive*  
+  - *Family*, *Genus*, *Species* and *VernName*  
+  - *Circ* or *CircCorr*  
+
 
 + **plotmask** Inventoried plot mask (SpatialPolygonsDataFrame **with a crs in UTM**)
 
-+ **topography** : Digital terrain model (DTM) of the inventoried plot (LiDAR
-or SRTM) (RasterLayer  **with a crs in UTM**)
++ **topography** : Digital terrain model (DTM) of the inventoried plot (LiDAR, 1m resolution)
+(RasterLayer **with a crs in UTM**) (See \code{\link{DTMParacou}})
+We advise you to generate your raster with Qgis rather than with the 'raster' package on R.
 
-+ **creekdistances** Relative (vertical and horizontal) distances from nearest channel network
-(list of 2 large RasterLayers **with a crs in UTM**)
+
++ **creekdistances** Relative (vertical (*distvert*) and horizontal (*disthorz*)) distances
+from nearest channel network (list of 2 large RasterLayers **with a crs in UTM**)
+To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 
 + **speciescriteria** : Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in
@@ -143,10 +169,10 @@ species) (data.frame)
 + **volumeparameters** : Volume parameters table (in the same format of
 \code{\link{ForestZoneVolumeParametersTable}}) to compute the harvestable
 volume of each tree, depend to its geographic zone if several locations
-(data.frame)
+(data.frame)("Guide de Sylviculture", ONF ('Office National des Forêts') of French Guiana, 2014)
 
 + **scenario** : Logging scenario: "**RIL1**", "**RIL2broken**", "**RIL2**", "**RIL3**",
-"**RIL3fuel**", "**RIL3fuelhollow**" or "**manual**"(character)
+"**RIL3fuel**", "**RIL3fuelhollow**" or "**manual**"(character) (See *ScenariosTable*)
 
 + **objective** : Objective volume (m3/ha) (numeric)
 
@@ -159,13 +185,15 @@ fuel = "**2**"
 main commercial species (species with a value of 2 for commercial in the
 \code{\link{SpeciesCriteria}} table) (logical)
 
-+ **winching** : No cable or grapple = "**0**", only **cable** = "**1**", **grapple + cable**
-= "**2**"
++ **winching** :  Tree recovery:
+"**0**": No cable or grapple  
+"**1**": only **cable**  
+"**2**": **grapple + cable** (grapple priority)  
 
-+ **directionalfelling** : Directional felling =
-"0": only to direct the foot of the tree towards the trail
-"1": to direct the foot of the tree towards the trail + to avoid damage to future and reserve trees
-"2": to avoid damage to future and reserve trees + orientation angle to the trail
++ **directionalfelling** : Directional felling =  
+"0": only to direct the foot of the tree towards the trail  
+"1": to direct the foot of the tree towards the trail + to avoid damage to future and reserve trees  
+"2": to avoid damage to future and reserve trees + orientation angle to the trail  
 
 
 + **specieslax** : Allow diversification if stand is too poor to reach the
@@ -178,7 +206,7 @@ objective volume (if stand too poor), = FALSE by default (logical)
 + **crowndiameterparameters** : Crown diameter allometry parameters table (in
 the same format of \code{\link{ParamCrownDiameterAllometry}}) to compute
 the crown diameter of each tree, depend to its DBH (Diameter at Breast
-Height) and its species, genus or family (Aubry-Kientz et al.2019). (data.frame)
+Height) and its Species, Genus or Family names (Aubry-Kientz et al.2019). (data.frame)
 
 + **advancedloggingparameters** : Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)
@@ -202,20 +230,20 @@ kable(ScenariosTable)
 *Numeric values*
 
 + **Minimum DBH for inclusion in the forest inventory** = 10 cm 
-+ **Maximum main & 2nd trail centerline slope** = 22 % 
-+ **Maximum main & 2nd trail cross slope** = 4 % 
++ **Maximum trail centerline slope** = 22 % 
++ **Maximum trail cross slope** = 4 % 
 + **Maximum slope accessible by the grapple** = 20 % 
-+ **Maximum slope around the tree to access it with cable** = 22 % 
++ **Maximum slope around the tree to access it with cable** = 35 % 
 + **Plateau maximum slope** = 5 % 
-+ **Distance to compute slope** = 6 m (3m for each side) 
++ **Distance to compute slope** = 3 m (for each side)  
 + **Water sources buffer zone** = 30 m
 + **Buffer zone** based on **relative elevation to the nearest water source** = 2 m
 + **Minimum main trail width** = 5 m 
 + **Maximum main trail width** = 6 m 
 + **Secondary trail width** = 4 m 
 + **Minimum DBH of trees to be avoided by trails** = 50 cm
-+ **Secondary trails smoothing factor** = 5 (unitless)
 + **Distance of DTM resampling to erase microtopographic variation**  = 5 m
++ **Secondary trails smoothing factor** = 5 (unitless)
 + **Cable length** = 40 m 
 + **Grapple length** = 6 m 
 + **Minimum distance to consider a tree "isolated"** from other trees of its species, in the aggregative species case
@@ -228,10 +256,19 @@ kable(ScenariosTable)
 + **Purge (unused part of the log)** = 0.14 m^3 of fuel wood/m^3 of logged trees
 + **Maximum trail density** = 200 m/ha (has no impact on the simulation.
 A message will be sent to inform if this threshold has been exceeded)
-+ **Maximum landing area** = 1500 square meters (has no impact on the simulation.
++ **Maximum landing area** = 1500 m2 (has no impact on the simulation.
 A message will be sent to inform if this threshold has been exceeded)
 
-+ **Cost matrix for optimized trail layout**. Gives an increasing cost according to a slope gradient, and different costs on  cases to avoid.
++ **Cost matrix for optimized trail layout**:
+Gives an increasing cost according to a slope gradient, and
+different costs on certain cases:
+  - "Initial" (default = 1000)
+  - "Access" (default = Inf)
+  - "BigTrees" (default = 500)
+  - "Reserves" (default = 500)
+  - "Futures" (default = 50)
+  - "MainTrails" (default = 1E-4)
+  - "SecondTrails" (default = 0.1)
 
 *Models*   
 
@@ -247,9 +284,9 @@ DBH in cm, height (H) in m.
 log(H) = 0.07359191 + 1.34241216 log(DBH) + (-0.12282344)*log(DBH)^2,
 height (H) in m, DBH in cm
 
-+ **Crown diameter allometry** (*ref*): ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺,
++ **Crown diameter allometry** (Aubry-Kientz et al.2019): ln(D) = 𝜶+ 𝜷 ln(H*CD) + 𝜺,
 with 𝜺~N(0,σ^2) and mean σ^2 = 0.0295966977
-with the crown diameter (CD) and the tree height (H) in m, and the DBH (D) in cm (Aubry-Kientz et al.2019).
+with the crown diameter (CD) and the tree height (H) in m, and the DBH (D) in cm.
 
 + **Rotten model**, estimates the tree probability of being probed hollow:
 1 / (1 + exp(-(-5.151 + 0.042 DBH))), with DBH in cm 
@@ -392,8 +429,10 @@ SimulTime <- microbenchmark::microbenchmark(
 
 ## Results summary
 ```{r}
-# loggingsummary1(Rslt)
-# loggingsummary(Rslt_iter)
+data(LoggingSimulationOutputs) # Outputs of one logging simulation
+data(LoggingSimulationOutputs_iter) # Outputs of one logging simulation (2 iterations and 2 cores)
+loggingsummary1(LoggingSimulationOutputs)
+loggingsummary(LoggingSimulationOutputs_iter) # Outputs of one logging simulation (2 iterations and 2 cores))
 ```
 
 # Decomposed harvesting
@@ -691,6 +730,62 @@ FuelV <- exploitablefuelwoodvolume(inventory, scenario = "manual", fuel = "2",
 DamageVolume <- FuelV$DamageVolume # only damage (without purge and hollow trees)
 FuelVolume <- FuelV$FuelVolume
 ```
+
+# Outputs
+Format: A large list of 38 elements  
+
++ **inventory** : Output forest inventory (data.frame)  
+
+Numeric values:  
++ **HarvestableArea** : Harvestable area in ha (numeric)  
++ **VO** : Objective volume in m3 (numeric)  
++ **HVinit** : Initial harvestable volume in m3 (numeric)  
++ **TimberLoggedVolume** : Timber logged volume in m3 (numeric)  
++ **NoHollowTimberLoggedVolume** : No hollow timber logged volume (only healthy trees) in m3 (numeric)  
++ **FuelVolume** : Fuel wood volume in m3 (numeric)  
++ **DamageVolume** : Damages volume (only damages (= without purge and hollow trees)) in m3 (numeric)  
++ **LostBiomass** : Total lost biomass in ton (numeric)  
++ **TrailsDensity** : Trails density (preliminary if FWE) in m/m2 (units)  
++ **AdjustTrailsDensity** : Adjusted trails density if FWE in m/m2 (units)  
+
+Spatial objects:  
++ **MainTrails** : Main trails (sf)  
+
++ **HarvestablePolygons** : Harvestable zones (MULTIPOLYGON with crs)  
++ **MachinePolygons** : Exploitable zones accessible to machines (MULTIPOLYGON with crs)  
++ **PlotSlope** : Slopes of the plot (in radians) (RasterLayer with crs)  
+
++ **SmoothedTrails** : Smoothed secondary trails (MULTIPOLYGON with crs)  
++ **MainTrailsAccess** : Random access point of main trail for each harvestable zone (POINT with crs)  
++ **TrailsIdentity** : Information on sections of the trails (matrix), with
+   - LineID: 
+   - LoggedTrees: idTree of trees reached by the trails
+   - TypeExpl: type of winching  
++ **RawSecondTrails** : Non-smoothed secondary trails (SpatialLines with crs)  
++ **CostRasterAgg** : The cost raster (RasterLayer)  
+
++ **AdjustSmoothedTrails** : Adjusted smoothed secondary trails for FWE (MULTIPOLYGON with crs)  
++ **AdjustTrailsIdentity** : Adjusted version of TrailsIdentity for FWE (matrix)  
++ **AdjustRawSecondTrails** : Adjusted non-smoothed secondary trails for FWE (SpatialLines with crs)  
+
+POINTS:  
++ **HarvestableTreesPoints** : Harvestable trees points (sf)  
++ **SelectedTreesPoints** : Selected trees points (sf)  
++ **FutureTreesPoints** : Future trees points (sf)  
++ **ReserveTreesPoints** : Reserve trees points (sf)  
++ **HollowTreesPoints** : Hollow trees points (sf)  
++ **EnergywoodTreesPoints** : Energywood trees points (sf) 
+
+INPUTS reminder:  
++ **INPUTinventory** : Input forest inventory (data.frame)  
++ **scenario** : Input value for 'scenario' argument(character)  
++ **objective** : Input value for 'objective' argument (numeric)  
++ **fuel** : Input value for 'fuel' argument (character)  
++ **diversification** : Input value for 'diversification' argument (logical)  
++ **winching** : Input value for 'winching' argument (numeric)  
++ **directionalfelling** : Input value for 'directionalfelling' argument (character)  
++ **specieslax** : Input value for 'specieslax' argument (logical)  
++ **objectivelax** : Input value for 'objectivelax' argument (logical)  
 
 # Tool functions
 

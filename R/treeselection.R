@@ -56,15 +56,15 @@
 #'
 #'@return A list with:
 #'  - input inventory with new columns:
-#'     - The exploitability criteria ("DistCriteria", "Slope" (in radians), "SlopeCriteria"), and if
-#'        they are validated for each of the trees ("LoggingStatus").
+#'     - The exploitability criteria ("DistCriteria" (aggregative species case),
+#'     "Slope" (in radians), "SlopeCriteria"), and if they are validated for
+#'     each of the trees ("LoggingStatus"= "harvestable"/"non-harvestable").
 #'     - The probability of a tree having visible defects ("VisibleDefectProba")
-#'         and the visible defect trees ("VisibleDefect").
-#'     - The trees selected for harvesting ("Selected"), if the Minimum
+#'         and the visible defect trees ("VisibleDefect" = "1").
+#'     - The trees selected for harvesting ("Selected" = "1"), if the Minimum
 #'        Felling Diameter (MinFD) of their species has been raised ("Up").
-#'        The cumulative harvestable volume of harvestable trees("VolumeCumSum").
 #'     - The probability of a tree being probed hollow ("ProbedHollowProba")
-#'         and the probed hollow trees ("ProbedHollow").
+#'         and the probed hollow trees ("ProbedHollow" = "1").
 #'     - Future and reserve trees (LoggingStatus = "future"/"reserve")
 #'    (see the outputs metadata in the vignette)
 #'  - the objective volume (VO) for the entire plot

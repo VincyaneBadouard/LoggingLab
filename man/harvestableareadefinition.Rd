@@ -47,13 +47,15 @@ Avoidance of future/reserves if chosen.}
 \value{
 A list with:
 \itemize{
-\item 'HarvestablePolygons': a collection of polygons (sfc_MULTIPOLYGON) defined as:
+\item 'HarvestablePolygons': a collection of polygons (sfc_MULTIPOLYGON, with
+crs) defined as:
 1 : harvestable area,
 0 : non-harvestable area
-\item 'PlotSlope': a raster with slope (in radians) characteristic of the studied
-plot (Large RasterLayer)
+\item 'PlotSlope': Slopes of the plot (in radians) characteristic of the studied
+plot (Large RasterLayer with crs)
 \item HarvestableArea : the harvestable area in hectares (double)
-\item MachinePolygons : a collection of polygons (sf (sfc_POLYGON)) defined as:
+\item MachinePolygons : a collection of polygons (sf (sfc_POLYGON with crs))
+defined as:
 1 : accessible machine area,
 0 : non-accessible machine area
 }

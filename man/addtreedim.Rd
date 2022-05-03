@@ -44,13 +44,17 @@ volume, wood density, and AGB)
 'advancedloggingparameters' argument:
 \itemize{
 \item Tree height (in m) ('TreeHeightAllometry')
-\item Tree Harvestable Volume (m^3) ('TreeHarvestableVolumeAllometry')
+\item Tree harvestable volume (m3) ('TreeHarvestableVolumeAllometry')
 \item Trunk height (in m) ('TrunkHeightAllometry')
 \item Crown height (in m)
 \item Crown diameter (in m) ('CrownDiameterAllometry')
-\item Wood density (g/cm^3) (by BIOMASS package)
-\item Tree above-ground biomass (AGB) (in ton) (by BIOMASS package)
+\item Wood density (g/cm3) (by the BIOMASS package)
+\item Tree above-ground biomass (AGB) (in ton) (by the BIOMASS package)
 }
+
+'Taxo': the level at which the CrownDiameter was calculated.
+'levelWD': the level at which the WoodDensity was assigned by the BIOMASS
+package.
 }
 \examples{
 data(Paracou6_2016)

@@ -8,7 +8,8 @@
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
-#' @return The inventory (data.frame) with only alive trees within the inventoried plot.
+#' @return The inventory (data.frame) with only alive trees within the
+#'   inventoried plot ('TreesIn' = "1").
 #'
 #' @export
 #'

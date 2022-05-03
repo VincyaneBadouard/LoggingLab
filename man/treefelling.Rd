@@ -51,7 +51,7 @@ If the avoidance of future/reserve trees could not be performed,
 a message is returned.}
 
 \item{maintrailsaccess}{Access point of maintrail for each PU (prospection
-unit) (sf or sfc)}
+unit = harvestable zone) (sf or sfc)}
 
 \item{scndtrail}{main and second trails (sf)}
 
@@ -62,7 +62,6 @@ unit) (sf or sfc)}
 Input inventory with new columns:
 \itemize{
 \item The tree felling success or fail("TreeFellingOrientationSuccess")
-\item The crowns of the future/reserve trees (Polygon)
 \item The fallen trees ("TreePolygon"): a MULTIPOLYGON of the tree oriented
 according to the chosen scenario
 \item The dead trees under felled trees (DeathCause = "treefall2nd")

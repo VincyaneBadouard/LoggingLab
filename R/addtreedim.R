@@ -26,12 +26,16 @@
 #'@details 'addtreedim' compute some tree dimensions with the
 #'  'advancedloggingparameters' argument:
 #'  - Tree height (in m) ('TreeHeightAllometry')
-#'  - Tree Harvestable Volume (m^3) ('TreeHarvestableVolumeAllometry')
+#'  - Tree harvestable volume (m3) ('TreeHarvestableVolumeAllometry')
 #'  - Trunk height (in m) ('TrunkHeightAllometry')
 #'  - Crown height (in m)
 #'  - Crown diameter (in m) ('CrownDiameterAllometry')
-#'  - Wood density (g/cm^3) (by BIOMASS package)
-#'  - Tree above-ground biomass (AGB) (in ton) (by BIOMASS package)
+#'  - Wood density (g/cm3) (by the BIOMASS package)
+#'  - Tree above-ground biomass (AGB) (in ton) (by the BIOMASS package)
+#'
+#'  'Taxo': the level at which the CrownDiameter was calculated.
+#'  'levelWD': the level at which the WoodDensity was assigned by the BIOMASS
+#'  package.
 #'
 #'@export
 #'

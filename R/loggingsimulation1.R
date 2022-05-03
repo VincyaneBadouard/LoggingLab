@@ -6,23 +6,33 @@
 #'  landings implementation (only for ONF plots), timber harvested, fuel wood
 #'  volume and damages quantification.
 #'
-#'@param inventory Input inventory (see the inputs formats and metadata in the
-#'  vignette) (data.frame)
+#'@param inventory Input forest inventory for 1 plot and 1 census year (see the
+#'  inputs formats and metadata in the vignette or in
+#'  \code{\link{Paracou6_2016}}) (data.frame)
+#' The columns required are:
+#' - *Forest* (to apply the corresponding volume formula)
+#' - *Plot* (1 value)
+#' - *CensusYear* (1 value)
+#' - *PlotArea*
+#' - *idTree*
+#' - *Xutm* and *Yutm*
+#' - *CodeAlive*
+#' - *Family*, *Genus*, *Species* and *VernName*
+#' - *Circ* or *CircCorr*
 #'
 #'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame
 #'  **with a crs in UTM**)
 #'
-#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
-#'  or SRTM) (Default: \code{\link{DTMParacou}})
-#'  (RasterLayer **with a crs in UTM**)
+#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR,
+#'  1m resolution)
+#'  (RasterLayer **with a crs in UTM**) (See \code{\link{DTMParacou}})
 #'  We advise you to generate your raster with Qgis rather than with the
 #'  'raster' package on R.
 #'
-#'@param creekdistances Relative distances (vertical and horizontal) (1 m
-#'  resolution) from nearest channel network (list of 2 large RasterLayers
-#'  **with a crs in UTM**) (Default: \code{\link{CreekDistances}})
-#'  To generate vertical creek height: \code{\link{CreekDistances}} in
-#'  'Articles'.
+#'@param creekdistances Relative distances (vertical (*distvert*) and horizontal
+#'  (*disthorz*)) (1 m resolution) from nearest channel network (list of 2 large
+#'  RasterLayers **with a crs in UTM**) (See \code{\link{CreekDistances}})
+#'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
 #'  names, economic interest level, minimum and maximum felling diameter, in the
@@ -34,9 +44,9 @@
 #'  volume of each tree, depend to its geographic zone if several locations
 #'  (data.frame)
 #'
-#'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
+#'@param scenario Logging scenario among: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-#'  vignette)
+#'  vignette for details)
 #'
 #'@param objective Objective volume (m3/ha) (numeric)
 #'
@@ -52,7 +62,7 @@
 #' main commercial species (species with a value of 2 for commercial in the
 #' \code{\link{SpeciesCriteria}} table) (logical)
 #'
-#'@param winching
+#'@param winching Tree recovery =
 #' "0": no cable or grapple (trail to tree foot)
 #' "1": only cable (default = 40m)
 #' "2": grapple (default = 6m) + cable (grapple priority)
@@ -82,13 +92,15 @@
 #'@param crowndiameterparameters Crown diameter allometry parameters table (in
 #'  the same format of \code{\link{ParamCrownDiameterAllometry}}) to compute the
 #'  crown diameter of each tree, depend to its DBH (Diameter at Breast Height)
-#'  and its species, genus or family. (data.frame)
+#'  and its Species, Genus or Family names (Aubry-Kientz et al.2019).
+#'  (data.frame)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
-#'@return Input inventory (data.frame) with logging informations (list)
-#'(see the outputs metadata in the vignette).
+#'@return  A large list of 38 elements: input forest inventory (data.frame) with
+#'  logging informations (list) (see the outputs metadata in the vignette or
+#'  \code{\link{LoggingSimulationOutputs}}).
 #'
 #'@seealso \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{ForestZoneVolumeParametersTable}},

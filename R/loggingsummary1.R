@@ -58,7 +58,7 @@ loggingsummary1 <- function(x
 
   cat('Lost biomass :', round(x$LostBiomass, digits = 1), 'ton\n') # Total lost biomass (ton)
 
-  cat('Trails density :', round(x$TrailsDensity, digits = 1), 'm/m2\n') # Trails density (m/m^2) (Preliminary if fuel)
+  cat('Trails density :', round(x$TrailsDensity, digits = 1), 'm/m2\n') # Trails density (m/m2) (Preliminary if fuel)
 
   cat('Adjusted trails density :', round(x$AdjustTrailsDensity, digits = 1), 'm/m2\n') # Adjusted rails density (m/m^2) (for fuel)
 

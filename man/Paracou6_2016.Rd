@@ -30,14 +30,13 @@ the Southwestern corner of the subplo, in m (numeric)}
 for the botanical identification (numeric)}
 \item{VernName}{Vernacular name (character)}
 \item{CensusYear}{Census year (integer)}
-\item{CensusDate}{Census Day (when available) (character)}
 \item{CensusDateCertainty}{Is the CensusDate precise (TRUE) or not (FALSE)?
 If FALSE, this information must not be considered for calculation (logical)}
 \item{CodeAlive}{Is the tree alive (TRUE) or dead (FALSE)? (logical)}
 \item{MeasCode}{Information on the method for measuring the circumference
 or on the state of the tree (integer)}
-\item{Circ}{Circumference of the tree at 1.30m above ground (DBH level),
-in cm (numeric)}
+\item{Circ}{Circumference of the tree at 1.30m above ground (breast height
+level), in cm (numeric)}
 \item{CircCorr}{Corrected circumference
 (mathematical correction of abnormal circumferences), in cm (numeric)}
 \item{CorrCode}{Information on the reason why and how the circumference has
@@ -60,5 +59,19 @@ Paracou6_2016
 \description{
 Tree inventory of plot 6 of Paracou research station (French Guiana) for 2016
 Public dataset extracted from the Guyafor database.
+}
+\details{
+The columns required for the package are:
+\itemize{
+\item \emph{Forest} (to apply the corresponding volume formula)
+\item \emph{Plot} (1 value)
+\item \emph{CensusYear} (1 value)
+\item \emph{PlotArea}
+\item \emph{idTree}
+\item \emph{Xutm} and \emph{Yutm}
+\item \emph{CodeAlive}
+\item \emph{Family}, \emph{Genus}, \emph{Species} and \emph{VernName}
+\item \emph{Circ} or \emph{CircCorr}
+}
 }
 \keyword{datasets}

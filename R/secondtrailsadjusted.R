@@ -51,16 +51,16 @@
 #' @return A list with :
 #' - inventory: Updated inventory
 #' - SmoothedTrails: Smoothed main and secondary trails polygons
-#' (sfc_MULTIPOLYGON)
+#'   (sfc_MULTIPOLYGON with crs)
 #' - TrailsDensity: Second trails density (in m/ha)
-#' - TrailsIdentity: information on sections of the trails (matrix) with:
+#' - TrailsIdentity: Information on sections of the trails (matrix) with:
 #'     - LineID:
 #'     - LoggedTrees: idTree of trees reached by the trails
 #'     - TypeExpl: type of winching
-#' - MainTrailsAccess : Random access point of maintrail for each PU
-#' (sfc_MULTIPOLYGON)
-#' - RawSecondTrails : non-smoothed secondary trails (SpatialLines)
-#' - CostRasterAgg: A cost Raster (RasterLayer)
+#' - MainTrailsAccess : Random access point of main trail for each harvestable
+#'   zone (sfc_POINT with crs)
+#' - RawSecondTrails : Non-smoothed secondary trails (SpatialLines with crs)
+#' - CostRasterAgg: The cost raster (RasterLayer  with crs)
 #'
 #' @importFrom sf st_cast st_as_sf st_intersection st_union st_sample st_join
 #'   st_buffer as_Spatial st_centroid st_set_precision st_make_valid st_set_agr
