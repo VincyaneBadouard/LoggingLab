@@ -218,11 +218,12 @@ and mean σ^2 = 0.0295966977 with the crown diameter (CD), the tree height
 (H) in m, and the DBH in cm. (Aubry-Kientz et al.2019)(function)</p></dd>
 <dt>RottenModel</dt>
 <dd><p>Estimates the tree probability of being probed hollow
-(default: 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) with DBH in cm) (function)</p></dd>
+(default: 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) with DBH in cm (developed
+by S.Schmitt)) (function)</p></dd>
 <dt>VisiblyDefectModel</dt>
 <dd><p>Estimates the commercial tree probability to have
 visible defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with
-DBH in cm (function)</p></dd>
+DBH in cm (developed by V.Badouard) (function)</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -429,32 +430,32 @@ in tropical forests." Remote Sensing 11.9 (2019): 1086.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TreeHarvestableVolumeAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, aCoef, bCoef) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> aCoef + bCoef * (DBH/100)^2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5630fb2ddf60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e553340418&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TrunkHeightAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, TreeHarvestableVolume) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TreeHarvestableVolume/(pi * (((DBH/100)/2)^2))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5630fb2ddf60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e553340418&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TreeHeightAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> exp(0.07359191 + 1.34241216 * log(DBH) + -0.12282344 * log(DBH)^2)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5630fb2ddf60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e553340418&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $CrownDiameterAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, TreeHeight, alpha, beta) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> exp(((log(DBH) - alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5630fb2ddf60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e553340418&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $RottenModel</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1/(1 + exp(-(-5.151 + 0.042 * DBH)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5630fb2ddf60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e553340418&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $VisiblyDefectModel</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (LogDBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1/(1 + exp(-(-3.392 + 0.357 * LogDBH)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5630fb2ddf60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e553340418&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 </code></pre></div>
