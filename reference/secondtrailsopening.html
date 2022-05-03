@@ -127,17 +127,16 @@ Avoidance of future/reserves if chosen.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with :</p><ul><li><p>inventory: Updated inventory</p></li>
-<li><p>SmoothedTrails: Smoothed main and secondary trails polygons</p></li>
+<li><p>SmoothedTrails: Smoothed secondary trails (MULTIPOLYGON with crs)</p></li>
 <li><p>TrailsDensity: Second trails density (in m/ha)</p></li>
-<li><p>TrailsIdentity: information on sections of the trails (matrix) with:</p><ul><li><p>LineID:</p></li>
+<li><p>TrailsIdentity: Information on sections of the trails (matrix) with:</p><ul><li><p>LineID:</p></li>
 <li><p>LoggedTrees: idTree of trees reached by the trails</p></li>
-<li><p>TypeExpl: type of winching
-(sfc_MULTIPOLYGON)</p></li>
+<li><p>TypeExpl: type of winching</p></li>
 </ul></li>
-<li><p>MainTrailsAccess : Random access point of maintrail for each PU
-(sf, sfc_MULTIPOLYGON)</p></li>
-<li><p>RawSecondTrails : non-smoothed secondary trails (SpatialLines)</p></li>
-<li><p>CostRasterAgg: A cost Raster (RasterLayer)</p></li>
+<li><p>MainTrailsAccess : Random access point of main trail for each harvestable
+zone (sfc_POINT with crs)</p></li>
+<li><p>RawSecondTrails : Non-smoothed secondary trails (SpatialLines with crs)</p></li>
+<li><p>CostRasterAgg: The cost raster (RasterLayer  with crs)</p></li>
 </ul></div>
 
     <div class="section level2">

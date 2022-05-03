@@ -131,9 +131,6 @@ for the botanical identification (numeric)</p></dd>
 <dt>CensusYear</dt>
 <dd><p>Census year (integer)</p></dd>
 
-<dt>CensusDate</dt>
-<dd><p>Census Day (when available) (character)</p></dd>
-
 <dt>CensusDateCertainty</dt>
 <dd><p>Is the CensusDate precise (TRUE) or not (FALSE)?
 If FALSE, this information must not be considered for calculation (logical)</p></dd>
@@ -146,8 +143,8 @@ If FALSE, this information must not be considered for calculation (logical)</p><
 or on the state of the tree (integer)</p></dd>
 
 <dt>Circ</dt>
-<dd><p>Circumference of the tree at 1.30m above ground (DBH level),
-in cm (numeric)</p></dd>
+<dd><p>Circumference of the tree at 1.30m above ground (breast height
+level), in cm (numeric)</p></dd>
 
 <dt>CircCorr</dt>
 <dd><p>Corrected circumference
@@ -169,6 +166,18 @@ WHERE = "Forest='Paracou' AND Plot='6' AND CensusYear=2016",
 UID = NULL,PWD = NULL,Driver = "SQL Server Native Client 10.0") %&gt;%
 dplyr::select(-TreeFieldNum,-Project, -idVern, -CommercialSp, -CensusDate)</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>The columns required for the package are:</p><ul><li><p><em>Forest</em> (to apply the corresponding volume formula)</p></li>
+<li><p><em>Plot</em> (1 value)</p></li>
+<li><p><em>CensusYear</em> (1 value)</p></li>
+<li><p><em>PlotArea</em></p></li>
+<li><p><em>idTree</em></p></li>
+<li><p><em>Xutm</em> and <em>Yutm</em></p></li>
+<li><p><em>CodeAlive</em></p></li>
+<li><p><em>Family</em>, <em>Genus</em>, <em>Species</em> and <em>VernName</em></p></li>
+<li><p><em>Circ</em> or <em>CircCorr</em></p></li>
+</ul></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

@@ -113,10 +113,10 @@
 <dd><p>Minimum DBH for inclusion in the forest inventory.
 Default = 10, in cm (double)</p></dd>
 <dt>MaxTrailCenterlineSlope</dt>
-<dd><p>Maximum main &amp; 2nd trail centerline slope.
+<dd><p>Maximum trail centerline slope.
 Default = 22, in % (double)</p></dd>
 <dt>MaxTrailCrossSlope</dt>
-<dd><p>Maximum main &amp; 2nd trail cross slope. Default = 4,
+<dd><p>Maximum trail cross slope. Default = 4,
 in % (double)</p></dd>
 <dt>GrappleMaxslope</dt>
 <dd><p>Maximum slope accessible by the grapple. Default
@@ -129,7 +129,7 @@ cable. Default = 35, in % (double)</p></dd>
 Default = 5, in % (double)</p></dd>
 <dt>SlopeDistance</dt>
 <dd><p>Distance over which the slope is calculated.
-Default = 6, in m (3m each side) (integer)</p></dd>
+Default = 3, in m (3m each side) (integer)</p></dd>
 <dt>WaterSourcesBufferZone</dt>
 <dd><p>Buffer zone based on relative horizontal
 distance to the nearest water source. Default = 30, in m (double)</p></dd>
@@ -184,9 +184,9 @@ Default = 0.14, in m3 of purge/m3 of volume of timber harvested. (double)</p></d
 (has no impact on the simulation. A message will be sent to inform if
 this threshold has been exceeded)</p></dd>
 <dt>MaxLandingArea</dt>
-<dd><p>Maximum landing area. Default = 1500) in square meters
-(double) (has no impact on the simulation. A message will be sent to inform
-if this threshold has been exceeded)</p></dd>
+<dd><p>Maximum landing area. Default = 1500) in m2 (double)
+(has no impact on the simulation. A message will be sent to inform if this
+threshold has been exceeded)</p></dd>
 <dt>CostMatrix</dt>
 <dd><p>Cost matrix for optimized trail layout (list of 2 lists).
 Gives an increasing cost according to a slope gradient (1st sub-list), and
@@ -429,32 +429,32 @@ in tropical forests." Remote Sensing 11.9 (2019): 1086.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TreeHarvestableVolumeAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, aCoef, bCoef) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> aCoef + bCoef * (DBH/100)^2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55686c210e60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5630fb2ddf60&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TrunkHeightAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, TreeHarvestableVolume) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TreeHarvestableVolume/(pi * (((DBH/100)/2)^2))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55686c210e60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5630fb2ddf60&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TreeHeightAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> exp(0.07359191 + 1.34241216 * log(DBH) + -0.12282344 * log(DBH)^2)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55686c210e60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5630fb2ddf60&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $CrownDiameterAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, TreeHeight, alpha, beta) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> exp(((log(DBH) - alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55686c210e60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5630fb2ddf60&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $RottenModel</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1/(1 + exp(-(-5.151 + 0.042 * DBH)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55686c210e60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5630fb2ddf60&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $VisiblyDefectModel</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (LogDBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1/(1 + exp(-(-3.392 + 0.357 * LogDBH)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55686c210e60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5630fb2ddf60&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 </code></pre></div>

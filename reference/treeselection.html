@@ -134,15 +134,15 @@ neighbourhood of 8 cells) (default:
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with:</p><ul><li><p>input inventory with new columns:</p><ul><li><p>The exploitability criteria ("DistCriteria", "Slope" (in radians), "SlopeCriteria"), and if
-they are validated for each of the trees ("LoggingStatus").</p></li>
+    <p>A list with:</p><ul><li><p>input inventory with new columns:</p><ul><li><p>The exploitability criteria ("DistCriteria" (aggregative species case),
+"Slope" (in radians), "SlopeCriteria"), and if they are validated for
+each of the trees ("LoggingStatus"= "harvestable"/"non-harvestable").</p></li>
 <li><p>The probability of a tree having visible defects ("VisibleDefectProba")
-and the visible defect trees ("VisibleDefect").</p></li>
-<li><p>The trees selected for harvesting ("Selected"), if the Minimum
-Felling Diameter (MinFD) of their species has been raised ("Up").
-The cumulative harvestable volume of harvestable trees("VolumeCumSum").</p></li>
+and the visible defect trees ("VisibleDefect" = "1").</p></li>
+<li><p>The trees selected for harvesting ("Selected" = "1"), if the Minimum
+Felling Diameter (MinFD) of their species has been raised ("Up").</p></li>
 <li><p>The probability of a tree being probed hollow ("ProbedHollowProba")
-and the probed hollow trees ("ProbedHollow").</p></li>
+and the probed hollow trees ("ProbedHollow" = "1").</p></li>
 <li><p>Future and reserve trees (LoggingStatus = "future"/"reserve")
 (see the outputs metadata in the vignette)</p></li>
 </ul></li>

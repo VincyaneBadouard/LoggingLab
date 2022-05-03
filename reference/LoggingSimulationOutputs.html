@@ -65,8 +65,141 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>list</p>
-    </div>
+    <p>A large named list of 38 elements</p><dl><dt>inventory</dt>
+<dd><p>Output forest inventory (data.frame)</p></dd>
+
+<dt>HarvestableArea</dt>
+<dd><p>Harvestable area in ha (numeric)</p></dd>
+
+<dt>VO</dt>
+<dd><p>Objective volume in m3 (numeric)</p></dd>
+
+<dt>HVinit</dt>
+<dd><p>Initial harvestable volume in m3 (numeric)</p></dd>
+
+<dt>TimberLoggedVolume</dt>
+<dd><p>Timber logged volume in m3 (numeric)</p></dd>
+
+<dt>NoHollowTimberLoggedVolume</dt>
+<dd><p>No hollow timber logged volume (only
+healthy trees) in m3 (numeric)</p></dd>
+
+<dt>FuelVolume</dt>
+<dd><p>Fuel wood volume in m3 (numeric)</p></dd>
+
+<dt>DamageVolume</dt>
+<dd><p>Damages volume (only damages (= without purge and
+hollow trees)) in m3 (numeric)</p></dd>
+
+<dt>LostBiomass</dt>
+<dd><p>Total lost biomass in ton (numeric)</p></dd>
+
+<dt>TrailsDensity</dt>
+<dd><p>Trails density (preliminary if FWE) in m/m2 (units)</p></dd>
+
+<dt>AdjustTrailsDensity</dt>
+<dd><p>Adjusted trails density if FWE in m/m2 (units)</p></dd>
+
+
+<dt>MainTrails</dt>
+<dd><p>Main trails (sf)</p></dd>
+
+
+<dt>HarvestablePolygons</dt>
+<dd><p>Harvestable zones (MULTIPOLYGON with crs)</p></dd>
+
+<dt>MachinePolygons</dt>
+<dd><p>Exploitable zones accessible to machines
+(MULTIPOLYGON with crs)</p></dd>
+
+<dt>PlotSlope</dt>
+<dd><p>Slopes of the plot (in radians) (RasterLayer with crs)</p></dd>
+
+
+<dt>SmoothedTrails</dt>
+<dd><p>Smoothed secondary trails (MULTIPOLYGON with crs)</p></dd>
+
+<dt>MainTrailsAccess</dt>
+<dd><p>Random access point of main trail for each
+harvestable zone (POINT with crs)</p></dd>
+
+<dt>TrailsIdentity</dt>
+<dd><p>Information on sections of the trails (matrix), with
+LineID: , LoggedTrees: idTree of trees reached by the trails and TypeExpl:
+type of winching</p></dd>
+
+<dt>RawSecondTrails</dt>
+<dd><p>Non-smoothed secondary trails (SpatialLines with
+crs)</p></dd>
+
+<dt>CostRasterAgg</dt>
+<dd><p>The cost raster (RasterLayer)</p></dd>
+
+
+<dt>AdjustSmoothedTrails</dt>
+<dd><p>Adjusted smoothed secondary trails for FWE
+(MULTIPOLYGON with crs)</p></dd>
+
+<dt>AdjustTrailsIdentity</dt>
+<dd><p>Adjusted version of TrailsIdentity for FWE
+(matrix)</p></dd>
+
+<dt>AdjustRawSecondTrails</dt>
+<dd><p>Adjusted non-smoothed secondary trails for FWE
+(SpatialLines with crs)</p></dd>
+
+
+<dt>HarvestableTreesPoints</dt>
+<dd><p>Harvestable trees points (sf)</p></dd>
+
+<dt>SelectedTreesPoints</dt>
+<dd><p>Selected trees points (sf)</p></dd>
+
+<dt>FutureTreesPoints</dt>
+<dd><p>Future trees points (sf)</p></dd>
+
+<dt>ReserveTreesPoints</dt>
+<dd><p>Reserve trees points (sf)</p></dd>
+
+<dt>HollowTreesPoints</dt>
+<dd><p>Hollow trees points (sf)</p></dd>
+
+<dt>EnergywoodTreesPoints</dt>
+<dd><p>Energywood trees points (sf)</p></dd>
+
+
+<dt>INPUTinventory</dt>
+<dd><p>Input forest inventory (data.frame)</p></dd>
+
+<dt>scenario</dt>
+<dd><p>Input value for 'scenario' argument(character)</p></dd>
+
+<dt>objective</dt>
+<dd><p>Input value for 'objective' argument (numeric)</p></dd>
+
+<dt>fuel</dt>
+<dd><p>Input value for 'fuel' argument (character)</p></dd>
+
+<dt>diversification</dt>
+<dd><p>Input value for 'diversification' argument
+(logical)</p></dd>
+
+<dt>winching</dt>
+<dd><p>Input value for 'winching' argument (numeric)</p></dd>
+
+<dt>directionalfelling</dt>
+<dd><p>Input value for 'directionalfelling' argument
+(character)</p></dd>
+
+<dt>specieslax</dt>
+<dd><p>Input value for 'specieslax' argument (logical)</p></dd>
+
+<dt>objectivelax</dt>
+<dd><p>Input value for 'objectivelax' argument (logical)</p></dd>
+
+...
+
+</dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>With the parameters:

@@ -71,17 +71,17 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     
 <ul><li><p>inventory: Updated inventory</p></li>
-<li><p>SmoothedTrails: Smoothed main and secondary trails polygons
-(sfc_MULTIPOLYGON)</p></li>
+<li><p>SmoothedTrails: Smoothed secondary trails polygons
+(sfc_MULTIPOLYGON with crs)</p></li>
 <li><p>TrailsDensity: Second trails density (in m/ha)</p></li>
 <li><p>TrailsIdentity: information on sections of the trails (matrix) with:</p><ul><li><p>LineID:</p></li>
 <li><p>LoggedTrees: idTree of trees reached by the trails</p></li>
 <li><p>TypeExpl: type of winching</p></li>
 </ul></li>
-<li><p>MainTrailsAccess : Random access point of maintrail for each PU
-(sfc_MULTIPOLYGON)</p></li>
-<li><p>RawSecondTrails : non-smoothed secondary trails (SpatialLines)</p></li>
-<li><p>CostRasterAgg: A cost Raster (RasterLayer)</p></li>
+<li><p>MainTrailsAccess : Random access point of main trail for each harvestable
+zone (sfc_POINT with crs)</p></li>
+<li><p>RawSecondTrails : non-smoothed secondary trails (SpatialLines with crs)</p></li>
+<li><p>CostRasterAgg: The cost raster (RasterLayer  with crs)</p></li>
 </ul></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
