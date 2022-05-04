@@ -63,16 +63,16 @@ data(CreekDistances)
 # Required format of the inventory
 \code{\link{Paracou6_2016}}
 
-The columns required for the package are:
-  - *Forest* (to apply the corresponding volume formula)
-  - *Plot* (1 value)
-  - *CensusYear* (1 value)
-  - *PlotArea*
-  - *idTree*
-  - *Xutm* and *Yutm*
-  - *CodeAlive*
-  - *Family*, *Genus*, *Species* and *VernName*
-  - *Circ* or *CircCorr*
+The columns required for the package are:  
+  - *Forest* (to apply the corresponding volume formula)  
+  - *Plot* (1 value)  
+  - *CensusYear* (1 value)  
+  - *PlotArea*  
+  - *idTree*  
+  - *Xutm* and *Yutm*  
+  - *CodeAlive*  
+  - *Family*, *Genus*, *Species* and *VernName*  
+  - *Circ* or *CircCorr*  
 ```{r}
 # inventory class
 class(Paracou6_2016)
@@ -136,10 +136,8 @@ exploitablefuelwoodvolume
 
 # Arguments presentation
 
-+ **inventory** : Input forest inventory for 1 plot and 1 census year (see the inputs formats and metadata in the
-vignette or in \code{\link{Paracou6_2016}}) (data.frame)
-
-The columns required for the package are:
++ **inventory** : Input forest inventory for 1 plot and 1 census year (see the inputs formats and metadata in the vignette or in Paracou6_2016.R) (data.frame)  
+The columns required for the package are:  
   - *Forest* (to apply the corresponding volume formula)  
   - *Plot* (1 value)  
   - *CensusYear* (1 value)  
@@ -186,7 +184,7 @@ fuel = "**2**"
 main commercial species (species with a value of 2 for commercial in the
 \code{\link{SpeciesCriteria}} table) (logical)
 
-+ **winching** :  Tree recovery:
++ **winching** :  Tree recovery:  
 "**0**": No cable or grapple  
 "**1**": only **cable**  
 "**2**": **grapple + cable** (grapple priority)  
@@ -262,7 +260,7 @@ A message will be sent to inform if this threshold has been exceeded)
 
 + **Cost matrix for optimized trail layout**:
 Gives an increasing cost according to a slope gradient, and
-different costs on certain cases:
+different costs on certain cases:  
   - "Initial" (default = 1000)
   - "Access" (default = Inf)
   - "BigTrees" (default = 500)
@@ -788,6 +786,7 @@ Format: A large list of 38 elements
 + **inventory** : Output forest inventory (data.frame)  
 
 Numeric values:  
+
 + **HarvestableArea** : Harvestable area in ha (numeric)  
 + **VO** : Objective volume in m3 (numeric)  
 + **HVinit** : Initial harvestable volume in m3 (numeric)  
@@ -799,7 +798,8 @@ Numeric values:
 + **TrailsDensity** : Skidding trails density (preliminary if FWE) in m/ha (units)  
 + **AdjustTrailsDensity** : Adjusted skidding trails density if FWE in m/ha (units)  
 
-Spatial objects:  
+Spatial objects: 
+
 + **MainTrails** : Main skidding trails (sf)  
 
 + **HarvestablePolygons** : Harvestable zones (MULTIPOLYGON with crs)  
@@ -819,7 +819,8 @@ Spatial objects:
 + **AdjustTrailsIdentity** : Adjusted version of TrailsIdentity for FWE (matrix)  
 + **AdjustRawSecondTrails** : Adjusted non-smoothed secondary skidding trails for FWE (SpatialLines with crs)  
 
-POINTS:  
+POINTS: 
+
 + **HarvestableTreesPoints** : Harvestable trees points (sf)  
 + **SelectedTreesPoints** : Selected trees points (sf)  
 + **FutureTreesPoints** : Future trees points (sf)  
@@ -828,6 +829,7 @@ POINTS:
 + **EnergywoodTreesPoints** : Energywood trees points (sf) 
 
 INPUTS reminder:  
+
 + **INPUTinventory** : Input forest inventory (data.frame)  
 + **scenario** : Input value for 'scenario' argument(character)  
 + **objective** : Input value for 'objective' argument (numeric)  
