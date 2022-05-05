@@ -844,14 +844,14 @@ INPUTS reminder:
 
 'inventorycheckformat' check if the input inventory data is compatible with the "LoggingLab" package (see 'Required format of the inventory' section of the vignette)
 
-'addtreedim' compute tree dimensions with the 'advancedloggingparameters' argument:
-- Tree height (in m) ('TreeHeightAllometry')
-- Tree Harvestable Volume (m^3) ('TreeHarvestableVolumeAllometry')
-- Trunk height (in m) ('TrunkHeightAllometry')
-- Crown height (in m)
-- Crown diameter (in m) ('CrownDiameterAllometry')
-- Wood density (g/cm^3) (by BIOMASS package)
-- Tree above-ground biomass (AGB) (in Mg) (by BIOMASS package)
+'addtreedim' compute tree dimensions with the 'advancedloggingparameters' argument:  
+- Tree height (in m) ('TreeHeightAllometry')  
+- Tree Harvestable Volume (m^3) ('TreeHarvestableVolumeAllometry')  
+- Trunk height (in m) ('TrunkHeightAllometry')  
+- Crown height (in m)  
+- Crown diameter (in m) ('CrownDiameterAllometry')  
+- Wood density (g/cm^3) (by BIOMASS package)  
+- Tree above-ground biomass (AGB) (in Mg) (by BIOMASS package)  
 
 ```{r include=FALSE}
 inventory <- addtreedim(inventorycheckformat(Paracou6_2016),
