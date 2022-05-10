@@ -143,7 +143,7 @@ loggingparameters <- function(
   ScndTrailWidth = 4, #in m
   BigTrees = 50, #in cm
   ResamplDistDTM = 5L, #in m
-  SmoothingFact = 5 , #unitless
+  SmoothingFact = 8 , #unitless
   # ObjectiveBonus = 30, #in % [20;30%]
   CableLength = 40, #in m
   GrappleLength = 6, #in m

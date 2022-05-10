@@ -19,7 +19,7 @@ loggingparameters(
   ScndTrailWidth = 4,
   BigTrees = 50,
   ResamplDistDTM = 5L,
-  SmoothingFact = 5,
+  SmoothingFact = 8,
   CableLength = 40,
   GrappleLength = 6,
   IsolateTreeMinDistance = 100,
@@ -34,7 +34,7 @@ loggingparameters(
   CostMatrix = list(list(list(Slope = 3, Cost = 3), list(Slope = 5, Cost = 5),
     list(Slope = 12, Cost = 20), list(Slope = 20, Cost = 60), list(Slope = 35, Cost =
     1000), list(Slope = Inf, Cost = Inf)), list(list(CostType = "Initial", CostValue =
-    1000), list(CostType = "Access", CostValue = Inf), list(CostType = "BigTrees",
+    1000), list(CostType = "Access", CostValue = NA), list(CostType = "BigTrees",
     CostValue = 500), list(CostType = "Reserves", CostValue = 500), list(CostType =
     "Futures", CostValue = 50), list(CostType = "MainTrails", CostValue = 1e-04),
     list(CostType = "SecondTrails", CostValue = 0.1))),
