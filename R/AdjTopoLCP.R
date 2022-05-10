@@ -47,7 +47,7 @@ adjtopolcp <- function(
   costSurface,
   slopeRdCond,
   pts,
-  directions = 8,
+  directions = 4,
   paths = TRUE,
   zweight = 1,
   advancedloggingparameters = loggingparameters()
@@ -60,11 +60,11 @@ adjtopolcp <- function(
   adj <- adjacent(topography, cells = 1:ncell(topography), pairs = TRUE, directions = directions, sorted = TRUE) # Compute adjacent matrix from DTM raster
   h.dist[adj] <- 1/h.dist[adj] # Convert horizontal distance resistance into conductance
   elevDiff <- function(x){zweight * abs(x[2] - x[1])} # Define elevation difference function
-  v.dist <- transition(topography, elevDiff, 8, symm = TRUE) # Absolute vertical distance from DTM to transition layer format
+  v.dist <- transition(topography, elevDiff, directions = directions, symm = TRUE) # Absolute vertical distance from DTM to transition layer format
   t.dist <- v.dist
   t.dist[adj] <- 1/sqrt((h.dist[adj]^2)+(v.dist[adj]^2)) # Convert tangential distance resistance into conductance
 
-  lcp.dist <- transition(costSurface, transitionFunction = mean, directions = 8) # Convert cost raster into transition layer
+  lcp.dist <- transition(costSurface, transitionFunction = mean, directions = directions) # Convert cost raster into transition layer
 
   tlcp <- t.dist * lcp.dist * slopeRdCond
   # Compute weights : 1/sqrt(h.dist^2 + v.dist^2) *

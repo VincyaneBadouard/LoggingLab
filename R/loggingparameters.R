@@ -164,7 +164,7 @@ loggingparameters <- function(
                          list(Slope = 35, Cost = 1000),
                          list(Slope = Inf, Cost = Inf)),
                     list(list(CostType = "Initial", CostValue = 1000),
-                         list(CostType = "Access", CostValue = Inf),
+                         list(CostType = "Access", CostValue = NA),
                          list(CostType = "BigTrees", CostValue = 500),
                          list(CostType = "Reserves", CostValue = 500),
                          list(CostType = "Futures", CostValue = 50),
