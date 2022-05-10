@@ -91,7 +91,7 @@ the nearest water source. Default = 2, in m (double)}
 variation. Default = 5, in m (integer).}
 
 \item{SmoothingFact}{Secondary trails smoothing factor. Default =
-5 (unitless) (double)}
+8 (unitless) (double)}
 
 \item{CableLength}{Cable length. Default = 40, in m (double)}
 
