@@ -37,7 +37,7 @@
 #'  50, in cm (double)
 #'
 #'@param SmoothingFact Secondary trails smoothing factor. Default =
-#'  5 (unitless) (double)
+#'  8 (unitless) (double)
 #'
 #'@param ResamplDistDTM Distance of DTM resampling to erase microtopographic
 #'  variation. Default = 5, in m (integer).
