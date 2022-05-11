@@ -50,7 +50,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>sloperdcond</h1>
-      <small class="dont-index">Source: <a href="https://github.com/VincyaneBadouard/LoggingLab/blob/HEAD/R/sloperdcond.R" class="external-link"><code>R/sloperdcond.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/VincyaneBadouard/LoggingLab/blob/HEAD/R/SlopeRdCond.R" class="external-link"><code>R/SlopeRdCond.R</code></a></small>
       <div class="d-none name"><code>sloperdcond.Rd</code></div>
     </div>
 
@@ -62,6 +62,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">sloperdcond</span><span class="op">(</span>
   <span class="va">topography</span>,
+  directions <span class="op">=</span> <span class="fl">4</span>,
   advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>,
   grapple <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
@@ -74,6 +75,9 @@
 or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer <strong>with a crs in UTM</strong>)
 We advise you to generate your raster with Qgis rather than with the
 'raster' package on R.</p></dd>
+<dt>directions</dt>
+<dd><p>numeric (default = 8). The number of directions for
+movement between cells, either 4 or 8.</p></dd>
 <dt>advancedloggingparameters</dt>
 <dd><p>Other parameters of the logging simulator
 <code><a href="loggingparameters.html">loggingparameters</a></code> (list)</p></dd>
