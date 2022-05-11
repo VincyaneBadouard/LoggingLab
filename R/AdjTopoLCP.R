@@ -16,7 +16,7 @@
 #'   coordinates for the geographic points from which to calculate pairwise
 #'   distances and paths.
 #'
-#' @param directions numeric (default = 8). The number of directions for
+#' @param directions numeric (default = 4). The number of directions for
 #'   movement between cells, either 4 or 8.
 #'
 #' @param paths logical. Default is FALSE, in which case only topographic
