@@ -125,7 +125,7 @@ and its Species, Genus or Family names (Aubry-Kientz et al.2019).
 \item{cores}{Number of cores for parallelization (numeric). Default = 1.}
 }
 \value{
-A large list of 39 elements for each iteration, contained in a list.
+A large list of 39  elements for each iteration, contained in a list.
 Input inventory (data.frame) with logging informations (list) (see the
 outputs metadata in the vignette or
 \code{\link{LoggingSimulationOutputs_iter}}).

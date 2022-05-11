@@ -123,7 +123,7 @@ Default = NULL}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-A large list of 39 elements: input forest inventory (data.frame) with
+A large list of 39  elements: input forest inventory (data.frame) with
 logging informations (list) (see the outputs metadata in the vignette or
 \code{\link{LoggingSimulationOutputs}}).
 }

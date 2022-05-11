@@ -5,7 +5,7 @@
 \alias{LoggingSimulationOutputs}
 \title{Logging Simulation Outputs}
 \format{
-A large named list of 39 elements
+A large named list of 39  elements
 \describe{
 \item{inventory}{Output forest inventory (data.frame)}
 \item{HarvestableArea}{Harvestable area in ha (numeric)}

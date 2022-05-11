@@ -102,7 +102,7 @@
 #'@param iter Number of iterations (numeric). Default = 1.
 #'@param cores Number of cores for parallelization (numeric). Default = 1.
 #'
-#'@return A large list of 39 elements for each iteration, contained in a list.
+#'@return A large list of 39  elements for each iteration, contained in a list.
 #'  Input inventory (data.frame) with logging informations (list) (see the
 #'  outputs metadata in the vignette or
 #'  \code{\link{LoggingSimulationOutputs_iter}}).

@@ -551,7 +551,7 @@ If the harvestable volume is too low, diversification can be applied if it was n
 **Future** trees will be:
 - species of 1st economic rank
 - DBH between 35cm ('FutureTreesMinDiameter') and the species MinFD or UpMinFD if it has been raised for its species.
-- in the prospection units (harvestable areas)
+- in the harvestable zones
 
 **Reserve** trees will be:
 - future trees
