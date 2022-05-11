@@ -12,7 +12,7 @@
 #'   specieslax : FALSE
 #'   objectivelax : TRUE
 #'
-#' @format A large named list of 38 elements
+#' @format A large named list of 39 elements
 #' \describe{
 #'   \item{inventory}{Output forest inventory (data.frame)}
 #'   \item{HarvestableArea}{Harvestable area in ha (numeric)}

@@ -135,6 +135,19 @@ volume and short-term damages quantification. This simulator is
 individual-centred, spatialised, and takes into account the topography and
 the hydrographic network.
 }
+\section{Paying attention to inputs - important source of error}{
+
+Common error sources:
+\itemize{
+\item no crs
+\item crs with accent
+\item \emph{topography} and \emph{plotmask} do not match
+\item \emph{topography} import as R Worspace (you must import it as a .tif file)
+\item \emph{Forest} name of the \emph{inventory} doesn't match with the \emph{Forest} name in
+\emph{volumeparameters} table
+}
+}
+
 \examples{
 \dontrun{
 data(Paracou6_2016) # inventory

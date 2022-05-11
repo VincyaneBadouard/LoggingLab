@@ -106,6 +106,15 @@
 #'  logging informations (list) (see the outputs metadata in the vignette or
 #'  \code{\link{LoggingSimulationOutputs}}).
 #'
+#'@section Paying attention to inputs - important source of error:
+#'Common error sources:
+#' - no crs
+#' - crs with accent
+#' - *topography* and *plotmask* do not match
+#' - *topography* import as R Worspace (you must import it as a .tif file)
+#' - *Forest* name of the *inventory* doesn't match with the *Forest* name in
+#'    *volumeparameters* table
+#'
 #'@seealso \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{ForestZoneVolumeParametersTable}},
 #'  \code{\link{ParamCrownDiameterAllometry}}, \code{\link{loggingparameters}},
@@ -245,7 +254,7 @@ loggingsimulation1 <- function(
   DeathCause <- AGB <- ParamCrownDiameterAllometry <- NULL
 
   #### Set seed #####
-  seed <-if (is.null(seed)) {round(runif(n = 1,min = 1,max = 2^23))}
+  seed <-if (is.null(seed)) {round(runif(n = 1, min = 1, max = 2^23))}
   set.seed(seed)
 
   #### Redefinition of the parameters according to the chosen scenario ####

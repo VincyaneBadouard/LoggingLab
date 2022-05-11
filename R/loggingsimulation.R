@@ -102,10 +102,19 @@
 #'@param iter Number of iterations (numeric). Default = 1.
 #'@param cores Number of cores for parallelization (numeric). Default = 1.
 #'
-#'@return A large list of 38 elements for each iteration, contained in a list.
+#'@return A large list of 39 elements for each iteration, contained in a list.
 #'  Input inventory (data.frame) with logging informations (list) (see the
 #'  outputs metadata in the vignette or
 #'  \code{\link{LoggingSimulationOutputs_iter}}).
+#'
+#'@section Paying attention to inputs - important source of error:
+#'Common error sources:
+#' - no crs
+#' - crs with accent
+#' - *topography* and *plotmask* do not match
+#' - *topography* import as R Worspace (you must import it as a .tif file)
+#' - *Forest* name of the *inventory* doesn't match with the *Forest* name in
+#'    *volumeparameters* table
 #'
 #'@seealso \code{\link{Paracou6_2016}}, \code{\link{SpeciesCriteria}},
 #'  \code{\link{ForestZoneVolumeParametersTable}},
