@@ -96,10 +96,13 @@
 #'  and its Species, Genus or Family names (Aubry-Kientz et al.2019).
 #'  (data.frame)
 #'
+#'@param seed The seed set for the uniform random-number generator (numeric).
+#'  Default = NULL
+#'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
-#'@return  A large list of 38 elements: input forest inventory (data.frame) with
+#'@return  A large list of 39 elements: input forest inventory (data.frame) with
 #'  logging informations (list) (see the outputs metadata in the vignette or
 #'  \code{\link{LoggingSimulationOutputs}}).
 #'
@@ -163,6 +166,7 @@ loggingsimulation1 <- function(
   objectivelax = FALSE,
 
   crowndiameterparameters = ParamCrownDiameterAllometry,
+  seed = NULL,
   advancedloggingparameters = loggingparameters()
 ){
 
@@ -239,6 +243,10 @@ loggingsimulation1 <- function(
 
   #### Global variables ####
   DeathCause <- AGB <- ParamCrownDiameterAllometry <- NULL
+
+  #### Set seed #####
+  seed <-if (is.null(seed)) {round(runif(n = 1,min = 1,max = 2^23))}
+  set.seed(seed)
 
   #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, objective = objective, fuel = fuel,
@@ -435,7 +443,8 @@ loggingsimulation1 <- function(
 
 
   #### Outputs ####
-  Outputs <- list(inventory = inventory,
+  Outputs <- list(seed = seed,
+                  inventory = inventory,
 
                   # Numeric values
                   HarvestableArea = HarvestableArea,
