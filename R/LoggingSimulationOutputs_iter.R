@@ -15,7 +15,7 @@
 #'   iter = 2
 #'   cores = 2
 #'
-#' @format A large list of 39 elements for each iteration, contained in a list.
+#' @format A large list of 39  elements for each iteration, contained in a list.
 #' \describe{
 #'   \item{inventory}{Output forest inventory (data.frame)}
 #'   \item{HarvestableArea}{Harvestable area in ha (numeric)}

@@ -5,7 +5,7 @@
 \alias{LoggingSimulationOutputs_iter}
 \title{Logging Simulation Outputs with iteration and parallelization}
 \format{
-A large list of 39 elements for each iteration, contained in a list.
+A large list of 39  elements for each iteration, contained in a list.
 \describe{
 \item{inventory}{Output forest inventory (data.frame)}
 \item{HarvestableArea}{Harvestable area in ha (numeric)}

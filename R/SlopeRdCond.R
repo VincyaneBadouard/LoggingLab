@@ -5,7 +5,7 @@
 #'  We advise you to generate your raster with Qgis rather than with the
 #'  'raster' package on R.
 #'
-#'@param directions numeric (default = 8). The number of directions for
+#'@param directions numeric (default = 4). The number of directions for
 #'   movement between cells, either 4 or 8.
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
@@ -131,7 +131,7 @@ sloperdcond <- function(
       }
     }else{
       for (i in limits) {
-        Adj4 <- c(#i -1  - ncol(topography), #Z1     # compute HYPOTHETICAL 8 neighbors adjacent FOCAL matrix
+        Adj4 <- c(#i -1  - ncol(topography), #Z1     # compute HYPOTHETICAL 4 neighbours adjacent FOCAL matrix
                   i  - ncol(topography), #Z2
                   #i  + 1  - ncol(topography),#Z3
                   i - 1,
@@ -158,8 +158,8 @@ sloperdcond <- function(
                      i + 1#,
                      #i +1 - ncol(topography)
                      )
-        InAdj <- as.numeric(Adj4 %in% adj[adj[,1] == i,2]) * as.numeric(RotAdj4 %in% adj[adj[,1] == i,2]) * RotAdj4 # compute TRUE rotated 8 neighbors adjacent FOCAL matrix
-        AntIndAdj <- as.numeric(Adj4 %in% adj[adj[,1] == i,2]) * as.numeric(RotAntiAdj4 %in% adj[adj[,1] == i,2]) * RotAntiAdj4 # compute TRUE antirotated 8 neighbors adjacent FOCAL matrix
+        InAdj <- as.numeric(Adj4 %in% adj[adj[,1] == i,2]) * as.numeric(RotAdj4 %in% adj[adj[,1] == i,2]) * RotAdj4 # compute TRUE rotated 4 neighbors adjacent FOCAL matrix
+        AntIndAdj <- as.numeric(Adj4 %in% adj[adj[,1] == i,2]) * as.numeric(RotAntiAdj4 %in% adj[adj[,1] == i,2]) * RotAntiAdj4 # compute TRUE antirotated 4 neighbors adjacent FOCAL matrix
         Mat4 <- matrix(c(Adj4,InAdj,AntIndAdj),nrow = 4) # concatenated adjacent links
         x <- pmax(Mat4[Mat4[,1] %in% adj[adj[,1]==i,2],2], Mat4[Mat4[,1] %in% adj[adj[,1]==i,2],3]) # Select +90 degree link except in boundaries conditions
         x[x==0] <- NA # exclude missing links
@@ -169,7 +169,7 @@ sloperdcond <- function(
       }
 
       for (i in others) {
-        Adj4 <- c(#i -1  - ncol(topography), #Z1     # compute HYPOTHETICAL 8 neighbors adjacent FOCAL matrix
+        Adj4 <- c(#i -1  - ncol(topography), #Z1     # compute HYPOTHETICAL 4 neighbors adjacent FOCAL matrix
                   i  - ncol(topography), #Z2
                   #i  + 1  - ncol(topography),#Z3
                   i - 1,

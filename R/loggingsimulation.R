@@ -96,13 +96,16 @@
 #'  and its Species, Genus or Family names (Aubry-Kientz et al.2019).
 #'  (data.frame)
 #'
+#'@param seed The seed set for the uniform random-number generator (numeric).
+#'  Default = NULL
+#'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
 #'@param iter Number of iterations (numeric). Default = 1.
 #'@param cores Number of cores for parallelization (numeric). Default = 1.
 #'
-#'@return A large list of 39 elements for each iteration, contained in a list.
+#'@return A large list of 39  elements for each iteration, contained in a list.
 #'  Input inventory (data.frame) with logging informations (list) (see the
 #'  outputs metadata in the vignette or
 #'  \code{\link{LoggingSimulationOutputs_iter}}).
@@ -174,6 +177,9 @@ loggingsimulation <- function(
   objectivelax = FALSE,
 
   crowndiameterparameters = ParamCrownDiameterAllometry,
+
+  seed = NULL,
+
   advancedloggingparameters = loggingparameters(),
 
   iter = 1,
@@ -341,11 +347,11 @@ loggingsimulation <- function(
                                                          specieslax = specieslax,
                                                          objectivelax = objectivelax,
                                                          crowndiameterparameters = crowndiameterparameters,
+                                                         seed = seed,
                                                          advancedloggingparameters = advancedloggingparameters))
                                 }
   close(pb)
   stopCluster(cl)
-  names(output) <- iter
 
   return(output)
 

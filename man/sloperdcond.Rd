@@ -17,7 +17,7 @@ or SRTM) (\code{\link{DTMParacou}}) (RasterLayer \strong{with a crs in UTM})
 We advise you to generate your raster with Qgis rather than with the
 'raster' package on R.}
 
-\item{directions}{numeric (default = 8). The number of directions for
+\item{directions}{numeric (default = 4). The number of directions for
 movement between cells, either 4 or 8.}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator

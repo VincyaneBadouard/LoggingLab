@@ -20,6 +20,7 @@ loggingsimulation(
   specieslax = FALSE,
   objectivelax = FALSE,
   crowndiameterparameters = ParamCrownDiameterAllometry,
+  seed = NULL,
   advancedloggingparameters = loggingparameters(),
   iter = 1,
   cores = 1
@@ -117,6 +118,9 @@ crown diameter of each tree, depend to its DBH (Diameter at Breast Height)
 and its Species, Genus or Family names (Aubry-Kientz et al.2019).
 (data.frame)}
 
+\item{seed}{The seed set for the uniform random-number generator (numeric).
+Default = NULL}
+
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
 
@@ -125,7 +129,7 @@ and its Species, Genus or Family names (Aubry-Kientz et al.2019).
 \item{cores}{Number of cores for parallelization (numeric). Default = 1.}
 }
 \value{
-A large list of 39 elements for each iteration, contained in a list.
+A large list of 39  elements for each iteration, contained in a list.
 Input inventory (data.frame) with logging informations (list) (see the
 outputs metadata in the vignette or
 \code{\link{LoggingSimulationOutputs_iter}}).
