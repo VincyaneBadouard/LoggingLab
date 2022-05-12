@@ -20,6 +20,7 @@ loggingsimulation(
   specieslax = FALSE,
   objectivelax = FALSE,
   crowndiameterparameters = ParamCrownDiameterAllometry,
+  seed = NULL,
   advancedloggingparameters = loggingparameters(),
   iter = 1,
   cores = 1
@@ -116,6 +117,9 @@ the same format of \code{\link{ParamCrownDiameterAllometry}}) to compute the
 crown diameter of each tree, depend to its DBH (Diameter at Breast Height)
 and its Species, Genus or Family names (Aubry-Kientz et al.2019).
 (data.frame)}
+
+\item{seed}{The seed set for the uniform random-number generator (numeric).
+Default = NULL}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}

@@ -96,6 +96,9 @@
 #'  and its Species, Genus or Family names (Aubry-Kientz et al.2019).
 #'  (data.frame)
 #'
+#'@param seed The seed set for the uniform random-number generator (numeric).
+#'  Default = NULL
+#'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
@@ -174,6 +177,9 @@ loggingsimulation <- function(
   objectivelax = FALSE,
 
   crowndiameterparameters = ParamCrownDiameterAllometry,
+
+  seed = NULL,
+
   advancedloggingparameters = loggingparameters(),
 
   iter = 1,
@@ -341,11 +347,11 @@ loggingsimulation <- function(
                                                          specieslax = specieslax,
                                                          objectivelax = objectivelax,
                                                          crowndiameterparameters = crowndiameterparameters,
+                                                         seed = seed,
                                                          advancedloggingparameters = advancedloggingparameters))
                                 }
   close(pb)
   stopCluster(cl)
-  names(output) <- iter
 
   return(output)
 
