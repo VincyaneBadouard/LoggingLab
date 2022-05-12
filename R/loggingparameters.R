@@ -37,7 +37,7 @@
 #'  50, in cm (double)
 #'
 #'@param SmoothingFact Secondary trails smoothing factor. Default =
-#'  8 (unitless) (double)
+#'  10 (unitless) (double)
 #'
 #'@param ResamplDistDTM Distance of DTM resampling to erase microtopographic
 #'  variation. Default = 5, in m (integer).
@@ -143,7 +143,7 @@ loggingparameters <- function(
   ScndTrailWidth = 4, #in m
   BigTrees = 50, #in cm
   ResamplDistDTM = 5L, #in m
-  SmoothingFact = 8 , #unitless
+  SmoothingFact = 10 , #unitless
   # ObjectiveBonus = 30, #in % [20;30%]
   CableLength = 40, #in m
   GrappleLength = 6, #in m

@@ -277,6 +277,8 @@ secondtrailsopening <- function(
 
   factagg <-  floor(advancedloggingparameters$SlopeDistance/res(topography)[1])
 
+  advancedloggingparameters$CableLength <- advancedloggingparameters$CableLength + factagg
+
   # Transformation of the DTM so that the maintrails are outside the plot
 
 
@@ -484,9 +486,9 @@ secondtrailsopening <- function(
     AccessRaster <- raster(extent(CostRasterMeanGrpl),resolution = res(CostRasterMeanGrpl), crs = crs(CostRasterMeanGrpl))
     values(AccessRaster) <- CostMatrix[[2]][[2]]$CostValue
 
-    AccessRaster <- rasterize(x = as_Spatial(machinepolygons),
+    AccessRaster <- rasterize(x = as_Spatial(machinepolygons %>% st_buffer(dist = factagg)),
                               y = AccessRaster ,
-                              field = 0,
+                              field = 1,
                               update = TRUE)
     AccessRaster <- crop(AccessRaster,  CostRaster)
     AccessRaster <- mask(AccessRaster, plotmask)
@@ -494,7 +496,7 @@ secondtrailsopening <- function(
 
     #Update Cost Raster with accessible weights raster
 
-    CostRasterMeanGrpl <- CostRasterMeanGrpl + AccessRaster
+    CostRasterMeanGrpl <- CostRasterMeanGrpl * AccessRaster
 
 
   }
@@ -503,9 +505,9 @@ secondtrailsopening <- function(
   AccessRaster <- raster(extent(CostRasterMean),resolution = res(CostRasterMean), crs = crs(CostRasterMean))
   values(AccessRaster) <- CostMatrix[[2]][[2]]$CostValue
 
-  AccessRaster <- rasterize(x = as_Spatial(machinepolygons),
+  AccessRaster <- rasterize(x = as_Spatial(machinepolygons %>% st_buffer(dist = factagg)),
                             y = AccessRaster ,
-                            field = 0,
+                            field = 1,
                             update = TRUE)
   AccessRaster <- crop(AccessRaster,  CostRaster)
   AccessRaster <- mask(AccessRaster, plotmask)
@@ -513,7 +515,7 @@ secondtrailsopening <- function(
 
   #Update Cost Raster with accessible weights raster
 
-  CostRasterMean <- CostRasterMean + AccessRaster
+  CostRasterMean <- CostRasterMean * AccessRaster
 
 
   #Compute conductance raster
@@ -598,6 +600,10 @@ secondtrailsopening <- function(
 
     if (winching == "0") {
       # winching 0 #########
+
+      #Update Cost Raster with accessible weights raster
+
+      CostRasterMean <- CostRasterMean * AccessRaster
 
       pts <- st_set_crs(pts, st_crs(AccessPoint))# set crs
 

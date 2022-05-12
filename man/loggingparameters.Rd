@@ -19,7 +19,7 @@ loggingparameters(
   ScndTrailWidth = 4,
   BigTrees = 50,
   ResamplDistDTM = 5L,
-  SmoothingFact = 8,
+  SmoothingFact = 10,
   CableLength = 40,
   GrappleLength = 6,
   IsolateTreeMinDistance = 100,
@@ -91,7 +91,7 @@ the nearest water source. Default = 2, in m (double)}
 variation. Default = 5, in m (integer).}
 
 \item{SmoothingFact}{Secondary trails smoothing factor. Default =
-8 (unitless) (double)}
+10 (unitless) (double)}
 
 \item{CableLength}{Cable length. Default = 40, in m (double)}
 

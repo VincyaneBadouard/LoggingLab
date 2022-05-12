@@ -279,6 +279,8 @@ secondtrailsadjusted <- function(
 
   factagg <-  floor(advancedloggingparameters$SlopeDistance/res(topography)[1])
 
+  advancedloggingparameters$CableLength <- advancedloggingparameters$CableLength + factagg
+
   # Transformation of the DTM so that the maintrails are outside the plot
 
 
@@ -633,7 +635,7 @@ secondtrailsadjusted <- function(
     AccessRaster <- raster(extent(CostRasterMeanGrpl),resolution = res(CostRasterMeanGrpl), crs = crs(CostRasterMeanGrpl))
     values(AccessRaster) <- CostMatrix[[2]][[2]]$CostValue
 
-    AccessRaster <- raster::rasterize(x = as_Spatial(machinepolygons),
+    AccessRaster <- raster::rasterize(x = as_Spatial(machinepolygons %>% st_buffer(dist = factagg)),
                                       y = AccessRaster ,
                                       field = 0,
                                       update = TRUE)
@@ -652,7 +654,7 @@ secondtrailsadjusted <- function(
   AccessRaster <- raster(extent(CostRasterMean),resolution = res(CostRasterMean), crs = crs(CostRasterMean))
   values(AccessRaster) <- CostMatrix[[2]][[2]]$CostValue
 
-  AccessRaster <- raster::rasterize(x = as_Spatial(machinepolygons),
+  AccessRaster <- raster::rasterize(x = as_Spatial(machinepolygons %>% st_buffer(dist = factagg)),
                                     y = AccessRaster ,
                                     field = 0,
                                     update = TRUE)
@@ -774,6 +776,17 @@ secondtrailsadjusted <- function(
 
     if (winching == "0") {
       # winching 0 #########
+
+      #Generate accessible weights raster
+      AccessRaster <- raster(extent(CostRasterMean),resolution = res(CostRasterMean), crs = crs(CostRasterMean))
+      values(AccessRaster) <- CostMatrix[[2]][[2]]$CostValue
+
+      AccessRaster <- rasterize(x = as_Spatial(machinepolygons %>%  st_buffer(1)),
+                                y = AccessRaster ,
+                                field = 1,
+                                update = TRUE)
+      AccessRaster <- crop(AccessRaster,  CostRaster)
+      AccessRaster <- mask(AccessRaster, plotmask)
 
       pts <- st_set_crs(pts, st_crs(AccessPoint))# set crs
 
