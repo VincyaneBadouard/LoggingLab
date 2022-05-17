@@ -160,7 +160,8 @@ addtreedim <- function(
     dplyr::select(-aCoef, -bCoef, -alpha, -beta, -Zone)
 
   # Estimated wood density (g/cm^3)
-  WDDetails <- BIOMASS::getWoodDensity(inventory$Genus, inventory$Species, inventory$Family, region = "World", verbose = FALSE) %>%
+  WDDetails <- BIOMASS::getWoodDensity(genus = inventory$Genus, species = inventory$Species,
+                                       family = inventory$Family, region = "World", verbose = FALSE) %>%
     unique()
 
   #RESULTS :
@@ -176,9 +177,7 @@ addtreedim <- function(
     dplyr::rename(Genus = genus) %>%
     dplyr::rename(Species = species) %>%
     dplyr::rename(WoodDensity = meanWD) %>%
-    dplyr::filter(levelWD != "Indet.") %>% # duplicates
     unique()
-
 
   inventory <- inventory %>%
     dplyr::left_join(WDDetails, by = c("Genus","Species")) %>%
