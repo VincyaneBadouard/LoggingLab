@@ -126,7 +126,7 @@
 #'@export
 #'
 #'@importFrom dplyr filter mutate select left_join bind_rows
-#'@importFrom sf st_as_sf st_point
+#'@importFrom sf st_as_sf st_point st_set_crs
 #'@importFrom raster crs extract
 #'@importFrom methods as
 #'
@@ -337,7 +337,8 @@ treeselection <- function(
 
   if (dim(HarvestableTreesPoints)[1] != 0) {
 
-    HarvestableTreesPoints <- st_as_sf(HarvestableTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(HarvestableTreesPoints) <- ~ Xutm + Yutm
+    HarvestableTreesPoints <- st_as_sf(HarvestableTreesPoints, coords = c("Xutm", "Yutm"))%>%
+      st_set_crs(crs(topography)) # sp::coordinates(HarvestableTreesPoints) <- ~ Xutm + Yutm
 
     # sp::proj4string(HarvestableTreesPoints) <- raster::crs(topography)
 
@@ -349,7 +350,8 @@ treeselection <- function(
 
   if (dim(SelectedTreesPoints)[1] != 0) {
 
-    SelectedTreesPoints <- st_as_sf(SelectedTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(SelectedTreesPoints) <- ~ Xutm + Yutm
+    SelectedTreesPoints <- st_as_sf(SelectedTreesPoints, coords = c("Xutm", "Yutm")) %>%
+      st_set_crs(crs(topography)) # sp::coordinates(SelectedTreesPoints) <- ~ Xutm + Yutm
 
     # sp::proj4string(SelectedTreesPoints) <- raster::crs(topography)
 
@@ -361,7 +363,8 @@ treeselection <- function(
 
   if (dim(FutureTreesPoints)[1] != 0) {
 
-    FutureTreesPoints <- st_as_sf(FutureTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(FutureTreesPoints) <- ~ Xutm + Yutm
+    FutureTreesPoints <- st_as_sf(FutureTreesPoints, coords = c("Xutm", "Yutm")) %>%
+      st_set_crs(crs(topography))# sp::coordinates(FutureTreesPoints) <- ~ Xutm + Yutm
 
     # sp::proj4string(FutureTreesPoints) <- raster::crs(topography)
 
@@ -373,7 +376,8 @@ treeselection <- function(
 
   if (dim(ReserveTreesPoints)[1] != 0) {
 
-    ReserveTreesPoints <-  st_as_sf(ReserveTreesPoints, coords = c("Xutm", "Yutm")) # sp::coordinates(ReserveTreesPoints) <- ~ Xutm + Yutm
+    ReserveTreesPoints <-  st_as_sf(ReserveTreesPoints, coords = c("Xutm", "Yutm"))%>%
+      st_set_crs(crs(topography)) # sp::coordinates(ReserveTreesPoints) <- ~ Xutm + Yutm
 
     # sp::proj4string(ReserveTreesPoints) <- raster::crs(topography)
 
@@ -386,11 +390,9 @@ treeselection <- function(
   if (dim(BigTreesPoints)[1] != 0) {
 
 
-    sp::coordinates(BigTreesPoints) <- ~ Xutm + Yutm
+    BigTreesPoints <-  st_as_sf(BigTreesPoints, coords = c("Xutm", "Yutm"))%>%
+      st_set_crs(crs(topography))
 
-    sp::proj4string(BigTreesPoints) <- crs(topography)
-
-    BigTreesPoints <- BigTreesPoints %>% st_as_sf()
 
   } else {BigTreesPoints = st_point(x = c(NA_real_, NA_real_))}
 

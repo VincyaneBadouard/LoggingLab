@@ -490,7 +490,7 @@ secondtrailsopening <- function(
                               y = AccessRaster ,
                               field = 1,
                               update = TRUE)
-    AccessRaster <- crop(AccessRaster,  CostRaster)
+    AccessRaster <- crop(AccessRaster,  CostRasterMeanGrpl)
     AccessRaster <- mask(AccessRaster, plotmask)
 
 
@@ -509,17 +509,13 @@ secondtrailsopening <- function(
                             y = AccessRaster ,
                             field = 1,
                             update = TRUE)
-  AccessRaster <- crop(AccessRaster,  CostRaster)
+  AccessRaster <- crop(AccessRaster,  CostRasterMean)
   AccessRaster <- mask(AccessRaster, plotmask)
 
 
   #Update Cost Raster with accessible weights raster
 
   CostRasterMean <- CostRasterMean * AccessRaster
-
-
-  #Compute conductance raster
-  CondSurf <- 1/CostRasterMean
 
 
   pathLines <- list() #Initialize storage pathlines
@@ -571,6 +567,9 @@ secondtrailsopening <- function(
 
   CostRasterMean <- crop(CostRasterMean,  CostRaster)
   CostRasterMean <- mask(CostRasterMean, plotmask)
+
+  #Compute conductance raster
+  CondSurf <- 1/CostRasterMean
 
   ########### Compute slope criteria transition graph ###############
 

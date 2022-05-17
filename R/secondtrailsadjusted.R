@@ -667,10 +667,6 @@ secondtrailsadjusted <- function(
   CostRasterMean <- CostRasterMean + AccessRaster
 
 
-  #Compute conductance raster
-  CondSurf <- 1/CostRasterMean
-
-
   pathLines <- list() #Initialize storage pathlines
   Lines <- list() #Initialize storage logged trees
   k <- 1 #Initialize pathlines index
@@ -743,6 +739,10 @@ secondtrailsadjusted <- function(
   CostRasterMean <- crop(CostRasterMean,  CostRaster)
   CostRasterMean <- mask(CostRasterMean, plotmask)
 
+
+  #Compute conductance raster
+  CondSurf <- 1/CostRasterMean
+
   ########### Compute slope criteria transition graph ###############
 
 
@@ -776,17 +776,6 @@ secondtrailsadjusted <- function(
 
     if (winching == "0") {
       # winching 0 #########
-
-      #Generate accessible weights raster
-      AccessRaster <- raster(extent(CostRasterMean),resolution = res(CostRasterMean), crs = crs(CostRasterMean))
-      values(AccessRaster) <- CostMatrix[[2]][[2]]$CostValue
-
-      AccessRaster <- rasterize(x = as_Spatial(machinepolygons %>%  st_buffer(1)),
-                                y = AccessRaster ,
-                                field = 1,
-                                update = TRUE)
-      AccessRaster <- crop(AccessRaster,  CostRaster)
-      AccessRaster <- mask(AccessRaster, plotmask)
 
       pts <- st_set_crs(pts, st_crs(AccessPoint))# set crs
 

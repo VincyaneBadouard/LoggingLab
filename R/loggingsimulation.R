@@ -195,6 +195,9 @@ loggingsimulation <- function(
   # Global variables
   ParamCrownDiameterAllometry <- NULL
 
+  seed <-if (is.null(seed)) {round(runif(n = iter, min = 1, max = 2^23))}
+
+
 
   # apply versions
   # replicate(iter, loggingsimulation1(inventory = inventory,
@@ -332,7 +335,7 @@ loggingsimulation <- function(
   output <- foreach::foreach(i=1:iter,
                                 .options.snow = opts) %dopar% {
                                   sim <- iter[i]
-                                  try(loggingsimulation1(inventory = inventory,
+                                  simtry <- try(loggingsimulation1(inventory = inventory,
                                                          plotmask = plotmask,
                                                          topography = topography,
                                                          creekdistances = creekdistances,
@@ -347,8 +350,12 @@ loggingsimulation <- function(
                                                          specieslax = specieslax,
                                                          objectivelax = objectivelax,
                                                          crowndiameterparameters = crowndiameterparameters,
-                                                         seed = seed,
+                                                         seed = seed[i],
                                                          advancedloggingparameters = advancedloggingparameters))
+                                  if (inherits(simtry, "try-error")) {
+                                    return(list("error" = simtry, "seed" = seed))
+                                  }else{return(simtry)
+                                      }
                                 }
   close(pb)
   stopCluster(cl)
