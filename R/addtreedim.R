@@ -160,7 +160,8 @@ addtreedim <- function(
     dplyr::select(-aCoef, -bCoef, -alpha, -beta, -Zone)
 
   # Estimated wood density (g/cm^3)
-  WDDetails <- getWoodDensity(inventory$Genus, inventory$Species, inventory$Family, region = "World", verbose = FALSE)
+  WDDetails <- BIOMASS::getWoodDensity(inventory$Genus, inventory$Species, inventory$Family, region = "World", verbose = FALSE) %>%
+    unique()
 
   #RESULTS :
   # 2 computes at the dataset level (indet.indet)
@@ -175,11 +176,12 @@ addtreedim <- function(
     dplyr::rename(Genus = genus) %>%
     dplyr::rename(Species = species) %>%
     dplyr::rename(WoodDensity = meanWD) %>%
+    dplyr::filter(levelWD != "Indet.") %>% # duplicates
     unique()
 
 
   inventory <- inventory %>%
-    left_join(WDDetails, by = c("Genus","Species")) %>%
+    dplyr::left_join(WDDetails, by = c("Genus","Species")) %>%
 
     # Tree Above-Ground Biomass (AGB) (in ton!) (with DBH in cm, WoodDensity in in g/cm3, TreeHeight in m)
     mutate(AGB = computeAGB(DBH, WoodDensity, TreeHeight))
