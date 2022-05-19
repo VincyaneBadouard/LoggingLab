@@ -288,28 +288,28 @@ loggingsimulation1 <- function(
 
   MainTrails <- maintrailextract(topography = topography, advancedloggingparameters = advancedloggingparameters)
 
-  if(is.null(MainTrails) | MainTrails$layer == 0 | is.null(MainTrails$geometry))
-    stop("The main trails could not be calculated. There is probably a problem with the inputs: 'topography'")
+  if(is.null(MainTrails) | MainTrails$layer == 0 | is.null(MainTrails$geometry)){
+    stop("The main trails could not be calculated. There is probably a problem with the inputs: 'topography'")}
 
   ##### Harvestable area definition ####
-  HarvestableAreaOutputs <- try(harvestableareadefinition(
+  HarvestableAreaOutputs <- harvestableareadefinition(
     topography = topography,
     creekdistances = creekdistances,
     maintrails = MainTrails,
     plotmask = plotmask,
     scenario = scenario, winching = winching,
     advancedloggingparameters = advancedloggingparameters
-  ), silent=TRUE)
+  )
 
   HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
   PlotSlope <- HarvestableAreaOutputs$PlotSlope
   HarvestableArea <- HarvestableAreaOutputs$HarvestableArea
   MachinePolygons <- HarvestableAreaOutputs$MachinePolygons
 
-  if(is.null(HarvestableArea) | HarvestableArea == 0)
+  if(is.null(HarvestableArea) | HarvestableArea == 0){
     stop("The havestable area is equal to 0 or NULL.
     Either your plot is not exploitable at all according to your criteria, or there is probably a problem with the inputs:
-    'topography', 'creekdistances', and/or 'plotmask'")
+    'topography', 'creekdistances', and/or 'plotmask'")}
 
   #### Tree selection (harvestable, future and reserve trees + defects trees): ####
   treeselectionoutputs <- treeselection(inventory,

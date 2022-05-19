@@ -353,7 +353,7 @@ loggingsimulation <- function(
                                                          seed = seed[i],
                                                          advancedloggingparameters = advancedloggingparameters))
                                   if (inherits(simtry, "try-error")) {
-                                    return(list("error" = simtry, "seed" = seed))
+                                    return(list("error" = simtry, "seed" = seed[i]))
                                   }else{return(simtry)
                                       }
                                 }
