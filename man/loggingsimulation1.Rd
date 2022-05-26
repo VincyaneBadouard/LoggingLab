@@ -20,7 +20,7 @@ loggingsimulation1(
   specieslax = FALSE,
   objectivelax = FALSE,
   crowndiameterparameters = ParamCrownDiameterAllometry,
-  seed = NULL,
+  seed = round(runif(n = 1, min = 1, max = 2^23)),
   advancedloggingparameters = loggingparameters()
 )
 }

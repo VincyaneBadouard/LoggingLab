@@ -96,7 +96,7 @@
 #'  and its Species, Genus or Family names (Aubry-Kientz et al.2019).
 #'  (data.frame)
 #'
-#'@param seed The seed set for the uniform random-number generator (numeric).
+#'@param seedsim The seed set for the uniform random-number generator (numeric).
 #'  Default = NULL
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
@@ -178,7 +178,7 @@ loggingsimulation <- function(
 
   crowndiameterparameters = ParamCrownDiameterAllometry,
 
-  seed = NULL,
+  seedsim = NULL,
 
   advancedloggingparameters = loggingparameters(),
 
@@ -193,9 +193,9 @@ loggingsimulation <- function(
     stop("The 'iter' and 'cores' arguments of the 'loggingsimulation' function must be numeric")
 
   # Global variables
-  ParamCrownDiameterAllometry <- NULL
+  j <- ParamCrownDiameterAllometry <- NULL
 
-  seed <-if (is.null(seed)) {round(runif(n = iter, min = 1, max = 2^23))}
+  seedsim <-if(length(seedsim) < iter){round(runif(n = iter, min = 1, max = 2^23))}
 
 
 
@@ -332,9 +332,8 @@ loggingsimulation <- function(
   pb <- txtProgressBar(max = iter, style = 3)
   progress <- function(n) setTxtProgressBar(pb, n)
   opts <- list(progress = progress)
-  output <- foreach::foreach(i=1:iter,
+  output <- foreach::foreach(j=1:iter,
                                 .options.snow = opts) %dopar% {
-                                  sim <- iter[i]
                                   simtry <- try(loggingsimulation1(inventory = inventory,
                                                          plotmask = plotmask,
                                                          topography = topography,
@@ -350,10 +349,10 @@ loggingsimulation <- function(
                                                          specieslax = specieslax,
                                                          objectivelax = objectivelax,
                                                          crowndiameterparameters = crowndiameterparameters,
-                                                         seed = seed[i],
+                                                         seed = seedsim[j],
                                                          advancedloggingparameters = advancedloggingparameters))
                                   if (inherits(simtry, "try-error")) {
-                                    return(list("error" = simtry, "seed" = seed[i]))
+                                    return(list("error" = simtry, "seed" = seedsim[j]))
                                   }else{return(simtry)
                                       }
                                 }

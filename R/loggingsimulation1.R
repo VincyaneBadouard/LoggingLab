@@ -175,7 +175,7 @@ loggingsimulation1 <- function(
   objectivelax = FALSE,
 
   crowndiameterparameters = ParamCrownDiameterAllometry,
-  seed = NULL,
+  seed = round(runif(n = 1, min = 1, max = 2^23)),
   advancedloggingparameters = loggingparameters()
 ){
 
@@ -254,7 +254,7 @@ loggingsimulation1 <- function(
   DeathCause <- AGB <- ParamCrownDiameterAllometry <- NULL
 
   #### Set seed #####
-  seed <-if (is.null(seed)) {round(runif(n = 1, min = 1, max = 2^23))}
+  seedsim <- seed
   set.seed(seed)
 
   #### Redefinition of the parameters according to the chosen scenario ####
@@ -452,55 +452,55 @@ loggingsimulation1 <- function(
 
 
   #### Outputs ####
-  Outputs <- list(seed = seed,
-                  inventory = inventory,
+  Outputs <- list("seed" = seedsim,
+                  "inventory" = inventory,
 
                   # Numeric values
-                  HarvestableArea = HarvestableArea,
-                  VO = VO,
-                  HVinit = HVinit,
-                  TimberLoggedVolume = TimberLoggedVolume,
-                  NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
-                  FuelVolume = FuelVolume,
-                  DamageVolume = DamageVolume, # only damage (without purge and hollow trees)
-                  LostBiomass = LostBiomass,
-                  TrailsDensity = TrailsDensity,
-                  AdjustTrailsDensity = AdjustTrailsDensity,
+                  "HarvestableArea" = HarvestableArea,
+                  "VO" = VO,
+                  "HVinit" = HVinit,
+                  "TimberLoggedVolume" = TimberLoggedVolume,
+                  "NoHollowTimberLoggedVolume" = NoHollowTimberLoggedVolume,
+                  "FuelVolume" = FuelVolume,
+                  "DamageVolume" = DamageVolume, # only damage (without purge and hollow trees)
+                  "LostBiomass" = LostBiomass,
+                  "TrailsDensity" = TrailsDensity,
+                  "AdjustTrailsDensity" = AdjustTrailsDensity,
 
 
                   # Spatial objects
-                  MainTrails = MainTrails,
-                  HarvestablePolygons = HarvestablePolygons,
-                  MachinePolygons = MachinePolygons,
-                  PlotSlope = PlotSlope,
-                  SmoothedTrails = SmoothedTrails,
-                  MainTrailsAccess = MainTrailsAccess,
-                  TrailsIdentity = TrailsIdentity,
-                  RawSecondTrails = RawSecondTrails,
-                  CostRasterAgg = CostRasterAgg,
+                  "MainTrails" = MainTrails,
+                  "HarvestablePolygons" = HarvestablePolygons,
+                  "MachinePolygons" = MachinePolygons,
+                  "PlotSlope" = PlotSlope,
+                  "SmoothedTrails" = SmoothedTrails,
+                  "MainTrailsAccess" = MainTrailsAccess,
+                  "TrailsIdentity" = TrailsIdentity,
+                  "RawSecondTrails" = RawSecondTrails,
+                  "CostRasterAgg" = CostRasterAgg,
 
-                  AdjustSmoothedTrails = AdjustSmoothedTrails,
-                  AdjustTrailsIdentity = AdjustTrailsIdentity,
-                  AdjustRawSecondTrails = AdjustRawSecondTrails,
+                  "AdjustSmoothedTrails" = AdjustSmoothedTrails,
+                  "AdjustTrailsIdentity" = AdjustTrailsIdentity,
+                  "AdjustRawSecondTrails" = AdjustRawSecondTrails,
 
                   ## POINTS
-                  HarvestableTreesPoints = HarvestableTreesPoints,
-                  SelectedTreesPoints = SelectedTreesPoints,
-                  FutureTreesPoints = FutureTreesPoints,
-                  ReserveTreesPoints = ReserveTreesPoints,
-                  HollowTreesPoints = HollowTreesPoints,
-                  EnergywoodTreesPoints = EnergywoodTreesPoints,
+                  "HarvestableTreesPoints" = HarvestableTreesPoints,
+                  "SelectedTreesPoints" = SelectedTreesPoints,
+                  "FutureTreesPoints" = FutureTreesPoints,
+                  "ReserveTreesPoints" = ReserveTreesPoints,
+                  "HollowTreesPoints" = HollowTreesPoints,
+                  "EnergywoodTreesPoints" = EnergywoodTreesPoints,
 
                   # INPUTS reminder
-                  INPUTinventory = INPUTinventory,
-                  scenario = scenario,
-                  objective = objective,
-                  fuel = fuel,
-                  diversification = diversification,
-                  winching = winching,
-                  directionalfelling = directionalfelling,
-                  specieslax = specieslax,
-                  objectivelax = objectivelax
+                  "INPUTinventory" = INPUTinventory,
+                  "scenario" = scenario,
+                  "objective" = objective,
+                  "fuel" = fuel,
+                  "diversification" = diversification,
+                  "winching" = winching,
+                  "directionalfelling" = directionalfelling,
+                  "specieslax" = specieslax,
+                  "objectivelax" = objectivelax
   )
 
   return(Outputs)

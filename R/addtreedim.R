@@ -88,7 +88,7 @@ addtreedim <- function(
   VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
-  genus <- species <- meanWD <- levelWD <- WoodDensity <- NULL
+  family <- genus <- species <- meanWD <- levelWD <- WoodDensity <- NULL
 
   # Crown diameter allometry parameters data preparation:
 
@@ -165,7 +165,12 @@ addtreedim <- function(
 
   inventoryWthoutFamily <- inventory %>% filter(Family == "Indet.") %>% select(-Family)
 
-  if (dim(inventoryWthoutFamily)[1] != 0) {
+  test <- FALSE
+  if (dim(inventoryWthoutFamily)[1] != 0 ) {
+    test <- !(unique(paste0(inventoryWthoutFamily$Genus,"_",inventoryWthoutFamily$Species))[1] == "Indet.Indet._Indet.")
+  }
+
+  if (test) {
     # Estimated wood density (g/cm^3)
     WDDetailsAll <- BIOMASS::getWoodDensity(genus = inventory$Genus, species = inventory$Species, region = "World", verbose = FALSE) %>%
       filter(levelWD == "dataset" & genus == "Indet." & species == "Indet.") %>%
@@ -183,10 +188,8 @@ addtreedim <- function(
       dplyr::rename(Family = family) %>%
       dplyr::rename(Genus = genus) %>%
       dplyr::rename(Species = species) %>%
-      dplyr::rename(WoodDensity = meanWD)  %>%
-      mutate(WoodDensity = if_else(condition = (Family == "Indet." & Genus == "Indet." & Species == "Indet."),
-                                   true = WDDetailsAll$WoodDensity,false = WoodDensity,missing = WDDetailsAll$WoodDensity)) %>%
-      unique()
+      dplyr::rename(WoodDensity = meanWD)
+
 
 
     WDDetailsWthoutFamily <- BIOMASS::getWoodDensity(genus = inventoryWthoutFamily$Genus, species = inventoryWthoutFamily$Species,
@@ -195,10 +198,25 @@ addtreedim <- function(
       dplyr::rename(Family = family) %>%
       dplyr::rename(Genus = genus) %>%
       dplyr::rename(Species = species) %>%
-      dplyr::rename(WoodDensity = meanWD) %>%
-      mutate(WoodDensity = if_else(condition = (Family == "Indet." & Genus == "Indet." & Species == "Indet."),
-                                   true = WDDetailsAll$WoodDensity,false = WoodDensity,missing = WDDetailsAll$WoodDensity)) %>%
-      unique()
+      dplyr::rename(WoodDensity = meanWD)
+
+    if (dim(WDDetailsAll)[1] != 0) {
+
+      WDDetailsWthFamily <- WDDetailsWthFamily %>%
+        mutate(WoodDensity = if_else(condition = (Family == "Indet." & Genus == "Indet." & Species == "Indet."),
+                                     true = WDDetailsAll$WoodDensity,false = WoodDensity,missing = WDDetailsAll$WoodDensity)) %>%
+        unique()
+
+      WDDetailsWthoutFamily <- WDDetailsWthoutFamily %>%
+        mutate(WoodDensity = if_else(condition = (Family == "Indet." & Genus == "Indet." & Species == "Indet."),
+                                     true = WDDetailsAll$WoodDensity,false = WoodDensity,missing = WDDetailsAll$WoodDensity)) %>%
+        unique()
+
+    }else{
+      WDDetailsWthFamily <- WDDetailsWthFamily %>% unique()
+
+      WDDetailsWthoutFamily <- WDDetailsWthoutFamily %>% unique()
+    }
 
     inventoryWthFamily <- inventoryWthFamily %>% left_join(WDDetailsWthFamily,by = c("Family","Genus","Species"))
 
@@ -207,16 +225,14 @@ addtreedim <- function(
     inventory <- rbind(inventoryWthFamily,inventoryWthoutFamily)
   }else{
     WDDetailsAll <- BIOMASS::getWoodDensity(genus = inventory$Genus, species = inventory$Species, region = "World", verbose = FALSE) %>%
-      filter(levelWD == "dataset" & genus == "Indet." & species == "Indet.") %>%
       unique() %>%
-      mutate(family = "Indet.") %>%
       dplyr::select(family,genus,species,meanWD) %>%
       dplyr::rename(Family = family) %>%
       dplyr::rename(Genus = genus) %>%
       dplyr::rename(Species = species) %>%
       dplyr::rename(WoodDensity = meanWD)
 
-    inventory <- inventory %>% left_join(WDDetailsAll,by = c("Family","Genus","Species"))
+    inventory <- inventory %>% left_join(WDDetailsAll,by = c("Genus","Species"))
   }
 
 
