@@ -277,6 +277,8 @@ secondtrailsopening <- function(
 
   factagg <-  floor(advancedloggingparameters$SlopeDistance/res(topography)[1])
 
+  advancedloggingparameters$CableLength <- advancedloggingparameters$CableLength + factagg
+
   # Transformation of the DTM so that the maintrails are outside the plot
 
 
@@ -336,11 +338,6 @@ secondtrailsopening <- function(
   # Generate Cost raster --> cf CostMatrix
   CostRaster <- raster(extent(DTMExtended),resolution = res(DTMExtended), crs = crs(DTMExtended))
   values(CostRaster) <- CostMatrix[[2]][[1]]$CostValue
-  CostRaster <- mask(CostRaster, plotmask)
-  CostRaster <- crop(CostRaster, plotmask)
-
-
-
 
   #Generate weight according to slope conditions
   # RastersToPoints
@@ -379,15 +376,10 @@ secondtrailsopening <- function(
 
   #Aggregation each raster to selected resolution
   CostRasterMean <- aggregate(CostRaster, fact=factagg, fun=mean)
-  CostRasterMean <- crop(CostRasterMean,  CostRaster)
-  CostRasterMean <- mask(CostRasterMean, plotmask)
-
-  DTMExtended <- crop(DTMExtended,  CostRasterMean)
-  DTMExtended <- mask(DTMExtended, plotmask)
 
   DTMmean <- aggregate(DTMExtended, fact=factagg, fun=mean)
-  DTMmean <- crop(DTMmean,  CostRasterMean)
-  DTMmean <- mask(DTMmean, plotmask)
+
+  plotmaskagg <- rasterToPolygons(DTMmean, dissolve=T) %>%  st_as_sf() %>%  st_union() %>%  as_Spatial()
 
   #Generate protection buffer for Big Trees (dist : ScndTrailWidth/2 + 2 m)
 
@@ -399,6 +391,7 @@ secondtrailsopening <- function(
                               field = CostMatrix[[2]][[3]]$CostValue,
                               update = TRUE)
   BigTreesRaster <- crop(BigTreesRaster, CostRasterMean)
+  BigTreesRaster <- mask(BigTreesRaster, plotmaskagg)
 
   #Generate protection buffer for Reserve Trees (dist : ScndTrailWidth/2 + 2 m)
 
@@ -410,6 +403,7 @@ secondtrailsopening <- function(
                              field = CostMatrix[[2]][[4]]$CostValue,
                              update = TRUE)
   ReserveRaster <- crop(ReserveRaster, CostRasterMean)
+  ReserveRaster <- mask(ReserveRaster, plotmaskagg)
 
   #Generate protection buffer for Futures Trees (dist : ScndTrailWidth/2 + 2 m)
   FutureRaster <- raster(extent(DTMmean),resolution = res(DTMmean), crs = crs(DTMmean))
@@ -420,6 +414,7 @@ secondtrailsopening <- function(
                              field = CostMatrix[[2]][[5]]$CostValue,
                              update = TRUE)
   FutureRaster  <- crop(FutureRaster, CostRasterMean)
+  FutureRaster  <- mask(FutureRaster, plotmaskagg)
 
   #Update Cost Raster with protection buffers
 
@@ -432,6 +427,7 @@ secondtrailsopening <- function(
                                field = CostMatrix[[2]][[3]]$CostValue/2,
                                update = TRUE)
   SelectedRaster <- crop(SelectedRaster, CostRasterMean)
+  SelectedRaster <- mask(SelectedRaster, plotmaskagg)
 
   #Update Cost Raster with protection buffers
 
@@ -481,43 +477,42 @@ secondtrailsopening <- function(
 
 
     #Generate accessible weights raster
-    AccessRaster <- raster(extent(CostRasterMeanGrpl),resolution = res(CostRasterMeanGrpl), crs = crs(CostRasterMeanGrpl))
+    AccessRaster <- raster(extent(CostRaster),resolution = res(CostRaster), crs = crs(CostRaster))
     values(AccessRaster) <- CostMatrix[[2]][[2]]$CostValue
 
-    AccessRaster <- rasterize(x = as_Spatial(machinepolygons),
+    AccessRaster <- rasterize(x = as_Spatial(machinepolygons %>% st_buffer(dist = factagg)),
                               y = AccessRaster ,
-                              field = 0,
+                              field = 1,
                               update = TRUE)
-    AccessRaster <- crop(AccessRaster,  CostRaster)
-    AccessRaster <- mask(AccessRaster, plotmask)
+
+    AccessRaster <- aggregate(AccessRaster,fact=factagg, fun=min)
+    AccessRaster <- crop(AccessRaster,  CostRasterMeanGrpl)
+    AccessRaster <- mask(AccessRaster,  plotmaskagg)
 
 
     #Update Cost Raster with accessible weights raster
 
-    CostRasterMeanGrpl <- CostRasterMeanGrpl + AccessRaster
+    CostRasterMeanGrpl <- CostRasterMeanGrpl * AccessRaster
 
 
   }
 
   #Generate accessible weights raster
-  AccessRaster <- raster(extent(CostRasterMean),resolution = res(CostRasterMean), crs = crs(CostRasterMean))
+  AccessRaster <- raster(extent(CostRaster),resolution = res(CostRaster), crs = crs(CostRaster))
   values(AccessRaster) <- CostMatrix[[2]][[2]]$CostValue
 
-  AccessRaster <- rasterize(x = as_Spatial(machinepolygons),
+  AccessRaster <- rasterize(x = as_Spatial(machinepolygons %>% st_buffer(dist = factagg)),
                             y = AccessRaster ,
-                            field = 0,
+                            field = 1,
                             update = TRUE)
-  AccessRaster <- crop(AccessRaster,  CostRaster)
-  AccessRaster <- mask(AccessRaster, plotmask)
+  AccessRaster <- aggregate(AccessRaster,fact=factagg, fun=min)
+  AccessRaster <- crop(AccessRaster,  CostRasterMean)
+  AccessRaster <- mask(AccessRaster,plotmaskagg)
 
 
   #Update Cost Raster with accessible weights raster
 
-  CostRasterMean <- CostRasterMean + AccessRaster
-
-
-  #Compute conductance raster
-  CondSurf <- 1/CostRasterMean
+  CostRasterMean <- CostRasterMean * AccessRaster
 
 
   pathLines <- list() #Initialize storage pathlines
@@ -557,8 +552,8 @@ secondtrailsopening <- function(
                                     field = CostMatrix[[2]][[3]]$CostValue,
                                     update = TRUE)
 
-    CostRasterMeanGrpl <- crop(CostRasterMeanGrpl,  CostRaster)
-    CostRasterMeanGrpl <- mask(CostRasterMeanGrpl, plotmask)
+    CostRasterMeanGrpl <- crop(CostRasterMeanGrpl,  CostRasterMean)
+    CostRasterMeanGrpl <- mask(CostRasterMeanGrpl,  plotmaskagg)
   }
 
   #Generate maintrail intersection cost raster
@@ -567,8 +562,13 @@ secondtrailsopening <- function(
                               field = CostMatrix[[2]][[6]]$CostValue,
                               update = TRUE)
 
-  CostRasterMean <- crop(CostRasterMean,  CostRaster)
-  CostRasterMean <- mask(CostRasterMean, plotmask)
+  CostRasterMean <- crop(CostRasterMean,DTMmean)
+  CostRasterMean <- mask(CostRasterMean,plotmaskagg)
+
+  DTMmean <- crop(DTMmean,CostRasterMean)
+  DTMmean <- mask(DTMmean,plotmaskagg)
+  #Compute conductance raster
+  CondSurf <- 1/CostRasterMean
 
   ########### Compute slope criteria transition graph ###############
 
@@ -598,6 +598,11 @@ secondtrailsopening <- function(
 
     if (winching == "0") {
       # winching 0 #########
+
+      #Update Cost Raster with accessible weights raster
+
+      CostRasterMean <- CostRasterMean * AccessRaster
+      CondSurf <- 1/CostRasterMean
 
       pts <- st_set_crs(pts, st_crs(AccessPoint))# set crs
 

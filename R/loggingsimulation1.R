@@ -175,7 +175,7 @@ loggingsimulation1 <- function(
   objectivelax = FALSE,
 
   crowndiameterparameters = ParamCrownDiameterAllometry,
-  seed = NULL,
+  seed = round(runif(n = 1, min = 1, max = 2^23)),
   advancedloggingparameters = loggingparameters()
 ){
 
@@ -254,7 +254,7 @@ loggingsimulation1 <- function(
   DeathCause <- AGB <- ParamCrownDiameterAllometry <- NULL
 
   #### Set seed #####
-  seed <-if (is.null(seed)) {round(runif(n = 1, min = 1, max = 2^23))}
+  seedsim <- seed
   set.seed(seed)
 
   #### Redefinition of the parameters according to the chosen scenario ####
@@ -288,28 +288,28 @@ loggingsimulation1 <- function(
 
   MainTrails <- maintrailextract(topography = topography, advancedloggingparameters = advancedloggingparameters)
 
-  if(is.null(MainTrails) | MainTrails$layer == 0 | is.null(MainTrails$geometry))
-    stop("The main trails could not be calculated. There is probably a problem with the inputs: 'topography'")
+  if(is.null(MainTrails) | MainTrails$layer == 0 | is.null(MainTrails$geometry)){
+    stop("The main trails could not be calculated. There is probably a problem with the inputs: 'topography'")}
 
   ##### Harvestable area definition ####
-  HarvestableAreaOutputs <- try(harvestableareadefinition(
+  HarvestableAreaOutputs <- harvestableareadefinition(
     topography = topography,
     creekdistances = creekdistances,
     maintrails = MainTrails,
     plotmask = plotmask,
     scenario = scenario, winching = winching,
     advancedloggingparameters = advancedloggingparameters
-  ), silent=TRUE)
+  )
 
   HarvestablePolygons <- HarvestableAreaOutputs$HarvestablePolygons
   PlotSlope <- HarvestableAreaOutputs$PlotSlope
   HarvestableArea <- HarvestableAreaOutputs$HarvestableArea
   MachinePolygons <- HarvestableAreaOutputs$MachinePolygons
 
-  if(is.null(HarvestableArea) | HarvestableArea == 0)
+  if(is.null(HarvestableArea) | HarvestableArea == 0){
     stop("The havestable area is equal to 0 or NULL.
     Either your plot is not exploitable at all according to your criteria, or there is probably a problem with the inputs:
-    'topography', 'creekdistances', and/or 'plotmask'")
+    'topography', 'creekdistances', and/or 'plotmask'")}
 
   #### Tree selection (harvestable, future and reserve trees + defects trees): ####
   treeselectionoutputs <- treeselection(inventory,
@@ -452,55 +452,55 @@ loggingsimulation1 <- function(
 
 
   #### Outputs ####
-  Outputs <- list(seed = seed,
-                  inventory = inventory,
+  Outputs <- list("seed" = seedsim,
+                  "inventory" = inventory,
 
                   # Numeric values
-                  HarvestableArea = HarvestableArea,
-                  VO = VO,
-                  HVinit = HVinit,
-                  TimberLoggedVolume = TimberLoggedVolume,
-                  NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
-                  FuelVolume = FuelVolume,
-                  DamageVolume = DamageVolume, # only damage (without purge and hollow trees)
-                  LostBiomass = LostBiomass,
-                  TrailsDensity = TrailsDensity,
-                  AdjustTrailsDensity = AdjustTrailsDensity,
+                  "HarvestableArea" = HarvestableArea,
+                  "VO" = VO,
+                  "HVinit" = HVinit,
+                  "TimberLoggedVolume" = TimberLoggedVolume,
+                  "NoHollowTimberLoggedVolume" = NoHollowTimberLoggedVolume,
+                  "FuelVolume" = FuelVolume,
+                  "DamageVolume" = DamageVolume, # only damage (without purge and hollow trees)
+                  "LostBiomass" = LostBiomass,
+                  "TrailsDensity" = TrailsDensity,
+                  "AdjustTrailsDensity" = AdjustTrailsDensity,
 
 
                   # Spatial objects
-                  MainTrails = MainTrails,
-                  HarvestablePolygons = HarvestablePolygons,
-                  MachinePolygons = MachinePolygons,
-                  PlotSlope = PlotSlope,
-                  SmoothedTrails = SmoothedTrails,
-                  MainTrailsAccess = MainTrailsAccess,
-                  TrailsIdentity = TrailsIdentity,
-                  RawSecondTrails = RawSecondTrails,
-                  CostRasterAgg = CostRasterAgg,
+                  "MainTrails" = MainTrails,
+                  "HarvestablePolygons" = HarvestablePolygons,
+                  "MachinePolygons" = MachinePolygons,
+                  "PlotSlope" = PlotSlope,
+                  "SmoothedTrails" = SmoothedTrails,
+                  "MainTrailsAccess" = MainTrailsAccess,
+                  "TrailsIdentity" = TrailsIdentity,
+                  "RawSecondTrails" = RawSecondTrails,
+                  "CostRasterAgg" = CostRasterAgg,
 
-                  AdjustSmoothedTrails = AdjustSmoothedTrails,
-                  AdjustTrailsIdentity = AdjustTrailsIdentity,
-                  AdjustRawSecondTrails = AdjustRawSecondTrails,
+                  "AdjustSmoothedTrails" = AdjustSmoothedTrails,
+                  "AdjustTrailsIdentity" = AdjustTrailsIdentity,
+                  "AdjustRawSecondTrails" = AdjustRawSecondTrails,
 
                   ## POINTS
-                  HarvestableTreesPoints = HarvestableTreesPoints,
-                  SelectedTreesPoints = SelectedTreesPoints,
-                  FutureTreesPoints = FutureTreesPoints,
-                  ReserveTreesPoints = ReserveTreesPoints,
-                  HollowTreesPoints = HollowTreesPoints,
-                  EnergywoodTreesPoints = EnergywoodTreesPoints,
+                  "HarvestableTreesPoints" = HarvestableTreesPoints,
+                  "SelectedTreesPoints" = SelectedTreesPoints,
+                  "FutureTreesPoints" = FutureTreesPoints,
+                  "ReserveTreesPoints" = ReserveTreesPoints,
+                  "HollowTreesPoints" = HollowTreesPoints,
+                  "EnergywoodTreesPoints" = EnergywoodTreesPoints,
 
                   # INPUTS reminder
-                  INPUTinventory = INPUTinventory,
-                  scenario = scenario,
-                  objective = objective,
-                  fuel = fuel,
-                  diversification = diversification,
-                  winching = winching,
-                  directionalfelling = directionalfelling,
-                  specieslax = specieslax,
-                  objectivelax = objectivelax
+                  "INPUTinventory" = INPUTinventory,
+                  "scenario" = scenario,
+                  "objective" = objective,
+                  "fuel" = fuel,
+                  "diversification" = diversification,
+                  "winching" = winching,
+                  "directionalfelling" = directionalfelling,
+                  "specieslax" = specieslax,
+                  "objectivelax" = objectivelax
   )
 
   return(Outputs)
