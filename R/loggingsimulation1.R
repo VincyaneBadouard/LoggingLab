@@ -319,6 +319,7 @@ loggingsimulation1 <- function(
                                         fuel = fuel, winching = winching,
                                         diversification = diversification,
                                         specieslax = specieslax, objectivelax = objectivelax,
+                                        harvestablearea = HarvestableArea,
                                         plotslope = PlotSlope,
                                         harvestablepolygons = HarvestablePolygons,
                                         advancedloggingparameters = advancedloggingparameters)

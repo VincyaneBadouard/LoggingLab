@@ -15,6 +15,7 @@ treeselection(
   winching = NULL,
   specieslax = FALSE,
   objectivelax = FALSE,
+  harvestablearea,
   harvestablepolygons,
   plotslope,
   advancedloggingparameters = loggingparameters()
@@ -62,12 +63,14 @@ default (logical)}
 \item{objectivelax}{Allow exploitation in case of non-achievement of the
 objective volume (if stand too poor), = FALSE by default (logical)}
 
+\item{harvestablearea}{Harvestable area in ha
+(\code{\link{harvestableareadefinition}}) (numeric)}
+
 \item{harvestablepolygons}{Accessible area of the inventoried plot
-(default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)}
+(\code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)}
 
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
-neighbourhood of 8 cells) (default:
-\code{\link{HarvestableAreaOutputsCable}})
+neighbourhood of 8 cells) (\code{\link{harvestableareadefinition}})
 (RasterLayer \strong{with a crs in UTM})}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
@@ -165,6 +168,7 @@ topography = DTMParacou,
 speciescriteria = SpeciesCriteria,
 scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
 winching = "0", specieslax = FALSE, objectivelax = TRUE,
+harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 plotslope = HarvestableAreaOutputsCable$PlotSlope,
 harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 advancedloggingparameters = loggingparameters())

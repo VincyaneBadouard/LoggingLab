@@ -377,6 +377,7 @@ treefelling <- function(
 #' speciescriteria = SpeciesCriteria,
 #' scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
 #' winching = "0", specieslax = FALSE, objectivelax = TRUE,
+#' harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 #' plotslope = HarvestableAreaOutputsCable$PlotSlope,
 #' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #' advancedloggingparameters = loggingparameters())$inventory
@@ -496,6 +497,7 @@ directionalfellingsuccessdef <- function(
 #' scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
 #' winching = "0", specieslax = FALSE, objectivelax = TRUE,
 #' plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#' harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 #' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #' advancedloggingparameters = loggingparameters())$inventory)
 #'

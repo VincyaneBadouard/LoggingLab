@@ -566,6 +566,7 @@ treeselectionoutputs <- treeselection(inventory,
                                       fuel = "2", winching = "2",
                                       diversification = FALSE, specieslax = FALSE,
                                       objectivelax = TRUE,
+                                      harvestablearea = HarvestableArea,
                                       plotslope = PlotSlope,
                                       harvestablepolygons = HarvestablePolygons,
                                       advancedloggingparameters = loggingparameters())
