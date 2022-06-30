@@ -50,6 +50,7 @@ treeselectionoutputs <- suppressWarnings(treeselection(
   diversification = FALSE,
   winching = "0",
   specieslax = FALSE, objectivelax = TRUE,
+  harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
   plotslope = HarvestableAreaOutputsCable$PlotSlope,
   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
   advancedloggingparameters = loggingparameters()))

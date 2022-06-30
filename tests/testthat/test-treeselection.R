@@ -70,6 +70,7 @@ test_that("treeselection", {
                                                   speciescriteria = SpeciesCriteria,
                                                   scenario = "manual", objective = 20, fuel = "2", diversification = TRUE,
                                                   winching = "0", specieslax = FALSE, objectivelax = TRUE,
+                                                  harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
                                                   plotslope = HarvestableAreaOutputsCable$PlotSlope,
                                                   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
                                                   advancedloggingparameters = loggingparameters())$inventory)
@@ -79,12 +80,13 @@ test_that("treeselection", {
 
   # Objective Volume:
   objective <- 20
-  expected <- objective * unique(inventory$PlotArea)
+  expected <- objective * HarvestableAreaOutputsCable$HarvestableArea
   VO <- suppressMessages(treeselection(inventory,
                                        topography = DTMParacou,
                                        speciescriteria = SpeciesCriteria,
                                        scenario = "manual", objective = objective, fuel = "2", winching = "0",
                                        diversification = TRUE, specieslax = FALSE, objectivelax = TRUE,
+                                       harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
                                        plotslope = HarvestableAreaOutputsCable$PlotSlope,
                                        harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons
                                        ))$VO

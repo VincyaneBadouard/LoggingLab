@@ -42,13 +42,15 @@
 #'@param objectivelax Allow exploitation in case of non-achievement of the
 #'  objective volume (if stand too poor), = FALSE by default (logical)
 #'
+#'@param harvestablearea Harvestable area in ha
+#'  (\code{\link{harvestableareadefinition}}) (numeric)
+#'
 #'@param plotslope Slopes (in radians) of the inventoried plot (with a
-#'  neighbourhood of 8 cells) (default:
-#'  \code{\link{HarvestableAreaOutputsCable}})
+#'  neighbourhood of 8 cells) (\code{\link{harvestableareadefinition}})
 #'  (RasterLayer **with a crs in UTM**)
 #'
 #'@param harvestablepolygons Accessible area of the inventoried plot
-#'  (default: \code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)
+#'  (\code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)
 #'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
@@ -146,6 +148,7 @@
 #' speciescriteria = SpeciesCriteria,
 #' scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
 #' winching = "0", specieslax = FALSE, objectivelax = TRUE,
+#' harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 #' plotslope = HarvestableAreaOutputsCable$PlotSlope,
 #' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #' advancedloggingparameters = loggingparameters())
@@ -218,6 +221,7 @@ treeselection <- function(
   winching = NULL,
   specieslax = FALSE,
   objectivelax = FALSE,
+  harvestablearea,
   harvestablepolygons,
   plotslope,
   advancedloggingparameters = loggingparameters()
@@ -295,7 +299,7 @@ treeselection <- function(
   if ("DeathCause" %in% names(inventory)) filter(inventory, is.null(DeathCause)) #select only still alived trees (after MainTrails) NULL ou NA
 
   # Compute the objective volume for the entire surface of the plot
-  VO <- objective * unique(inventory$PlotArea)
+  VO <- objective * harvestablearea
 
   # Joins commercial criteria to the inventory
   inventory <- commercialcriteriajoin(inventory, speciescriteria = speciescriteria)
