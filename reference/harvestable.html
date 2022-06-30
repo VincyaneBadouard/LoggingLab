@@ -63,17 +63,17 @@ which trees are harvestable according to your harvestability criteria.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">harvestable</span><span class="op">(</span>
-  <span class="va">inventory</span>,
-  <span class="va">topography</span>,
-  <span class="va">diversification</span>,
-  specieslax <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">harvestablepolygons</span>,
-  <span class="va">plotslope</span>,
-  <span class="va">scenario</span>,
-  winching <span class="op">=</span> <span class="cn">NULL</span>,
-  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">harvestable</span><span class="op">(</span></span>
+<span>  <span class="va">inventory</span>,</span>
+<span>  <span class="va">topography</span>,</span>
+<span>  <span class="va">diversification</span>,</span>
+<span>  specieslax <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">harvestablepolygons</span>,</span>
+<span>  <span class="va">plotslope</span>,</span>
+<span>  <span class="va">scenario</span>,</span>
+<span>  winching <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -81,30 +81,44 @@ which trees are harvestable according to your harvestability criteria.</p>
     <dl><dt>inventory</dt>
 <dd><p>Input inventory (see the inputs formats and metadata in the
 vignette) (data.frame)</p></dd>
+
+
 <dt>topography</dt>
 <dd><p>Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer <strong>with a crs  in UTM</strong>)
 We advise you to generate your raster with Qgis rather than with the
 'raster' package on R.</p></dd>
+
+
 <dt>diversification</dt>
 <dd><p>Taking of other species in addition to the main
 commercial species (2 levels of commercial species in the
 <code><a href="SpeciesCriteria.html">SpeciesCriteria</a></code> table) (logical)</p></dd>
+
+
 <dt>specieslax</dt>
 <dd><p>Allow diversification if stand is too poor, = FALSE by
 default (logical)</p></dd>
+
+
 <dt>harvestablepolygons</dt>
 <dd><p>Accessible area of the inventoried plot
 (default: <code><a href="harvestableareadefinition.html">harvestableareadefinition</a></code>) (sfc_MULTIPOLYGON)</p></dd>
+
+
 <dt>plotslope</dt>
 <dd><p>Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default:
 <code><a href="HarvestableAreaOutputsCable.html">HarvestableAreaOutputsCable</a></code>)
 (RasterLayer <strong>with a crs in UTM</strong>)</p></dd>
+
+
 <dt>scenario</dt>
 <dd><p>Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 vignette)</p></dd>
+
+
 <dt>winching</dt>
 <dd><p>"0": no cable or grapple (trail to tree foot)
 "1": only cable (default = 40m)
@@ -113,13 +127,18 @@ If grapple + cable (winching = "2") without fuel wood (fuel = "0")
 recovery of the tree foot with grapple if possible (respected grapple
 conditions) otherwise with cable with angle to the trail.
 Avoidance of future/reserves if chosen.</p></dd>
+
+
 <dt>advancedloggingparameters</dt>
 <dd><p>Other parameters of the logging simulator
 (<code><a href="loggingparameters.html">loggingparameters</a></code>) (list)</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Input inventory with new columns:</p><ul><li><p>The exploitability criteria ("DistCriteria", "Slope"(in radians),
+    
+
+<p>Input inventory with new columns:</p><ul><li><p>The exploitability criteria ("DistCriteria", "Slope"(in radians),
 "SlopeCriteria"), and if they are validated for each of the trees
 ("LoggingStatus").</p></li>
 <li><p>The probability of a tree having visible defects ("VisibleDefectProba")
@@ -150,26 +169,26 @@ criteria and are therefore considered 'non-harvestable'.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotMask</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestableAreaOutputsCable</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
-<span class="r-in">volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="commercialcriteriajoin.html">commercialcriteriajoin</a></span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">harvestableOutputs</span> <span class="op">&lt;-</span> <span class="fu">harvestable</span><span class="op">(</span><span class="va">inventory</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
-<span class="r-in">diversification <span class="op">=</span> <span class="cn">TRUE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span class="r-in">plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span>
-<span class="r-in">harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span>
-<span class="r-in">scenario <span class="op">=</span> <span class="st">"manual"</span>, winching <span class="op">=</span> <span class="st">"0"</span>,</span>
-<span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">new</span> <span class="op">&lt;-</span> <span class="va">harvestableOutputs</span><span class="op">$</span><span class="va">inventory</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotMask</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestableAreaOutputsCable</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="commercialcriteriajoin.html">commercialcriteriajoin</a></span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">harvestableOutputs</span> <span class="op">&lt;-</span> <span class="fu">harvestable</span><span class="op">(</span><span class="va">inventory</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
+<span class="r-in"><span>diversification <span class="op">=</span> <span class="cn">TRUE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span></span>
+<span class="r-in"><span>harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span></span>
+<span class="r-in"><span>scenario <span class="op">=</span> <span class="st">"manual"</span>, winching <span class="op">=</span> <span class="st">"0"</span>,</span></span>
+<span class="r-in"><span>advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">new</span> <span class="op">&lt;-</span> <span class="va">harvestableOutputs</span><span class="op">$</span><span class="va">inventory</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -181,7 +200,7 @@ criteria and are therefore considered 'non-harvestable'.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

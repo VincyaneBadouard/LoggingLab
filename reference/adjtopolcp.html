@@ -63,16 +63,16 @@ adjacent matrix</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">adjtopolcp</span><span class="op">(</span>
-  <span class="va">topography</span>,
-  <span class="va">costSurface</span>,
-  <span class="va">slopeRdCond</span>,
-  <span class="va">pts</span>,
-  directions <span class="op">=</span> <span class="fl">4</span>,
-  paths <span class="op">=</span> <span class="cn">TRUE</span>,
-  zweight <span class="op">=</span> <span class="fl">1</span>,
-  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">adjtopolcp</span><span class="op">(</span></span>
+<span>  <span class="va">topography</span>,</span>
+<span>  <span class="va">costSurface</span>,</span>
+<span>  <span class="va">slopeRdCond</span>,</span>
+<span>  <span class="va">pts</span>,</span>
+<span>  directions <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  paths <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  zweight <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -80,32 +80,49 @@ adjacent matrix</p>
     <dl><dt>topography</dt>
 <dd><p>Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer <strong>with a crs in UTM</strong>)</p></dd>
+
+
 <dt>costSurface</dt>
 <dd><p>A RasterLayer for the conductance (inverse of resistance)
 values for each cell.</p></dd>
+
+
 <dt>slopeRdCond</dt>
 <dd><p>A categorical transition layer of longitudinal and
 transversal slope.</p></dd>
+
+
 <dt>pts</dt>
 <dd><p>A SpatialPointsDataFrame object or two-column matrix with xy
 coordinates for the geographic points from which to calculate pairwise
 distances and paths.</p></dd>
+
+
 <dt>directions</dt>
 <dd><p>numeric (default = 4). The number of directions for
 movement between cells, either 4 or 8.</p></dd>
+
+
 <dt>paths</dt>
 <dd><p>logical. Default is FALSE, in which case only topographic
 distances are calculated.  If TRUE, topographic paths are also identified.</p></dd>
+
+
 <dt>zweight</dt>
 <dd><p>numeric (default = 1). The weight to be applied to the
 elevation (z) distances relative to the horizontal (xy) distances.</p></dd>
+
+
 <dt>advancedloggingparameters</dt>
 <dd><p>Other parameters of the logging simulator
 <code><a href="loggingparameters.html">loggingparameters</a></code> (list)</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Matrix of topographic distances (if paths = FALSE), or a list
+    
+
+<p>Matrix of topographic distances (if paths = FALSE), or a list
 containing a matrix of topographic distances and the topographic paths as
 an object of class SpatialLines (if paths = TRUE).</p>
     </div>
@@ -125,7 +142,7 @@ the inverse of resistance values.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

@@ -66,12 +66,12 @@ wood.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">timberharvestedvolume</span><span class="op">(</span>
-  <span class="va">inventory</span>,
-  <span class="va">scenario</span>,
-  fuel <span class="op">=</span> <span class="cn">NULL</span>,
-  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">timberharvestedvolume</span><span class="op">(</span></span>
+<span>  <span class="va">inventory</span>,</span>
+<span>  <span class="va">scenario</span>,</span>
+<span>  fuel <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -79,21 +79,30 @@ wood.</p>
     <dl><dt>inventory</dt>
 <dd><p>Input inventory (see the inputs formats and metadata in the
 vignette) (data.frame)</p></dd>
+
+
 <dt>scenario</dt>
 <dd><p>Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 vignette)</p></dd>
+
+
 <dt>fuel</dt>
 <dd><p>Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of
 hollow trees, damage and and unused part of the log for fuel = "2"</p></dd>
+
+
 <dt>advancedloggingparameters</dt>
 <dd><p>Other parameters of the logging simulator
 <code><a href="loggingparameters.html">loggingparameters</a></code> (list)</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with the logged volume (<em>TimberLoggedVolume</em>)
+    
+
+<p>A list with the logged volume (<em>TimberLoggedVolume</em>)
 and when fuel = "2", the logged volume without the hollow trees
 (<em>NoHollowTimberLoggedVolume</em>).
 <em>NoHollowTimberLoggedVolume</em> is the logged volume (<em>TimberLoggedVolume</em>)
@@ -110,34 +119,35 @@ as timber, but as fuel wood if chosen.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span> <span class="co"># inventory</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span> <span class="co"># topography</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span>  <span class="co"># MainTrails</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestableAreaOutputsCable</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span> <span class="co"># species exploitability criteria</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span> <span class="co"># volume parameters</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
-<span class="r-in">volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>,</span>
-<span class="r-in">topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
-<span class="r-in">speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span>
-<span class="r-in">scenario <span class="op">=</span> <span class="st">"manual"</span>, objective <span class="op">=</span> <span class="fl">10</span>, fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">winching <span class="op">=</span> <span class="st">"0"</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span>
-<span class="r-in">harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span>
-<span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">timberharvestedvolume</span><span class="op">(</span><span class="va">inventory</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>, fuel <span class="op">=</span> <span class="st">"2"</span>,</span>
-<span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span> <span class="co"># inventory</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span> <span class="co"># topography</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span>  <span class="co"># MainTrails</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestableAreaOutputsCable</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span> <span class="co"># species exploitability criteria</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span> <span class="co"># volume parameters</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>,</span></span>
+<span class="r-in"><span>topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
+<span class="r-in"><span>speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span></span>
+<span class="r-in"><span>scenario <span class="op">=</span> <span class="st">"manual"</span>, objective <span class="op">=</span> <span class="fl">10</span>, fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>winching <span class="op">=</span> <span class="st">"0"</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>harvestablearea <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestableArea</span>,</span></span>
+<span class="r-in"><span>plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span></span>
+<span class="r-in"><span>harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span></span>
+<span class="r-in"><span>advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">timberharvestedvolume</span><span class="op">(</span><span class="va">inventory</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>, fuel <span class="op">=</span> <span class="st">"2"</span>,</span></span>
+<span class="r-in"><span>advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TimberLoggedVolume</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 59.21912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 31.69388</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $NoHollowTimberLoggedVolume</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 56.27286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 24.94123</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -149,7 +159,7 @@ as timber, but as fuel wood if chosen.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

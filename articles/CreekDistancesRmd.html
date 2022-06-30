@@ -72,7 +72,7 @@
 
 
 <script src="CreekDistancesRmd_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
-  <main id="main"><div class="page-header">
+  <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>CreekDistances</h1>
                         <h4 data-toc-skip class="author">Gaquiere Thomas</h4>
             
@@ -88,41 +88,41 @@
 <h2 id="prenons-un-mnt-1m-de-résolution-si-possible">Prenons un MNT (1m de résolution si possible)<a class="anchor" aria-label="anchor" href="#prenons-un-mnt-1m-de-r%C3%A9solution-si-possible"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"PlotMask"</span><span class="op">)</span>
-
-<span class="va">DATA_paracou_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">'DATAPATH'</span><span class="op">)</span>, <span class="st">"/GIS/Paracou/"</span><span class="op">)</span>
-
-<span class="va">DTM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">DATA_paracou_path</span>,<span class="st">"Dem.sgrd"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"PlotMask"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">DATA_paracou_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">'DATAPATH'</span><span class="op">)</span>, <span class="st">"/GIS/Paracou/"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">DTM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">DATA_paracou_path</span>,<span class="st">"Dem.sgrd"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="création-de-réseau-hydro">Création de réseau Hydro<a class="anchor" aria-label="anchor" href="#cr%C3%A9ation-de-r%C3%A9seau-hydro"></a>
 </h2>
 <p>Lien R - Saga-gis (saga-gis doit être installé sur la machine)</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Saga</span> <span class="op">&lt;-</span> <span class="fu">Rsagacmd</span><span class="fu">::</span><span class="fu">saga_gis</span><span class="op">(</span>verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">Saga</span> <span class="op">&lt;-</span> <span class="fu">Rsagacmd</span><span class="fu">::</span><span class="fu">saga_gis</span><span class="op">(</span>verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="fill-sinks-xxl-wang-liu-on-comble-les-trous">1 - Fill sinks xxl (Wang &amp; Liu) (on comble les trous)<a class="anchor" aria-label="anchor" href="#fill-sinks-xxl-wang-liu-on-comble-les-trous"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">FilledSinks</span> <span class="op">&lt;-</span> <span class="va">Saga</span><span class="op">$</span><span class="va">ta_preprocessor</span><span class="op">$</span><span class="fu">fill_sinks_xxl_wang_liu</span><span class="op">(</span>elev <span class="op">=</span> <span class="va">DTM</span>, 
-                                                            minslope <span class="op">=</span> <span class="fl">.01</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">FilledSinks</span> <span class="op">&lt;-</span> <span class="va">Saga</span><span class="op">$</span><span class="va">ta_preprocessor</span><span class="op">$</span><span class="fu">fill_sinks_xxl_wang_liu</span><span class="op">(</span>elev <span class="op">=</span> <span class="va">DTM</span>, </span>
+<span>                                                            minslope <span class="op">=</span> <span class="fl">.01</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="flow-accumulation-top-down">2 - Flow accumulation (top-down)<a class="anchor" aria-label="anchor" href="#flow-accumulation-top-down"></a>
 </h3>
 <p>La composante flow de TotalCatchmentArea nous servira de grille d’initiation pour le réseau Hydro)</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">TotalCatchmentArea</span> <span class="op">&lt;-</span> <span class="va">Saga</span><span class="op">$</span><span class="va">ta_hydrology</span><span class="op">$</span><span class="fu">flow_accumulation_top_down</span><span class="op">(</span>elevation <span class="op">=</span> <span class="va">FilledSinks</span>, 
-                                                                   method <span class="op">=</span> <span class="st">'Multiple Flow Direction'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">TotalCatchmentArea</span> <span class="op">&lt;-</span> <span class="va">Saga</span><span class="op">$</span><span class="va">ta_hydrology</span><span class="op">$</span><span class="fu">flow_accumulation_top_down</span><span class="op">(</span>elevation <span class="op">=</span> <span class="va">FilledSinks</span>, </span>
+<span>                                                                   method <span class="op">=</span> <span class="st">'Multiple Flow Direction'</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="channel-network">3 - Channel Network<a class="anchor" aria-label="anchor" href="#channel-network"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ChannelNetwork</span> <span class="op">&lt;-</span> <span class="va">Saga</span><span class="op">$</span><span class="va">ta_channels</span><span class="op">$</span><span class="fu">channel_network</span><span class="op">(</span>elevation <span class="op">=</span> <span class="va">FilledSinks</span>,
-                                                   init_grid <span class="op">=</span> <span class="va">TotalCatchmentArea</span><span class="op">$</span><span class="va">flow</span>,
-                                                   init_method <span class="op">=</span> <span class="st">"Greater than"</span>,
-                                                   init_value <span class="op">=</span> <span class="fl">2250</span><span class="op">)</span> <span class="co"># on colle à ce que fait l'ONF sauf qu'ici notre DEM a une résolution de 1m</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ChannelNetwork</span> <span class="op">&lt;-</span> <span class="va">Saga</span><span class="op">$</span><span class="va">ta_channels</span><span class="op">$</span><span class="fu">channel_network</span><span class="op">(</span>elevation <span class="op">=</span> <span class="va">FilledSinks</span>,</span>
+<span>                                                   init_grid <span class="op">=</span> <span class="va">TotalCatchmentArea</span><span class="op">$</span><span class="va">flow</span>,</span>
+<span>                                                   init_method <span class="op">=</span> <span class="st">"Greater than"</span>,</span>
+<span>                                                   init_value <span class="op">=</span> <span class="fl">2250</span><span class="op">)</span> <span class="co"># on colle à ce que fait l'ONF sauf qu'ici notre DEM a une résolution de 1m</span></span></code></pre></div>
 <p>On a maintenant un réseau hydro à partir du DEM de Paracou, je fabrique mon raster de distance verticale à la crique<br>
 (indispensable pour le modèle HAND dans la fonction de definition d’UP) à la suite,<br>
 je pense qu’il est preferable que l’utilisateur rentre un DTM + un raster de distance verticale à la crique qui sera impérativement réalisé à partir de ce même DEM, sinon les x et y pourraient ne pas correspondre plus tard</p>
@@ -132,24 +132,24 @@ je pense qu’il est preferable que l’utilisateur rentre un DTM + un raster de
 <h2 id="distance-verticale-à-la-crique">Distance Verticale à la crique<a class="anchor" aria-label="anchor" href="#distance-verticale-%C3%A0-la-crique"></a>
 </h2>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">DistancesCrique</span> <span class="op">&lt;-</span> <span class="va">Saga</span><span class="op">$</span><span class="va">ta_channels</span><span class="op">$</span><span class="fu">overland_flow_distance_to_channel_network</span><span class="op">(</span>elevation <span class="op">=</span> <span class="va">FilledSinks</span>,
-                                                                     channels <span class="op">=</span> <span class="va">ChannelNetwork</span><span class="op">$</span><span class="va">chnlntwrk</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">DistancesCrique</span> <span class="op">&lt;-</span> <span class="va">Saga</span><span class="op">$</span><span class="va">ta_channels</span><span class="op">$</span><span class="fu">overland_flow_distance_to_channel_network</span><span class="op">(</span>elevation <span class="op">=</span> <span class="va">FilledSinks</span>,</span>
+<span>                                                                     channels <span class="op">=</span> <span class="va">ChannelNetwork</span><span class="op">$</span><span class="va">chnlntwrk</span><span class="op">)</span></span></code></pre></div>
 <p>Cet outil nous sort les distances verticale et horizontale à la crique de chacune des cellules de notre dtm</p>
 <div class="section level3">
 <h3 id="selection-de-la-distance-verticale-à-la-crique">Selection de la distance verticale à la crique<a class="anchor" aria-label="anchor" href="#selection-de-la-distance-verticale-%C3%A0-la-crique"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R">  <span class="va">DistancesCrique</span><span class="op">$</span><span class="va">distvert</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/mask.html" class="external-link">mask</a></span><span class="op">(</span><span class="va">DistancesCrique</span><span class="op">$</span><span class="va">distvert</span>, <span class="va">PlotMask</span><span class="op">)</span>
-  <span class="va">DistancesCrique</span><span class="op">$</span><span class="va">distvert</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/crop.html" class="external-link">crop</a></span><span class="op">(</span><span class="va">DistancesCrique</span><span class="op">$</span><span class="va">distvert</span>, <span class="va">PlotMask</span><span class="op">)</span>
-  
-  <span class="va">DistancesCrique</span><span class="op">$</span><span class="va">disthorz</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/mask.html" class="external-link">mask</a></span><span class="op">(</span><span class="va">DistancesCrique</span><span class="op">$</span><span class="va">disthorz</span>, <span class="va">PlotMask</span><span class="op">)</span>
-  <span class="va">DistancesCrique</span><span class="op">$</span><span class="va">disthorz</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/crop.html" class="external-link">crop</a></span><span class="op">(</span><span class="va">DistancesCrique</span><span class="op">$</span><span class="va">disthorz</span>, <span class="va">PlotMask</span><span class="op">)</span>
-
-<span class="va">CreekDistances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>distvert <span class="op">=</span> <span class="va">DistancesCrique</span><span class="op">$</span><span class="va">distvert</span>,distHorz <span class="op">=</span> <span class="va">DistancesCrique</span><span class="op">$</span><span class="va">disthorz</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span>  <span class="va">DistancesCrique</span><span class="op">$</span><span class="va">distvert</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/mask.html" class="external-link">mask</a></span><span class="op">(</span><span class="va">DistancesCrique</span><span class="op">$</span><span class="va">distvert</span>, <span class="va">PlotMask</span><span class="op">)</span></span>
+<span>  <span class="va">DistancesCrique</span><span class="op">$</span><span class="va">distvert</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/crop.html" class="external-link">crop</a></span><span class="op">(</span><span class="va">DistancesCrique</span><span class="op">$</span><span class="va">distvert</span>, <span class="va">PlotMask</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">DistancesCrique</span><span class="op">$</span><span class="va">disthorz</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/mask.html" class="external-link">mask</a></span><span class="op">(</span><span class="va">DistancesCrique</span><span class="op">$</span><span class="va">disthorz</span>, <span class="va">PlotMask</span><span class="op">)</span></span>
+<span>  <span class="va">DistancesCrique</span><span class="op">$</span><span class="va">disthorz</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/crop.html" class="external-link">crop</a></span><span class="op">(</span><span class="va">DistancesCrique</span><span class="op">$</span><span class="va">disthorz</span>, <span class="va">PlotMask</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">CreekDistances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>distvert <span class="op">=</span> <span class="va">DistancesCrique</span><span class="op">$</span><span class="va">distvert</span>,distHorz <span class="op">=</span> <span class="va">DistancesCrique</span><span class="op">$</span><span class="va">disthorz</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">CreekDistances</span><span class="op">$</span><span class="va">distvert</span>,  breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">2</span><span class="op">)</span>, col<span class="op">=</span><span class="st">'red'</span><span class="op">)</span> 
-
-<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">CreekDistances</span><span class="op">$</span><span class="va">distHorz</span>,  breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">30</span><span class="op">)</span>, col<span class="op">=</span><span class="st">'red'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">CreekDistances</span><span class="op">$</span><span class="va">distvert</span>,  breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">2</span><span class="op">)</span>, col<span class="op">=</span><span class="st">'red'</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">CreekDistances</span><span class="op">$</span><span class="va">distHorz</span>,  breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">30</span><span class="op">)</span>, col<span class="op">=</span><span class="st">'red'</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -165,7 +165,7 @@ je pense qu’il est preferable que l’utilisateur rentre un DTM + un raster de
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer>

@@ -72,19 +72,19 @@ constraints and avoiding trees to protect.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">secondtrailsopening</span><span class="op">(</span>
-  <span class="va">topography</span>,
-  <span class="va">plotmask</span>,
-  <span class="va">maintrails</span>,
-  <span class="va">plotslope</span>,
-  <span class="va">harvestablepolygons</span>,
-  <span class="va">machinepolygons</span>,
-  <span class="va">treeselectionoutputs</span>,
-  <span class="va">scenario</span>,
-  winching <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">secondtrailsopening</span><span class="op">(</span></span>
+<span>  <span class="va">topography</span>,</span>
+<span>  <span class="va">plotmask</span>,</span>
+<span>  <span class="va">maintrails</span>,</span>
+<span>  <span class="va">plotslope</span>,</span>
+<span>  <span class="va">harvestablepolygons</span>,</span>
+<span>  <span class="va">machinepolygons</span>,</span>
+<span>  <span class="va">treeselectionoutputs</span>,</span>
+<span>  <span class="va">scenario</span>,</span>
+<span>  winching <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -92,23 +92,35 @@ constraints and avoiding trees to protect.</p>
     <dl><dt>topography</dt>
 <dd><p>Digital terrain model (DTM) of the inventoried plot (LiDAR
 or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer <strong>with a crs in UTM</strong>)</p></dd>
+
+
 <dt>plotmask</dt>
 <dd><p>Inventoried plot mask
 (SpatialPolygonsDataFrame <strong>with a crs in UTM</strong>)</p></dd>
+
+
 <dt>maintrails</dt>
 <dd><p>Main trails defined at the entire harvestable area (sf
 linestring <strong>with a crs in UTM</strong>)</p></dd>
+
+
 <dt>plotslope</dt>
 <dd><p>Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (default:
 <code><a href="HarvestableAreaOutputsCable.html">HarvestableAreaOutputsCable</a></code>)
 (RasterLayer <strong>with a crs in UTM</strong>)</p></dd>
+
+
 <dt>harvestablepolygons</dt>
 <dd><p>Accessible zones of the inventoried plot
 (default: <code><a href="harvestableareadefinition.html">harvestableareadefinition</a></code>) (sfc_MULTIPOLYGON)</p></dd>
+
+
 <dt>machinepolygons</dt>
 <dd><p>Accessible zones for machines of the inventoried plot
 (default: <code><a href="harvestableareadefinition.html">harvestableareadefinition</a></code>) (sf polygons data.frame)</p></dd>
+
+
 <dt>treeselectionoutputs</dt>
 <dd><p>A list with:</p><ul><li><p>your inventory with: "DistCriteria", "Slope", "SlopeCriteria",
 "LoggingStatus", "Selected", "Up", "VolumeCumSum",
@@ -118,10 +130,14 @@ neighbourhood of 8 cells) (default:
 <li><p>6 sets of spatial points:
 harvestable, selected, future and reserve, hollow and fuel wood trees</p></li>
 </ul></dd>
+
+
 <dt>scenario</dt>
 <dd><p>Logging scenario among: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 vignette)</p></dd>
+
+
 <dt>winching</dt>
 <dd><p>"0": no cable or grapple (trail to tree foot)
 "1": only cable (default = 40m)
@@ -130,15 +146,22 @@ If grapple + cable (winching = "2") without fuel wood (fuel = "0")
 recovery of the tree foot with grapple if possible (respected grapple
 conditions) otherwise with cable with angle to the trail.
 Avoidance of future/reserves if chosen.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>Allow to provide messages from internal functions (boolean)</p></dd>
+
+
 <dt>advancedloggingparameters</dt>
 <dd><p>Other parameters of the logging simulator
 <code><a href="loggingparameters.html">loggingparameters</a></code> (list)</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with :</p><ul><li><p><em>inventory</em>: Updated inventory</p></li>
+    
+
+<p>A list with :</p><ul><li><p><em>inventory</em>: Updated inventory</p></li>
 <li><p><em>SmoothedTrails</em>: Smoothed secondary trails (MULTIPOLYGON with crs)</p></li>
 <li><p><em>TrailsDensity</em>: Secondary trails density (in m/ha)</p></li>
 <li><p><em>TrailsIdentity</em>: Information on sections of the trails (matrix) with:</p><ul><li><p><em>LineID</em>:</p></li>
@@ -153,130 +176,131 @@ zone (sfc_POINT with crs)</p></li>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotMask</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestableAreaOutputsCable</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">scenario</span> <span class="op">&lt;-</span> <span class="st">"manual"</span></span>
-<span class="r-in"><span class="va">winching</span> <span class="op">&lt;-</span> <span class="st">"2"</span></span>
-<span class="r-in"><span class="va">objective</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
-<span class="r-in"><span class="va">fuel</span> <span class="op">&lt;-</span> <span class="st">"2"</span></span>
-<span class="r-in"><span class="va">diversification</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
-<span class="r-in">volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">treeselectionoutputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>,</span>
-<span class="r-in">  topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
-<span class="r-in">  speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span>
-<span class="r-in">  scenario <span class="op">=</span> <span class="st">"manual"</span>, objective <span class="op">=</span> <span class="va">objective</span>,</span>
-<span class="r-in">  fuel <span class="op">=</span> <span class="va">fuel</span>,</span>
-<span class="r-in">  diversification <span class="op">=</span> <span class="va">diversification</span>,</span>
-<span class="r-in">  winching <span class="op">=</span> <span class="va">winching</span>,</span>
-<span class="r-in">  specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">  plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span>
-<span class="r-in">  harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span>
-<span class="r-in">  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotMask</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestableAreaOutputsCable</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">scenario</span> <span class="op">&lt;-</span> <span class="st">"manual"</span></span></span>
+<span class="r-in"><span><span class="va">winching</span> <span class="op">&lt;-</span> <span class="st">"2"</span></span></span>
+<span class="r-in"><span><span class="va">objective</span> <span class="op">&lt;-</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="va">fuel</span> <span class="op">&lt;-</span> <span class="st">"2"</span></span></span>
+<span class="r-in"><span><span class="va">diversification</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">treeselectionoutputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>,</span></span>
+<span class="r-in"><span>  topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
+<span class="r-in"><span>  speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span></span>
+<span class="r-in"><span>  scenario <span class="op">=</span> <span class="st">"manual"</span>, objective <span class="op">=</span> <span class="va">objective</span>,</span></span>
+<span class="r-in"><span>  fuel <span class="op">=</span> <span class="va">fuel</span>,</span></span>
+<span class="r-in"><span>  diversification <span class="op">=</span> <span class="va">diversification</span>,</span></span>
+<span class="r-in"><span>  winching <span class="op">=</span> <span class="va">winching</span>,</span></span>
+<span class="r-in"><span>  specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  harvestablearea <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestableArea</span>,</span></span>
+<span class="r-in"><span>  plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span></span>
+<span class="r-in"><span>  harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span></span>
+<span class="r-in"><span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> As the harvestable volume (= 207.7m^3)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>                 was higher (by 145.2m^3)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>                 was higher (by 170.2m^3)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>                 than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st and 2nd economic ranks species</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>                   were increased to UpMinFD. The objective volume has now been reached.</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">secondtrails</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">secondtrailsopening</span><span class="op">(</span></span>
-<span class="r-in">  topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
-<span class="r-in">  plotmask <span class="op">=</span> <span class="va">PlotMask</span>,</span>
-<span class="r-in">  maintrails <span class="op">=</span> <span class="va">MainTrails</span>,</span>
-<span class="r-in">  plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span>
-<span class="r-in">  harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span>
-<span class="r-in">  machinepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">MachinePolygons</span>,</span>
-<span class="r-in">  treeselectionoutputs <span class="op">=</span> <span class="va">treeselectionoutputs</span>,</span>
-<span class="r-in">  scenario <span class="op">=</span> <span class="st">"manual"</span>,</span>
-<span class="r-in">  winching <span class="op">=</span> <span class="va">winching</span>,</span>
-<span class="r-in">  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, silent<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in">  <span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">NewInventory</span> <span class="op">&lt;-</span> <span class="va">treeselectionoutputs</span><span class="op">$</span><span class="va">inventory</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">Harvestable</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span>
-<span class="r-in"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">LoggingStatus</span> <span class="op">==</span> <span class="st">"harvestable"</span><span class="op">)</span>,</span>
-<span class="r-in">coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">HarvestableUp</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span>
-<span class="r-in"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">LoggingStatus</span> <span class="op">==</span> <span class="st">"harvestableUp"</span><span class="op">)</span>,</span>
-<span class="r-in">coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">Selected</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span>
-<span class="r-in"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">Selected</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">Reserve</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span>
-<span class="r-in"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">LoggingStatus</span> <span class="op">==</span> <span class="st">"reserve"</span><span class="op">)</span>,</span>
-<span class="r-in">coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">Future</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span>
-<span class="r-in"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">LoggingStatus</span> <span class="op">==</span> <span class="st">"future"</span><span class="op">)</span>,</span>
-<span class="r-in">coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">ProbedHollow</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span>
-<span class="r-in"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">ProbedHollow</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span>,</span>
-<span class="r-in"> coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">VisibleDefect</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span>
-<span class="r-in"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">VisibleDefect</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span>,</span>
-<span class="r-in"> coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="co"># Harvestable zones</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span>
-<span class="r-in">        fill <span class="op">=</span> <span class="st">"olivedrab"</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">MachinePolygons</span>,</span>
-<span class="r-in">        fill <span class="op">=</span> <span class="st">"olivedrab"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="st">"Harvestable"</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"P6 zones exploitables"</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">VisibleDefect</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Visible defect"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="co"># geom_sf(data = Future,</span></span>
-<span class="r-in">  <span class="co"># aes(colour = "Future"), show.legend = "point", size = 4) +</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Reserve</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Reserve"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span>, size <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Harvestable</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Harvestable"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span>, size <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">HarvestableUp</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"HarvestableUp"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span>, size <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Selected</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Selected"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ProbedHollow</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Probed hollow"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="co"># 2ndary trails</span></span>
-<span class="r-in">    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">SmoothedTrails</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"darkgreen"</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in"></span>
-<span class="r-in">    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Visible defect"</span> <span class="op">=</span> <span class="st">"pink"</span>,</span>
-<span class="r-in">   <span class="st">"Harvestable"</span> <span class="op">=</span> <span class="st">"skyblue"</span>, <span class="st">"HarvestableUp"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"Selected"</span> <span class="op">=</span> <span class="st">"red"</span>,</span>
-<span class="r-in">   <span class="st">"Future"</span> <span class="op">=</span> <span class="st">"orange"</span>, <span class="st">"Reserve"</span> <span class="op">=</span> <span class="st">"purple"</span>, <span class="st">"Probed hollow"</span> <span class="op">=</span> <span class="st">"forestgreen"</span>,</span>
-<span class="r-in">  <span class="st">"Second trails"</span> <span class="op">=</span> <span class="st">"darkgreen"</span>, <span class="st">"Harvestable area"</span> <span class="op">=</span> <span class="st">"olivedrab"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">secondtrails</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">secondtrailsopening</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
+<span class="r-in"><span>  plotmask <span class="op">=</span> <span class="va">PlotMask</span>,</span></span>
+<span class="r-in"><span>  maintrails <span class="op">=</span> <span class="va">MainTrails</span>,</span></span>
+<span class="r-in"><span>  plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span></span>
+<span class="r-in"><span>  harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span></span>
+<span class="r-in"><span>  machinepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">MachinePolygons</span>,</span></span>
+<span class="r-in"><span>  treeselectionoutputs <span class="op">=</span> <span class="va">treeselectionoutputs</span>,</span></span>
+<span class="r-in"><span>  scenario <span class="op">=</span> <span class="st">"manual"</span>,</span></span>
+<span class="r-in"><span>  winching <span class="op">=</span> <span class="va">winching</span>,</span></span>
+<span class="r-in"><span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, silent<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">NewInventory</span> <span class="op">&lt;-</span> <span class="va">treeselectionoutputs</span><span class="op">$</span><span class="va">inventory</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">Harvestable</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">LoggingStatus</span> <span class="op">==</span> <span class="st">"harvestable"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">HarvestableUp</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">LoggingStatus</span> <span class="op">==</span> <span class="st">"harvestableUp"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">Selected</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">Selected</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">Reserve</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">LoggingStatus</span> <span class="op">==</span> <span class="st">"reserve"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">Future</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">LoggingStatus</span> <span class="op">==</span> <span class="st">"future"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">ProbedHollow</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">ProbedHollow</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span> coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">VisibleDefect</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NewInventory</span>, <span class="va">VisibleDefect</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span> coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Xutm"</span>, <span class="st">"Yutm"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="co"># Harvestable zones</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span></span>
+<span class="r-in"><span>        fill <span class="op">=</span> <span class="st">"olivedrab"</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">MachinePolygons</span>,</span></span>
+<span class="r-in"><span>        fill <span class="op">=</span> <span class="st">"olivedrab"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="st">"Harvestable"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"P6 zones exploitables"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">VisibleDefect</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Visible defect"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="co"># geom_sf(data = Future,</span></span></span>
+<span class="r-in"><span>  <span class="co"># aes(colour = "Future"), show.legend = "point", size = 4) +</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Reserve</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Reserve"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span>, size <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Harvestable</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Harvestable"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span>, size <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">HarvestableUp</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"HarvestableUp"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span>, size <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">Selected</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Selected"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ProbedHollow</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Probed hollow"</span><span class="op">)</span>, show.legend <span class="op">=</span> <span class="st">"point"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="co"># 2ndary trails</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">SmoothedTrails</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"darkgreen"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">MainTrailsAccess</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Visible defect"</span> <span class="op">=</span> <span class="st">"pink"</span>,</span></span>
+<span class="r-in"><span>   <span class="st">"Harvestable"</span> <span class="op">=</span> <span class="st">"skyblue"</span>, <span class="st">"HarvestableUp"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"Selected"</span> <span class="op">=</span> <span class="st">"red"</span>,</span></span>
+<span class="r-in"><span>   <span class="st">"Future"</span> <span class="op">=</span> <span class="st">"orange"</span>, <span class="st">"Reserve"</span> <span class="op">=</span> <span class="st">"purple"</span>, <span class="st">"Probed hollow"</span> <span class="op">=</span> <span class="st">"forestgreen"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"Second trails"</span> <span class="op">=</span> <span class="st">"darkgreen"</span>, <span class="st">"Harvestable area"</span> <span class="op">=</span> <span class="st">"olivedrab"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="secondtrailsopening-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">TrailsIdentity</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">TrailsIdentity</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       LineID LoggedTrees TypeExpl IdMachineZone</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,] 1      100699      "Grpl"   "ID_5"       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2,] 2      100727      "Grpl"   "ID_5"       </span>
@@ -288,7 +312,7 @@ zone (sfc_POINT with crs)</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [8,] 8      102086      "Grpl"   "ID_2"       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9,] 9      102520      "Grpl"   "ID_2"       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [10,] NA     102249      "Cbl"    "ID_2"       </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -300,7 +324,7 @@ zone (sfc_POINT with crs)</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

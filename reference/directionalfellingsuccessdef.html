@@ -69,12 +69,12 @@ is by default 60%, and can be changed with the
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">directionalfellingsuccessdef</span><span class="op">(</span>
-  <span class="va">inventory</span>,
-  <span class="va">fuel</span>,
-  <span class="va">directionalfelling</span>,
-  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">directionalfellingsuccessdef</span><span class="op">(</span></span>
+<span>  <span class="va">inventory</span>,</span>
+<span>  <span class="va">fuel</span>,</span>
+<span>  <span class="va">directionalfelling</span>,</span>
+<span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -82,10 +82,14 @@ is by default 60%, and can be changed with the
     <dl><dt>inventory</dt>
 <dd><p>input inventory (see the inputs formats and metadata in the
 vignette) (data.frame)</p></dd>
+
+
 <dt>fuel</dt>
 <dd><p>Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of
 hollow trees, damage and and unused part of the log for fuel = "2"</p></dd>
+
+
 <dt>directionalfelling</dt>
 <dd><p>Directional felling =
 "0": only to direct the foot of the tree towards the trail
@@ -93,43 +97,49 @@ hollow trees, damage and and unused part of the log for fuel = "2"</p></dd>
 future and reserve trees
 "2": to avoid damage to future and reserve trees + orientation angle
 to the trail</p></dd>
+
+
 <dt>advancedloggingparameters</dt>
 <dd><p>Other parameters of the logging simulator
 <code><a href="loggingparameters.html">loggingparameters</a></code> (list)</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Input inventory with the "TreeFellingOrientationSuccess" new column (see
+    
+
+<p>Input inventory with the "TreeFellingOrientationSuccess" new column (see
 the outputs metadata in the vignette).</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestableAreaOutputsCable</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
-<span class="r-in">volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>,</span>
-<span class="r-in">topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
-<span class="r-in">speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span>
-<span class="r-in">scenario <span class="op">=</span> <span class="st">"manual"</span>, objective <span class="op">=</span> <span class="fl">10</span>, fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">winching <span class="op">=</span> <span class="st">"0"</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span>
-<span class="r-in">harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span>
-<span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> As the harvestable volume (= 130.9m^3)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>                 was higher (by 68.4m^3)</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestableAreaOutputsCable</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="treeselection.html">treeselection</a></span><span class="op">(</span><span class="va">inventory</span>,</span></span>
+<span class="r-in"><span>topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
+<span class="r-in"><span>speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span></span>
+<span class="r-in"><span>scenario <span class="op">=</span> <span class="st">"manual"</span>, objective <span class="op">=</span> <span class="fl">10</span>, fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>winching <span class="op">=</span> <span class="st">"0"</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>harvestablearea <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestableArea</span>,</span></span>
+<span class="r-in"><span>plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span></span>
+<span class="r-in"><span>harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span></span>
+<span class="r-in"><span>advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> As the harvestable volume (= 123.4m^3)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>                 was higher (by 85.9m^3)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>                 than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st and 2nd economic ranks species</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>                   were increased to UpMinFD. The objective volume has now been reached.</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">new</span> <span class="op">&lt;-</span> <span class="fu">directionalfellingsuccessdef</span><span class="op">(</span><span class="va">inventory</span>, fuel <span class="op">=</span> <span class="st">"2"</span>,</span>
-<span class="r-in">directionalfelling <span class="op">=</span> <span class="st">"2"</span>,</span>
-<span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">new</span> <span class="op">&lt;-</span> <span class="fu">directionalfellingsuccessdef</span><span class="op">(</span><span class="va">inventory</span>, fuel <span class="op">=</span> <span class="st">"2"</span>,</span></span>
+<span class="r-in"><span>directionalfelling <span class="op">=</span> <span class="st">"2"</span>,</span></span>
+<span class="r-in"><span>advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -141,7 +151,7 @@ the outputs metadata in the vignette).</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

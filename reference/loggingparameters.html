@@ -60,51 +60,51 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">loggingparameters</span><span class="op">(</span>
-  MinDBHValue <span class="op">=</span> <span class="fl">10</span>,
-  MaxTrailCenterlineSlope <span class="op">=</span> <span class="fl">22</span>,
-  MaxTrailCrossSlope <span class="op">=</span> <span class="fl">4</span>,
-  GrappleMaxslope <span class="op">=</span> <span class="fl">20</span>,
-  CableTreesMaxSlope <span class="op">=</span> <span class="fl">35</span>,
-  PlateauMaxSlope <span class="op">=</span> <span class="fl">5</span>,
-  SlopeDistance <span class="op">=</span> <span class="fl">3L</span>,
-  WaterSourcesBufferZone <span class="op">=</span> <span class="fl">30</span>,
-  WaterSourcesRelativeHeight <span class="op">=</span> <span class="fl">2</span>,
-  MinMainTrailWidth <span class="op">=</span> <span class="fl">5</span>,
-  MaxMainTrailWidth <span class="op">=</span> <span class="fl">6</span>,
-  ScndTrailWidth <span class="op">=</span> <span class="fl">4</span>,
-  BigTrees <span class="op">=</span> <span class="fl">50</span>,
-  ResamplDistDTM <span class="op">=</span> <span class="fl">5L</span>,
-  SmoothingFact <span class="op">=</span> <span class="fl">10</span>,
-  CableLength <span class="op">=</span> <span class="fl">40</span>,
-  GrappleLength <span class="op">=</span> <span class="fl">6</span>,
-  IsolateTreeMinDistance <span class="op">=</span> <span class="fl">100</span>,
-  FutureTreesMinDiameter <span class="op">=</span> <span class="fl">35</span>,
-  TreefallSuccessProportion <span class="op">=</span> <span class="fl">0.6</span>,
-  MinTreefallOrientation <span class="op">=</span> <span class="fl">30</span>,
-  MaxTreefallOrientation <span class="op">=</span> <span class="fl">45</span>,
-  TreeHollowPartForFuel <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">3</span>,
-  Purge <span class="op">=</span> <span class="fl">0.14</span>,
-  MaxTrailDensity <span class="op">=</span> <span class="fl">200</span>,
-  MaxLandingArea <span class="op">=</span> <span class="fl">1500</span>,
-  CostMatrix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">3</span>, Cost <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">5</span>, Cost <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,
-    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">12</span>, Cost <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">20</span>, Cost <span class="op">=</span> <span class="fl">60</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">35</span>, Cost <span class="op">=</span>
-    <span class="fl">1000</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="cn">Inf</span>, Cost <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Initial"</span>, CostValue <span class="op">=</span>
-    <span class="fl">1000</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Access"</span>, CostValue <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"BigTrees"</span>,
-    CostValue <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Reserves"</span>, CostValue <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span>
-    <span class="st">"Futures"</span>, CostValue <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"MainTrails"</span>, CostValue <span class="op">=</span> <span class="fl">1e-04</span><span class="op">)</span>,
-    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"SecondTrails"</span>, CostValue <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-  TreeHarvestableVolumeAllometry <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">DBH</span>, <span class="va">aCoef</span>, <span class="va">bCoef</span><span class="op">)</span> <span class="va">aCoef</span> <span class="op">+</span> <span class="va">bCoef</span> <span class="op">*</span>
-    <span class="op">(</span><span class="va">DBH</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>,
-  TrunkHeightAllometry <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">DBH</span>, <span class="va">TreeHarvestableVolume</span><span class="op">)</span> <span class="va">TreeHarvestableVolume</span><span class="op">/</span><span class="op">(</span><span class="va">pi</span>
-    <span class="op">*</span> <span class="op">(</span><span class="op">(</span><span class="op">(</span><span class="va">DBH</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,
-  TreeHeightAllometry <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">DBH</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="fl">0.07359191</span> <span class="op">+</span> <span class="fl">1.34241216</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">DBH</span><span class="op">)</span> <span class="op">+</span>
-    <span class="op">-</span><span class="fl">0.12282344</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">DBH</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>,
-  CrownDiameterAllometry <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">DBH</span>, <span class="va">TreeHeight</span>, <span class="va">alpha</span>, <span class="va">beta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">DBH</span><span class="op">)</span> <span class="op">-</span>
-    <span class="va">alpha</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">DBH</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">0.0295966977</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="va">TreeHeight</span>,
-  RottenModel <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">DBH</span><span class="op">)</span> <span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="op">-</span><span class="fl">5.151</span> <span class="op">+</span> <span class="fl">0.042</span> <span class="op">*</span> <span class="va">DBH</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-  VisiblyDefectModel <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">LogDBH</span><span class="op">)</span> <span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="op">-</span><span class="fl">3.392</span> <span class="op">+</span> <span class="fl">0.357</span> <span class="op">*</span> <span class="va">LogDBH</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">loggingparameters</span><span class="op">(</span></span>
+<span>  MinDBHValue <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  MaxTrailCenterlineSlope <span class="op">=</span> <span class="fl">22</span>,</span>
+<span>  MaxTrailCrossSlope <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  GrappleMaxslope <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  CableTreesMaxSlope <span class="op">=</span> <span class="fl">35</span>,</span>
+<span>  PlateauMaxSlope <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  SlopeDistance <span class="op">=</span> <span class="fl">3L</span>,</span>
+<span>  WaterSourcesBufferZone <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  WaterSourcesRelativeHeight <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  MinMainTrailWidth <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  MaxMainTrailWidth <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  ScndTrailWidth <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  BigTrees <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  ResamplDistDTM <span class="op">=</span> <span class="fl">5L</span>,</span>
+<span>  SmoothingFact <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  CableLength <span class="op">=</span> <span class="fl">40</span>,</span>
+<span>  GrappleLength <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  IsolateTreeMinDistance <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  FutureTreesMinDiameter <span class="op">=</span> <span class="fl">35</span>,</span>
+<span>  TreefallSuccessProportion <span class="op">=</span> <span class="fl">0.6</span>,</span>
+<span>  MinTreefallOrientation <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  MaxTreefallOrientation <span class="op">=</span> <span class="fl">45</span>,</span>
+<span>  TreeHollowPartForFuel <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">3</span>,</span>
+<span>  Purge <span class="op">=</span> <span class="fl">0.14</span>,</span>
+<span>  MaxTrailDensity <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  MaxLandingArea <span class="op">=</span> <span class="fl">1500</span>,</span>
+<span>  CostMatrix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">3</span>, Cost <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">5</span>, Cost <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">12</span>, Cost <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">20</span>, Cost <span class="op">=</span> <span class="fl">60</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="fl">35</span>, Cost <span class="op">=</span></span>
+<span>    <span class="fl">1000</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Slope <span class="op">=</span> <span class="cn">Inf</span>, Cost <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Initial"</span>, CostValue <span class="op">=</span></span>
+<span>    <span class="fl">1000</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Access"</span>, CostValue <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"BigTrees"</span>,</span>
+<span>    CostValue <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"Reserves"</span>, CostValue <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span></span>
+<span>    <span class="st">"Futures"</span>, CostValue <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"MainTrails"</span>, CostValue <span class="op">=</span> <span class="fl">1e-04</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CostType <span class="op">=</span> <span class="st">"SecondTrails"</span>, CostValue <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  TreeHarvestableVolumeAllometry <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">DBH</span>, <span class="va">aCoef</span>, <span class="va">bCoef</span><span class="op">)</span> <span class="va">aCoef</span> <span class="op">+</span> <span class="va">bCoef</span> <span class="op">*</span></span>
+<span>    <span class="op">(</span><span class="va">DBH</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>,</span>
+<span>  TrunkHeightAllometry <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">DBH</span>, <span class="va">TreeHarvestableVolume</span><span class="op">)</span> <span class="va">TreeHarvestableVolume</span><span class="op">/</span><span class="op">(</span><span class="va">pi</span></span>
+<span>    <span class="op">*</span> <span class="op">(</span><span class="op">(</span><span class="op">(</span><span class="va">DBH</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  TreeHeightAllometry <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">DBH</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="fl">0.07359191</span> <span class="op">+</span> <span class="fl">1.34241216</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">DBH</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="op">-</span><span class="fl">0.12282344</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">DBH</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>  CrownDiameterAllometry <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">DBH</span>, <span class="va">TreeHeight</span>, <span class="va">alpha</span>, <span class="va">beta</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">DBH</span><span class="op">)</span> <span class="op">-</span></span>
+<span>    <span class="va">alpha</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">DBH</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">0.0295966977</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="va">TreeHeight</span>,</span>
+<span>  RottenModel <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">DBH</span><span class="op">)</span> <span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="op">-</span><span class="fl">5.151</span> <span class="op">+</span> <span class="fl">0.042</span> <span class="op">*</span> <span class="va">DBH</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  VisiblyDefectModel <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">LogDBH</span><span class="op">)</span> <span class="fl">1</span><span class="op">/</span><span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="op">-</span><span class="fl">3.392</span> <span class="op">+</span> <span class="fl">0.357</span> <span class="op">*</span> <span class="va">LogDBH</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -112,81 +112,133 @@
     <dl><dt>MinDBHValue</dt>
 <dd><p>Minimum DBH for inclusion in the forest inventory.
 Default = 10, in cm (double)</p></dd>
+
+
 <dt>MaxTrailCenterlineSlope</dt>
 <dd><p>Maximum trail centerline slope.
 Default = 22, in % (double)</p></dd>
+
+
 <dt>MaxTrailCrossSlope</dt>
 <dd><p>Maximum trail cross slope. Default = 4,
 in % (double)</p></dd>
+
+
 <dt>GrappleMaxslope</dt>
 <dd><p>Maximum slope accessible by the grapple. Default
 = 20, in % (double)</p></dd>
+
+
 <dt>CableTreesMaxSlope</dt>
 <dd><p>Maximum slope around the tree to access it with
 cable. Default = 35, in % (double)</p></dd>
+
+
 <dt>PlateauMaxSlope</dt>
 <dd><p>Maximum slope to define an area as a plateau.
 Default = 5, in % (double)</p></dd>
+
+
 <dt>SlopeDistance</dt>
 <dd><p>Distance over which the slope is calculated.
 Default = 3, in m (3m each side) (integer)</p></dd>
+
+
 <dt>WaterSourcesBufferZone</dt>
 <dd><p>Buffer zone based on relative horizontal
 distance to the nearest water source. Default = 30, in m (double)</p></dd>
+
+
 <dt>WaterSourcesRelativeHeight</dt>
 <dd><p>Buffer zone based on relative elevation to
 the nearest water source. Default = 2, in m (double)</p></dd>
+
+
 <dt>MinMainTrailWidth</dt>
 <dd><p>Minimum main trail width. Default = 5, in m (double)</p></dd>
+
+
 <dt>MaxMainTrailWidth</dt>
 <dd><p>Maximum main trail width. Default = 6, in m (double)</p></dd>
+
+
 <dt>ScndTrailWidth</dt>
 <dd><p>Secondary trail width. Default = 4, in m (double)</p></dd>
+
+
 <dt>BigTrees</dt>
 <dd><p>Minimum DBH of trees to be avoided by trails. Default =
 50, in cm (double)</p></dd>
+
+
 <dt>ResamplDistDTM</dt>
 <dd><p>Distance of DTM resampling to erase microtopographic
 variation. Default = 5, in m (integer).</p></dd>
+
+
 <dt>SmoothingFact</dt>
 <dd><p>Secondary trails smoothing factor. Default =
 10 (unitless) (double)</p></dd>
+
+
 <dt>CableLength</dt>
 <dd><p>Cable length. Default = 40, in m (double)</p></dd>
+
+
 <dt>GrappleLength</dt>
 <dd><p>Grapple length. Default = 6, in m (double)</p></dd>
+
+
 <dt>IsolateTreeMinDistance</dt>
 <dd><p>Minimum distance to consider a tree "isolated"
 from other trees of its species, in the aggregative species case
 (<code><a href="SpeciesCriteria.html">SpeciesCriteria</a></code>, 'Aggregative' column).
 Default = 100, in m (double)</p></dd>
+
+
 <dt>FutureTreesMinDiameter</dt>
 <dd><p>Future trees minimum diameter. Default = 35, in
 cm (future trees are only commercial species of the 1st economic level)
 (double)</p></dd>
+
+
 <dt>TreefallSuccessProportion</dt>
 <dd><p>Proportion of successful directional felling
 events. Default = 0.6 (double)</p></dd>
+
+
 <dt>MinTreefallOrientation</dt>
 <dd><p>Minimum orientation of the tree fall to the
 trail. Default = 30, in degree (double)</p></dd>
+
+
 <dt>MaxTreefallOrientation</dt>
 <dd><p>Maximum orientation of the tree fall to the
 trail. Default = 45, in degree (double)</p></dd>
+
+
 <dt>TreeHollowPartForFuel</dt>
 <dd><p>Proportion of hollow trees used as fuel wood.
 Default = 1/3 (double)</p></dd>
+
+
 <dt>Purge</dt>
 <dd><p>Part of the log no used for timber, can be used for fuel wood.
 Default = 0.14, in m3 of purge/m3 of volume of timber harvested. (double)</p></dd>
+
+
 <dt>MaxTrailDensity</dt>
 <dd><p>Maximum trail density. Default = 200, in m/ha (double)
 (has no impact on the simulation. A message will be sent to inform if
 this threshold has been exceeded)</p></dd>
+
+
 <dt>MaxLandingArea</dt>
 <dd><p>Maximum landing area. Default = 1500) in m2 (double)
 (has no impact on the simulation. A message will be sent to inform if this
 threshold has been exceeded)</p></dd>
+
+
 <dt>CostMatrix</dt>
 <dd><p>Cost matrix for optimized trail layout (list of 2 lists).
 Gives an increasing cost according to a slope gradient (1st sub-list), and
@@ -198,36 +250,51 @@ different costs on certain cases (2nd sub-list):</p><ul><li><p>"Initial" (defaul
 <li><p>"MainTrails" (default = 1E-4)</p></li>
 <li><p>"SecondTrails" (default = 0.1)</p></li>
 </ul></dd>
+
+
 <dt>TreeHarvestableVolumeAllometry</dt>
 <dd><p>By default, allometry of tree
 harvestable volume, French Guiana ONF formula: aCoef + bCoef * (DBH/100)^2,
 aCoef and bCoef depend on the forest location, stored in
 <code><a href="ForestZoneVolumeParametersTable.html">ForestZoneVolumeParametersTable</a></code>, DBH in cm. (function)</p></dd>
+
+
 <dt>TrunkHeightAllometry</dt>
 <dd><p>Allometry of trunk height, based on the cylinder
 volume formula: CylinderVolume = pi ((DBH/100)/2)^2 * H, with the height (H)
 in m and the DBH in cm (function)</p></dd>
+
+
 <dt>TreeHeightAllometry</dt>
 <dd><p>By default, allometry parameters estimated from
 Guyanese data with the BIOMASS package: ln(H) = 0.07359191 + 1.34241216 *
 ln(DBH) -0.12282344 * ln(DBH)^2, with the height (H) in m and the DBH in
 cm (function)</p></dd>
+
+
 <dt>CrownDiameterAllometry</dt>
 <dd><p>ln(DBH) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
 and mean σ^2 = 0.0295966977 with the crown diameter (CD), the tree height
 (H) in m, and the DBH in cm. (Aubry-Kientz et al.2019)(function)</p></dd>
+
+
 <dt>RottenModel</dt>
 <dd><p>Estimates the tree probability of being probed hollow
 (default: 1 / (1 + exp(-(-5.151 + 0.042 * DBH))) with DBH in cm (developed
 by S.Schmitt)) (function)</p></dd>
+
+
 <dt>VisiblyDefectModel</dt>
 <dd><p>Estimates the commercial tree probability to have
 visible defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with
 DBH in cm (developed by V.Badouard) (function)</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A named list of 33 objects.</p>
+    
+
+<p>A named list of 33 objects.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -238,7 +305,7 @@ in tropical forests." Remote Sensing 11.9 (2019): 1086.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">loggingparameters</span><span class="op">(</span>MinDBHValue <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">loggingparameters</span><span class="op">(</span>MinDBHValue <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $MinDBHValue</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -430,34 +497,34 @@ in tropical forests." Remote Sensing 11.9 (2019): 1086.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TreeHarvestableVolumeAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, aCoef, bCoef) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> aCoef + bCoef * (DBH/100)^2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x557f473bf850&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x564bb02b9730&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TrunkHeightAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, TreeHarvestableVolume) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TreeHarvestableVolume/(pi * (((DBH/100)/2)^2))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x557f473bf850&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x564bb02b9730&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TreeHeightAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> exp(0.07359191 + 1.34241216 * log(DBH) + -0.12282344 * log(DBH)^2)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x557f473bf850&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x564bb02b9730&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $CrownDiameterAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, TreeHeight, alpha, beta) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> exp(((log(DBH) - alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x557f473bf850&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x564bb02b9730&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $RottenModel</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1/(1 + exp(-(-5.151 + 0.042 * DBH)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x557f473bf850&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x564bb02b9730&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $VisiblyDefectModel</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (LogDBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1/(1 + exp(-(-3.392 + 0.357 * LogDBH)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x557f473bf850&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x564bb02b9730&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -469,7 +536,7 @@ in tropical forests." Remote Sensing 11.9 (2019): 1086.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

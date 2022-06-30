@@ -66,7 +66,7 @@ vignette vignette)</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">inventorycheckformat</span><span class="op">(</span><span class="va">inventory</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">inventorycheckformat</span><span class="op">(</span><span class="va">inventory</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -74,18 +74,21 @@ vignette vignette)</p>
     <dl><dt>inventory</dt>
 <dd><p>Input inventory (see the inputs formats and metadata in the
 vignette) (data.frame)</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>The inventory if the inventory is in the required format.
+    
+
+<p>The inventory if the inventory is in the required format.
 Stop the function if the format is not the one required.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">inventorycheckformat</span><span class="op">(</span>inventory <span class="op">=</span> <span class="va">Paracou6_2016</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">inventorycheckformat</span><span class="op">(</span>inventory <span class="op">=</span> <span class="va">Paracou6_2016</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Forest Plot PlotArea SubPlot idTree Protocole Xfield Yfield     Xutm</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    Paracou    6     6.25       1 100726   Guyafor   13.5  201.0 286420.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    Paracou    6     6.25       1 100729   Guyafor   19.0  196.5 286426.4</span>
@@ -18191,7 +18194,7 @@ Stop the function if the format is not the one required.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3618  57.295780</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3619  12.095776</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3620  10.504226</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -18203,7 +18206,7 @@ Stop the function if the format is not the one required.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

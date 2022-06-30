@@ -66,11 +66,11 @@ trees".</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">futurereserve</span><span class="op">(</span>
-  <span class="va">inventory</span>,
-  <span class="va">speciescriteria</span>,
-  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">futurereserve</span><span class="op">(</span></span>
+<span>  <span class="va">inventory</span>,</span>
+<span>  <span class="va">speciescriteria</span>,</span>
+<span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -78,17 +78,24 @@ trees".</p>
     <dl><dt>inventory</dt>
 <dd><p>Input inventory (see the inputs formats and metadata in the
 vignette) (data.frame)</p></dd>
+
+
 <dt>speciescriteria</dt>
 <dd><p>Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in
 the same format as <code><a href="SpeciesCriteria.html">SpeciesCriteria</a></code> (data.frame)</p></dd>
+
+
 <dt>advancedloggingparameters</dt>
 <dd><p>Other parameters of the logging simulator
 <code><a href="loggingparameters.html">loggingparameters</a></code> (list)</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Input inventory with selected future and reserve trees
+    
+
+<p>Input inventory with selected future and reserve trees
 (<em>LoggingStatus</em> = "<em>future</em>"/"<em>reserve</em>"),
 for your logging criteria (<code><a href="SpeciesCriteria.html">SpeciesCriteria</a></code>)</p>
     </div>
@@ -109,56 +116,56 @@ the number of reserve trees is equal to the number of harvested trees.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ParamCrownDiameterAllometry</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span> <span class="co"># The volume parameters data in the global environment</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestableAreaOutputsCable</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">scenario</span> <span class="op">&lt;-</span> <span class="st">"RIL2"</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span>
-<span class="r-in">volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="commercialcriteriajoin.html">commercialcriteriajoin</a></span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">harvestableOutputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="harvestable.html">harvestable</a></span><span class="op">(</span><span class="va">inventory</span>,</span>
-<span class="r-in"> topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
-<span class="r-in"> diversification <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in"> specieslax <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span class="r-in"> plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span>
-<span class="r-in"> harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span>
-<span class="r-in"> scenario <span class="op">=</span> <span class="va">scenario</span>,</span>
-<span class="r-in"> advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="va">harvestableOutputs</span><span class="op">$</span><span class="va">inventory</span></span>
-<span class="r-in"><span class="va">HVinit</span> <span class="op">&lt;-</span> <span class="va">harvestableOutputs</span><span class="op">$</span><span class="va">HVinit</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="selected.html">selected</a></span><span class="op">(</span><span class="va">inventory</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>, fuel <span class="op">=</span> <span class="st">"0"</span>,</span>
-<span class="r-in">diversification <span class="op">=</span> <span class="cn">TRUE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span>
-<span class="r-in">advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>, VO <span class="op">=</span> <span class="fl">125</span>,</span>
-<span class="r-in"> HVinit <span class="op">=</span> <span class="va">HVinit</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> As the harvestable volume (= 199.9m^3)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>                 was higher (by 74.9m^3)</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ParamCrownDiameterAllometry</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span> <span class="co"># The volume parameters data in the global environment</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestableAreaOutputsCable</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">scenario</span> <span class="op">&lt;-</span> <span class="st">"RIL2"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="commercialcriteriajoin.html">commercialcriteriajoin</a></span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">harvestableOutputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="harvestable.html">harvestable</a></span><span class="op">(</span><span class="va">inventory</span>,</span></span>
+<span class="r-in"><span> topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
+<span class="r-in"><span> diversification <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span> specieslax <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span> plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span></span>
+<span class="r-in"><span> harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span></span>
+<span class="r-in"><span> scenario <span class="op">=</span> <span class="va">scenario</span>,</span></span>
+<span class="r-in"><span> advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="va">harvestableOutputs</span><span class="op">$</span><span class="va">inventory</span></span></span>
+<span class="r-in"><span><span class="va">HVinit</span> <span class="op">&lt;-</span> <span class="va">harvestableOutputs</span><span class="op">$</span><span class="va">HVinit</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="selected.html">selected</a></span><span class="op">(</span><span class="va">inventory</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>, fuel <span class="op">=</span> <span class="st">"0"</span>,</span></span>
+<span class="r-in"><span>diversification <span class="op">=</span> <span class="cn">TRUE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
+<span class="r-in"><span>advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span>, VO <span class="op">=</span> <span class="fl">125</span>,</span></span>
+<span class="r-in"><span> HVinit <span class="op">=</span> <span class="va">HVinit</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> As the harvestable volume (= 212.2m^3)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>                 was higher (by 87.2m^3)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>                 than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st and 2nd economic ranks species</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>                   were increased to UpMinFD. The objective volume has now been reached.</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">futurereserve</span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">futurereserve</span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3,525 × 56</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Forest  Plot  PlotArea SubPlot idTree Protocole Xfield Yfield UTMZone   Lat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Paracou 6         6.25       2 <span style="text-decoration: underline;">102</span>249 Guyafor    202    134.       22  5.27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">100</span>727 Guyafor     12.5  200.       22  5.27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Paracou 6         6.25       4 <span style="text-decoration: underline;">104</span>642 Guyafor    242     31.5      22  5.27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">101</span>436 Guyafor    108.   170        22  5.27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">101</span>413 Guyafor    106.   140.       22  5.27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Paracou 6         6.25       3 <span style="text-decoration: underline;">102</span>824 Guyafor      5.5   24.5      22  5.27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">100</span>699 Guyafor     20    240.       22  5.27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Paracou 6         6.25       2 <span style="text-decoration: underline;">102</span>507 Guyafor    234.   202.       22  5.27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Paracou 6         6.25       4 <span style="text-decoration: underline;">104</span>246 Guyafor    176.     2.5      22  5.27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Paracou 6         6.25       2 <span style="text-decoration: underline;">102</span>520 Guyafor    241    181        22  5.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Paracou 6         6.25       4 <span style="text-decoration: underline;">103</span>939 Guyafor     128.   34        22  5.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Paracou 6         6.25       4 <span style="text-decoration: underline;">104</span>642 Guyafor     242    31.5      22  5.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">101</span>436 Guyafor     108.  170        22  5.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">101</span>413 Guyafor     106.  140.       22  5.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">100</span>699 Guyafor      20   240.       22  5.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Paracou 6         6.25       1 <span style="text-decoration: underline;">101</span>055 Guyafor      58   173        22  5.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Paracou 6         6.25       2 <span style="text-decoration: underline;">102</span>507 Guyafor     234.  202.       22  5.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Paracou 6         6.25       4 <span style="text-decoration: underline;">104</span>246 Guyafor     176.    2.5      22  5.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Paracou 6         6.25       2 <span style="text-decoration: underline;">102</span>520 Guyafor     241   181        22  5.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Paracou 6         6.25       2 <span style="text-decoration: underline;">101</span>998 Guyafor     172.  182.       22  5.27</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 3,515 more rows, and 46 more variables: Lon &lt;dbl&gt;, Family.x &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ScientificName &lt;chr&gt;, Genus &lt;chr&gt;, Species &lt;chr&gt;, BotaSource &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   BotaCertainty &lt;dbl&gt;, VernName &lt;chr&gt;, CensusYear &lt;int&gt;,</span></span>
@@ -166,7 +173,7 @@ the number of reserve trees is equal to the number of harvested trees.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   CircCorr &lt;dbl&gt;, CorrCode &lt;chr&gt;, DBH &lt;dbl&gt;, TreesIn &lt;chr&gt;, Xutm &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Yutm &lt;dbl&gt;, TreeHarvestableVolume &lt;dbl&gt;, TrunkHeight &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   TreeHeight &lt;dbl&gt;, CrownHeight &lt;dbl&gt;, Taxo &lt;chr&gt;, CrownDiameter &lt;dbl&gt;, …</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -178,7 +185,7 @@ the number of reserve trees is equal to the number of harvested trees.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>
