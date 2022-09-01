@@ -115,6 +115,12 @@
 #'  visible defects. Default: 1 / (1 + exp(-(-3.392 + 0.357 * ln(DBH)))) with
 #'  DBH in cm (developed by V.Badouard) (function)
 #'
+#'@param Treefall2ndDeathModel Estimates the probability of a tree dying when it
+#'  is in the area disturbed by the felling of a tree, according to the DBH of
+#'  the tree whose probability of dying is estimated. Default: 1 / (1 +
+#'  exp(-(-0.42747 + -0.03203 * DBH))) with DBH in cm (developed by M.Rojat)
+#'  (function)
+#'
 #'@references Aubry-Kientz, Mélaine, et al. "A comparative assessment of the
 #'   performance of individual tree crowns delineation algorithms from ALS data
 #'   in tropical forests." Remote Sensing 11.9 (2019): 1086.
@@ -199,7 +205,9 @@ loggingparameters <- function(
 
   RottenModel = function(DBH) 1 / (1 + exp(-(-5.151 + 0.042 * DBH))), # Hollow trees identification
 
-  VisiblyDefectModel = function(LogDBH) 1 / (1 + exp(-(-3.392 + 0.357 * LogDBH))) #  Visible defects trees identification
+  VisiblyDefectModel = function(LogDBH) 1 / (1 + exp(-(-3.392 + 0.357 * LogDBH))), #  Visible defects trees identification
+
+  Treefall2ndDeathModel = function(DBH) 1 / (1 + exp(-(-0.42747 + -0.03203 * DBH))) # Treefall2nd death
 ){
 
   # Arguments check
@@ -292,6 +300,7 @@ loggingparameters <- function(
     TreeHeightAllometry = TreeHeightAllometry,
     CrownDiameterAllometry = CrownDiameterAllometry,
     RottenModel = RottenModel,
-    VisiblyDefectModel = VisiblyDefectModel
+    VisiblyDefectModel = VisiblyDefectModel,
+    Treefall2ndDeathModel = Treefall2ndDeathModel
   )
 }
