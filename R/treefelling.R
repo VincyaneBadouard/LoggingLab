@@ -254,7 +254,7 @@ treefelling <- function(
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- NULL
   VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
-  geometry <- idTree <- . <- NULL
+  geometry <- idTree <- . <- Treefall2ndDeath <- Treefall2ndDeathProba <-  NULL
 
 
   # Redefinition of the parameters according to the chosen scenario

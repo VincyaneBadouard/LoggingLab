@@ -176,7 +176,7 @@ exp(-(-0.42747 + -0.03203 * DBH))) with DBH in cm (developed by M.Rojat)
 (function)}
 }
 \value{
-A named list of 33 objects.
+A named list of 34 objects.
 }
 \description{
 Advanced parameters of the logging simulator

@@ -125,7 +125,7 @@
 #'   performance of individual tree crowns delineation algorithms from ALS data
 #'   in tropical forests." Remote Sensing 11.9 (2019): 1086.
 #'
-#'@return A named list of 33 objects.
+#'@return A named list of 34 objects.
 #'
 #'@export
 #'
