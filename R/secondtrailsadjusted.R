@@ -71,7 +71,7 @@
 #'
 #' - *CostRasterAgg*: The cost raster (RasterLayer  with crs)
 #'
-#' @importFrom sf st_cast st_as_sf st_intersection st_union st_sample st_join
+#' @importFrom sf st_cast st_as_sf st_as_sfc st_intersection st_union st_sample st_join
 #'   st_buffer as_Spatial st_centroid st_set_precision st_make_valid st_set_agr
 #'   st_geometry st_area st_is_empty st_set_crs st_crs sf_use_s2 st_geometry<-
 #'   st_as_sfc
@@ -1108,10 +1108,15 @@ secondtrailsadjusted <- function(
 
 
 
+      steps <- 0
+
+      RemainTreeInit <- RemainTree
 
 
       #Loop over possible intersection
-      while (RemainTree !=0L) {
+      while (RemainTree !=0L & steps < 10*RemainTreeInit) {
+
+        steps <- steps + 1
 
         if (verbose) {
           print(RemainTree)
@@ -1484,21 +1489,21 @@ secondtrailsadjusted <- function(
 
               pathsWIP <- do.call(rbind, pathLinesWIP)
 
-              if(dim( pathsWIP %>%
-                      st_as_sf() %>% filter(!st_is_empty(pathsWIP %>%
-                                                         st_as_sf())))[1]> 1){
-                pathsWIP <-  smoothtrails(paths = pathsWIP,
-                                          plotmask = plotmask,
-                                          verbose = FALSE,
-                                          advancedloggingparameters = advancedloggingparameters)$SmoothedTrails %>%
-                  st_union()
+              # if(all(class(pathsWIP) == "SpatialLines") & length(pathsWIP)>0){
+              #   pathsWIP <-  smoothtrails(paths = pathsWIP,
+              #                             plotmask = plotmask,
+              #                             verbose = FALSE,
+              #                             advancedloggingparameters = advancedloggingparameters)$SmoothedTrails %>%
+              #     st_union()
+              #
+              # }else{
+              #
+              #   pathsWIP <- pathsWIP %>% st_as_sf() %>%
+              #     st_union()
+              # }
 
-              }else{
-
-                pathsWIP <- pathsWIP %>% st_as_sf() %>%
-                  st_union()
-              }
-
+              pathsWIP <- pathsWIP %>% st_as_sf() %>%
+                st_union()
 
 
 
@@ -1875,7 +1880,9 @@ secondtrailsadjusted <- function(
     }
   }
 
-
+  if (RemainTree > 0L){
+    stop("Failed to compute 2nd trails")
+  }
 
   paths <- do.call(rbind, pathLines)
 
@@ -1884,9 +1891,9 @@ secondtrailsadjusted <- function(
 
   inventory <- treeselectionoutputs$inventory
 
-  if (length(paths)> 0) {
+  lines <- do.call(rbind, Lines)
 
-    lines <- do.call(rbind, Lines)
+  if (all(class(paths) == "SpatialLines") & length(paths)>0) {
 
     secondtrails <- smoothtrails(paths,
                                  plotmask,
@@ -1903,11 +1910,10 @@ secondtrailsadjusted <- function(
 
     DeadTrees <- suppressWarnings(sf::st_intersection(
       sf::st_make_valid(st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography))),
-      sf::st_make_valid(st_as_sf(SmoothedTrails)) # "make valid" to avoid self-intersection
+      sf::st_make_valid(st_as_sf(SmoothedTrails) %>%  st_union()) # "make valid" to avoid self-intersection
     )) %>%
       add_column(DeadTrees = "1") %>%
-      dplyr::select(idTree, DeadTrees)
-    sf::st_geometry(DeadTrees) <- NULL # remove geometry column (sf to data.frame)
+      dplyr::select(idTree, DeadTrees) %>%  st_drop_geometry()
     DeadTrees <- unique(DeadTrees)
 
     inventory <- inventory %>%
@@ -1918,17 +1924,17 @@ secondtrailsadjusted <- function(
 
   }else{
     paths <- NULL
-    lines <- do.call(rbind, Lines)
-    SmoothedTrails <- MainTrailsAccess %>% st_union() %>% st_set_crs(st_crs(topography))
+
+    SmoothedTrails <- MainTrailsAccess %>% st_union()  %>%
+      st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2)  %>% st_set_crs(st_crs(topography))
     TrailsDensity <- 0
 
     DeadTrees <- suppressWarnings(sf::st_intersection(
       sf::st_make_valid(st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography))),
-      sf::st_make_valid(st_as_sf(SmoothedTrails)) # "make valid" to avoid self-intersection
+      sf::st_make_valid(st_as_sf(SmoothedTrails) %>% st_union()) # "make valid" to avoid self-intersection
     )) %>%
       add_column(DeadTrees = "1") %>%
-      dplyr::select(idTree, DeadTrees)
-    sf::st_geometry(DeadTrees) <- NULL # remove geometry column (sf to data.frame)
+      dplyr::select(idTree, DeadTrees) %>%  st_drop_geometry()
     DeadTrees <- unique(DeadTrees)
 
     inventory <- inventory %>%

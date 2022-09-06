@@ -11,6 +11,7 @@ secondtrailsopening(
   plotslope,
   harvestablepolygons,
   machinepolygons,
+  maintrailsaccess = NULL,
   treeselectionoutputs,
   scenario,
   winching = NULL,
@@ -38,6 +39,9 @@ neighbourhood of 8 cells) (default:
 
 \item{machinepolygons}{Accessible zones for machines of the inventoried plot
 (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
+
+\item{maintrailsaccess}{Access point of maintrail for each PU (prospection
+unit) (sf or sfc)}
 
 \item{treeselectionoutputs}{A list with:
 \itemize{

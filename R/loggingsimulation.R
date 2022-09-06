@@ -332,7 +332,7 @@ loggingsimulation <- function(
   pb <- txtProgressBar(max = iter, style = 3)
   progress <- function(n) setTxtProgressBar(pb, n)
   opts <- list(progress = progress)
-  output <- foreach::foreach(j=1:iter,
+  output <- foreach::foreach(j=1:iter,.packages = c("LoggingLab"),
                                 .options.snow = opts) %dopar% {
                                   simtry <- try(loggingsimulation1(inventory = inventory,
                                                          plotmask = plotmask,
