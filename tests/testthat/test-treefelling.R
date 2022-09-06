@@ -111,9 +111,10 @@ test_that("treefelling", {
     dplyr::filter(is.na(TreePolygon) & DeathCause == "treefall2nd") %>%  # & DeadTrees == "1"
     dplyr::arrange(idTree)
 
-  expect_true(nrow(Damage) == nrow(DeadTrees)) # damages = intersections
+  expect_true(all(Damage$idTree %in% DeadTrees$idTree)) # damages among the trees under the felled trees
 
-  expect_true(all(Damage$idTree == DeadTrees$idTree)) # damages = intersections
+  expect_true(nrow(Damage) <= nrow(DeadTrees)) # treefall2nd are less or equal to the number of trees under the felled trees
+
 
 
 })

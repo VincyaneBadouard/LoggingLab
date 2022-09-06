@@ -566,6 +566,7 @@ treeselectionoutputs <- treeselection(inventory,
                                       fuel = "2", winching = "2",
                                       diversification = FALSE, specieslax = FALSE,
                                       objectivelax = TRUE,
+                                      harvestablearea = HarvestableArea,
                                       plotslope = PlotSlope,
                                       harvestablepolygons = HarvestablePolygons,
                                       advancedloggingparameters = loggingparameters())
@@ -717,7 +718,9 @@ trees > 6 m from the trail and/or slope >20%)(*cable* use):
 - priority 2: conformation allowing skidding back to the main trail
 
 Damage:
-Secondary windfall: *all trees under the felled tree (timber or energy) will be considered dead*.
+Secondary windfall: Not all trees under the felled tree (timber or energy) will be considered dead.
+The probability of a tree dying under a felled tree is estimated by the model 'Treefall2ndDeathModel',
+according to the DBH of the tree whose probability of dying is estimated.
 
 ### In 1 function
 ```{r}

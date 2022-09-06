@@ -126,6 +126,7 @@
 #'   diversification = diversification,
 #'   winching = winching,
 #'   specieslax = FALSE, objectivelax = TRUE,
+#'   harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 #'   plotslope = HarvestableAreaOutputsCable$PlotSlope,
 #'   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #'   advancedloggingparameters = loggingparameters()))

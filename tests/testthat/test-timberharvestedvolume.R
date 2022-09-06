@@ -13,6 +13,7 @@ test_that("timberharvestedvolume", {
                                               fuel = "2", diversification = TRUE,
                                               winching = "0",
                                               specieslax = FALSE, objectivelax = TRUE,
+                                              harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
                                               harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
                                               plotslope =  HarvestableAreaOutputsCable$PlotSlope,
                                               advancedloggingparameters = loggingparameters()

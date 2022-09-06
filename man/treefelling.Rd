@@ -112,8 +112,10 @@ as close as possible to the trail
 }
 
 Damage:
-Secondary windfall: all trees under the felled tree (timber or energy)
-will be considered dead.
+Secondary windfall: Not all trees under the felled tree (timber or energy)
+will be considered dead. The probability of a tree dying under a felled tree
+is estimated by the model 'Treefall2ndDeathModel', according to the DBH of the
+tree whose probability of dying is estimated.
 }
 \examples{
 set.seed(1)
@@ -133,11 +135,11 @@ NewInventory <- treefelling(SecondaryTrails$inventory,
   scndtrail = SecondaryTrails$SmoothedTrails,
   advancedloggingparameters = loggingparameters())
 
-NewInventory_crs <- NewInventory \%>\%
+TreePolygon <- NewInventory \%>\%
 getgeometry(TreePolygon) \%>\%
 sf::st_set_crs(sf::st_crs(MainTrails)) # set a crs
 
-Inventory_crs <- sf::st_as_sf(SecondaryTrails$inventory, coords = c("Xutm", "Yutm")) # as sf
+Inventory_crs <- sf::st_as_sf(NewInventory, coords = c("Xutm", "Yutm")) # as sf
 Inventory_crs <- sf::st_set_crs(Inventory_crs, sf::st_crs(MainTrails)) # set a crs
 
 Treefall <- sf::st_as_sf(
@@ -174,6 +176,9 @@ dplyr::filter(Inventory_crs, ProbedHollow == "1"), coords = c("Xutm", "Yutm"))
 VisibleDefect <- sf::st_as_sf(
 dplyr::filter(Inventory_crs, VisibleDefect == "1"), coords = c("Xutm", "Yutm"))
 
+Treefall2nd <- sf::st_as_sf(
+dplyr::filter(Inventory_crs, DeathCause == "treefall2nd"), coords = c("Xutm", "Yutm"))
+
 library(ggplot2)
 ggplot() +
   geom_sf(data = Inventory_crs) +
@@ -189,11 +194,13 @@ ggplot() +
   aes(colour = "Harvestable"), show.legend = "point", size = 4) +
   geom_sf(data = HarvestableUp,
   aes(colour = "HarvestableUp"), show.legend = "point", size = 4) +
-  geom_sf(data = NewInventory_crs, # cuted trees
+  geom_sf(data = TreePolygon, # cuted trees
   alpha = 0.5, fill = "red") +
   geom_sf(data = Selected, aes(colour = "Selected"), show.legend = "point") +
   geom_sf(data = ProbedHollow,
   aes(colour = "Probed hollow"), show.legend = "point") +
+  geom_sf(data = Treefall2nd,
+  aes(colour = "Treefall2nd"), show.legend = "point") +
   geom_sf(data = SecondaryTrails$maintrailsaccess,
   alpha = 0.5, fill = "black") +
   geom_sf(data = SecondaryTrails$SmoothedTrails,
@@ -202,7 +209,8 @@ ggplot() +
   scale_colour_manual(values = c("Non-harvestable" = "grey",
   "Visible defect" = "pink", "Harvestable" = "skyblue",
   "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
-  "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
+  "Reserve" = "purple", "Probed hollow" = "forestgreen",
+  "Treefall2nd" = "chocolate4")) +
   labs(color = "Logging status")
 
 \dontrun{

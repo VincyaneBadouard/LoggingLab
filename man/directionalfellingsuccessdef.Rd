@@ -53,6 +53,7 @@ topography = DTMParacou,
 speciescriteria = SpeciesCriteria,
 scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
 winching = "0", specieslax = FALSE, objectivelax = TRUE,
+harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 plotslope = HarvestableAreaOutputsCable$PlotSlope,
 harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 advancedloggingparameters = loggingparameters())$inventory

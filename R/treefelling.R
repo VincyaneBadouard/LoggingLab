@@ -84,8 +84,10 @@
 #'     - avoid futures and reserves if possible
 #'
 #'Damage:
-#'Secondary windfall: all trees under the felled tree (timber or energy)
-#'will be considered dead.
+#'Secondary windfall: Not all trees under the felled tree (timber or energy)
+#'will be considered dead. The probability of a tree dying under a felled tree
+#'is estimated by the model 'Treefall2ndDeathModel', according to the DBH of the
+#'tree whose probability of dying is estimated.
 #'
 #'@export
 #'
@@ -114,11 +116,11 @@
 #'   scndtrail = SecondaryTrails$SmoothedTrails,
 #'   advancedloggingparameters = loggingparameters())
 #'
-#' NewInventory_crs <- NewInventory %>%
+#' TreePolygon <- NewInventory %>%
 #' getgeometry(TreePolygon) %>%
 #' sf::st_set_crs(sf::st_crs(MainTrails)) # set a crs
 #'
-#' Inventory_crs <- sf::st_as_sf(SecondaryTrails$inventory, coords = c("Xutm", "Yutm")) # as sf
+#' Inventory_crs <- sf::st_as_sf(NewInventory, coords = c("Xutm", "Yutm")) # as sf
 #' Inventory_crs <- sf::st_set_crs(Inventory_crs, sf::st_crs(MainTrails)) # set a crs
 #'
 #' Treefall <- sf::st_as_sf(
@@ -155,6 +157,9 @@
 #' VisibleDefect <- sf::st_as_sf(
 #' dplyr::filter(Inventory_crs, VisibleDefect == "1"), coords = c("Xutm", "Yutm"))
 #'
+#' Treefall2nd <- sf::st_as_sf(
+#' dplyr::filter(Inventory_crs, DeathCause == "treefall2nd"), coords = c("Xutm", "Yutm"))
+#'
 #' library(ggplot2)
 #' ggplot() +
 #'   geom_sf(data = Inventory_crs) +
@@ -170,11 +175,13 @@
 #'   aes(colour = "Harvestable"), show.legend = "point", size = 4) +
 #'   geom_sf(data = HarvestableUp,
 #'   aes(colour = "HarvestableUp"), show.legend = "point", size = 4) +
-#'   geom_sf(data = NewInventory_crs, # cuted trees
+#'   geom_sf(data = TreePolygon, # cuted trees
 #'   alpha = 0.5, fill = "red") +
 #'   geom_sf(data = Selected, aes(colour = "Selected"), show.legend = "point") +
 #'   geom_sf(data = ProbedHollow,
 #'   aes(colour = "Probed hollow"), show.legend = "point") +
+#'   geom_sf(data = Treefall2nd,
+#'   aes(colour = "Treefall2nd"), show.legend = "point") +
 #'   geom_sf(data = SecondaryTrails$maintrailsaccess,
 #'   alpha = 0.5, fill = "black") +
 #'   geom_sf(data = SecondaryTrails$SmoothedTrails,
@@ -183,7 +190,8 @@
 #'   scale_colour_manual(values = c("Non-harvestable" = "grey",
 #'   "Visible defect" = "pink", "Harvestable" = "skyblue",
 #'   "HarvestableUp" = "blue", "Selected" = "red", "Future" = "orange",
-#'   "Reserve" = "purple", "Probed hollow" = "forestgreen")) +
+#'   "Reserve" = "purple", "Probed hollow" = "forestgreen",
+#'   "Treefall2nd" = "chocolate4")) +
 #'   labs(color = "Logging status")
 #'
 #'\dontrun{
@@ -246,7 +254,7 @@ treefelling <- function(
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- NULL
   VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
-  geometry <- idTree <- . <- NULL
+  geometry <- idTree <- . <- Treefall2ndDeath <- Treefall2ndDeathProba <-  NULL
 
 
   # Redefinition of the parameters according to the chosen scenario
@@ -274,10 +282,10 @@ treefelling <- function(
 
   # Main trails accesses with a width
   MainTrailsAccessBuff <- maintrailsaccess %>%
-    st_buffer(dist = runif(1,
+    sf::st_buffer(dist = runif(1,
                            advancedloggingparameters$MinMainTrailWidth,
                            advancedloggingparameters$MaxMainTrailWidth)) %>%
-    st_union() %>% st_as_sf()
+    sf::st_union() %>% sf::st_as_sf()
 
   # Treefelling
   felttrees <- inventory %>%
@@ -289,7 +297,7 @@ treefelling <- function(
                              maintrailsaccess = MainTrailsAccessBuff, scndtrail = scndtrail,
                              FutureReserveCrowns = FutureReserveCrowns,
                              advancedloggingparameters = advancedloggingparameters)$FallenTree %>%
-                st_as_text()) %>% # as text to easy join with a non spacial table
+                sf::st_as_text()) %>% # as text to easy join with a non spacial table
     tidyr::unnest(TreePolygon) # here to pass from list to character
 
   inventory <- left_join(inventory, felttrees, by = "idTree") # join spatial filtered inventory and non spatial complete inventory
@@ -327,6 +335,27 @@ treefelling <- function(
     mutate(DeathCause = ifelse(is.na(DeathCause) & is.na(TreePolygon) & DeadTrees == "1",
                                "treefall2nd", DeathCause)) %>%  # Damage trees
     dplyr::select(-DeadTrees)
+
+  # length(which(inventory$DeathCause == "treefall2nd"))
+
+  # Not all trees die under the felled tree:
+  inventory <- inventory %>%
+
+    mutate(Treefall2ndDeathProba = ifelse(DeathCause == "treefall2nd",
+                                       advancedloggingparameters$Treefall2ndDeathModel(DBH), NA)) %>%  # Proba to be dead under a felled tree
+
+
+    # generate either "1" or "0" randomly for each line, depending on the proba associated with the line:
+    rowwise() %>%
+    mutate(Treefall2ndDeath = ifelse(!is.na(Treefall2ndDeathProba),
+                                  sample(c(1,0), size = 1, replace = F,
+                                         prob = c(Treefall2ndDeathProba, 1-Treefall2ndDeathProba)), NA)) %>% # 1 = dead tree, 0 = alive tree
+    ungroup() %>%
+    mutate(Treefall2ndDeath = as.factor(Treefall2ndDeath)) %>% # alive trees ("0") -> DeathCause = NA
+    mutate(DeathCause = ifelse(Treefall2ndDeath %in% "0", NA, # alive trees ("0") -> DeathCause = NA
+                               DeathCause))
+
+  # length(which(inventory$DeathCause == "treefall2nd"))
 
 
   return(inventory)
@@ -377,6 +406,7 @@ treefelling <- function(
 #' speciescriteria = SpeciesCriteria,
 #' scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
 #' winching = "0", specieslax = FALSE, objectivelax = TRUE,
+#' harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 #' plotslope = HarvestableAreaOutputsCable$PlotSlope,
 #' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #' advancedloggingparameters = loggingparameters())$inventory
@@ -496,6 +526,7 @@ directionalfellingsuccessdef <- function(
 #' scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
 #' winching = "0", specieslax = FALSE, objectivelax = TRUE,
 #' plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#' harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 #' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #' advancedloggingparameters = loggingparameters())$inventory)
 #'
