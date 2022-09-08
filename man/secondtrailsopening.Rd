@@ -128,7 +128,7 @@ treeselectionoutputs <- suppressWarnings(treeselection(inventory,
   advancedloggingparameters = loggingparameters()))
 
 \dontrun{
-secondtrails <- try(secondtrailsopening(
+secondtrails <- tryLog(secondtrailsopening(
   topography = DTMParacou,
   plotmask = PlotMask,
   maintrails = MainTrails,
@@ -138,7 +138,7 @@ secondtrails <- try(secondtrailsopening(
   treeselectionoutputs = treeselectionoutputs,
   scenario = "manual",
   winching = winching,
-  advancedloggingparameters = loggingparameters()), silent=TRUE)
+  advancedloggingparameters = loggingparameters()), write.error.dump.file = TRUE)
   }
 
 data(SecondaryTrails)

@@ -134,7 +134,6 @@
 #'@importFrom sf st_as_sf st_point
 #'@importFrom raster crs extract
 #'@importFrom methods as
-#'@importFrom tryCatchLog tryLog
 #'
 #' @examples
 #' \dontrun{
@@ -346,7 +345,7 @@ loggingsimulation1 <- function(
                             maintrails = MainTrails,
                             advancedloggingparameters = advancedloggingparameters)
 
-  ScndTrailOutputs <- tryLog(secondtrailsopening(topography = topography,
+  ScndTrailOutputs <- secondtrailsopening(topography = topography,
                                               plotmask = plotmask,
                                               maintrails = MainTrails, plotslope = PlotSlope,
                                               harvestablepolygons = HarvestablePolygons,
@@ -355,21 +354,7 @@ loggingsimulation1 <- function(
                                               treeselectionoutputs = treeselectionoutputs,
                                               scenario = scenario, winching = winching,
                                               advancedloggingparameters = advancedloggingparameters
-  ), write.error.dump.file = TRUE)
-
-  if(!(class(ScndTrailOutputs) == "list")){
-    return(list(ScndTrailOutputs = ScndTrailOutputs,
-                topography = topography,
-                plotmask = plotmask,
-                maintrails = MainTrails, plotslope = PlotSlope,
-                harvestablepolygons = HarvestablePolygons,
-                machinepolygons = MachinePolygons,
-                maintrailsaccess = accesspts,
-                treeselectionoutputs = treeselectionoutputs,
-                scenario = scenario, winching = winching,
-                advancedloggingparameters = advancedloggingparameters,
-                seed = seed))
-  }
+  )
 
 
   inventory <- ScndTrailOutputs$inventory
@@ -399,25 +384,14 @@ loggingsimulation1 <- function(
   #### Adjusted secondary trails layout (for fuel wood harvesting only) ####
   if(fuel != "0"){
 
-    ScndTrailAdjustOutputs <- tryLog(secondtrailsadjusted(inventory = inventory,
+    ScndTrailAdjustOutputs <- secondtrailsadjusted(inventory = inventory,
                                                        topography = topography, plotmask = plotmask, maintrails = MainTrails,
                                                        plotslope = PlotSlope,
                                                        harvestablepolygons = HarvestablePolygons,
                                                        machinepolygons = MachinePolygons, maintrailsaccess = MainTrailsAccess,
                                                        scenario = scenario, winching = winching,
-                                                       advancedloggingparameters = advancedloggingparameters), write.error.dump.file = TRUE)
+                                                       advancedloggingparameters = advancedloggingparameters)
 
-    if(!(class(ScndTrailAdjustOutputs) == "list")){
-      return(list(ScndTrailAdjustOutputs = ScndTrailAdjustOutputs,
-                  inventory = inventory,
-                  topography = topography, plotmask = plotmask, maintrails = MainTrails,
-                  plotslope = PlotSlope,
-                  harvestablepolygons = HarvestablePolygons,
-                  machinepolygons = MachinePolygons, maintrailsaccess = MainTrailsAccess,
-                  scenario = scenario, winching = winching,
-                  advancedloggingparameters = advancedloggingparameters,
-                  seed = seed))
-    }
 
     if(is.null(ScndTrailAdjustOutputs$TrailsDensity) | as.numeric(ScndTrailAdjustOutputs$TrailsDensity) == 0){
       print(inventory)

@@ -12,7 +12,7 @@
 #'
 #'
 #'@importFrom  sf st_as_sf st_buffer st_union st_geometry st_area st_difference
-#'  st_combine st_make_valid
+#'  st_combine st_make_valid st_geometry_type
 #'@importFrom smoothr smooth
 #'
 #'@return A list with :
@@ -56,7 +56,7 @@ smoothtrails <- function(
       st_geometry_type(.)
       %in% c("POLYGON", "LINESTRING") ) %>% filter(n.overlaps >= 20) %>% st_make_valid()
 
-    if (dim(RawMainTrails %>% st_as_sf() %>% filter(!st_is_empty(RawMainTrails %>% st_as_sf())))[1]>0) {
+    if (dim(RawMainTrails)[1]>0) {
       RawMainTrails <- RawSecondTrails %>% st_intersection() %>% filter(n.overlaps >= 20) %>%
         st_union()  %>%  st_cast("LINESTRING") %>%
         st_union() %>% as_Spatial()
