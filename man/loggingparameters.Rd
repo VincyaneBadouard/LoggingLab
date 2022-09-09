@@ -31,24 +31,24 @@ loggingparameters(
   Purge = 0.14,
   MaxTrailDensity = 200,
   MaxLandingArea = 1500,
-  CostMatrix = list(list(list(Slope = 3, Cost = 3), list(Slope = 5, Cost = 5),
-    list(Slope = 12, Cost = 20), list(Slope = 20, Cost = 60), list(Slope = 35, Cost =
-    1000), list(Slope = Inf, Cost = Inf)), list(list(CostType = "Initial", CostValue =
-    1000), list(CostType = "Access", CostValue = Inf), list(CostType = "BigTrees",
-    CostValue = 500), list(CostType = "Reserves", CostValue = 500), list(CostType =
-    "Futures", CostValue = 50), list(CostType = "MainTrails", CostValue = 1e-04),
-    list(CostType = "SecondTrails", CostValue = 0.1))),
+  CostMatrix = list(list(list(Slope = 3, Cost = 3), list(Slope = 5, Cost = 5), list(Slope
+    = 12, Cost = 20), list(Slope = 20, Cost = 60), list(Slope = 35, Cost = 1000),
+    list(Slope = Inf, Cost = Inf)), list(list(CostType = "Initial", CostValue = 1000),
+    list(CostType = "Access", CostValue = Inf), list(CostType = "BigTrees", CostValue =
+    500), list(CostType = "Reserves", CostValue = 500), list(CostType = "Futures",
+    CostValue = 50), list(CostType = "MainTrails", CostValue = 1e-04), list(CostType =
+    "SecondTrails", CostValue = 0.1))),
   TreeHarvestableVolumeAllometry = function(DBH, aCoef, bCoef) aCoef + bCoef *
     (DBH/100)^2,
-  TrunkHeightAllometry = function(DBH, TreeHarvestableVolume) TreeHarvestableVolume/(pi
-    * (((DBH/100)/2)^2)),
+  TrunkHeightAllometry = function(DBH, TreeHarvestableVolume) TreeHarvestableVolume/(pi *
+    (((DBH/100)/2)^2)),
   TreeHeightAllometry = function(DBH) exp(0.07359191 + 1.34241216 * log(DBH) +
     -0.12282344 * log(DBH)^2),
-  CrownDiameterAllometry = function(DBH, TreeHeight, alpha, beta) exp(((log(DBH) -
-    alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight,
+  CrownDiameterAllometry = function(DBH, TreeHeight, alpha, beta) exp(((log(DBH) - alpha
+    - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight,
   RottenModel = function(DBH) 1/(1 + exp(-(-5.151 + 0.042 * DBH))),
   VisiblyDefectModel = function(LogDBH) 1/(1 + exp(-(-3.392 + 0.357 * LogDBH))),
-  Treefall2ndDeathModel = function(DBH) 1/(1 + exp(-(-0.42747 + -0.03203 * DBH)))
+  Treefall2ndDeathModel = function(DBH) 1/(1 + exp(-(-0.47323 + -0.02564 * DBH)))
 )
 }
 \arguments{
@@ -157,7 +157,7 @@ Guyanese data with the BIOMASS package: ln(H) = 0.07359191 + 1.34241216 *
 ln(DBH) -0.12282344 * ln(DBH)^2, with the height (H) in m and the DBH in
 cm (function)}
 
-\item{CrownDiameterAllometry}{ln(DBH) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
+\item{CrownDiameterAllometry}{ln(DBH) = 𝜶 +𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
 and mean σ^2 = 0.0295966977 with the crown diameter (CD), the tree height
 (H) in m, and the DBH in cm. (Aubry-Kientz et al.2019)(function)}
 
@@ -172,7 +172,7 @@ DBH in cm (developed by V.Badouard) (function)}
 \item{Treefall2ndDeathModel}{Estimates the probability of a tree dying when it
 is in the area disturbed by the felling of a tree, according to the DBH of
 the tree whose probability of dying is estimated. Default: 1 / (1 +
-exp(-(-0.42747 + -0.03203 * DBH))) with DBH in cm (developed by M.Rojat)
+exp(-(-0.47323 + -0.02564 * DBH))) with DBH in cm (developed by M.Rojat)
 (function)}
 }
 \value{

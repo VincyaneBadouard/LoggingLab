@@ -103,7 +103,7 @@
 #'  ln(DBH) -0.12282344 * ln(DBH)^2, with the height (H) in m and the DBH in
 #'  cm (function)
 #'
-#'@param CrownDiameterAllometry ln(DBH) = 𝜶+ 𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
+#'@param CrownDiameterAllometry ln(DBH) = 𝜶 +𝜷 ln(H*CD) + 𝜺, with 𝜺~N(0,σ^2)
 #'  and mean σ^2 = 0.0295966977 with the crown diameter (CD), the tree height
 #'  (H) in m, and the DBH in cm. (Aubry-Kientz et al.2019)(function)
 #'
@@ -118,7 +118,7 @@
 #'@param Treefall2ndDeathModel Estimates the probability of a tree dying when it
 #'  is in the area disturbed by the felling of a tree, according to the DBH of
 #'  the tree whose probability of dying is estimated. Default: 1 / (1 +
-#'  exp(-(-0.42747 + -0.03203 * DBH))) with DBH in cm (developed by M.Rojat)
+#'  exp(-(-0.47323 + -0.02564 * DBH))) with DBH in cm (developed by M.Rojat)
 #'  (function)
 #'
 #'@references Aubry-Kientz, Mélaine, et al. "A comparative assessment of the
@@ -207,7 +207,7 @@ loggingparameters <- function(
 
   VisiblyDefectModel = function(LogDBH) 1 / (1 + exp(-(-3.392 + 0.357 * LogDBH))), #  Visible defects trees identification
 
-  Treefall2ndDeathModel = function(DBH) 1 / (1 + exp(-(-0.42747 + -0.03203 * DBH))) # Treefall2nd death
+  Treefall2ndDeathModel = function(DBH) 1 / (1 + exp(-(-0.47323 + -0.02564 * DBH))) # Treefall2nd death
 ){
 
   # Arguments check

@@ -1,7 +1,7 @@
 Package: LoggingLab
 Title: An R Package to Simulate Forest Logging
 Version: 0.0.0.9003
-Date: 2022-02-10
+Date: 2022-09-09
 Authors@R: 
     c(person(given = "Vincyane",
            family = "Badouard",
@@ -30,19 +30,20 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 Suggests:
     knitr (>= 1.33),
     kableExtra (>= 1.3.4),
     rmarkdown (>= 2.7),
     testthat (>= 3.0.4),
-    pkgdown (>= 1.6.1)
+    pkgdown (>= 1.6.1),
+    devtools (>= 2.4.3),
+    ggplot2 (>= 3.3.5)
 VignetteBuilder: knitr, rmarkdown
 Depends: 
     R (>= 3.6)
 Config/testthat/edition: 3
 Imports: 
-    devtools (>= 2.4.3),
     magrittr (>= 2.0.1),
     dplyr (>= 1.0.7),
     tibble (>= 3.1.0),
@@ -58,7 +59,6 @@ Imports:
     methods (>= 3.6.1),
     utils (>= 3.6.1),
     matlib (>= 0.9.4),
-    ggplot2 (>= 3.3.5),
     gdistance(>= 1.3-6),
     smoothr (>= 0.2.2),
     lwgeom (>= 0.2-8),

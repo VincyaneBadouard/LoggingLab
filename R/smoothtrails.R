@@ -39,7 +39,7 @@ smoothtrails <- function(
 ){
 
   # Global Variables
-  n.overlaps <- NULL
+  n.overlaps <- . <- NULL
 
 
 
