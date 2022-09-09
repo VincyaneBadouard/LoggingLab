@@ -79,6 +79,7 @@ constraints and avoiding trees to protect.</p>
 <span>  <span class="va">plotslope</span>,</span>
 <span>  <span class="va">harvestablepolygons</span>,</span>
 <span>  <span class="va">machinepolygons</span>,</span>
+<span>  maintrailsaccess <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">treeselectionoutputs</span>,</span>
 <span>  <span class="va">scenario</span>,</span>
 <span>  winching <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -119,6 +120,11 @@ neighbourhood of 8 cells) (default:
 <dt>machinepolygons</dt>
 <dd><p>Accessible zones for machines of the inventoried plot
 (default: <code><a href="harvestableareadefinition.html">harvestableareadefinition</a></code>) (sf polygons data.frame)</p></dd>
+
+
+<dt>maintrailsaccess</dt>
+<dd><p>Access point of maintrail for each PU (prospection
+unit) (sf or sfc)</p></dd>
 
 
 <dt>treeselectionoutputs</dt>
@@ -205,13 +211,13 @@ zone (sfc_POINT with crs)</p></li>
 <span class="r-in"><span>  plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span></span>
 <span class="r-in"><span>  harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span></span>
 <span class="r-in"><span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> As the harvestable volume (= 207.7m^3)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>                 was higher (by 170.2m^3)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> As the harvestable volume (= 175.4m^3)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>                 was higher (by 138m^3)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>                 than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st and 2nd economic ranks species</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>                   were increased to UpMinFD. The objective volume has now been reached.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="va">secondtrails</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">secondtrailsopening</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">secondtrails</span> <span class="op">&lt;-</span> <span class="fu">tryLog</span><span class="op">(</span><span class="fu">secondtrailsopening</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
 <span class="r-in"><span>  plotmask <span class="op">=</span> <span class="va">PlotMask</span>,</span></span>
 <span class="r-in"><span>  maintrails <span class="op">=</span> <span class="va">MainTrails</span>,</span></span>
@@ -221,7 +227,7 @@ zone (sfc_POINT with crs)</p></li>
 <span class="r-in"><span>  treeselectionoutputs <span class="op">=</span> <span class="va">treeselectionoutputs</span>,</span></span>
 <span class="r-in"><span>  scenario <span class="op">=</span> <span class="st">"manual"</span>,</span></span>
 <span class="r-in"><span>  winching <span class="op">=</span> <span class="va">winching</span>,</span></span>
-<span class="r-in"><span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, silent<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, write.error.dump.file <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">)</span></span></span>
