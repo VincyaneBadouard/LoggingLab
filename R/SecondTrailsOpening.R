@@ -265,7 +265,7 @@ secondtrailsopening <- function(
   # gc() # remove intermediary files (to avoid gdal warnings)
 
   # Global Variables
-  slope <- x <- y <- Harvestable <- idTree <- ID <- type <- ptAcc  <- NULL
+  slope <- x <- y <- Harvestable <- idTree <- ID <- type <- ptAcc <- . <- NULL
   EstCost <- n.overlaps <- TypeAcc <- IDpts <- Logged <- AccessPolygons <- NULL
   Selected <- DeathCause <- ID_Acc <- isEmpty <- gprlAcc <- cblAcc <- NULL
   ID.y <- IdMachineZone <- IdMachineZone.y <- IdMachineZone.x <- LineID <- LoggedTrees <- TypeExpl <- NULL

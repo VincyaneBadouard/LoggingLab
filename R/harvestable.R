@@ -126,7 +126,7 @@ harvestable <- function(
 
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
-  Condition <- DBH <- NULL
+  Condition <- DBH <- HarvestableCor <- NULL
   DistCriteria <- Family <- VisibleDefect <- VisibleDefectProba <- NULL
   DeathCause <- ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
   TimberLoggedVolume <- LoggingStatus <- MaxFD <- MaxFD.genus <- LogDBH <- NULL

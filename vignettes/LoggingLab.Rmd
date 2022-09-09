@@ -294,6 +294,13 @@ with the crown diameter (CD) and the tree height (H) in m, and the DBH (D) in cm
 to have visible defects: 1 / (1 + exp(-(-3.392 + 0.357 * Log(DBH))))
 with DBH in cm (developed by V.Badouard)
 
+
++ **Treefall2ndDeathModel** Estimates the probability of a tree dying when it
+is in the area disturbed by the felling of a tree, according to the DBH of
+the tree whose probability of dying is estimated.
+Default: 1 / (1 + exp(-(-0.47323 + -0.02564 * DBH))) with DBH in cm (developed by M.Rojat)
+
+  
 # Paying attention to inputs - important source of error
 Common error sources:  
 - no crs  
