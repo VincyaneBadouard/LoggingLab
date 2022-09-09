@@ -39,6 +39,7 @@ Accessory function to generate access point according to operating-machine area.
 \examples{
 
 \dontrun{
+set.seed(1)
 data(MainTrails)
 data(HarvestableAreaOutputsCable)
 data(DTMParacou)

@@ -121,6 +121,7 @@ tree whose probability of dying is estimated.
 set.seed(1)
 data(SecondaryTrails)
 
+
 scenario <- "manual"
 winching <- "2"
 fuel <- "2"

@@ -262,7 +262,7 @@ treeselection <- function(
   if(!all(unlist(lapply(list(topography, plotslope), inherits, "RasterLayer"))))
     stop("The 'topography' and 'plotslope' arguments of the 'treeselection' function must be RasterLayer")
 
-  if(!all(unlist(lapply(list(maintrails,harvestablepolygons), inherits, c("sf","sfc") ))))
+  if(!all(unlist(lapply(list(maintrails,harvestablepolygons), inherits, c("sf","sfc","sfg") ))))
     stop("The 'maintrails' and 'harvestablepolygons' arguments of the 'treeselection' function must be sf or sfc object")
 
   if(!inherits(advancedloggingparameters, "list"))

@@ -124,11 +124,12 @@ treeselectionoutputs <- suppressWarnings(treeselection(inventory,
   specieslax = FALSE, objectivelax = TRUE,
   harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
   plotslope = HarvestableAreaOutputsCable$PlotSlope,
+  maintrails = MainTrails,
   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
   advancedloggingparameters = loggingparameters()))
 
 \dontrun{
-secondtrails <- tryLog(secondtrailsopening(
+secondtrails <- secondtrailsopening(
   topography = DTMParacou,
   plotmask = PlotMask,
   maintrails = MainTrails,
@@ -138,14 +139,14 @@ secondtrails <- tryLog(secondtrailsopening(
   treeselectionoutputs = treeselectionoutputs,
   scenario = "manual",
   winching = winching,
-  advancedloggingparameters = loggingparameters()), write.error.dump.file = TRUE)
+  advancedloggingparameters = loggingparameters())
   }
 
 data(SecondaryTrails)
 library(ggplot2)
 library(sf)
 
-NewInventory <- treeselectionoutputs$inventory
+NewInventory <- SecondaryTrails$inventory
 
 
 Harvestable <- sf::st_as_sf(

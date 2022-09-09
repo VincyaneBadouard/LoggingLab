@@ -1,6 +1,7 @@
 test_that("futurereserve", {
 
   data(Paracou6_2016)
+  data(MainTrails)
   data(DTMParacou)
 
   inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask), volumeparameters = ForestZoneVolumeParametersTable)
@@ -11,6 +12,7 @@ test_that("futurereserve", {
                                     diversification = T, specieslax = F,
                                     scenario = "RIL1",
                                     plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                    maintrails = MainTrails,
                                     harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
 
 

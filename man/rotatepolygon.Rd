@@ -36,6 +36,7 @@ speciescriteria = SpeciesCriteria,
 scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
 winching = "0", specieslax = FALSE, objectivelax = TRUE,
 plotslope = HarvestableAreaOutputsCable$PlotSlope,
+maintrails = MainTrails,
 harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 advancedloggingparameters = loggingparameters())$inventory)
