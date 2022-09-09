@@ -5,6 +5,7 @@ test_that("harvestable", {
   data(DTMParacou)
   data(PlotMask)
   data(SpeciesCriteria)
+  data(MainTrails)
   data(HarvestableAreaOutputsCable)
 
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:1000)
@@ -29,18 +30,21 @@ test_that("harvestable", {
                           diversification = T, specieslax = F,
                           scenario = "RIL1",
                           plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                          maintrails = MainTrails,
                           harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
   Outputs2 <- harvestable(inventory,
                           topography = DTMParacou,
                           diversification = F, specieslax = T,
                           scenario = "RIL2",
                           plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                          maintrails = MainTrails,
                           harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
   Outputs3 <- harvestable(inventory,
                           topography = DTMParacou,
                           diversification = F, specieslax = F,
                           scenario = "RIL3",
                           plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                          maintrails = MainTrails,
                           harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons)
 
   testinventory1 <- Outputs1$inventory

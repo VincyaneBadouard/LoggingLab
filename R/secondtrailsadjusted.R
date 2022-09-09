@@ -329,33 +329,16 @@ secondtrailsadjusted <- function(
     AccessPointAll <- maintrailsaccess
   }else{
 
-    AccessMainTrails <- AccessPolygons  %>% st_union() %>%
-      st_cast("POLYGON", warn = FALSE) %>%
-      st_as_sf() %>%
-      mutate(ID = paste0("ID_",row_number()))
+    accesspts <- genaccesspts(topography = topography,
+                              machinepolygons = machinepolygons,
+                              maintrails = maintrails,
+                              advancedloggingparameters = advancedloggingparameters)
 
-
-    # Generate intersections between accessible area and maintrails (ID = accessible area index)
-    PartMainTrails <- st_intersection(st_geometry(maintrails %>%
-                                                    st_buffer(dist = 2*factagg)),
-                                      st_geometry(AccessMainTrails %>%
-                                                    st_buffer(dist = -0.5*factagg))) %>%
-      st_union(by_feature = T) %>%
-      st_buffer(dist = 0.5) %>%
-      st_intersection(st_as_sf(plotmask) %>% st_union()) %>%
-      st_cast("MULTIPOLYGON", warn = FALSE)  %>% # "In st_cast.MULTIPOLYGON(X[[i]], ...) : polygon from first part only"
-      st_as_sf() %>%
-      st_set_agr(value = "constant") %>%
-      st_join(AccessMainTrails)
-    PartMainTrails <- PartMainTrails %>% arrange(desc(st_area(PartMainTrails))) %>%
-      filter(duplicated(PartMainTrails$ID) == FALSE)
+    PartMainTrails <- accesspts$PartMainTrails
 
 
     # Generate point access in the intersections between accessible area and maintrails (ID = accessible area index)
-    AccessPointAll <- PartMainTrails %>%
-      st_sample(rep(1,dim(PartMainTrails)[1]) ,type = "random", by_polygon=TRUE) %>% as_Spatial() %>%
-      st_as_sf() %>%
-      mutate(idTree = NA) %>% st_join(PartMainTrails)
+    AccessPointAll <- accesspts$AccessPointAll
   }
 
 

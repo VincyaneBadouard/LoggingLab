@@ -11,6 +11,7 @@ harvestable(
   specieslax = FALSE,
   harvestablepolygons,
   plotslope,
+  maintrails,
   scenario,
   winching = NULL,
   advancedloggingparameters = loggingparameters()
@@ -39,6 +40,9 @@ default (logical)}
 neighbourhood of 8 cells) (default:
 \code{\link{HarvestableAreaOutputsCable}})
 (RasterLayer \strong{with a crs in UTM})}
+
+\item{maintrails}{Main trails defined at the entire harvestable area (sf
+linestring \strong{with a crs in UTM})}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
@@ -94,6 +98,7 @@ data(Paracou6_2016)
 data(DTMParacou)
 data(PlotMask)
 data(SpeciesCriteria)
+data(MainTrails)
 data(HarvestableAreaOutputsCable)
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
@@ -104,6 +109,7 @@ inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 diversification = TRUE, specieslax = FALSE,
 plotslope = HarvestableAreaOutputsCable$PlotSlope,
+maintrails = MainTrails,
 harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 scenario = "manual", winching = "0",
 advancedloggingparameters = loggingparameters())

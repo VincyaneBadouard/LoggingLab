@@ -21,6 +21,7 @@ loggingsimulation(
   objectivelax = FALSE,
   crowndiameterparameters = ParamCrownDiameterAllometry,
   seedsim = NULL,
+  debug = FALSE,
   advancedloggingparameters = loggingparameters(),
   iter = 1,
   cores = 1
@@ -120,6 +121,8 @@ and its Species, Genus or Family names (Aubry-Kientz et al.2019).
 
 \item{seedsim}{The seed set for the uniform random-number generator (numeric).
 Default = NULL}
+
+\item{debug}{Option to enable writing error environment in working directory,FALSE by default (logical).}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}

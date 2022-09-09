@@ -34,6 +34,7 @@
 #' @examples
 #'
 #' \dontrun{
+#' set.seed(1)
 #' data(MainTrails)
 #' data(HarvestableAreaOutputsCable)
 #' data(DTMParacou)
@@ -52,7 +53,7 @@ genaccesspts <- function(topography,
   # Arguments check
 
   if(!inherits(topography, "RasterLayer"))
-    stop("The 'topography' argument of the 'secondtrailsadjusted' function must
+    stop("The 'topography' argument of the 'genaccesspts' function must
          be RasterLayer")
 
   ##################################

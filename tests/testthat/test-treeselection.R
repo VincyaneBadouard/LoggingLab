@@ -4,6 +4,7 @@ test_that("treeselection", {
   data(Paracou6_2016)
   data(DTMParacou)
   data(SpeciesCriteria)
+  data(MainTrails)
   data(HarvestableAreaOutputsCable)
 
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
@@ -72,6 +73,7 @@ test_that("treeselection", {
                                                   winching = "0", specieslax = FALSE, objectivelax = TRUE,
                                                   harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
                                                   plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                                  maintrails = MainTrails,
                                                   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
                                                   advancedloggingparameters = loggingparameters())$inventory)
 
@@ -88,6 +90,7 @@ test_that("treeselection", {
                                        diversification = TRUE, specieslax = FALSE, objectivelax = TRUE,
                                        harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
                                        plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                       maintrails = MainTrails,
                                        harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons
                                        ))$VO
 
