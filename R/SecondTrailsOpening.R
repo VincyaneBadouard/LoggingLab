@@ -32,6 +32,9 @@
 #' @param machinepolygons Accessible zones for machines of the inventoried plot
 #'  (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)
 #'
+#' @param maintrailsaccess Access point of maintrail for each PU (prospection
+#'    unit) (sf or sfc)
+#'
 #' @param plotslope Slopes (in radians) of the inventoried plot (with a
 #'  neighbourhood of 8 cells) (default:
 #'  \code{\link{HarvestableAreaOutputsCable}})
@@ -74,9 +77,10 @@
 #'
 #' - *CostRasterAgg*: The cost raster (RasterLayer  with crs)
 #'
-#' @importFrom sf st_cast st_as_sf st_intersection st_union st_sample st_join
+#' @importFrom sf st_cast st_as_sf st_as_sfc st_intersection st_union st_sample st_join
 #'   st_buffer as_Spatial st_centroid st_set_precision st_make_valid st_set_agr
 #'   st_geometry st_area st_is_empty st_set_crs st_crs sf_use_s2 st_geometry<-
+#'   st_drop_geometry st_geometry_type
 #'
 #' @importFrom dplyr mutate row_number select as_tibble left_join if_else filter
 #'   arrange desc
@@ -128,7 +132,7 @@
 #'   advancedloggingparameters = loggingparameters()))
 #'
 #' \dontrun{
-#' secondtrails <- try(secondtrailsopening(
+#' secondtrails <- tryLog(secondtrailsopening(
 #'   topography = DTMParacou,
 #'   plotmask = PlotMask,
 #'   maintrails = MainTrails,
@@ -138,7 +142,7 @@
 #'   treeselectionoutputs = treeselectionoutputs,
 #'   scenario = "manual",
 #'   winching = winching,
-#'   advancedloggingparameters = loggingparameters()), silent=TRUE)
+#'   advancedloggingparameters = loggingparameters()), write.error.dump.file = TRUE)
 #'   }
 #'
 #' data(SecondaryTrails)
@@ -225,6 +229,7 @@ secondtrailsopening <- function(
   plotslope,
   harvestablepolygons,
   machinepolygons,
+  maintrailsaccess = NULL,
   treeselectionoutputs,
   scenario,
   winching = NULL,
@@ -283,7 +288,7 @@ secondtrailsopening <- function(
   # Transformation of the DTM so that the maintrails are outside the plot
 
 
-  DTMExtExtended <- raster::extend(topography, c(factagg,factagg)) # extend the extent
+  DTMExtExtended <- raster::extend(topography, c(2*factagg,2*factagg)) # extend the extent
 
   fill.boundaries <- function(x) {
     center = 0.5 + (factagg*factagg/2)
@@ -299,41 +304,69 @@ secondtrailsopening <- function(
                                fun=fill.boundaries,
                                na.rm=F, pad=T)
 
+  for (iterExt in 1:5) {
+    DTMExtended <- raster::focal(DTMExtended,
+                                 matrix(1,factagg,factagg),
+                                 fun=fill.boundaries,
+                                 na.rm=F, pad=T)
+  }
+
   # Generate accessible area from HarvestablePolygones and winching choice
 
   AccessPolygons <- machinepolygons
 
+  maintrailsRed <- maintrails %>% st_as_sfc() %>%
+    st_cast("POLYGON") %>% st_buffer(-2*factagg) %>%
+    st_cast("LINESTRING") %>% st_buffer(1)
 
-  # Generate accessible area from HarvestablePolygones and winching == "0"
-  AccessMainTrails <- AccessPolygons  %>% st_union() %>%
-    st_cast("POLYGON", warn = FALSE) %>%
-    st_as_sf() %>%
-    mutate(ID = paste0("ID_",row_number()))
+  #-------------------------------------------
+
+  if (!is.null(maintrailsaccess)) {
+    AccessMainTrails <- AccessPolygons  %>% st_union() %>%
+      st_cast("POLYGON", warn = FALSE) %>%
+      st_as_sf() %>% st_join(maintrailsaccess) %>%
+      select(ID)
+
+    PartMainTrails <- st_intersection(maintrailsRed,
+                                      st_geometry(AccessMainTrails)) %>%
+      st_union(by_feature = T) %>%
+      st_cast("MULTIPOLYGON", warn = FALSE)  %>% # "In st_cast.MULTIPOLYGON(X[[i]], ...) : polygon from first part only"
+      st_as_sf() %>%
+      st_set_agr(value = "constant") %>%
+      st_join(AccessMainTrails)
+    PartMainTrails <- PartMainTrails %>% arrange(desc(st_area(PartMainTrails))) %>%
+      filter(duplicated(PartMainTrails$ID) == FALSE)
+
+    AccessPointAll <- maintrailsaccess
+  }else{
+
+    AccessMainTrails <- AccessPolygons  %>% st_union() %>%
+      st_cast("POLYGON", warn = FALSE) %>%
+      st_as_sf() %>%
+      mutate(ID = paste0("ID_",row_number()))
 
 
+    # Generate intersections between accessible area and maintrails (ID = accessible area index)
+    PartMainTrails <- st_intersection(st_geometry(maintrailsRed),
+                                      st_geometry(AccessMainTrails)) %>%
+      st_union(by_feature = T) %>%
+      st_cast("MULTIPOLYGON", warn = FALSE)  %>% # "In st_cast.MULTIPOLYGON(X[[i]], ...) : polygon from first part only"
+      st_as_sf() %>%
+      st_set_agr(value = "constant") %>%
+      st_join(AccessMainTrails)
+
+    PartMainTrails <- PartMainTrails %>% arrange(desc(st_area(PartMainTrails))) %>%
+      filter(duplicated(PartMainTrails$ID) == FALSE)
 
 
-  # Generate intersections between accessible area and maintrails (ID = accessible area index)
-  PartMainTrails <- st_intersection(st_geometry(maintrails %>%
-                                                  st_buffer(dist = 2*factagg)),
-                                    st_geometry(AccessMainTrails %>%
-                                                  st_buffer(dist = -0.5*factagg))) %>%
-    st_union(by_feature = T) %>%
-    st_buffer(dist = 0.5) %>%
-    st_intersection(st_as_sf(plotmask) %>% st_union()) %>%
-    st_cast("MULTIPOLYGON", warn = FALSE)  %>% # "In st_cast.MULTIPOLYGON(X[[i]], ...) : polygon from first part only"
-    st_as_sf() %>%
-    st_set_agr(value = "constant") %>%
-    st_join(AccessMainTrails)
-  PartMainTrails <- PartMainTrails %>% arrange(desc(st_area(PartMainTrails))) %>%
-    filter(duplicated(PartMainTrails$ID) == FALSE)
+    # Generate point access in the intersections between accessible area and maintrails (ID = accessible area index)
+    AccessPointAll <- PartMainTrails %>%
+      st_sample(rep(1,dim(PartMainTrails)[1]) ,type = "random", by_polygon=TRUE) %>% as_Spatial() %>%
+      st_as_sf() %>%
+      mutate(idTree = NA) %>% st_join(PartMainTrails)
+  }
 
-  # Generate point access in the intersections between accessible area and maintrails (ID = accessible area index)
-
-  AccessPointAll <- PartMainTrails %>%
-    st_sample(rep(1,dim(PartMainTrails)[1]) ,type = "random", by_polygon=TRUE) %>% as_Spatial() %>%
-    st_as_sf() %>%
-    mutate(idTree = NA) %>% st_join(PartMainTrails)
+  #-------------------------------------------
 
 
   # Generate Cost raster --> cf CostMatrix
@@ -588,7 +621,7 @@ secondtrailsopening <- function(
   for(ID_Access in unique(ptsAll$ID_Acc)) { # ici
 
     winching <- WinchingInit
-    pts <- ptsAll %>% filter(ID_Acc == ID_Access) %>%  dplyr::select(-ID_Acc)
+    pts <- ptsAll %>% filter(ID_Acc == ID_Access) %>% mutate(ID = ID_Access) %>%  dplyr::select(-ID_Acc)
     AccessPoint <- AccessPointAll %>% filter(ID == ID_Access)
 
     pathLinesWIP <- c()
@@ -882,10 +915,20 @@ secondtrailsopening <- function(
 
 
 
+      steps <- 0
+
+      RemainTreeInit <- RemainTree
 
 
       #Loop over possible intersection
-      while (RemainTree !=0L) {
+      while (RemainTree !=0L &  steps < 5*RemainTreeInit) {
+
+        steps <- steps +1
+
+
+        if (verbose) {
+          print(RemainTree)
+        }
 
 
         #Switch from grpl to cbl exploitation when grapple accessible tree != 0
@@ -912,7 +955,7 @@ secondtrailsopening <- function(
           mutate(EstCost = NA)  %>%
           mutate(ptsAcc = NA)
 
-        if (k == 1 ) {
+        if (ki == 1 ) {
           if (winching == "2") {
             ptsDirAcc <- ptsTreeWIP %>%  mutate(gprlAcc  = c(FALSE,as.numeric(st_distance(ptsTreeWIP)[2:dim(ptsTreeWIP)[1],1]) < advancedloggingparameters$GrappleLength)) %>%
               filter(gprlAcc == TRUE | type == "Access") %>% dplyr::select(-gprlAcc)
@@ -927,13 +970,17 @@ secondtrailsopening <- function(
 
 
           if (winching == "2") {
-            ptsDirAcc <- ptsTreeWIP %>%  mutate(gprlAcc  = c(FALSE,as.numeric(st_distance(ptsTreeWIP,st_union(pathsWIP,PointAcc))[2:dim(ptsTreeWIP)[1],1]) < advancedloggingparameters$GrappleLength)) %>%
+            ptsDirAcc <- ptsTreeWIP %>%  mutate(gprlAcc  = c(FALSE,as.numeric(st_distance(ptsTreeWIP,st_union(pathsWIP %>%  st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2)  %>% st_make_valid() %>%
+                                                                                                                st_union(),PointAcc %>% st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2)  %>% st_make_valid() %>%
+                                                                                                                st_union()))[2:dim(ptsTreeWIP)[1],1]) < advancedloggingparameters$GrappleLength)) %>%
               filter(gprlAcc == TRUE | type == "Access") %>% dplyr::select(-gprlAcc)
 
             TmpTypeAcc <- "Grpl"
 
           }else{
-            ptsDirAcc <- ptsTreeWIP %>%  mutate(cblAcc  = c(FALSE,as.numeric(st_distance(ptsTreeWIP,st_union(pathsWIP,PointAcc))[2:dim(ptsTreeWIP)[1],1]) < advancedloggingparameters$CableLength)) %>%
+            ptsDirAcc <- ptsTreeWIP %>%  mutate(cblAcc  = c(FALSE,as.numeric(st_distance(ptsTreeWIP,st_union(pathsWIP %>% st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2)  %>% st_make_valid() %>%
+                                                                                                               st_union(),PointAcc %>% st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2)  %>% st_make_valid() %>%
+                                                                                                               st_union()))[2:dim(ptsTreeWIP)[1],1]) < advancedloggingparameters$CableLength)) %>%
               filter(cblAcc == TRUE | type == "Access") %>% dplyr::select(-cblAcc)
 
             TmpTypeAcc <- "Cbl"
@@ -945,6 +992,10 @@ secondtrailsopening <- function(
         if (dim(ptsDirAcc)[1] > 1) {
 
           PointTreeWIP <- ptsDirAcc %>% filter(type == "Tree")
+
+          if (verbose){
+            print(paste0("LoggedTrees : ",PointTreeWIP$origins[[1]]))
+          }
 
           Lines[[l]] <- list("LineID" = NA,"LoggedTrees" = PointTreeWIP$origins, "TypeExpl" = TmpTypeAcc,"IdMachineZone" = ID_Access)
 
@@ -1185,19 +1236,37 @@ secondtrailsopening <- function(
 
           pathsWIP <- do.call(rbind, pathLinesWIP)
 
-          if(dim( pathsWIP %>%
-                  st_as_sf() %>% filter(!st_is_empty(pathsWIP %>%
-                                                     st_as_sf())))[1]> 1){
-            pathsWIP <-  smoothtrails(paths = pathsWIP,
-                                      plotmask = plotmask,
-                                      verbose = FALSE,
-                                      advancedloggingparameters = advancedloggingparameters)$SmoothedTrails %>%
-              st_union()
+
+          pathsWIP <- pathsWIP %>% st_as_sf() %>% st_make_valid() %>% filter(!st_is_empty(pathsWIP %>%
+                                                                     st_as_sf())) %>% filter(
+                                                                       st_geometry_type(.)
+                                                                       %in% c("LINESTRING") )
+
+
+          if(dim(pathsWIP)[1]>0){
+
+            pathsWIP <- pathsWIP$geometry %>% as_Spatial()
+
+            if ( length(pathsWIP)==1) {
+
+              pathsWIP <- pathsWIP %>% st_as_sf() %>%
+                st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2)  %>% st_make_valid() %>%
+                st_union()
+
+            }else{
+
+              pathsWIP <-  smoothtrails(paths = pathsWIP ,
+                                        plotmask = plotmask,
+                                        verbose = FALSE,
+                                        advancedloggingparameters = advancedloggingparameters)$SmoothedTrails %>%
+                st_union()
+            }
+
+
 
           }else{
 
-            pathsWIP <- pathsWIP %>% st_as_sf() %>%
-              st_union()
+            pathsWIP <- pathsWIP %>% st_union()
           }
 
 
@@ -1381,29 +1450,49 @@ secondtrailsopening <- function(
       }
 
 
+      if (RemainTree > 0L){
+        stop("Failed to compute 2nd trails")
+      }
     }
+
 
   }
 
-  paths <- do.call(rbind, pathLines)
+
+
 
   MainTrailsAccess <- AccessPointAll %>%
     st_set_crs(st_crs(topography))
 
   inventory <- treeselectionoutputs$inventory
 
-  if (length(paths)> 0) {
+  lines <- do.call(rbind, Lines)
 
-    lines <- do.call(rbind, Lines)
+    paths <- do.call(rbind, pathLines)
+    paths <- paths %>% st_as_sf() %>% st_make_valid() %>% filter(!st_is_empty(paths %>% st_as_sf())) %>% filter(
+      st_geometry_type(.) %in% c("LINESTRING") )
 
-    secondtrails <- smoothtrails(paths,
-                                 plotmask,
-                                 verbose = verbose,
-                                 advancedloggingparameters = advancedloggingparameters)
+  if (dim(paths)[1]>0) {
 
-    SmoothedTrails <- secondtrails$SmoothedTrails %>% st_set_crs(st_crs(topography))
+    paths <- paths$geometry %>%  as_Spatial()
 
-    TrailsDensity <- secondtrails$TrailsDensity
+    if ( length(paths)==1) {
+
+      SmoothedTrails <- paths %>% st_as_sf() %>%
+        st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2)  %>% st_make_valid() %>%
+        st_union()%>% st_set_crs(st_crs(topography))
+
+      TrailsDensity <- (SmoothedTrails  %>% st_intersection(plotmask %>% st_as_sf()) %>% st_area / advancedloggingparameters$ScndTrailWidth)/(plotmask %>% st_as_sf() %>% st_area() /10000)
+    }else{
+      secondtrails <- smoothtrails(paths,
+                                   plotmask,
+                                   verbose = verbose,
+                                   advancedloggingparameters = advancedloggingparameters)
+
+      SmoothedTrails <- secondtrails$SmoothedTrails %>% st_set_crs(st_crs(topography))
+
+      TrailsDensity <- secondtrails$TrailsDensity
+    }
     #
     #
     # # Records the dead trees
@@ -1414,13 +1503,12 @@ secondtrailsopening <- function(
         add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
     }
 
-    DeadTrees <- suppressWarnings(sf::st_intersection(
-      sf::st_make_valid(st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography))),
-      sf::st_make_valid(st_as_sf(SmoothedTrails)) # "make valid" to avoid self-intersection
+    DeadTrees <- suppressWarnings(st_intersection(
+      st_make_valid(st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography))),
+      st_make_valid(st_as_sf(SmoothedTrails) %>% st_union()) # "make valid" to avoid self-intersection
     )) %>%
       add_column(DeadTrees = "1") %>%
-      dplyr::select(idTree, DeadTrees)
-    sf::st_geometry(DeadTrees) <- NULL # remove geometry column (sf to data.frame)
+      dplyr::select(idTree, DeadTrees) %>% st_drop_geometry() # remove geometry column (sf to data.frame)
     DeadTrees <- unique(DeadTrees)
 
     inventory <- inventory %>%
@@ -1431,8 +1519,8 @@ secondtrailsopening <- function(
 
   }else{
     paths <- NULL
-    lines <- do.call(rbind, Lines)
-    SmoothedTrails <- MainTrailsAccess %>% st_union() %>% st_set_crs(st_crs(topography))
+    SmoothedTrails <- MainTrailsAccess %>% st_union() %>%
+      st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2) %>% st_set_crs(st_crs(topography))
     TrailsDensity <- 0
 
     if (!("DeathCause" %in% names(inventory))){
@@ -1442,11 +1530,10 @@ secondtrailsopening <- function(
 
     DeadTrees <- suppressWarnings(sf::st_intersection(
       sf::st_make_valid(st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography))),
-      sf::st_make_valid(st_as_sf(SmoothedTrails)) # "make valid" to avoid self-intersection
+      sf::st_make_valid(st_as_sf(SmoothedTrails) %>% st_union()) # "make valid" to avoid self-intersection
     )) %>%
       add_column(DeadTrees = "1") %>%
-      dplyr::select(idTree, DeadTrees)
-    sf::st_geometry(DeadTrees) <- NULL # remove geometry column (sf to data.frame)
+      dplyr::select(idTree, DeadTrees) %>% st_drop_geometry()
     DeadTrees <- unique(DeadTrees)
 
     inventory <- inventory %>%

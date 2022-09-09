@@ -239,7 +239,17 @@ harvestable <- function(
                                          st_union(), st_as_sf(SpatInventoryAll),sparse = F))) %>% # check if trees are contained in HarvestableZones
      dplyr::select(idTree, HarvestableZone)
 
+   maintrails <- maintrailextract(topography = topography,
+                                  advancedloggingparameters = advancedloggingparameters)
+
+   HarvestableCorSpatInventory <- st_as_sf(SpatInventoryAll) %>%
+     mutate(HarvestableCor = as.vector(!st_intersects(maintrails %>%
+                                                         st_buffer(dist = 2*floor(advancedloggingparameters$SlopeDistance/res(topography)[1])) %>%
+                                                      st_union(), st_as_sf(SpatInventoryAll),sparse = F))) %>% # check if trees are contained in HarvestableZones
+     dplyr::select(idTree, HarvestableCor)
+
    inventory <- inventory %>% left_join(HarvestableZoneSpatInventory, by = "idTree")%>%
+     dplyr::select(-geometry) %>% left_join(HarvestableCorSpatInventory, by = "idTree")%>%
      dplyr::select(-geometry)
 
   # Essences selection
@@ -258,7 +268,8 @@ harvestable <- function(
   HarverstableConditions <- HarverstableConditions & (
     (!inventory$DistCriteria %in% FALSE) & # take the TRUE and NA values
       inventory$SlopeCriteria %in% TRUE &
-      inventory$HarvestableZone %in% TRUE ) # !is.null(ProspectionUnitCode) &
+      inventory$HarvestableZone %in% TRUE  &
+      inventory$HarvestableCor %in% TRUE) # !is.null(ProspectionUnitCode) &
   ## in a HarvestableZone
   ## slope
   ## isolement

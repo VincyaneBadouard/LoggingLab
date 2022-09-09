@@ -339,15 +339,23 @@ loggingsimulation1 <- function(
   }
 
   #### Secondary trails layout (preliminaries for fuel wood harvesting) ####
-  ScndTrailOutputs <- try(secondtrailsopening(topography = topography,
+
+  accesspts <- genaccesspts(topography = topography,
+                            machinepolygons = MachinePolygons,
+                            maintrails = MainTrails,
+                            advancedloggingparameters = advancedloggingparameters)
+
+  ScndTrailOutputs <- secondtrailsopening(topography = topography,
                                               plotmask = plotmask,
                                               maintrails = MainTrails, plotslope = PlotSlope,
                                               harvestablepolygons = HarvestablePolygons,
                                               machinepolygons = MachinePolygons,
+                                              maintrailsaccess = accesspts$AccessPointAll,
                                               treeselectionoutputs = treeselectionoutputs,
                                               scenario = scenario, winching = winching,
                                               advancedloggingparameters = advancedloggingparameters
-  ), silent=TRUE)
+  )
+
 
   inventory <- ScndTrailOutputs$inventory
   SmoothedTrails <- ScndTrailOutputs$SmoothedTrails
@@ -376,24 +384,25 @@ loggingsimulation1 <- function(
   #### Adjusted secondary trails layout (for fuel wood harvesting only) ####
   if(fuel != "0"){
 
-    ScndTrailAdjustOutputs <- try(secondtrailsadjusted(inventory = inventory,
+    ScndTrailAdjustOutputs <- secondtrailsadjusted(inventory = inventory,
                                                        topography = topography, plotmask = plotmask, maintrails = MainTrails,
                                                        plotslope = PlotSlope,
                                                        harvestablepolygons = HarvestablePolygons,
                                                        machinepolygons = MachinePolygons, maintrailsaccess = MainTrailsAccess,
                                                        scenario = scenario, winching = winching,
-                                                       advancedloggingparameters = advancedloggingparameters), silent=TRUE)
+                                                       advancedloggingparameters = advancedloggingparameters)
+
+
+    if(is.null(ScndTrailAdjustOutputs$TrailsDensity) | as.numeric(ScndTrailAdjustOutputs$TrailsDensity) == 0){
+      print(inventory)
+      stop("No adjusted trails have been traced. Check the printed inventory")
+    }
 
     inventory <- ScndTrailAdjustOutputs$inventory
     AdjustSmoothedTrails <- ScndTrailAdjustOutputs$SmoothedTrails
     AdjustTrailsDensity <- ScndTrailAdjustOutputs$TrailsDensity
     AdjustTrailsIdentity <- ScndTrailAdjustOutputs$TrailsIdentity
     AdjustRawSecondTrails <- ScndTrailAdjustOutputs$RawSecondTrails
-
-    if(is.null(AdjustTrailsDensity) | as.numeric(AdjustTrailsDensity) == 0){
-      print(inventory)
-      stop("No adjusted trails have been traced. Check the printed inventory")
-    }
 
 
   }else{

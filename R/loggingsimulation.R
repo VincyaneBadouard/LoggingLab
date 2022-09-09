@@ -137,6 +137,7 @@
 #'@importFrom doSNOW registerDoSNOW
 #'@importFrom foreach foreach %dopar%
 #'@importFrom utils setTxtProgressBar txtProgressBar
+#'@importFrom tryCatchLog tryLog
 #'
 #' @examples
 #' \dontrun{
@@ -151,7 +152,7 @@
 #'  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
 #'  creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
-#'  objective = 10, fuel = "2", diversification = TRUE, winching = "2",
+#'  objective = 10, fuel = "2", diversification = TRUE, winching = "0",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
 #'  crowndiameterparameters = ParamCrownDiameterAllometry,
 #'  advancedloggingparameters = loggingparameters(), iter = 2, cores = 2)
@@ -332,9 +333,9 @@ loggingsimulation <- function(
   pb <- txtProgressBar(max = iter, style = 3)
   progress <- function(n) setTxtProgressBar(pb, n)
   opts <- list(progress = progress)
-  output <- foreach::foreach(j=1:iter,
+  output <- foreach::foreach(j=1:iter,.packages = c("LoggingLab","tryCatchLog"),
                                 .options.snow = opts) %dopar% {
-                                  simtry <- try(loggingsimulation1(inventory = inventory,
+                                  simtry <- tryLog(loggingsimulation1(inventory = inventory,
                                                          plotmask = plotmask,
                                                          topography = topography,
                                                          creekdistances = creekdistances,
@@ -350,7 +351,7 @@ loggingsimulation <- function(
                                                          objectivelax = objectivelax,
                                                          crowndiameterparameters = crowndiameterparameters,
                                                          seed = seedsim[j],
-                                                         advancedloggingparameters = advancedloggingparameters))
+                                                         advancedloggingparameters = advancedloggingparameters), write.error.dump.file = TRUE)
                                   if (inherits(simtry, "try-error")) {
                                     return(list("error" = simtry, "seed" = seedsim[j]))
                                   }else{return(simtry)

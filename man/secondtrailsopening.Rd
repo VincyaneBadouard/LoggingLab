@@ -11,6 +11,7 @@ secondtrailsopening(
   plotslope,
   harvestablepolygons,
   machinepolygons,
+  maintrailsaccess = NULL,
   treeselectionoutputs,
   scenario,
   winching = NULL,
@@ -38,6 +39,9 @@ neighbourhood of 8 cells) (default:
 
 \item{machinepolygons}{Accessible zones for machines of the inventoried plot
 (default: \code{\link{harvestableareadefinition}}) (sf polygons data.frame)}
+
+\item{maintrailsaccess}{Access point of maintrail for each PU (prospection
+unit) (sf or sfc)}
 
 \item{treeselectionoutputs}{A list with:
 \itemize{
@@ -124,7 +128,7 @@ treeselectionoutputs <- suppressWarnings(treeselection(inventory,
   advancedloggingparameters = loggingparameters()))
 
 \dontrun{
-secondtrails <- try(secondtrailsopening(
+secondtrails <- tryLog(secondtrailsopening(
   topography = DTMParacou,
   plotmask = PlotMask,
   maintrails = MainTrails,
@@ -134,7 +138,7 @@ secondtrails <- try(secondtrailsopening(
   treeselectionoutputs = treeselectionoutputs,
   scenario = "manual",
   winching = winching,
-  advancedloggingparameters = loggingparameters()), silent=TRUE)
+  advancedloggingparameters = loggingparameters()), write.error.dump.file = TRUE)
   }
 
 data(SecondaryTrails)
