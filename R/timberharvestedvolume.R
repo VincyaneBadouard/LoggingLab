@@ -52,6 +52,7 @@
 #' winching = "0", specieslax = FALSE, objectivelax = TRUE,
 #' harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 #' plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#' maintrails = MainTrails,
 #' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #' advancedloggingparameters = loggingparameters())$inventory)
 #'

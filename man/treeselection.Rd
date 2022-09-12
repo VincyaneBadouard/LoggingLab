@@ -18,6 +18,7 @@ treeselection(
   harvestablearea,
   harvestablepolygons,
   plotslope,
+  maintrails,
   advancedloggingparameters = loggingparameters()
 )
 }
@@ -72,6 +73,9 @@ objective volume (if stand too poor), = FALSE by default (logical)}
 \item{plotslope}{Slopes (in radians) of the inventoried plot (with a
 neighbourhood of 8 cells) (\code{\link{harvestableareadefinition}})
 (RasterLayer \strong{with a crs in UTM})}
+
+\item{maintrails}{Main trails defined at the entire harvestable area (sf
+linestring \strong{with a crs in UTM})}
 
 \item{advancedloggingparameters}{Other parameters of the logging simulator
 \code{\link{loggingparameters}} (list)}
@@ -158,6 +162,7 @@ set.seed(1)
 data(Paracou6_2016)
 data(DTMParacou)
 data(SpeciesCriteria)
+data(MainTrails)
 data(HarvestableAreaOutputsCable)
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
@@ -169,7 +174,7 @@ speciescriteria = SpeciesCriteria,
 scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
 winching = "0", specieslax = FALSE, objectivelax = TRUE,
 harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
-plotslope = HarvestableAreaOutputsCable$PlotSlope,
+plotslope = HarvestableAreaOutputsCable$PlotSlope,maintrails = MainTrails,
 harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 advancedloggingparameters = loggingparameters())
 

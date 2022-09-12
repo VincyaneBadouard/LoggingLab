@@ -26,6 +26,9 @@
 #'  \code{\link{HarvestableAreaOutputsCable}})
 #'  (RasterLayer **with a crs in UTM**)
 #'
+#'@param maintrails Main trails defined at the entire harvestable area (sf
+#'   linestring **with a crs in UTM**)
+#'
 #'@param scenario Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
 #'  "RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
 #'  vignette)
@@ -85,6 +88,7 @@
 #' data(DTMParacou)
 #' data(PlotMask)
 #' data(SpeciesCriteria)
+#' data(MainTrails)
 #' data(HarvestableAreaOutputsCable)
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
@@ -95,6 +99,7 @@
 #' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 #' diversification = TRUE, specieslax = FALSE,
 #' plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#' maintrails = MainTrails,
 #' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #' scenario = "manual", winching = "0",
 #' advancedloggingparameters = loggingparameters())
@@ -108,6 +113,7 @@ harvestable <- function(
   specieslax = FALSE,
   harvestablepolygons,
   plotslope,
+  maintrails,
   scenario,
   winching = NULL,
   advancedloggingparameters = loggingparameters()
@@ -124,6 +130,8 @@ harvestable <- function(
   if(!all(unlist(lapply(list(topography, plotslope), inherits, "RasterLayer"))))
     stop("The 'topography' and 'plotslope' arguments of the 'harvestable' function must be RasterLayer")
 
+
+
   # Global variables
   Accessible <- Circ <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
   Condition <- DBH <- HarvestableCor <- NULL
@@ -139,6 +147,7 @@ harvestable <- function(
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
   UpMinFD.species <- NULL
   VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  HarvestableCor <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- HarvestableZone <- NULL
 
@@ -238,9 +247,6 @@ harvestable <- function(
      mutate(HarvestableZone = as.vector(st_contains(AccessPolygons %>%
                                          st_union(), st_as_sf(SpatInventoryAll),sparse = F))) %>% # check if trees are contained in HarvestableZones
      dplyr::select(idTree, HarvestableZone)
-
-   maintrails <- maintrailextract(topography = topography,
-                                  advancedloggingparameters = advancedloggingparameters)
 
    HarvestableCorSpatInventory <- st_as_sf(SpatInventoryAll) %>%
      mutate(HarvestableCor = as.vector(!st_intersects(maintrails %>%

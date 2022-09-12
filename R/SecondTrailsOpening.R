@@ -128,11 +128,12 @@
 #'   specieslax = FALSE, objectivelax = TRUE,
 #'   harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 #'   plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#'   maintrails = MainTrails,
 #'   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #'   advancedloggingparameters = loggingparameters()))
 #'
 #' \dontrun{
-#' secondtrails <- tryLog(secondtrailsopening(
+#' secondtrails <- secondtrailsopening(
 #'   topography = DTMParacou,
 #'   plotmask = PlotMask,
 #'   maintrails = MainTrails,
@@ -142,14 +143,14 @@
 #'   treeselectionoutputs = treeselectionoutputs,
 #'   scenario = "manual",
 #'   winching = winching,
-#'   advancedloggingparameters = loggingparameters()), write.error.dump.file = TRUE)
+#'   advancedloggingparameters = loggingparameters())
 #'   }
 #'
 #' data(SecondaryTrails)
 #' library(ggplot2)
 #' library(sf)
 #'
-#' NewInventory <- treeselectionoutputs$inventory
+#' NewInventory <- SecondaryTrails$inventory
 #'
 #'
 #' Harvestable <- sf::st_as_sf(
@@ -340,30 +341,24 @@ secondtrailsopening <- function(
     AccessPointAll <- maintrailsaccess
   }else{
 
-    AccessMainTrails <- AccessPolygons  %>% st_union() %>%
-      st_cast("POLYGON", warn = FALSE) %>%
-      st_as_sf() %>%
-      mutate(ID = paste0("ID_",row_number()))
 
+    accesspts <- genaccesspts(topography = topography,
+                              machinepolygons = machinepolygons,
+                              maintrails = maintrails,
+                              advancedloggingparameters = advancedloggingparameters)
 
-    # Generate intersections between accessible area and maintrails (ID = accessible area index)
-    PartMainTrails <- st_intersection(st_geometry(maintrailsRed),
-                                      st_geometry(AccessMainTrails)) %>%
-      st_union(by_feature = T) %>%
-      st_cast("MULTIPOLYGON", warn = FALSE)  %>% # "In st_cast.MULTIPOLYGON(X[[i]], ...) : polygon from first part only"
-      st_as_sf() %>%
-      st_set_agr(value = "constant") %>%
-      st_join(AccessMainTrails)
-
-    PartMainTrails <- PartMainTrails %>% arrange(desc(st_area(PartMainTrails))) %>%
-      filter(duplicated(PartMainTrails$ID) == FALSE)
+    PartMainTrails <- accesspts$PartMainTrails
 
 
     # Generate point access in the intersections between accessible area and maintrails (ID = accessible area index)
-    AccessPointAll <- PartMainTrails %>%
-      st_sample(rep(1,dim(PartMainTrails)[1]) ,type = "random", by_polygon=TRUE) %>% as_Spatial() %>%
-      st_as_sf() %>%
-      mutate(idTree = NA) %>% st_join(PartMainTrails)
+    AccessPointAll <- accesspts$AccessPointAll
+
+    AccessMainTrails <- AccessPolygons  %>% st_union() %>%
+      st_cast("POLYGON", warn = FALSE) %>%
+      st_as_sf() %>% st_join(accesspts$AccessPointAll) %>%
+      select(ID)
+
+
   }
 
   #-------------------------------------------

@@ -4,6 +4,7 @@ test_that("treeselection", {
   data(Paracou6_2016)
   data(DTMParacou)
   data(SpeciesCriteria)
+  data(MainTrails)
   data(HarvestableAreaOutputsCable)
 
   Paracou6_2016 <- dplyr::slice(Paracou6_2016, 1:2000)
@@ -46,19 +47,22 @@ test_that("treeselection", {
   expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
                              objective = 20, scenario ="manual", fuel = "2",
                              diversification = FALSE, specieslax = FALSE, objectivelax = FALSE,
-                             topography = NULL, plotslope = NULL))
+                             topography = NULL, plotslope = NULL,maintrails = NULL))
 
 
   expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
                              objective = 20, scenario ="manual", fuel = "0", diversification = TRUE,
                              topography = DTMParacou, plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                             maintrails = MainTrails,harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
+                             harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
                              advancedloggingparameters = as.matrix(loggingparameters())),
                regexp = "The 'advancedloggingparameters' argument of the 'treeselection' function must be a list")
 
   expect_error(treeselection(Paracou6_2016, speciescriteria = SpeciesCriteria,
                              scenario = "manual",
                              objective = 20, fuel = NULL, diversification = T,
-                             topography = DTMParacou, plotslope = HarvestableAreaOutputsCable$PlotSlope),
+                             topography = DTMParacou, plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                             maintrails = MainTrails,harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons),
                regexp = "If you choose the 'manual' mode, you must fill in the arguments
          'objective', 'fuel' , 'winching' and 'diversification'")
 
@@ -72,6 +76,7 @@ test_that("treeselection", {
                                                   winching = "0", specieslax = FALSE, objectivelax = TRUE,
                                                   harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
                                                   plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                                  maintrails = MainTrails,
                                                   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
                                                   advancedloggingparameters = loggingparameters())$inventory)
 
@@ -88,6 +93,7 @@ test_that("treeselection", {
                                        diversification = TRUE, specieslax = FALSE, objectivelax = TRUE,
                                        harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
                                        plotslope = HarvestableAreaOutputsCable$PlotSlope,
+                                       maintrails = MainTrails,
                                        harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons
                                        ))$VO
 

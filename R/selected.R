@@ -85,6 +85,7 @@
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(HarvestableAreaOutputsCable)
+#' data(MainTrails)
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -94,6 +95,7 @@
 #' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
 #' diversification = TRUE, specieslax = FALSE,
 #' plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#' maintrails = MainTrails,
 #' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #' scenario = "manual", winching = "2",
 #' advancedloggingparameters = loggingparameters())

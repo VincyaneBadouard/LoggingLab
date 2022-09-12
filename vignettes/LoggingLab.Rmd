@@ -574,7 +574,7 @@ treeselectionoutputs <- treeselection(inventory,
                                       diversification = FALSE, specieslax = FALSE,
                                       objectivelax = TRUE,
                                       harvestablearea = HarvestableArea,
-                                      plotslope = PlotSlope,
+                                      plotslope = PlotSlope,maintrails = MainTrails,
                                       harvestablepolygons = HarvestablePolygons,
                                       advancedloggingparameters = loggingparameters())
 ```
@@ -593,7 +593,7 @@ inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 ```{r}
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
                                   diversification = TRUE, specieslax = FALSE,
-                                  plotslope = PlotSlope,
+                                  plotslope = PlotSlope,maintrails = MainTrails,
                                   harvestablepolygons = HarvestablePolygons,
                                   scenario = "manual", winching = "0",
                                   advancedloggingparameters = loggingparameters())

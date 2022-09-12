@@ -40,6 +40,7 @@ is by default 60\%, and can be changed with the
 \code{advancedloggingparameters} argument.
 }
 \examples{
+
 data(Paracou6_2016)
 data(DTMParacou)
 data(MainTrails)
@@ -52,9 +53,10 @@ inventory <- treeselection(inventory,
 topography = DTMParacou,
 speciescriteria = SpeciesCriteria,
 scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
-winching = "0", specieslax = FALSE, objectivelax = TRUE,
+winching = "2", specieslax = FALSE, objectivelax = TRUE,
 harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 plotslope = HarvestableAreaOutputsCable$PlotSlope,
+maintrails = MainTrails,
 harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 advancedloggingparameters = loggingparameters())$inventory
 

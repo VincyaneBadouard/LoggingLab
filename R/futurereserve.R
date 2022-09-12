@@ -40,6 +40,7 @@
 #' data(ForestZoneVolumeParametersTable) # The volume parameters data in the global environment
 #' data(SpeciesCriteria)
 #' data(DTMParacou)
+#' data(MainTrails)
 #' data(HarvestableAreaOutputsCable)
 #'
 #' scenario <- "RIL2"
@@ -54,6 +55,7 @@
 #'  diversification = TRUE,
 #'  specieslax = FALSE,
 #'  plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#'  maintrails = MainTrails,
 #'  harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #'  scenario = scenario,
 #'  advancedloggingparameters = loggingparameters())

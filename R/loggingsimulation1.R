@@ -320,7 +320,7 @@ loggingsimulation1 <- function(
                                         diversification = diversification,
                                         specieslax = specieslax, objectivelax = objectivelax,
                                         harvestablearea = HarvestableArea,
-                                        plotslope = PlotSlope,
+                                        plotslope = PlotSlope,maintrails = MainTrails,
                                         harvestablepolygons = HarvestablePolygons,
                                         advancedloggingparameters = advancedloggingparameters)
 

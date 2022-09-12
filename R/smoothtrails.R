@@ -41,7 +41,9 @@ smoothtrails <- function(
   # Global Variables
   n.overlaps <- . <- NULL
 
-  if ( class(paths) == "SpatialLines") {
+
+
+  if ( inherits(paths,"SpatialLines")) {
   RawSecondTrails <- paths %>%
     st_as_sf() %>% st_make_valid() %>% filter(!st_is_empty(paths %>%
                                         st_as_sf()))
@@ -53,15 +55,15 @@ smoothtrails <- function(
       st_union()
 
     RawMainTrails <- RawSecondTrails %>% st_intersection() %>% filter(
-      st_geometry_type(.)
-      %in% c("POLYGON", "LINESTRING") ) %>% filter(n.overlaps >= 20) %>% st_make_valid()
+      st_geometry_type(.) %in% c("LINESTRING") ) %>% filter(n.overlaps >= 20) %>% st_make_valid()
 
     if (dim(RawMainTrails)[1]>0) {
-      RawMainTrails <- RawSecondTrails %>% st_intersection() %>% filter(n.overlaps >= 20) %>%
-        st_union()  %>%  st_cast("LINESTRING") %>%
-        st_union() %>% as_Spatial()
+      RawMainTrails <- RawSecondTrails %>% st_intersection() %>%
+        filter(st_geometry_type(.) %in% c("LINESTRING") ) %>% filter(n.overlaps >= 20) %>%
+        st_make_valid() %>% st_union()  %>%  st_cast("LINESTRING") %>%
+        st_union()
 
-      SmoothedMainTrails <- RawMainTrails %>% st_as_sf()  %>% st_make_valid()%>%
+      SmoothedMainTrails <- RawMainTrails  %>% st_make_valid()%>%
         st_union() %>% st_cast("LINESTRING") %>% st_make_valid() %>%
         smoothr::smooth(method = "ksmooth", smoothness = advancedloggingparameters$SmoothingFact) %>%
         st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2)  %>% st_make_valid() %>%

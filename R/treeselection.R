@@ -49,6 +49,9 @@
 #'  neighbourhood of 8 cells) (\code{\link{harvestableareadefinition}})
 #'  (RasterLayer **with a crs in UTM**)
 #'
+#'@param maintrails Main trails defined at the entire harvestable area (sf
+#'   linestring **with a crs in UTM**)
+#'
 #'@param harvestablepolygons Accessible area of the inventoried plot
 #'  (\code{\link{harvestableareadefinition}}) (sfc_MULTIPOLYGON)
 #'
@@ -138,6 +141,7 @@
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(SpeciesCriteria)
+#' data(MainTrails)
 #' data(HarvestableAreaOutputsCable)
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
@@ -149,7 +153,7 @@
 #' scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
 #' winching = "0", specieslax = FALSE, objectivelax = TRUE,
 #' harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
-#' plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#' plotslope = HarvestableAreaOutputsCable$PlotSlope,maintrails = MainTrails,
 #' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #' advancedloggingparameters = loggingparameters())
 #'
@@ -224,6 +228,7 @@ treeselection <- function(
   harvestablearea,
   harvestablepolygons,
   plotslope,
+  maintrails,
   advancedloggingparameters = loggingparameters()
 
 
@@ -256,6 +261,9 @@ treeselection <- function(
 
   if(!all(unlist(lapply(list(topography, plotslope), inherits, "RasterLayer"))))
     stop("The 'topography' and 'plotslope' arguments of the 'treeselection' function must be RasterLayer")
+
+  if(!all(unlist(lapply(list(maintrails,harvestablepolygons), inherits, c("sf","sfc","sfg") ))))
+    stop("The 'maintrails' and 'harvestablepolygons' arguments of the 'treeselection' function must be sf or sfc object")
 
   if(!inherits(advancedloggingparameters, "list"))
     stop("The 'advancedloggingparameters' argument of the 'treeselection' function must be a list")
@@ -308,6 +316,7 @@ treeselection <- function(
   harvestableOutputs <- harvestable(inventory,
                                     topography = topography,
                                     harvestablepolygons = harvestablepolygons,plotslope = plotslope,
+                                    maintrails = maintrails,
                                     diversification = diversification, specieslax = specieslax,
                                     scenario = scenario, winching = winching,
                                     advancedloggingparameters = advancedloggingparameters)

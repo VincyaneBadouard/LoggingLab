@@ -102,6 +102,7 @@
 #' set.seed(1)
 #' data(SecondaryTrails)
 #'
+#'
 #' scenario <- "manual"
 #' winching <- "2"
 #' fuel <- "2"
@@ -393,6 +394,7 @@ treefelling <- function(
 #'@importFrom dplyr mutate rowwise
 #'
 #' @examples
+#'
 #' data(Paracou6_2016)
 #' data(DTMParacou)
 #' data(MainTrails)
@@ -405,9 +407,10 @@ treefelling <- function(
 #' topography = DTMParacou,
 #' speciescriteria = SpeciesCriteria,
 #' scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
-#' winching = "0", specieslax = FALSE, objectivelax = TRUE,
+#' winching = "2", specieslax = FALSE, objectivelax = TRUE,
 #' harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 #' plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#' maintrails = MainTrails,
 #' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #' advancedloggingparameters = loggingparameters())$inventory
 #'
@@ -526,6 +529,7 @@ directionalfellingsuccessdef <- function(
 #' scenario = "manual", objective = 10, fuel = "2", diversification = TRUE,
 #' winching = "0", specieslax = FALSE, objectivelax = TRUE,
 #' plotslope = HarvestableAreaOutputsCable$PlotSlope,
+#' maintrails = MainTrails,
 #' harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 #' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
 #' advancedloggingparameters = loggingparameters())$inventory)

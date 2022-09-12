@@ -2,6 +2,7 @@ test_that("timberharvestedvolume", {
 
   # Data loading
   data(Paracou6_2016)
+  data(MainTrails)
   data(HarvestableAreaOutputsCable)
 
   inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
@@ -16,6 +17,7 @@ test_that("timberharvestedvolume", {
                                               harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
                                               harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
                                               plotslope =  HarvestableAreaOutputsCable$PlotSlope,
+                                              maintrails = MainTrails,
                                               advancedloggingparameters = loggingparameters()
   )$inventory)
 
