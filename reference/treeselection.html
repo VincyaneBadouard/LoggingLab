@@ -74,6 +74,7 @@
 <span>  <span class="va">harvestablearea</span>,</span>
 <span>  <span class="va">harvestablepolygons</span>,</span>
 <span>  <span class="va">plotslope</span>,</span>
+<span>  <span class="va">maintrails</span>,</span>
 <span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -157,6 +158,11 @@ neighbourhood of 8 cells) (<code><a href="harvestableareadefinition.html">harves
 (RasterLayer <strong>with a crs in UTM</strong>)</p></dd>
 
 
+<dt>maintrails</dt>
+<dd><p>Main trails defined at the entire harvestable area (sf
+linestring <strong>with a crs in UTM</strong>)</p></dd>
+
+
 <dt>advancedloggingparameters</dt>
 <dd><p>Other parameters of the logging simulator
 <code><a href="loggingparameters.html">loggingparameters</a></code> (list)</p></dd>
@@ -236,6 +242,7 @@ the number of reserve trees is equal to the number of harvested trees.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestableAreaOutputsCable</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span></span>
@@ -247,7 +254,7 @@ the number of reserve trees is equal to the number of harvested trees.</p>
 <span class="r-in"><span>scenario <span class="op">=</span> <span class="st">"manual"</span>, objective <span class="op">=</span> <span class="fl">10</span>, fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>winching <span class="op">=</span> <span class="st">"0"</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>harvestablearea <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestableArea</span>,</span></span>
-<span class="r-in"><span>plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span></span>
+<span class="r-in"><span>plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,maintrails <span class="op">=</span> <span class="va">MainTrails</span>,</span></span>
 <span class="r-in"><span>harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span></span>
 <span class="r-in"><span>advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> As the harvestable volume (= 84.8m^3)</span>

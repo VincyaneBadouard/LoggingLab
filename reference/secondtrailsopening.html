@@ -209,6 +209,7 @@ zone (sfc_POINT with crs)</p></li>
 <span class="r-in"><span>  specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  harvestablearea <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestableArea</span>,</span></span>
 <span class="r-in"><span>  plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span></span>
+<span class="r-in"><span>  maintrails <span class="op">=</span> <span class="va">MainTrails</span>,</span></span>
 <span class="r-in"><span>  harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span></span>
 <span class="r-in"><span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> As the harvestable volume (= 175.4m^3)</span>
@@ -217,7 +218,7 @@ zone (sfc_POINT with crs)</p></li>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>                   were increased to UpMinFD. The objective volume has now been reached.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="va">secondtrails</span> <span class="op">&lt;-</span> <span class="fu">tryLog</span><span class="op">(</span><span class="fu">secondtrailsopening</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">secondtrails</span> <span class="op">&lt;-</span> <span class="fu">secondtrailsopening</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
 <span class="r-in"><span>  plotmask <span class="op">=</span> <span class="va">PlotMask</span>,</span></span>
 <span class="r-in"><span>  maintrails <span class="op">=</span> <span class="va">MainTrails</span>,</span></span>
@@ -227,14 +228,14 @@ zone (sfc_POINT with crs)</p></li>
 <span class="r-in"><span>  treeselectionoutputs <span class="op">=</span> <span class="va">treeselectionoutputs</span>,</span></span>
 <span class="r-in"><span>  scenario <span class="op">=</span> <span class="st">"manual"</span>,</span></span>
 <span class="r-in"><span>  winching <span class="op">=</span> <span class="va">winching</span>,</span></span>
-<span class="r-in"><span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, write.error.dump.file <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SecondaryTrails</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">NewInventory</span> <span class="op">&lt;-</span> <span class="va">treeselectionoutputs</span><span class="op">$</span><span class="va">inventory</span></span></span>
+<span class="r-in"><span><span class="va">NewInventory</span> <span class="op">&lt;-</span> <span class="va">SecondaryTrails</span><span class="op">$</span><span class="va">inventory</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">Harvestable</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span></span>
