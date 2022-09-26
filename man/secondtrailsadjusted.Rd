@@ -176,7 +176,7 @@ ggplot() +
    geom_sf(data = HarvestableAreaOutputsCable$MachinePolygons,
         fill = "olivedrab", alpha = 0.5) +
   labs(alpha = "Harvestable") +
-  labs(title = "P6 zones exploitables") +
+  labs(title = "Paracou P6 - secondary trails adjusted for fuel wood") +
 
   geom_sf(data = VisibleDefect,
   aes(colour = "Visible defect"), show.legend = "point") +

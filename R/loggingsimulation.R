@@ -183,7 +183,7 @@ loggingsimulation <- function(
 
   seedsim = NULL,
 
-  debug = TRUE,
+  debug = FALSE,
 
   advancedloggingparameters = loggingparameters(),
 
