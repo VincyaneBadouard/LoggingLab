@@ -83,7 +83,7 @@
 #'   st_drop_geometry st_geometry_type
 #'
 #' @importFrom dplyr mutate row_number select as_tibble left_join if_else filter
-#'   arrange desc
+#'   arrange desc distinct
 #'
 #' @importFrom raster raster extend extent focal res crs mask crop rasterize
 #'   rasterToPoints rasterToPolygons rasterFromXYZ aggregate values ncell
@@ -317,24 +317,28 @@ secondtrailsopening <- function(
   AccessPolygons <- machinepolygons
 
   maintrailsRed <- maintrails %>% st_as_sfc() %>%
-    st_cast("POLYGON") %>% st_buffer(-2*factagg) %>%
-    st_cast("LINESTRING") %>% st_buffer(1)
+    st_cast("POLYGON") %>% st_buffer(-factagg) %>%
+    st_cast("LINESTRING") %>% st_buffer(factagg+0.5)
 
   #-------------------------------------------
 
   if (!is.null(maintrailsaccess)) {
+
     AccessMainTrails <- AccessPolygons  %>% st_union() %>%
       st_cast("POLYGON", warn = FALSE) %>%
       st_as_sf() %>% st_join(maintrailsaccess) %>%
       select(ID)
 
-    PartMainTrails <- st_intersection(maintrailsRed,
+    PartMainTrails <- st_intersection(st_geometry(maintrailsRed),
                                       st_geometry(AccessMainTrails)) %>%
-      st_union(by_feature = T) %>%
+      st_union(by_feature = T) %>% st_as_sf() %>% filter(
+        st_geometry_type(.) %in% c("POLYGON","MULTIPOLYGON") ) %>%
       st_cast("MULTIPOLYGON", warn = FALSE)  %>% # "In st_cast.MULTIPOLYGON(X[[i]], ...) : polygon from first part only"
       st_as_sf() %>%
       st_set_agr(value = "constant") %>%
-      st_join(AccessMainTrails)
+      st_join(AccessMainTrails)%>%
+      st_make_valid()
+
     PartMainTrails <- PartMainTrails %>% arrange(desc(st_area(PartMainTrails))) %>%
       filter(duplicated(PartMainTrails$ID) == FALSE)
 
@@ -616,7 +620,7 @@ secondtrailsopening <- function(
   for(ID_Access in unique(ptsAll$ID_Acc)) { # ici
 
     winching <- WinchingInit
-    pts <- ptsAll %>% filter(ID_Acc == ID_Access) %>% mutate(ID = ID_Access) %>%  dplyr::select(-ID_Acc)
+    pts <- ptsAll %>% filter(ID_Acc == ID_Access) %>% dplyr::mutate(ID = ID_Access) %>%  dplyr::select(-ID_Acc) %>% dplyr::distinct()
     AccessPoint <- AccessPointAll %>% filter(ID == ID_Access)
 
     pathLinesWIP <- c()
@@ -768,10 +772,10 @@ secondtrailsopening <- function(
 
 
         for (h in 1:dim(ptsGrpl)[1]) {
-          if (ptsGrpl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+          if (ptsGrpl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
             ptsGrpl$isEmpty[h] <- TRUE
           }else{
-            suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessPolygons)))
+            suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
           }
 
         }
@@ -813,10 +817,10 @@ secondtrailsopening <- function(
 
 
         for (h in 1:dim(ptsCbl)[1]) {
-          if (ptsCbl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+          if (ptsCbl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
             ptsCbl$isEmpty[h] <- TRUE
           }else{
-            suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessPolygons)))
+            suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
           }
 
         }
@@ -870,15 +874,14 @@ secondtrailsopening <- function(
         ptsCbl$isEmpty <- FALSE
 
 
-        for (h in 1:dim(ptsCbl)[1]) {
-          if (st_geometry(ptsCbl[h,]) %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
-            ptsCbl$isEmpty[h] <- TRUE
-          }else{
-            suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessPolygons)))
-          }
-
-        }
-
+            for (h in 1:dim(ptsCbl)[1]) {
+              if (st_geometry(ptsCbl[h,]) %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
+                ptsCbl$isEmpty[h] <- TRUE
+              }else{
+                suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
+                ptsCbl$isEmpty[h] <- FALSE
+              }
+            }
 
 
         ptsWIP <-  ptsCbl %>% filter(isEmpty == FALSE) %>% dplyr::select(-isEmpty) %>%#def cbl point as WIP point
@@ -887,8 +890,7 @@ secondtrailsopening <- function(
 
         ptsWIP <- ptsWIP %>%  #filter cbl intersection centroid point out plot
           filter(st_intersects(st_geometry(ptsWIP),
-                               st_geometry(plotmask %>%
-                                             st_as_sf()),
+                               st_geometry(plotmask %>% st_as_sf()),
                                sparse = FALSE)) %>%
           arrange(desc(n.overlaps))
 
@@ -938,10 +940,12 @@ secondtrailsopening <- function(
 
 
         ptsWIPmax <- rbind(PointAcc,ptsWIP %>%
+                             filter(st_intersects(.,st_geometry(plotmask %>%  st_as_sf()),sparse = FALSE)) %>%
                              filter(n.overlaps == max(ptsWIP$n.overlaps))) %>%
           mutate(TypeAcc = NA) %>%
           mutate(EstCost = NA)  %>%
           mutate(ptsAcc = NA)
+
 
         ptsTreeWIP <-  rbind(PointAcc,TreePts %>%
                                mutate(n.overlaps = NA, origins = idTree,IDpts = NA) %>%
@@ -1044,7 +1048,7 @@ secondtrailsopening <- function(
             CostDistEstGrpl[CostDistEstGrpl != Inf] <- 0
             CostDistEstGrpl[CostDistEstGrpl == Inf] <- 1
 
-            for (j in 1:length(CostDistEstGrpl)[1]) {
+            for (j in 1:length(CostDistEstGrpl)) {
               PointTree[j,"TypeAcc"] <-  as.character(prod(CostDistEstGrpl[j,]))
             }
             PointTree$TypeAcc[PointTree$TypeAcc == "0"] <- "Grpl"
@@ -1310,10 +1314,10 @@ secondtrailsopening <- function(
 
 
             for (h in 1:dim(ptsGrpl)[1]) {
-              if (ptsGrpl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+              if (ptsGrpl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
                 ptsGrpl$isEmpty[h] <- TRUE
               }else{
-                suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessPolygons)))
+                suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
               }
 
             }
@@ -1354,11 +1358,12 @@ secondtrailsopening <- function(
             ptsCbl$isEmpty <- FALSE
 
 
+
             for (h in 1:dim(ptsCbl)[1]) {
-              if (ptsCbl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+              if (ptsCbl[h,] %>% st_intersects(st_geometry(AccessMainTrails %>% filter(ID == ID_Access) %>% st_union()),sparse = FALSE) == FALSE) {
                 ptsCbl$isEmpty[h] <- TRUE
               }else{
-                suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessPolygons)))
+                suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(st_geometry(AccessMainTrails %>% filter(ID == ID_Access)))))
               }
 
             }
@@ -1410,10 +1415,10 @@ secondtrailsopening <- function(
 
 
             for (h in 1:dim(ptsCbl)[1]) {
-              if (ptsCbl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+              if (ptsCbl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
                 ptsCbl$isEmpty[h] <- TRUE
               }else{
-                suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessPolygons)))
+                suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
               }
 
             }
@@ -1426,8 +1431,7 @@ secondtrailsopening <- function(
 
             ptsWIP <- ptsWIP %>%  #filter cbl intersection centroid point out plot
               filter(st_intersects(st_geometry(ptsWIP),
-                                   st_geometry(plotmask %>%
-                                                 st_as_sf()),
+                                   st_geometry(plotmask %>% st_as_sf()),
                                    sparse = FALSE)) %>%
               arrange(desc(n.overlaps))
 
@@ -1462,6 +1466,25 @@ secondtrailsopening <- function(
   inventory <- treeselectionoutputs$inventory
 
   lines <- do.call(rbind, Lines)
+
+  # WinchingMachine info in the inventory
+  TrailsIdentity_df <- as.data.frame(lines) %>%
+    unnest(cols = c(LineID, LoggedTrees, TypeExpl, IdMachineZone)) #  unnesting flattens it back out into regular columns
+
+
+  TrailsIdentity_df <- TrailsIdentity_df %>%
+    dplyr::select(LoggedTrees, TypeExpl, IdMachineZone) %>%
+    rename(idTree = LoggedTrees) %>%
+    rename(WinchingMachine = TypeExpl) %>%
+    unique()
+
+  if(any(duplicated(TrailsIdentity_df$idTree))) # trees logged several times?
+    stop("Error: duplicated tree in logged trees")
+
+
+  inventory <- inventory %>%
+    left_join(TrailsIdentity_df, by = "idTree")
+
 
     paths <- do.call(rbind, pathLines)
     paths <- paths %>% st_as_sf() %>% st_make_valid() %>% filter(!st_is_empty(paths %>% st_as_sf())) %>% filter(
@@ -1537,24 +1560,6 @@ secondtrailsopening <- function(
                                  "2ndtrail", DeathCause)) %>%  # Damage trees
       dplyr::select(-DeadTrees)
   }
-
-  # WinchingMachine info in the inventory
-  TrailsIdentity_df <- as.data.frame(lines) %>%
-    unnest(cols = c(LineID, LoggedTrees, TypeExpl, IdMachineZone)) #  unnesting flattens it back out into regular columns
-
-
-  TrailsIdentity_df <- TrailsIdentity_df %>%
-    dplyr::select(LoggedTrees, TypeExpl, IdMachineZone) %>%
-    rename(idTree = LoggedTrees) %>%
-    rename(WinchingMachine = TypeExpl) %>%
-    unique()
-
-  if(any(duplicated(TrailsIdentity_df$idTree))) # trees logged several times?
-    print(TrailsIdentity_df[duplicated(TrailsIdentity_df$idTree)])
-
-
-  inventory <- inventory %>%
-    left_join(TrailsIdentity_df, by = "idTree")
 
   # OUTPUTS
 

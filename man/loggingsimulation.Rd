@@ -21,7 +21,7 @@ loggingsimulation(
   objectivelax = FALSE,
   crowndiameterparameters = ParamCrownDiameterAllometry,
   seedsim = NULL,
-  debug = FALSE,
+  debug = TRUE,
   advancedloggingparameters = loggingparameters(),
   iter = 1,
   cores = 1

@@ -14,6 +14,7 @@
 #'@importFrom  sf st_as_sf st_buffer st_union st_geometry st_area st_difference
 #'  st_combine st_make_valid st_geometry_type
 #'@importFrom smoothr smooth
+#'@importFrom dplyr filter mutate
 #'
 #'@return A list with :
 #'   1) SmoothedTrails: Smoothed trails polygons;
@@ -39,32 +40,33 @@ smoothtrails <- function(
 ){
 
   # Global Variables
-  n.overlaps <- . <- NULL
+  maintrailswidth <- n.overlaps <- . <- NULL
 
 
 
-  if ( inherits(paths,"SpatialLines")) {
+  if ( !inherits(paths,"SpatialLines")) {
+    stop("Error: paths argument of smoothtrails function have to be 'SpatialLines' class")
+  }
+
   RawSecondTrails <- paths %>%
     st_as_sf() %>% st_make_valid() %>% filter(!st_is_empty(paths %>%
-                                        st_as_sf()))
+                                        st_as_sf())) %>% st_intersection() %>%
+    mutate(maintrailswidth = if_else(n.overlaps >= 20,TRUE,FALSE))
 
-  SmoothedSecondTrails <- RawSecondTrails %>% st_intersection() %>% filter(n.overlaps < 20) %>% st_make_valid()%>%
+  SmoothedSecondTrails <- RawSecondTrails %>% st_make_valid()%>%
       st_union() %>% st_cast("LINESTRING") %>% st_make_valid() %>%
       smoothr::smooth(method = "ksmooth", smoothness = advancedloggingparameters$SmoothingFact) %>%
       st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2)  %>% st_make_valid() %>%
       st_union()
 
-    RawMainTrails <- RawSecondTrails %>% st_intersection() %>% filter(
-      st_geometry_type(.) %in% c("LINESTRING") ) %>% filter(n.overlaps >= 20) %>% st_make_valid()
+  RawMainTrails <- RawSecondTrails %>% filter(maintrailswidth == TRUE) %>% filter(
+    st_geometry_type(.) %in% c("LINESTRING") ) %>% filter(n.overlaps >= 20) %>% st_make_valid()
 
     if (dim(RawMainTrails)[1]>0) {
-      RawMainTrails <- RawSecondTrails %>% st_intersection() %>%
-        filter(st_geometry_type(.) %in% c("LINESTRING") ) %>% filter(n.overlaps >= 20) %>%
-        st_make_valid() %>% st_union()  %>%  st_cast("LINESTRING") %>%
-        st_union()
+      RawMainTrails <-  RawMainTrails %>% st_union()  %>%  st_cast("LINESTRING")
 
       SmoothedMainTrails <- RawMainTrails  %>% st_make_valid()%>%
-        st_union() %>% st_cast("LINESTRING") %>% st_make_valid() %>%
+        st_union() %>% st_make_valid() %>%
         smoothr::smooth(method = "ksmooth", smoothness = advancedloggingparameters$SmoothingFact) %>%
         st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2)  %>% st_make_valid() %>%
         st_union()
@@ -94,15 +96,6 @@ smoothtrails <- function(
                            "TrailsDensity" = TrailsDensity)
 
     return(smoothedtrails)
-  }else{
-
-    smoothedtrails <- list("SmoothedTrails" = SmoothedSecondTrails %>% st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2),
-                           "SmoothedSecondTrails" = SmoothedSecondTrails %>% st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2),
-                           "SmoothedMainTrails" = NULL,
-                           "TrailsDensity" = 0)
-
-    return(smoothedtrails)
-  }
 
 
 
