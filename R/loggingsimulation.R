@@ -99,6 +99,8 @@
 #'@param seedsim The seed set for the uniform random-number generator (numeric).
 #'  Default = NULL
 #'
+#'@param debug Option to enable writing error environment in working directory,FALSE by default (logical).
+#'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
@@ -180,6 +182,8 @@ loggingsimulation <- function(
   crowndiameterparameters = ParamCrownDiameterAllometry,
 
   seedsim = NULL,
+
+  debug = FALSE,
 
   advancedloggingparameters = loggingparameters(),
 
@@ -351,8 +355,7 @@ loggingsimulation <- function(
                                                                       objectivelax = objectivelax,
                                                                       crowndiameterparameters = crowndiameterparameters,
                                                                       seed = seedsim[j],
-                                                                      advancedloggingparameters = advancedloggingparameters),
-                                                   write.error.dump.file = FALSE)
+                                                                      advancedloggingparameters = advancedloggingparameters), write.error.dump.file = debug)
                                   if (inherits(simtry, "try-error")) {
                                     return(list("error" = simtry, "seed" = seedsim[j]))
                                   }else{return(simtry)
