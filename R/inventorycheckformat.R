@@ -105,6 +105,9 @@ inventorycheckformat <- function(
     GeneralStop <- paste (GeneralStop, "Yutm variable is not found.")
   }
 
+  if (!GoodData)# inverse value of the object
+    stop(paste ("Input inventory does not comply.", GeneralStop))
+
   #### Variables class check ####
   if (!inherits(inventory$idTree, "integer")) {
     if(all(as.integer(inventory$idTree) == inventory$idTree))
