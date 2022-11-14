@@ -8,7 +8,8 @@ loggingsimulation(
   inventory,
   plotmask,
   topography,
-  creekdistances,
+  creekverticaldistance,
+  creekhorizontaldistance,
   speciescriteria,
   volumeparameters,
   scenario,
@@ -34,7 +35,6 @@ inputs formats and metadata in the vignette or in
 The columns required are:
 \itemize{
 \item \emph{Forest} (to apply the corresponding volume formula)
-\item \emph{PlotArea}
 \item \emph{idTree}
 \item \emph{Xutm} and \emph{Yutm}
 \item \emph{CodeAlive}
@@ -54,9 +54,14 @@ The optional columns are
 We advise you to generate your raster with Qgis rather than with the
 'raster' package on R.}
 
-\item{creekdistances}{Relative distances (vertical (\emph{distvert}) and horizontal
-(\emph{disthorz})) (1 m resolution) from nearest channel network (list of 2 large
-RasterLayers \strong{with a crs in UTM}) (See \code{\link{CreekDistances}})
+\item{creekverticaldistance}{Relative vertical distance
+(1 m resolution) from nearest channel network
+(RasterLayer \strong{with a crs in UTM}) (See \code{\link{CreekDistances}})
+To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.}
+
+\item{creekhorizontaldistance}{Relative horizontal distance
+(1 m resolution) from nearest channel network
+(RasterLayer \strong{with a crs in UTM}) (See \code{\link{CreekDistances}})
 To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
@@ -170,7 +175,9 @@ data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allo
 
 Rslt <- loggingsimulation(
  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
- creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+ creekverticaldistance = CreekDistances$distvert,
+ creekhorizontaldistance = CreekDistances$disthorz,
+ speciescriteria = SpeciesCriteria,
  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
  objective = 10, fuel = "2", diversification = TRUE, winching = "0",
  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,

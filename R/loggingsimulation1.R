@@ -12,7 +12,6 @@
 #'  \code{\link{Paracou6_2016}}) (data.frame)
 #' The columns required are:
 #' - *Forest* (to apply the corresponding volume formula)
-#' - *PlotArea*
 #' - *idTree*
 #' - *Xutm* and *Yutm*
 #' - *CodeAlive*
@@ -31,9 +30,14 @@
 #'  We advise you to generate your raster with Qgis rather than with the
 #'  'raster' package on R.
 #'
-#'@param creekdistances Relative distances (vertical (*distvert*) and horizontal
-#'  (*disthorz*)) (1 m resolution) from nearest channel network (list of 2 large
-#'  RasterLayers **with a crs in UTM**) (See \code{\link{CreekDistances}})
+#'@param creekverticaldistance Relative vertical distance
+#'  (1 m resolution) from nearest channel network
+#'  (RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
+#'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
+#'
+#'@param creekhorizontaldistance Relative horizontal distance
+#'  (1 m resolution) from nearest channel network
+#'  (RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
 #'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
@@ -148,7 +152,9 @@
 #'
 #' Rslt <- loggingsimulation1(
 #'  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-#'  creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+#'  creekverticaldistance = CreekDistances$distvert,
+#'  creekhorizontaldistance = CreekDistances$disthorz,
+#'  speciescriteria = SpeciesCriteria,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'  objective = 10, fuel = "2", diversification = TRUE, winching = "2",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
@@ -160,7 +166,8 @@ loggingsimulation1 <- function(
   inventory,
   plotmask,
   topography,
-  creekdistances,
+  creekverticaldistance,
+  creekhorizontaldistance,
   speciescriteria,
   volumeparameters,
 
@@ -179,6 +186,9 @@ loggingsimulation1 <- function(
   seed = round(runif(n = 1, min = 1, max = 2^23)),
   advancedloggingparameters = loggingparameters()
 ){
+
+  creekdistances <- list("distvert" = creekverticaldistance,
+                         "disthorz" = creekhorizontaldistance)
 
   #### Arguments check ####
 
@@ -209,7 +219,8 @@ loggingsimulation1 <- function(
   # creekdistances
   if(length(creekdistances) < 2 |
      !inherits(creekdistances, "list"))
-    stop("The 'creekdistances' argument of the 'loggingsimulation' function must be a list of 2 elements")
+    stop("The 'creekverticaldistance', and 'creekhorizontaldistance' arguments
+         of the 'loggingsimulation' function must be a list of 2 elements")
 
   # scenario
   if (length(scenario) != 1 |
@@ -305,7 +316,8 @@ loggingsimulation1 <- function(
   ##### Harvestable area definition ####
   HarvestableAreaOutputs <- harvestableareadefinition(
     topography = topography,
-    creekdistances = creekdistances,
+    creekverticaldistance = creekdistances$distvert,
+    creekhorizontaldistance = creekdistances$disthorz,
     maintrails = MainTrails,
     plotmask = plotmask,
     scenario = scenario, winching = winching,
@@ -320,7 +332,7 @@ loggingsimulation1 <- function(
   if(is.null(HarvestableArea) | HarvestableArea == 0){
     stop("The havestable area is equal to 0 or NULL.
     Either your plot is not exploitable at all according to your criteria, or there is probably a problem with the inputs:
-    'topography', 'creekdistances', and/or 'plotmask'")}
+    'topography', 'creekverticaldistance', 'creekhorizontaldistance', and/or 'plotmask'")}
 
   #### Tree selection (harvestable, future and reserve trees + defects trees): ####
   treeselectionoutputs <- treeselection(inventory,

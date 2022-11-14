@@ -64,7 +64,6 @@ Public dataset extracted from the Guyafor database.
 The columns required for the package are:
 \itemize{
 \item \emph{Forest} (to apply the corresponding volume formula)
-\item \emph{PlotArea}
 \item \emph{idTree}
 \item \emph{Xutm} and \emph{Yutm}
 \item \emph{CodeAlive}

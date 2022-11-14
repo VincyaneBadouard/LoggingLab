@@ -5,7 +5,6 @@
 #'
 #' The columns required for the package are:
 #' - *Forest* (to apply the corresponding volume formula)
-#' - *PlotArea*
 #' - *idTree*
 #' - *Xutm* and *Yutm*
 #' - *CodeAlive*
