@@ -46,7 +46,7 @@ commercialcriteriajoin <- function(
            }
   )
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
+  Accessible <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
   CommercialLevel.genus <- CommercialLevel.species <- Condition <- DBH <- NULL
   DeathCause <- DistCriteria <- Family <- CommercialName <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL

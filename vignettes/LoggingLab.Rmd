@@ -63,16 +63,18 @@ data(CreekDistances)
 # Required format of the inventory
 \code{\link{Paracou6_2016}}
 
-The columns required for the package are:  
-  - *Forest* (to apply the corresponding volume formula)  
-  - *Plot* (1 value)  
-  - *CensusYear* (1 value)  
-  - *PlotArea*  
-  - *idTree*  
-  - *Xutm* and *Yutm*  
-  - *CodeAlive*  
-  - *Family*, *Genus*, *Species* and *VernName*  
-  - *Circ* or *CircCorr*  
+The columns required for the package are:
+ - *Forest* (to apply the corresponding volume formula)
+ - *PlotArea*
+ - *idTree*
+ - *Xutm* and *Yutm*
+ - *CodeAlive*
+ - *Family*, *Genus*, *Species*
+ - *CircCorr*
+The columns optional for the package are:
+ - *Plot* (1 value)
+ - *CensusYear* (1 value)  
+
 ```{r}
 # inventory class
 class(Paracou6_2016)
@@ -137,16 +139,17 @@ exploitablefuelwoodvolume
 # Arguments presentation
 
 + **inventory** : Input forest inventory for 1 plot and 1 census year (see the inputs formats and metadata in the vignette or in Paracou6_2016.R) (data.frame)  
-The columns required for the package are:  
-  - *Forest* (to apply the corresponding volume formula)  
-  - *Plot* (1 value)  
-  - *CensusYear* (1 value)  
-  - *PlotArea*  
-  - *idTree*  
-  - *Xutm* and *Yutm*  
-  - *CodeAlive*  
-  - *Family*, *Genus*, *Species* and *VernName*  
-  - *Circ* or *CircCorr*  
+The columns required for the package are:
+ - *Forest* (to apply the corresponding volume formula)
+ - *PlotArea*
+ - *idTree*
+ - *Xutm* and *Yutm*
+ - *CodeAlive*
+ - *Family*, *Genus*, *Species*
+ - *CircCorr*
+The columns optional for the package are:
+ - *Plot* (1 value)
+ - *CensusYear* (1 value)  
 
 
 + **plotmask** Inventoried plot mask (SpatialPolygonsDataFrame **with a crs in UTM**)

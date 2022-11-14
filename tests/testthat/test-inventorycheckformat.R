@@ -15,14 +15,13 @@ test_that("inventorycheckformat", {
   DetectVar <- Paracou6_2016 %>%
     dplyr::select(-Species,-CensusYear,-idTree,-Family,-Genus,-Species,-CircCorr,-CodeAlive,
                   -UTMZone,-Lat,-Lon,-Xfield,-Yfield,-Xutm,-Yutm) %>%
-    dplyr::rename(Vernacular = VernName) %>%
     dplyr::rename(PLOT = Plot)
 
 
   ### Test
   errors <- capture_error(inventorycheckformat(DetectVar))
   lapply(c("Plot","CensusYear","idTree","Family","Genus","Species","CircCorr","CodeAlive",
-           "UTMZone","Lat","Lon","VernName","Xfield","Yfield","Xutm","Yutm"), function(element)
+           "UTMZone","Xutm","Yutm"), function(element)
              expect_match(errors$message, regexp = element))
 
 
@@ -39,7 +38,7 @@ test_that("inventorycheckformat", {
   ### Test
   errors <- capture_error(inventorycheckformat(RightClasses))
   lapply(c("Plot","CensusYear","idTree","Family","Genus","Species","CircCorr","CodeAlive",
-           "UTMZone","Lat","Lon","VernName","Xfield","Yfield","Xutm","Yutm"), function(element)
+           "UTMZone","Xutm","Yutm"), function(element)
              expect_match(errors$message, regexp = element))
 
 

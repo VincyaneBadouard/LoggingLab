@@ -31,14 +31,15 @@ inputs formats and metadata in the vignette or in
 The columns required are:
 \itemize{
 \item \emph{Forest} (to apply the corresponding volume formula)
-\item \emph{Plot} (1 value)
-\item \emph{CensusYear} (1 value)
 \item \emph{PlotArea}
 \item \emph{idTree}
 \item \emph{Xutm} and \emph{Yutm}
 \item \emph{CodeAlive}
-\item \emph{Family}, \emph{Genus}, \emph{Species} and \emph{VernName}
-\item \emph{Circ} or \emph{CircCorr}
+\item \emph{Family}, \emph{Genus}, and \emph{Species}
+\item \emph{CircCorr}
+The optional columns are
+\item \emph{Plot} (1 value)
+\item \emph{CensusYear} (1 value)
 }}
 
 \item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame

@@ -64,14 +64,15 @@ Public dataset extracted from the Guyafor database.
 The columns required for the package are:
 \itemize{
 \item \emph{Forest} (to apply the corresponding volume formula)
-\item \emph{Plot} (1 value)
-\item \emph{CensusYear} (1 value)
 \item \emph{PlotArea}
 \item \emph{idTree}
 \item \emph{Xutm} and \emph{Yutm}
 \item \emph{CodeAlive}
-\item \emph{Family}, \emph{Genus}, \emph{Species} and \emph{VernName}
-\item \emph{Circ} or \emph{CircCorr}
+\item \emph{Family}, \emph{Genus}, \emph{Species}
+\item \emph{CircCorr}
+The columns optional for the package are:
+\item \emph{Plot} (1 value)
+\item \emph{CensusYear} (1 value)
 }
 }
 \keyword{datasets}

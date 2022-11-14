@@ -12,14 +12,15 @@
 #'  \code{\link{Paracou6_2016}}) (data.frame)
 #' The columns required are:
 #' - *Forest* (to apply the corresponding volume formula)
-#' - *Plot* (1 value)
-#' - *CensusYear* (1 value)
 #' - *PlotArea*
 #' - *idTree*
 #' - *Xutm* and *Yutm*
 #' - *CodeAlive*
-#' - *Family*, *Genus*, *Species* and *VernName*
-#' - *Circ* or *CircCorr*
+#' - *Family*, *Genus*, and *Species*
+#' - *CircCorr*
+#' The optional columns are
+#' - *Plot* (1 value)
+#' - *CensusYear* (1 value)
 #'
 #'@param plotmask Inventoried plot mask
 #'(SpatialPolygonsDataFrame **with a crs in UTM**)

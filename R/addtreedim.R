@@ -72,7 +72,7 @@ addtreedim <- function(
     stop("The 'advancedloggingparameters' argument of the 'addtreedim' function must be a list")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- NULL
+  Accessible <- CircCorr <- CodeAlive <- NULL
   Condition <- DBH <- NULL
   DeathCause <- DistCriteria <- Family  <- Zone <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL

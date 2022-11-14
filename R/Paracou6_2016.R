@@ -5,14 +5,15 @@
 #'
 #' The columns required for the package are:
 #' - *Forest* (to apply the corresponding volume formula)
-#' - *Plot* (1 value)
-#' - *CensusYear* (1 value)
 #' - *PlotArea*
 #' - *idTree*
 #' - *Xutm* and *Yutm*
 #' - *CodeAlive*
-#' - *Family*, *Genus*, *Species* and *VernName*
-#' - *Circ* or *CircCorr*
+#' - *Family*, *Genus*, *Species*
+#' - *CircCorr*
+#' The columns optional for the package are:
+#' - *Plot* (1 value)
+#' - *CensusYear* (1 value)
 #'
 #' @format A tibble with 3620 rows and 26 variables:
 #' \describe{

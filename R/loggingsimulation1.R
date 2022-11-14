@@ -12,14 +12,15 @@
 #'  \code{\link{Paracou6_2016}}) (data.frame)
 #' The columns required are:
 #' - *Forest* (to apply the corresponding volume formula)
-#' - *Plot* (1 value)
-#' - *CensusYear* (1 value)
 #' - *PlotArea*
 #' - *idTree*
 #' - *Xutm* and *Yutm*
 #' - *CodeAlive*
-#' - *Family*, *Genus*, *Species* and *VernName*
-#' - *Circ* or *CircCorr*
+#' - *Family*, *Genus*, and *Species*
+#' - *CircCorr*
+#' The optional columns are
+#' - *Plot* (1 value)
+#' - *CensusYear* (1 value)
 #'
 #'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame
 #'  **with a crs in UTM**)
@@ -131,8 +132,8 @@
 #'@export
 #'
 #'@importFrom dplyr filter mutate select left_join bind_rows
-#'@importFrom sf st_as_sf st_point
-#'@importFrom raster crs extract
+#'@importFrom sf st_as_sf st_point as_Spatial
+#'@importFrom raster crs extract raster
 #'@importFrom methods as
 #'
 #' @examples
@@ -186,14 +187,24 @@ loggingsimulation1 <- function(
                         inherits, "data.frame"))))
     stop("The 'inventory', 'speciescriteria', 'volumeparameters' and 'crowndiameterparameters' arguments
          of the 'loggingsimulation' function must be data.frames")
+  # inventory as.data.frame to remove data.table or dplyr formats
+  inventory <- as.data.frame(inventory)
 
   # plotmask
-  if(length(plotmask) != 1 | !inherits(plotmask, "SpatialPolygonsDataFrame"))
-    stop("The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygonsDataFrame")
+  if(length(plotmask) != 1 | !inherits(plotmask, "SpatialPolygons")){
+    if((inherits(plotmask, "sf") & inherits(plotmask$geometry, "sfc_POLYGON")))
+      plotmask <- as_Spatial(plotmask)
+    if(!(inherits(plotmask, "sf") & inherits(plotmask$geometry, "sfc_POLYGON")))
+      stop("The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygons")
+  }
 
   # topography
-  if(!inherits(topography, "RasterLayer"))
-    stop("The 'topography' argument of the 'loggingsimulation' function must be a RasterLayer")
+  if(!inherits(topography, "RasterLayer")){
+    if(inherits(topography, "SpatRaster"))
+      topography <- raster(topography)
+    if(!inherits(topography, "SpatRaster"))
+      stop("The 'topography' argument of the 'loggingsimulation' function must be a RasterLayer")
+  }
 
   # creekdistances
   if(length(creekdistances) < 2 |
