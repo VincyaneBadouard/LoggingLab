@@ -56,11 +56,11 @@ inventorycheckformat <- function(
   # UTMZone,  Xutm, Yutm)
   if(!("Plot" %in% names(inventory))) {
     inventory$Plot = "UnknownPlot"
-    warning("The Plot variable is not found, we assume that all data come from one plot.")
+    warning("The 'Plot' variable is not found, we assume that all data come from one plot.")
   }
   if(!("CensusYear" %in% names(inventory))) {
     inventory$CensusYear = NA_integer_
-    warning("The CensusYear variable is not found, we assume that all data come from one year.")
+    warning("The 'CensusYear' variable is not found, we assume that all data come from one year.")
   }
   if(!("idTree" %in% names(inventory))) {
     GoodData <- FALSE
@@ -212,12 +212,12 @@ inventorycheckformat <- function(
   # test DBH interval is in cm
   if (any(inventory$DBH < 1)) {
     GoodData <- FALSE
-    GeneralStop <- paste (GeneralStop, "Tree identifiers (idTree) are not unique.")
+    GeneralStop <- paste (GeneralStop, "You have diameter below 1 cm, please check DBH or CircCorr unit.")
     # stop function if a DBH is below 1 cm
   }
   if (any(inventory$DBH > 1000)) {
     GoodData <- FALSE
-    GeneralStop <- paste (GeneralStop, "Tree identifiers (idTree) are not unique.")
+    GeneralStop <- paste (GeneralStop, "You have diameter above 1000 cm, please check DBH or CircCorr unit.")
     # stop function if a DBH is above 1000 cm (10 m)
   }
 
