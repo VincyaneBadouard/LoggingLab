@@ -31,10 +31,12 @@ test_that("loggingsimulation1", {
 
   # plotmask
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = data.frame(), topography = DTMParacou,
-                                  creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable, scenario = "RIL1",
                                   crowndiameterparameters = ParamCrownDiameterAllometry),
-               regexp = "The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygonsDataFrame")
+               regexp = "The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygons")
 
   # topography
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask,

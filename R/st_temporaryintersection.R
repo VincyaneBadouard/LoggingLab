@@ -95,6 +95,7 @@ st_temporaryintersection <- function(
 
 
   # Raster update
+  treebuffers$idTree <- as.numeric(as.factor(treebuffers$idTree))
   for(p in 1:dim(treebuffers)[1] ){
     RasterOrigins <- fasterize(sf = treebuffers[p,],raster = RasterAccum,field = "idTree",background = 0)
     RasterOrigins@data@values[RasterOrigins@data@values == 0] <- NA
