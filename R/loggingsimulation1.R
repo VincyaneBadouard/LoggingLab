@@ -217,10 +217,18 @@ loggingsimulation1 <- function(
   }
 
   # creekdistances
-  if(length(creekdistances) < 2 |
-     !inherits(creekdistances, "list"))
-    stop("The 'creekverticaldistance', and 'creekhorizontaldistance' arguments
-         of the 'loggingsimulation' function must be a list of 2 elements")
+  if(!inherits(creekverticaldistance, "RasterLayer")){
+    if(inherits(creekverticaldistance, "SpatRaster"))
+      creekverticaldistance <- raster(creekverticaldistance)
+    if(!inherits(creekverticaldistance, "SpatRaster"))
+      stop("The 'creekverticaldistance' argument of the 'loggingsimulation' function must be a RasterLayer")
+  }
+  if(!inherits(creekhorizontaldistance, "RasterLayer")){
+    if(inherits(creekhorizontaldistance, "SpatRaster"))
+      creekhorizontaldistance <- raster(creekhorizontaldistance)
+    if(!inherits(creekhorizontaldistance, "SpatRaster"))
+      stop("The 'creekhorizontaldistance' argument of the 'loggingsimulation' function must be a RasterLayer")
+  }
 
   # scenario
   if (length(scenario) != 1 |

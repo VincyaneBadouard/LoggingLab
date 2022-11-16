@@ -29,6 +29,13 @@ test_that("loggingsimulation1", {
                regexp = "The 'inventory', 'speciescriteria', 'volumeparameters' and 'crowndiameterparameters' arguments
          of the 'loggingsimulation' function must be data.frames")
 
+  # plotmask
+  expect_error(loggingsimulation1(Paracou6_2016, plotmask = data.frame(), topography = DTMParacou,
+                                  creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+                                  volumeparameters = ForestZoneVolumeParametersTable, scenario = "RIL1",
+                                  crowndiameterparameters = ParamCrownDiameterAllometry),
+               regexp = "The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygonsDataFrame")
+
   # topography
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask,
                                   creekverticaldistance = CreekDistances$distvert,
@@ -39,6 +46,17 @@ test_that("loggingsimulation1", {
                                   scenario = "RIL1",
                                   topography = NULL),
                regexp = "The 'topography' argument of the 'loggingsimulation' function must be a RasterLayer")
+
+  # creekdistances
+  expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask,
+                                  creekverticaldistance = data.frame(),
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
+                                  volumeparameters = ForestZoneVolumeParametersTable,
+                                  crowndiameterparameters = ParamCrownDiameterAllometry,
+                                  scenario = "RIL1",
+                                  topography = DTMParacou),
+               regexp = "The 'creekverticaldistance' argument of the 'loggingsimulation' function must be a RasterLayer")
 
   # scenario
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,

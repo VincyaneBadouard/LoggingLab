@@ -109,12 +109,12 @@ inventorycheckformat <- function(
     stop(paste ("Input inventory does not comply.", GeneralStop))
 
   #### Variables class check ####
-  if (!inherits(inventory$idTree, "integer")) {
-    if(all(as.integer(inventory$idTree) == inventory$idTree))
-      inventory$idTree <- as.integer(inventory$idTree)
-    if(!all(as.integer(inventory$idTree) == inventory$idTree)) {
+  if (!inherits(inventory$idTree, "character")) {
+    if(all(as.character(inventory$idTree) == inventory$idTree))
+      inventory$idTree <- as.character(inventory$idTree)
+    if(!all(as.character(inventory$idTree) == inventory$idTree)) {
       GoodData <- FALSE
-      GeneralStop <- paste (GeneralStop, "idTree variable should be an integer.")
+      GeneralStop <- paste (GeneralStop, "idTree variable should be a character.")
     }
   }
 
