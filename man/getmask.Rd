@@ -21,7 +21,7 @@ The inventoried plot mask (SpatialPolygonsDataFrame
 \strong{with a crs in UTM})
 }
 \description{
-Get mask
+Build a mask with the intersection of the topography and the spatial inventory.
 }
 \examples{
 data(Paracou6_2016)

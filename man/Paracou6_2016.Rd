@@ -11,7 +11,7 @@ A tibble with 3620 rows and 26 variables:
 \item{Plot}{Plot number (character)}
 \item{PlotArea}{Plot area, in hectare (numeric)}
 \item{SubPlot}{Subplot number (integer)}
-\item{idTree}{Unique tree identifier from the database (integer)}
+\item{idTree}{Unique tree identifier from the database (character)}
 \item{Protocole}{Protocole name (character)}
 \item{Xfield}{Euclidean position of the tree relative to
 the Southwestern corner of the subplot, in m (numeric)}
