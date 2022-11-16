@@ -1,9 +1,11 @@
 #' Get mask
 #'
+#' @description Build a mask with the intersection of the topography and the spatial inventory.
+#'
 #' @param inventory Input inventory (see the inputs formats and metadata in the
 #'   vignette) (data.frame)
 #'
-#'@param topography Digital terrain model (DTM) of the inventoried plot (LiDAR,
+#' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR,
 #'  1m resolution)
 #'  (RasterLayer **with a crs in UTM**) (See \code{\link{DTMParacou}})
 #'  We advise you to generate your raster with Qgis rather than with the
