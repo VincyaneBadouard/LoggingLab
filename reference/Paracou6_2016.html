@@ -81,7 +81,7 @@ Public dataset extracted from the Guyafor database.</p>
 <dd><p>Subplot number (integer)</p></dd>
 
 <dt>idTree</dt>
-<dd><p>Unique tree identifier from the database (integer)</p></dd>
+<dd><p>Unique tree identifier from the database (character)</p></dd>
 
 <dt>Protocole</dt>
 <dd><p>Protocole name (character)</p></dd>
@@ -169,14 +169,14 @@ dplyr::select(-TreeFieldNum,-Project, -idVern, -CommercialSp, -CensusDate)</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The columns required for the package are:</p><ul><li><p><em>Forest</em> (to apply the corresponding volume formula)</p></li>
-<li><p><em>Plot</em> (1 value)</p></li>
-<li><p><em>CensusYear</em> (1 value)</p></li>
-<li><p><em>PlotArea</em></p></li>
 <li><p><em>idTree</em></p></li>
 <li><p><em>Xutm</em> and <em>Yutm</em></p></li>
 <li><p><em>CodeAlive</em></p></li>
-<li><p><em>Family</em>, <em>Genus</em>, <em>Species</em> and <em>VernName</em></p></li>
-<li><p><em>Circ</em> or <em>CircCorr</em></p></li>
+<li><p><em>Family</em>, <em>Genus</em>, <em>Species</em></p></li>
+<li><p><em>CircCorr</em>
+The columns optional for the package are:</p></li>
+<li><p><em>Plot</em> (1 value)</p></li>
+<li><p><em>CensusYear</em> (1 value)</p></li>
 </ul></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

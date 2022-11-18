@@ -79,7 +79,8 @@ the hydrographic network.</p>
 <span>  <span class="va">inventory</span>,</span>
 <span>  <span class="va">plotmask</span>,</span>
 <span>  <span class="va">topography</span>,</span>
-<span>  <span class="va">creekdistances</span>,</span>
+<span>  <span class="va">creekverticaldistance</span>,</span>
+<span>  <span class="va">creekhorizontaldistance</span>,</span>
 <span>  <span class="va">speciescriteria</span>,</span>
 <span>  <span class="va">volumeparameters</span>,</span>
 <span>  <span class="va">scenario</span>,</span>
@@ -103,14 +104,14 @@ the hydrographic network.</p>
 inputs formats and metadata in the vignette or in
 <code><a href="Paracou6_2016.html">Paracou6_2016</a></code>) (data.frame)
 The columns required are:</p><ul><li><p><em>Forest</em> (to apply the corresponding volume formula)</p></li>
-<li><p><em>Plot</em> (1 value)</p></li>
-<li><p><em>CensusYear</em> (1 value)</p></li>
-<li><p><em>PlotArea</em></p></li>
 <li><p><em>idTree</em></p></li>
 <li><p><em>Xutm</em> and <em>Yutm</em></p></li>
 <li><p><em>CodeAlive</em></p></li>
-<li><p><em>Family</em>, <em>Genus</em>, <em>Species</em> and <em>VernName</em></p></li>
-<li><p><em>Circ</em> or <em>CircCorr</em></p></li>
+<li><p><em>Family</em>, <em>Genus</em>, and <em>Species</em></p></li>
+<li><p><em>CircCorr</em>
+The optional columns are</p></li>
+<li><p><em>Plot</em> (1 value)</p></li>
+<li><p><em>CensusYear</em> (1 value)</p></li>
 </ul></dd>
 
 
@@ -127,10 +128,17 @@ We advise you to generate your raster with Qgis rather than with the
 'raster' package on R.</p></dd>
 
 
-<dt>creekdistances</dt>
-<dd><p>Relative distances (vertical (<em>distvert</em>) and horizontal
-(<em>disthorz</em>)) (1 m resolution) from nearest channel network (list of 2 large
-RasterLayers <strong>with a crs in UTM</strong>) (See <code><a href="CreekDistances.html">CreekDistances</a></code>)
+<dt>creekverticaldistance</dt>
+<dd><p>Relative vertical distance
+(1 m resolution) from nearest channel network
+(RasterLayer <strong>with a crs in UTM</strong>) (See <code><a href="CreekDistances.html">CreekDistances</a></code>)
+To generate creek distances: <code><a href="CreekDistances.html">CreekDistances</a></code> in 'Articles'.</p></dd>
+
+
+<dt>creekhorizontaldistance</dt>
+<dd><p>Relative horizontal distance
+(1 m resolution) from nearest channel network
+(RasterLayer <strong>with a crs in UTM</strong>) (See <code><a href="CreekDistances.html">CreekDistances</a></code>)
 To generate creek distances: <code><a href="CreekDistances.html">CreekDistances</a></code> in 'Articles'.</p></dd>
 
 
@@ -274,7 +282,9 @@ logging informations (list) (see the outputs metadata in the vignette or
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">Rslt</span> <span class="op">&lt;-</span> <span class="fu">loggingsimulation1</span><span class="op">(</span></span></span>
 <span class="r-in"><span> <span class="va">Paracou6_2016</span>, plotmask <span class="op">=</span> <span class="va">PlotMask</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
-<span class="r-in"><span> creekdistances  <span class="op">=</span> <span class="va">CreekDistances</span>, speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span></span>
+<span class="r-in"><span> creekverticaldistance <span class="op">=</span> <span class="va">CreekDistances</span><span class="op">$</span><span class="va">distvert</span>,</span></span>
+<span class="r-in"><span> creekhorizontaldistance <span class="op">=</span> <span class="va">CreekDistances</span><span class="op">$</span><span class="va">disthorz</span>,</span></span>
+<span class="r-in"><span> speciescriteria <span class="op">=</span> <span class="va">SpeciesCriteria</span>,</span></span>
 <span class="r-in"><span> volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>,</span></span>
 <span class="r-in"><span> objective <span class="op">=</span> <span class="fl">10</span>, fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>, winching <span class="op">=</span> <span class="st">"2"</span>,</span></span>
 <span class="r-in"><span> directionalfelling <span class="op">=</span> <span class="st">"2"</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>

@@ -62,7 +62,8 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">harvestableareadefinition</span><span class="op">(</span></span>
 <span>  <span class="va">topography</span>,</span>
-<span>  <span class="va">creekdistances</span>,</span>
+<span>  <span class="va">creekverticaldistance</span>,</span>
+<span>  <span class="va">creekhorizontaldistance</span>,</span>
 <span>  <span class="va">maintrails</span>,</span>
 <span>  <span class="va">plotmask</span>,</span>
 <span>  <span class="va">scenario</span>,</span>
@@ -78,11 +79,18 @@
 or SRTM) (<code><a href="DTMParacou.html">DTMParacou</a></code>) (RasterLayer <strong>with a crs in UTM</strong>)</p></dd>
 
 
-<dt>creekdistances</dt>
-<dd><p>Relative distances (vertical and horizontal) (1 m
-resolution) from nearest channel network (list of 2 large RasterLayers
-<strong>with a crs in UTM</strong>) (Default: <code><a href="CreekDistances.html">CreekDistances</a></code>) To generate
-vertical creek height: <code><a href="CreekDistances.html">CreekDistances</a></code> in 'Articles'.</p></dd>
+<dt>creekverticaldistance</dt>
+<dd><p>Relative vertical distance
+(1 m resolution) from nearest channel network
+(RasterLayer <strong>with a crs in UTM</strong>) (See <code><a href="CreekDistances.html">CreekDistances</a></code>)
+To generate creek distances: <code><a href="CreekDistances.html">CreekDistances</a></code> in 'Articles'.</p></dd>
+
+
+<dt>creekhorizontaldistance</dt>
+<dd><p>Relative horizontal distance
+(1 m resolution) from nearest channel network
+(RasterLayer <strong>with a crs in UTM</strong>) (See <code><a href="CreekDistances.html">CreekDistances</a></code>)
+To generate creek distances: <code><a href="CreekDistances.html">CreekDistances</a></code> in 'Articles'.</p></dd>
 
 
 <dt>maintrails</dt>
@@ -143,7 +151,8 @@ defined as:
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">HarvestableAreaOutputsCable</span> <span class="op">&lt;-</span> <span class="fu">harvestableareadefinition</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
-<span class="r-in"><span>  creekdistances <span class="op">=</span> <span class="va">CreekDistances</span>,</span></span>
+<span class="r-in"><span>  creekverticaldistance <span class="op">=</span> <span class="va">CreekDistances</span><span class="op">$</span><span class="va">distvert</span>,</span></span>
+<span class="r-in"><span>  creekhorizontaldistance <span class="op">=</span> <span class="va">CreekDistances</span><span class="op">$</span><span class="va">disthorz</span>,</span></span>
 <span class="r-in"><span>  maintrails <span class="op">=</span> <span class="va">MainTrails</span>,</span></span>
 <span class="r-in"><span>  plotmask <span class="op">=</span> <span class="va">PlotMask</span>,</span></span>
 <span class="r-in"><span>  scenario <span class="op">=</span> <span class="st">"manual"</span>, winching <span class="op">=</span> <span class="st">"1"</span>,</span></span>
