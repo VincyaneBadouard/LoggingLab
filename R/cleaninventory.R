@@ -42,11 +42,11 @@ cleaninventory <- function(
 
 
   # Global variables
-  CodeAlive <- DBH <- Circ <- CircCorr <- idTree <- Xutm <- Yutm <- NULL
+  CodeAlive <- DBH <- CircCorr <- idTree <- Xutm <- Yutm <- NULL
 
   #if DBH (cm) doesn't exist create it
   if (!("DBH" %in% names(inventory)) && ("CircCorr" %in% names(inventory))) {
-    inventory <- mutate(inventory, DBH = ifelse(is.na(CircCorr), Circ/pi, CircCorr/pi))
+    inventory <- mutate(inventory, DBH = CircCorr/pi)
   }
 
   #### Alive trees and with good minimal DBH ####
@@ -82,6 +82,9 @@ cleaninventory <- function(
 
   inventory <- inventory %>%
     left_join(inventory_coordinates, by = "idTree") # to recover the coordinates lost with the geometry
+
+  if(nrow(inventory) == 0)
+    stop("It seems that the inventory cleaning removed all your trees. Please check your inventory.")
 
   return(inventory)
 

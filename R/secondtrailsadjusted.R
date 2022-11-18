@@ -397,7 +397,7 @@ secondtrailsadjusted <- function(
   for (h in 1:nrow(inventory)) {
     if (!st_is_empty(Trunks[h])) {
       inventory_Tr$CrownGeom[h] <- st_difference(Trunks[h],inventory_sf[h,] %>%
-                                                              st_buffer(dist = (inventory_sf$TrunkHeight[h]-0.05))) %>%
+                                                              st_buffer(dist = (inventory_sf$TrunkHeight[h] * 0.95))) %>%
         st_centroid() %>% st_union()%>% st_as_text()
     }
 
@@ -896,10 +896,10 @@ secondtrailsadjusted <- function(
 
 
           for (h in 1:dim(ptsGrpl)[1]) {
-            if (ptsGrpl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+            if (ptsGrpl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
               ptsGrpl$isEmpty[h] <- TRUE
             }else{
-              suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessPolygons)))
+              suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
             }
 
           }
@@ -944,10 +944,10 @@ secondtrailsadjusted <- function(
 
 
           for (h in 1:dim(ptsGrpl)[1]) {
-            if (ptsGrpl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+            if (ptsGrpl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
               ptsGrpl$isEmpty[h] <- TRUE
             }else{
-              suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessPolygons)))
+              suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
             }
 
           }
@@ -991,10 +991,10 @@ secondtrailsadjusted <- function(
 
 
         for (h in 1:dim(ptsCbl)[1]) {
-          if (ptsCbl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+          if (ptsCbl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
             ptsCbl$isEmpty[h] <- TRUE
           }else{
-            suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessPolygons)))
+            suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
           }
 
         }
@@ -1051,10 +1051,10 @@ secondtrailsadjusted <- function(
 
 
         for (h in 1:dim(ptsCbl)[1]) {
-          if (st_geometry(ptsCbl[h,]) %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+          if (st_geometry(ptsCbl[h,]) %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
             ptsCbl$isEmpty[h] <- TRUE
           }else{
-            suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessPolygons)))
+            suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
           }
 
         }
@@ -1552,10 +1552,10 @@ secondtrailsadjusted <- function(
 
 
                 for (h in 1:dim(ptsGrpl)[1]) {
-                  if (ptsGrpl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+                  if (ptsGrpl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
                     ptsGrpl$isEmpty[h] <- TRUE
                   }else{
-                    suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessPolygons)))
+                    suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
                   }
 
                 }
@@ -1597,10 +1597,10 @@ secondtrailsadjusted <- function(
 
 
                 for (h in 1:dim(ptsCbl)[1]) {
-                  if (ptsCbl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+                  if (ptsCbl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
                     ptsCbl$isEmpty[h] <- TRUE
                   }else{
-                    suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessPolygons)))
+                    suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
                   }
 
                 }
@@ -1653,10 +1653,10 @@ secondtrailsadjusted <- function(
 
 
                 for (h in 1:dim(ptsCbl)[1]) {
-                  if (ptsCbl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+                  if (ptsCbl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
                     ptsCbl$isEmpty[h] <- TRUE
                   }else{
-                    suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessPolygons)))
+                    suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
                   }
 
                 }
@@ -1723,10 +1723,10 @@ secondtrailsadjusted <- function(
 
 
                 for (h in 1:dim(ptsGrpl)[1]) {
-                  if (ptsGrpl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+                  if (ptsGrpl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
                     ptsGrpl$isEmpty[h] <- TRUE
                   }else{
-                    suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessPolygons)))
+                    suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
                   }
 
                 }
@@ -1789,10 +1789,10 @@ secondtrailsadjusted <- function(
 
 
           for (h in 1:dim(ptsGrpl)[1]) {
-            if (ptsGrpl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+            if (ptsGrpl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
               ptsGrpl$isEmpty[h] <- TRUE
             }else{
-              suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessPolygons)))
+              suppressWarnings(st_geometry(ptsGrpl[h,]) <- st_geometry(ptsGrpl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
             }
 
           }
@@ -1834,10 +1834,10 @@ secondtrailsadjusted <- function(
 
 
           for (h in 1:dim(ptsCbl)[1]) {
-            if (ptsCbl[h,] %>% st_intersects(AccessPolygons,sparse = FALSE) == FALSE) {
+            if (ptsCbl[h,] %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
               ptsCbl$isEmpty[h] <- TRUE
             }else{
-              suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessPolygons)))
+              suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
             }
 
           }

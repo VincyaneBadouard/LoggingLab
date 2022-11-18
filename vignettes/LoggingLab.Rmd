@@ -63,16 +63,17 @@ data(CreekDistances)
 # Required format of the inventory
 \code{\link{Paracou6_2016}}
 
-The columns required for the package are:  
-  - *Forest* (to apply the corresponding volume formula)  
-  - *Plot* (1 value)  
-  - *CensusYear* (1 value)  
-  - *PlotArea*  
-  - *idTree*  
-  - *Xutm* and *Yutm*  
-  - *CodeAlive*  
-  - *Family*, *Genus*, *Species* and *VernName*  
-  - *Circ* or *CircCorr*  
+The columns required for the package are:
+ - *Forest* (to apply the corresponding volume formula)
+ - *idTree*
+ - *Xutm* and *Yutm*
+ - *CodeAlive*
+ - *Family*, *Genus*, *Species*
+ - *CircCorr*
+The columns optional for the package are:
+ - *Plot* (1 value)
+ - *CensusYear* (1 value)  
+
 ```{r}
 # inventory class
 class(Paracou6_2016)
@@ -137,16 +138,16 @@ exploitablefuelwoodvolume
 # Arguments presentation
 
 + **inventory** : Input forest inventory for 1 plot and 1 census year (see the inputs formats and metadata in the vignette or in Paracou6_2016.R) (data.frame)  
-The columns required for the package are:  
-  - *Forest* (to apply the corresponding volume formula)  
-  - *Plot* (1 value)  
-  - *CensusYear* (1 value)  
-  - *PlotArea*  
-  - *idTree*  
-  - *Xutm* and *Yutm*  
-  - *CodeAlive*  
-  - *Family*, *Genus*, *Species* and *VernName*  
-  - *Circ* or *CircCorr*  
+The columns required for the package are:
+ - *Forest* (to apply the corresponding volume formula)
+ - *idTree*
+ - *Xutm* and *Yutm*
+ - *CodeAlive*
+ - *Family*, *Genus*, *Species*
+ - *CircCorr*
+The columns optional for the package are:
+ - *Plot* (1 value)
+ - *CensusYear* (1 value)  
 
 
 + **plotmask** Inventoried plot mask (SpatialPolygonsDataFrame **with a crs in UTM**)
@@ -155,9 +156,14 @@ The columns required for the package are:
 (RasterLayer **with a crs in UTM**) (See \code{\link{DTMParacou}})
 We advise you to generate your raster with Qgis rather than with the 'raster' package on R.
 
++ **creekverticaldistance**: Relative vertical distance
+(1 m resolution) from nearest channel network
+(RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
+To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 
-+ **creekdistances** Relative (vertical (*distvert*) and horizontal (*disthorz*)) distances
-from nearest channel network (list of 2 large RasterLayers **with a crs in UTM**)
++ **creekhorizontaldistance**: Relative horizontal distance
+(1 m resolution) from nearest channel network
+(RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
 To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 
 + **speciescriteria** : Table of species exploitability criteria : species
@@ -316,7 +322,9 @@ Common error sources:
 ```{r}
 Rslt <- loggingsimulation1(Paracou6_2016,
                            plotmask = PlotMask, topography = DTMParacou,
-                           creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+                           creekverticaldistance = CreekDistances$distvert,
+                           creekhorizontaldistance = CreekDistances$disthorz,
+                           speciescriteria = SpeciesCriteria,
                            volumeparameters = ForestZoneVolumeParametersTable,
                            scenario = "manual", objective = 20,
                            fuel = "2", winching = "2", directionalfelling = "2", 
@@ -329,7 +337,9 @@ With the ability to iterate and parallelize:
 ```{r}
 Rslt_iter <- loggingsimulation(Paracou6_2016,
                                plotmask = PlotMask, topography = DTMParacou,
-                               creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+                               creekverticaldistance = CreekDistances$distvert,
+                               creekhorizontaldistance = CreekDistances$disthorz,
+                               speciescriteria = SpeciesCriteria,
                                volumeparameters = ForestZoneVolumeParametersTable,
                                scenario = "manual", objective = 20,
                                fuel = "2", winching = "2", directionalfelling = "2", 
@@ -346,7 +356,9 @@ SimulTime <- microbenchmark::microbenchmark(
   loggingsimulation1(
     inventory = Paracou6_2016,
     plotmask = PlotMask, topography = DTMParacou,
-    creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+    creekverticaldistance = CreekDistances$distvert,
+    creekhorizontaldistance = CreekDistances$disthorz, 
+    speciescriteria = SpeciesCriteria,
     volumeparameters = ForestZoneVolumeParametersTable,
     scenario = "RIL3",
     objectivelax = TRUE,
@@ -355,7 +367,9 @@ SimulTime <- microbenchmark::microbenchmark(
   loggingsimulation(
     inventory = Paracou6_2016,
     plotmask = PlotMask, topography = DTMParacou,
-    creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+    creekverticaldistance = CreekDistances$distvert,
+    creekhorizontaldistance = CreekDistances$disthorz, 
+    speciescriteria = SpeciesCriteria,
     volumeparameters = ForestZoneVolumeParametersTable,
     scenario = "RIL3", objectivelax = TRUE,
     crowndiameterparameters = ParamCrownDiameterAllometry, # 1632.843	s
@@ -504,7 +518,8 @@ By default, a prospecting unit is an area connected to a truck trail or a main s
 ```{r}
 HarvestableAreaOutputs <- harvestableareadefinition(
   topography = DTMParacou,
-  creekdistances = CreekDistances,
+  creekverticaldistance = CreekDistances$distvert,
+  creekhorizontaldistance = CreekDistances$disthorz,
   maintrails = MainTrails,
   plotmask = PlotMask,
   scenario = "manual", winching = "1", # with an zone for cable only

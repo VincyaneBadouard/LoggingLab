@@ -11,19 +11,11 @@ test_that("loggingsimulation", {
   data(ForestZoneVolumeParametersTable) # volume parameters
   data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 
-
-  # Rslt <- loggingsimulation(inventory = Paracou6_2016,
-  #                           topography = DTMParacou, plotmask = PlotMask, creekdistances  = CreekDistances,
-  #                           speciescriteria = SpeciesCriteria, volumeparameters = ForestZoneVolumeParametersTable,
-  #                           scenario = "manual", objective = 20,
-  #                           fuel = "2", winching = "2", directionalfelling = "2",
-  #                           diversification = TRUE, specieslax = FALSE, objectivelax = TRUE,
-  #                           crowndiameterparameters = ParamCrownDiameterAllometry,
-  #                           advancedloggingparameters = loggingparameters(), iter = 2, cores = 2)
-
   # Check args
   expect_error(loggingsimulation(Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-                                 creekdistances = RE, speciescriteria = SpeciesCriteria,
+                                 creekverticaldistance = RE$distvert,
+                                 creekhorizontaldistance = RE$disthorz,
+                                 speciescriteria = SpeciesCriteria,
                                  volumeparameters = ForestZoneVolumeParametersTable,
                                  crowndiameterparameters = ParamCrownDiameterAllometry, scenario = "RIL1",
                                  iter = FALSE, cores = FALSE),

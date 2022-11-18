@@ -87,7 +87,7 @@ futurereserve <- function(
   #   stop("The 'advancedloggingparameters' argument of the 'futurereserve' function must be a list")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
+  Accessible <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
   Condition <- DBH <- HarvestableZone <- NULL
   DeathCause <- DistCriteria <- Family <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL

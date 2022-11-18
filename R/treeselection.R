@@ -276,7 +276,7 @@ treeselection <- function(
   options("rgdal_show_exportToProj4_warnings"="none")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <-  NULL
+  Accessible <- CircCorr <- CodeAlive <-  NULL
   Condition <- DBH <- NULL
   DeathCause <- DistCriteria <- Family <- LogDBH <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL

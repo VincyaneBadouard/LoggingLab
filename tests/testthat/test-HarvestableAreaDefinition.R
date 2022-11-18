@@ -7,18 +7,20 @@ test_that("harvestableareadefinition",{
 
 
   test_Harvestable0 <- harvestableareadefinition(topography = DTMParacou,
-                                                creekdistances = CreekDistances,
-                                                maintrails = MainTrails,
-                                                plotmask = PlotMask,
-                                                scenario = "manual",
-                                                winching = "0")
+                                                 creekverticaldistance = CreekDistances$distvert,
+                                                 creekhorizontaldistance = CreekDistances$disthorz,
+                                                 maintrails = MainTrails,
+                                                 plotmask = PlotMask,
+                                                 scenario = "manual",
+                                                 winching = "0")
 
   test_HarvestablePolygons0 <- test_Harvestable0$HarvestablePolygons
   test_PlotSlope0 <- test_Harvestable0$PlotSlope
   test_HarvestableArea0 <- test_Harvestable0$HarvestableArea
 
   test_Harvestable1 <- harvestableareadefinition(topography = DTMParacou,
-                                                 creekdistances = CreekDistances,
+                                                 creekverticaldistance = CreekDistances$distvert,
+                                                 creekhorizontaldistance = CreekDistances$disthorz,
                                                  maintrails = MainTrails,
                                                  plotmask = PlotMask,
                                                  scenario = "RIL2")
@@ -28,7 +30,8 @@ test_that("harvestableareadefinition",{
   test_HarvestableArea1 <- test_Harvestable1$HarvestableArea
 
   test_Harvestable2 <- harvestableareadefinition(topography = DTMParacou,
-                                                 creekdistances = CreekDistances,
+                                                 creekverticaldistance = CreekDistances$distvert,
+                                                 creekhorizontaldistance = CreekDistances$disthorz,
                                                  maintrails = MainTrails,
                                                  plotmask = PlotMask,
                                                  scenario = "manual",

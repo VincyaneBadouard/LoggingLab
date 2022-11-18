@@ -12,14 +12,14 @@
 #'  \code{\link{Paracou6_2016}}) (data.frame)
 #' The columns required are:
 #' - *Forest* (to apply the corresponding volume formula)
-#' - *Plot* (1 value)
-#' - *CensusYear* (1 value)
-#' - *PlotArea*
 #' - *idTree*
 #' - *Xutm* and *Yutm*
 #' - *CodeAlive*
-#' - *Family*, *Genus*, *Species* and *VernName*
-#' - *Circ* or *CircCorr*
+#' - *Family*, *Genus*, and *Species*
+#' - *CircCorr*
+#' The optional columns are
+#' - *Plot* (1 value)
+#' - *CensusYear* (1 value)
 #'
 #'@param plotmask Inventoried plot mask
 #'(SpatialPolygonsDataFrame **with a crs in UTM**)
@@ -30,9 +30,14 @@
 #'  We advise you to generate your raster with Qgis rather than with the
 #'  'raster' package on R.
 #'
-#'@param creekdistances Relative distances (vertical (*distvert*) and horizontal
-#'  (*disthorz*)) (1 m resolution) from nearest channel network (list of 2 large
-#'  RasterLayers **with a crs in UTM**) (See \code{\link{CreekDistances}})
+#'@param creekverticaldistance Relative vertical distance
+#'  (1 m resolution) from nearest channel network
+#'  (RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
+#'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
+#'
+#'@param creekhorizontaldistance Relative horizontal distance
+#'  (1 m resolution) from nearest channel network
+#'  (RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
 #'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
@@ -99,6 +104,8 @@
 #'@param seedsim The seed set for the uniform random-number generator (numeric).
 #'  Default = NULL
 #'
+#'@param debug Option to enable writing error environment in working directory,FALSE by default (logical).
+#'
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
@@ -150,7 +157,9 @@
 #'
 #' Rslt <- loggingsimulation(
 #'  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-#'  creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+#'  creekverticaldistance = CreekDistances$distvert,
+#'  creekhorizontaldistance = CreekDistances$disthorz,
+#'  speciescriteria = SpeciesCriteria,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'  objective = 10, fuel = "2", diversification = TRUE, winching = "0",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
@@ -162,7 +171,8 @@ loggingsimulation <- function(
   inventory,
   plotmask,
   topography,
-  creekdistances,
+  creekverticaldistance,
+  creekhorizontaldistance,
   speciescriteria,
   volumeparameters,
 
@@ -180,6 +190,8 @@ loggingsimulation <- function(
   crowndiameterparameters = ParamCrownDiameterAllometry,
 
   seedsim = NULL,
+
+  debug = FALSE,
 
   advancedloggingparameters = loggingparameters(),
 
@@ -338,7 +350,8 @@ loggingsimulation <- function(
                                   simtry <- tryLog(loggingsimulation1(inventory = inventory,
                                                                       plotmask = plotmask,
                                                                       topography = topography,
-                                                                      creekdistances = creekdistances,
+                                                                      creekverticaldistance,
+                                                                      creekhorizontaldistance,
                                                                       speciescriteria = speciescriteria,
                                                                       volumeparameters = volumeparameters,
                                                                       scenario = scenario,
@@ -351,8 +364,7 @@ loggingsimulation <- function(
                                                                       objectivelax = objectivelax,
                                                                       crowndiameterparameters = crowndiameterparameters,
                                                                       seed = seedsim[j],
-                                                                      advancedloggingparameters = advancedloggingparameters),
-                                                   write.error.dump.file = FALSE)
+                                                                      advancedloggingparameters = advancedloggingparameters), write.error.dump.file = debug)
                                   if (inherits(simtry, "try-error")) {
                                     return(list("error" = simtry, "seed" = seedsim[j]))
                                   }else{return(simtry)

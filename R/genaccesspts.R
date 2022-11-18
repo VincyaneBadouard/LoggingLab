@@ -58,6 +58,8 @@ genaccesspts <- function(topography,
 
   ##################################
 
+  . <- NULL
+
   suppressMessages(sf_use_s2(FALSE)) # to deal with actual unresolved s2 issues in sf ("Spherical geometry (s2) switched off")
 
   factagg <-  floor(advancedloggingparameters$SlopeDistance/res(topography)[1])
@@ -67,8 +69,8 @@ genaccesspts <- function(topography,
   AccessPolygons <- machinepolygons
 
   maintrailsRed <- maintrails %>% st_as_sfc() %>%
-    st_cast("POLYGON") %>% st_buffer(-2*factagg) %>%
-    st_cast("LINESTRING") %>% st_buffer(1)
+    st_cast("POLYGON") %>% st_buffer(-factagg) %>%
+    st_cast("LINESTRING") %>% st_buffer(factagg+0.5)
 
 
   AccessMainTrails <- AccessPolygons  %>% st_union() %>%
@@ -80,7 +82,8 @@ genaccesspts <- function(topography,
   # Generate intersections between accessible area and maintrails (ID = accessible area index)
   PartMainTrails <- st_intersection(st_geometry(maintrailsRed),
                                     st_geometry(AccessMainTrails)) %>%
-    st_union(by_feature = T) %>%
+    st_union(by_feature = T) %>% st_as_sf() %>% filter(
+      st_geometry_type(.) %in% c("POLYGON","MULTIPOLYGON") ) %>%
     st_cast("MULTIPOLYGON", warn = FALSE)  %>% # "In st_cast.MULTIPOLYGON(X[[i]], ...) : polygon from first part only"
     st_as_sf() %>%
     st_set_agr(value = "constant") %>%
