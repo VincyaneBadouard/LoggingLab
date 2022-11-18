@@ -3,10 +3,15 @@
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs in UTM**)
 #'
-#' @param creekdistances Relative distances (vertical and horizontal) (1 m
-#'   resolution) from nearest channel network (list of 2 large RasterLayers
-#'   **with a crs in UTM**) (Default: \code{\link{CreekDistances}}) To generate
-#'   vertical creek height: \code{\link{CreekDistances}} in 'Articles'.
+#'@param creekverticaldistance Relative vertical distance
+#'  (1 m resolution) from nearest channel network
+#'  (RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
+#'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
+#'
+#'@param creekhorizontaldistance Relative horizontal distance
+#'  (1 m resolution) from nearest channel network
+#'  (RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
+#'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 #'
 #' @param maintrails Main trails defined at the entire harvestable area (sf
 #'   linestring **with a crs in UTM**)
@@ -63,7 +68,8 @@
 #'
 #' HarvestableAreaOutputsCable <- harvestableareadefinition(
 #'   topography = DTMParacou,
-#'   creekdistances = CreekDistances,
+#'   creekverticaldistance = CreekDistances$distvert,
+#'   creekhorizontaldistance = CreekDistances$disthorz,
 #'   maintrails = MainTrails,
 #'   plotmask = PlotMask,
 #'   scenario = "manual", winching = "1",
@@ -87,7 +93,8 @@
 #'
 harvestableareadefinition <- function(
   topography,
-  creekdistances,
+  creekverticaldistance,
+  creekhorizontaldistance,
   maintrails,
   plotmask,
   scenario,
@@ -95,11 +102,13 @@ harvestableareadefinition <- function(
   advancedloggingparameters = loggingparameters()
 ){
 
+  creekdistances <- list("distvert" = creekverticaldistance,
+                         "disthorz" = creekhorizontaldistance)
   # Arguments check
 
   if(!all(unlist(lapply(list(topography, creekdistances$distvert, creekdistances$disthorz), inherits, "RasterLayer"))))
-    stop("The 'topography' and 'plotslope' arguments of the 'harvestableareadefinition' function,
-         and creekdistances$distvert, creekdistances$disthorz must be RasterLayer")
+    stop("The 'topography', 'plotslope', 'creekverticaldistance', and 'creekhorizontaldistance' arguments
+    of the 'harvestableareadefinition' function must be RasterLayer")
 
 
   if(!(scenario %in% c("RIL1", "RIL2broken", "RIL2", "RIL3", "RIL3fuel", "RIL3fuelhollow", "manual")))

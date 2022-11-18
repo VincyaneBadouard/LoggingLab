@@ -12,14 +12,14 @@
 #'  \code{\link{Paracou6_2016}}) (data.frame)
 #' The columns required are:
 #' - *Forest* (to apply the corresponding volume formula)
-#' - *Plot* (1 value)
-#' - *CensusYear* (1 value)
-#' - *PlotArea*
 #' - *idTree*
 #' - *Xutm* and *Yutm*
 #' - *CodeAlive*
-#' - *Family*, *Genus*, *Species* and *VernName*
-#' - *Circ* or *CircCorr*
+#' - *Family*, *Genus*, and *Species*
+#' - *CircCorr*
+#' The optional columns are
+#' - *Plot* (1 value)
+#' - *CensusYear* (1 value)
 #'
 #'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame
 #'  **with a crs in UTM**)
@@ -30,9 +30,14 @@
 #'  We advise you to generate your raster with Qgis rather than with the
 #'  'raster' package on R.
 #'
-#'@param creekdistances Relative distances (vertical (*distvert*) and horizontal
-#'  (*disthorz*)) (1 m resolution) from nearest channel network (list of 2 large
-#'  RasterLayers **with a crs in UTM**) (See \code{\link{CreekDistances}})
+#'@param creekverticaldistance Relative vertical distance
+#'  (1 m resolution) from nearest channel network
+#'  (RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
+#'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
+#'
+#'@param creekhorizontaldistance Relative horizontal distance
+#'  (1 m resolution) from nearest channel network
+#'  (RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
 #'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
@@ -131,8 +136,8 @@
 #'@export
 #'
 #'@importFrom dplyr filter mutate select left_join bind_rows
-#'@importFrom sf st_as_sf st_point
-#'@importFrom raster crs extract
+#'@importFrom sf st_as_sf st_point as_Spatial
+#'@importFrom raster crs extract raster
 #'@importFrom methods as
 #'
 #' @examples
@@ -147,7 +152,9 @@
 #'
 #' Rslt <- loggingsimulation1(
 #'  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-#'  creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+#'  creekverticaldistance = CreekDistances$distvert,
+#'  creekhorizontaldistance = CreekDistances$disthorz,
+#'  speciescriteria = SpeciesCriteria,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'  objective = 10, fuel = "2", diversification = TRUE, winching = "2",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
@@ -159,7 +166,8 @@ loggingsimulation1 <- function(
   inventory,
   plotmask,
   topography,
-  creekdistances,
+  creekverticaldistance,
+  creekhorizontaldistance,
   speciescriteria,
   volumeparameters,
 
@@ -179,6 +187,9 @@ loggingsimulation1 <- function(
   advancedloggingparameters = loggingparameters()
 ){
 
+  creekdistances <- list("distvert" = creekverticaldistance,
+                         "disthorz" = creekhorizontaldistance)
+
   #### Arguments check ####
 
   # inventory, speciescriteria, volumeparameters, crowndiameterparameters
@@ -186,19 +197,38 @@ loggingsimulation1 <- function(
                         inherits, "data.frame"))))
     stop("The 'inventory', 'speciescriteria', 'volumeparameters' and 'crowndiameterparameters' arguments
          of the 'loggingsimulation' function must be data.frames")
+  # inventory as.data.frame to remove data.table or dplyr formats
+  inventory <- as.data.frame(inventory)
 
   # plotmask
-  if(length(plotmask) != 1 | !inherits(plotmask, "SpatialPolygonsDataFrame"))
-    stop("The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygonsDataFrame")
+  if(length(plotmask) != 1 | !inherits(plotmask, "SpatialPolygons")){
+    if((inherits(plotmask, "sf") & inherits(plotmask$geometry, "sfc_POLYGON")))
+      plotmask <- as_Spatial(plotmask)
+    if(!(inherits(plotmask, "sf") & inherits(plotmask$geometry, "sfc_POLYGON")))
+      stop("The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygons")
+  }
 
   # topography
-  if(!inherits(topography, "RasterLayer"))
-    stop("The 'topography' argument of the 'loggingsimulation' function must be a RasterLayer")
+  if(!inherits(topography, "RasterLayer")){
+    if(inherits(topography, "SpatRaster"))
+      topography <- raster(topography)
+    if(!inherits(topography, "SpatRaster"))
+      stop("The 'topography' argument of the 'loggingsimulation' function must be a RasterLayer")
+  }
 
   # creekdistances
-  if(length(creekdistances) < 2 |
-     !inherits(creekdistances, "list"))
-    stop("The 'creekdistances' argument of the 'loggingsimulation' function must be a list of 2 elements")
+  if(!inherits(creekverticaldistance, "RasterLayer")){
+    if(inherits(creekverticaldistance, "SpatRaster"))
+      creekverticaldistance <- raster(creekverticaldistance)
+    if(!inherits(creekverticaldistance, "SpatRaster"))
+      stop("The 'creekverticaldistance' argument of the 'loggingsimulation' function must be a RasterLayer")
+  }
+  if(!inherits(creekhorizontaldistance, "RasterLayer")){
+    if(inherits(creekhorizontaldistance, "SpatRaster"))
+      creekhorizontaldistance <- raster(creekhorizontaldistance)
+    if(!inherits(creekhorizontaldistance, "SpatRaster"))
+      stop("The 'creekhorizontaldistance' argument of the 'loggingsimulation' function must be a RasterLayer")
+  }
 
   # scenario
   if (length(scenario) != 1 |
@@ -294,7 +324,8 @@ loggingsimulation1 <- function(
   ##### Harvestable area definition ####
   HarvestableAreaOutputs <- harvestableareadefinition(
     topography = topography,
-    creekdistances = creekdistances,
+    creekverticaldistance = creekdistances$distvert,
+    creekhorizontaldistance = creekdistances$disthorz,
     maintrails = MainTrails,
     plotmask = plotmask,
     scenario = scenario, winching = winching,
@@ -309,7 +340,7 @@ loggingsimulation1 <- function(
   if(is.null(HarvestableArea) | HarvestableArea == 0){
     stop("The havestable area is equal to 0 or NULL.
     Either your plot is not exploitable at all according to your criteria, or there is probably a problem with the inputs:
-    'topography', 'creekdistances', and/or 'plotmask'")}
+    'topography', 'creekverticaldistance', 'creekhorizontaldistance', and/or 'plotmask'")}
 
   #### Tree selection (harvestable, future and reserve trees + defects trees): ####
   treeselectionoutputs <- treeselection(inventory,

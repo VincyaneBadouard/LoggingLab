@@ -245,7 +245,7 @@ treefelling <- function(
          you must fill in the arguments 'fuel' and 'directionalfelling'")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <-NULL
+  Accessible <- CircCorr <- CodeAlive <-NULL
   Condition <- DBH <- MinFD <- Taxo <- alpha <- bCoef <- NULL
   DeathCause <- DistCriteria <- Family <- CrownHeight <- CrownDiameter <- NULL
   Genus <- Logged <- TreePolygon <- NULL
@@ -441,7 +441,7 @@ directionalfellingsuccessdef <- function(
     stop("The 'advancedloggingparameters' argument of the 'directionalfellingsuccessdef' function must be a list")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- NULL
+  Accessible <- CircCorr <- CodeAlive <- NULL
   Condition <- DBH <- NULL
   DeathCause <- DistCriteria <- Family <- CrownHeight <- CrownDiameter <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- TreePolygon <- NULL
@@ -453,8 +453,8 @@ directionalfellingsuccessdef <- function(
   Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
-  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
-  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  UpMinFD.species <- NULL
+  VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
@@ -741,7 +741,7 @@ felling1tree <- function(
     stop("The 'advancedloggingparameters' argument of the 'felling1tree' function must be a list")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- NULL
+  Accessible <- CircCorr <- CodeAlive <- NULL
   Condition <- DBH <- NULL
   DeathCause <- DistCriteria <- Family <- CrownHeight <- CrownDiameter <- NULL
   Genus <- Logged <- TreePolygon <- Crowns <- NULL
@@ -752,8 +752,8 @@ felling1tree <- function(
   Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
-  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
-  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  UpMinFD.species <- NULL
+  VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 

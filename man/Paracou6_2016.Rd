@@ -11,7 +11,7 @@ A tibble with 3620 rows and 26 variables:
 \item{Plot}{Plot number (character)}
 \item{PlotArea}{Plot area, in hectare (numeric)}
 \item{SubPlot}{Subplot number (integer)}
-\item{idTree}{Unique tree identifier from the database (integer)}
+\item{idTree}{Unique tree identifier from the database (character)}
 \item{Protocole}{Protocole name (character)}
 \item{Xfield}{Euclidean position of the tree relative to
 the Southwestern corner of the subplot, in m (numeric)}
@@ -64,14 +64,14 @@ Public dataset extracted from the Guyafor database.
 The columns required for the package are:
 \itemize{
 \item \emph{Forest} (to apply the corresponding volume formula)
-\item \emph{Plot} (1 value)
-\item \emph{CensusYear} (1 value)
-\item \emph{PlotArea}
 \item \emph{idTree}
 \item \emph{Xutm} and \emph{Yutm}
 \item \emph{CodeAlive}
-\item \emph{Family}, \emph{Genus}, \emph{Species} and \emph{VernName}
-\item \emph{Circ} or \emph{CircCorr}
+\item \emph{Family}, \emph{Genus}, \emph{Species}
+\item \emph{CircCorr}
+The columns optional for the package are:
+\item \emph{Plot} (1 value)
+\item \emph{CensusYear} (1 value)
 }
 }
 \keyword{datasets}

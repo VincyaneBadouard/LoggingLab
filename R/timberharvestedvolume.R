@@ -67,7 +67,7 @@ timberharvestedvolume <- function(
 ){
 
   #### Global variables ####
-  Accessible <- Circ <- CircCorr <- CodeAlive <- NULL
+  Accessible <- CircCorr <- CodeAlive <- NULL
   Condition <- DBH <- NULL
   DeathCause <- DistCriteria <- Family <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL

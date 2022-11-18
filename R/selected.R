@@ -157,7 +157,7 @@ selected <- function(
   diversification <- scenariosparameters$diversification
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
+  Accessible <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
   Condition <- DBH <- NULL
   DeathCause <- DistCriteria <- Family <- CommercialName <- Crumbs <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL

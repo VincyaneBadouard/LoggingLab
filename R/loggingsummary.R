@@ -28,11 +28,8 @@ loggingsummary <- function(x
   if(!inherits(x, "list"))
     stop("The argument of the 'loggingsummary' function must be a list")
 
-  PlotArea <- unique(x[[1]]$inventory$PlotArea)
-
   # Reminder of INPUTS:
   cat('inventory :', x[[1]]$INPUTinventory, '\n') # input inventory name
-  cat('Plot area :', PlotArea, 'ha\n') # Plot area,
   cat('scenario :', x[[1]]$scenario, '\n') # scenario,
   cat('objective :', x[[1]]$objective, 'm3/ha\n') # objective volume (m3/ha)
   cat('fuel :', x[[1]]$fuel, '\n') # fuel
@@ -70,7 +67,9 @@ loggingsummary <- function(x
   RsltStats <- lapply(var, statsvars, x)
 
   cat('Harvestable area (ha):\n')
-  print(unlist(RsltStats[1])) # harvestable area (ha)
+  HarvestableArea <- unlist(RsltStats[1])
+  print(HarvestableArea) # harvestable area (ha)
+
 
   cat('\n') # skip a line
 
@@ -81,31 +80,31 @@ loggingsummary <- function(x
 
   cat('Initial harvestable volume (m3):\n')
   print(unlist(RsltStats[3]))
-  print(set_units(unlist(RsltStats[3])/PlotArea, m3/ha)) # the harvestable volume (m3) with your initial criteria
+  print(set_units(unlist(RsltStats[3])/HarvestableArea, m3/ha)) # the harvestable volume (m3) with your initial criteria
 
   cat('\n') # skip a line
 
   cat('Timber logged volume (m3):\n')
   print(unlist(RsltStats[4]))
-  print(set_units(unlist(RsltStats[4])/PlotArea, m3/ha)) # Logged volume (m3) (only healthy trees if fuel != "2", healthy + hollow trees if fuel = "2")
+  print(set_units(unlist(RsltStats[4])/HarvestableArea, m3/ha)) # Logged volume (m3) (only healthy trees if fuel != "2", healthy + hollow trees if fuel = "2")
 
   cat('\n') # skip a line
 
   cat('No hollow timber logged volume (m3):\n')
   print(unlist(RsltStats[5]))
-  print(set_units(unlist(RsltStats[5])/PlotArea, m3/ha)) # Logged volume (m3) (only healthy trees)
+  print(set_units(unlist(RsltStats[5])/HarvestableArea, m3/ha)) # Logged volume (m3) (only healthy trees)
 
   cat('\n') # skip a line
 
   cat('Fuel wood volume (m3):\n')
   print(unlist(RsltStats[6]))
-  print(set_units(unlist(RsltStats[6])/PlotArea, m3/ha)) # Damages + purge (+ hollow trees if fuel = "2") (m3)
+  print(set_units(unlist(RsltStats[6])/HarvestableArea, m3/ha)) # Damages + purge (+ hollow trees if fuel = "2") (m3)
 
   cat('\n') # skip a line
 
   cat('Damages volume (m3):\n')
   print(unlist(RsltStats[7]))
-  print(set_units(unlist(RsltStats[7])/PlotArea, m3/ha)) # only damages (without purge and hollow trees) (m3)
+  print(set_units(unlist(RsltStats[7])/HarvestableArea, m3/ha)) # only damages (without purge and hollow trees) (m3)
 
   cat('\n') # skip a line
 

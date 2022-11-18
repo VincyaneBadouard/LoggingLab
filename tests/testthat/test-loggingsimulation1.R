@@ -17,34 +17,32 @@ test_that("loggingsimulation1", {
   MatrixVolParam <- as.matrix(ForestZoneVolumeParametersTable)
   MatrixCDparam <- as.matrix(ParamCrownDiameterAllometry)
 
-  # Rslt <- loggingsimulation1(inventory = Paracou6_2016,
-  #                            topography = DTMParacou, plotmask = PlotMask, creekdistances  = CreekDistances,
-  #                            speciescriteria = SpeciesCriteria, volumeparameters = ForestZoneVolumeParametersTable,
-  #                            scenario = "manual", objective = 20,
-  #                            fuel = "2", winching = "2", directionalfelling = "2",
-  #                            diversification = TRUE, specieslax = FALSE, objectivelax = TRUE,
-  #                            crowndiameterparameters = ParamCrownDiameterAllometry,
-  #                            advancedloggingparameters = loggingparameters())
-
   # Check the function arguments
 
   # inventory, speciescriteria, volumeparameters, crowndiameterparameters
   expect_error(loggingsimulation1(MatrixInventory, plotmask = PlotMask, topography = DTMParacou,
-                                  creekdistances  = CreekDistances, speciescriteria = Matrixspeciescriteria,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = Matrixspeciescriteria,
                                   volumeparameters = MatrixVolParam, scenario = "RIL1",
                                   crowndiameterparameters = MatrixCDparam),
                regexp = "The 'inventory', 'speciescriteria', 'volumeparameters' and 'crowndiameterparameters' arguments
          of the 'loggingsimulation' function must be data.frames")
 
   # plotmask
-  expect_error(loggingsimulation1(Paracou6_2016, plotmask = sf::st_as_sf(PlotMask), topography = DTMParacou,
-                                  creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+  expect_error(loggingsimulation1(Paracou6_2016, plotmask = data.frame(), topography = DTMParacou,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable, scenario = "RIL1",
                                   crowndiameterparameters = ParamCrownDiameterAllometry),
-               regexp = "The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygonsDataFrame")
+               regexp = "The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygons")
 
   # topography
-  expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, speciescriteria = SpeciesCriteria,
+  expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable,
                                   crowndiameterparameters = ParamCrownDiameterAllometry,
                                   scenario = "RIL1",
@@ -52,17 +50,21 @@ test_that("loggingsimulation1", {
                regexp = "The 'topography' argument of the 'loggingsimulation' function must be a RasterLayer")
 
   # creekdistances
-  expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, speciescriteria = SpeciesCriteria,
+  expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask,
+                                  creekverticaldistance = data.frame(),
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable,
                                   crowndiameterparameters = ParamCrownDiameterAllometry,
                                   scenario = "RIL1",
-                                  topography = DTMParacou,
-                                  creekdistances  = DTMParacou),
-               regexp = "The 'creekdistances' argument of the 'loggingsimulation' function must be a list of 2 elements")
+                                  topography = DTMParacou),
+               regexp = "The 'creekverticaldistance' argument of the 'loggingsimulation' function must be a RasterLayer")
 
   # scenario
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-                                  creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable,
                                   crowndiameterparameters = ParamCrownDiameterAllometry, scenario = "RIL"),
                regexp = "The 'scenario' argument of the 'loggingsimulation' function must be
@@ -70,35 +72,45 @@ test_that("loggingsimulation1", {
 
   # objective
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-                                  creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable,
                                   crowndiameterparameters = ParamCrownDiameterAllometry, scenario = "RIL1", objective = "20"),
                regexp = "The 'objective' argument of the 'loggingsimulation' function must be numeric or NULL")
 
   # fuel
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-                                  creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable,
                                   crowndiameterparameters = ParamCrownDiameterAllometry, scenario = "RIL1", fuel = "3"),
                regexp = "The 'fuel' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
 
   # diversification
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-                                  creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable,
                                   crowndiameterparameters = ParamCrownDiameterAllometry, scenario = "RIL1", diversification = 2),
                regexp = "The 'diversification' argument of the 'loggingsimulation' function must be logical or NULL")
 
   # winching
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-                                  creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable,
                                   crowndiameterparameters = ParamCrownDiameterAllometry, scenario = "RIL1", winching = "3"),
                regexp = "The 'winching' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
 
   # directionalfelling
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-                                  creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable,
                                   crowndiameterparameters = ParamCrownDiameterAllometry, scenario = "RIL1", directionalfelling = "3"),
                regexp = "The 'directionalfelling' argument of the 'loggingsimulation' function must be '0', '1', '2' or NULL")
@@ -106,7 +118,9 @@ test_that("loggingsimulation1", {
 
   # manual mode
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-                                  creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable,
                                   crowndiameterparameters = ParamCrownDiameterAllometry, scenario = "manual"),
                regexp = "If you choose the 'manual' mode,
@@ -115,7 +129,9 @@ test_that("loggingsimulation1", {
 
   # specieslax, objectivelax
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-                                  creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable,
                                   crowndiameterparameters = ParamCrownDiameterAllometry, scenario = "RIL1",
                                   specieslax = 2, objectivelax = "yes"),
@@ -124,7 +140,9 @@ test_that("loggingsimulation1", {
 
   # advancedloggingparameters
   expect_error(loggingsimulation1(Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-                                  creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+                                  creekverticaldistance = CreekDistances$distvert,
+                                  creekhorizontaldistance = CreekDistances$disthorz,
+                                  speciescriteria = SpeciesCriteria,
                                   volumeparameters = ForestZoneVolumeParametersTable,
                                   crowndiameterparameters = ParamCrownDiameterAllometry, scenario = "RIL1",
                                   advancedloggingparameters = FALSE),

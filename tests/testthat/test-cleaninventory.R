@@ -39,7 +39,7 @@ test_that("cleaninventory", {
 
   inventory <- Paracou6_2016 %>%
     dplyr::filter(CodeAlive == "TRUE") %>%
-    dplyr::mutate(DBH = ifelse(is.na(CircCorr), Circ/pi, CircCorr/pi)) %>%
+    dplyr::mutate(DBH = CircCorr/pi) %>%
     dplyr::filter(DBH >= 10)
 
   inventory <- sf::st_as_sf(inventory, coords = c("Xutm", "Yutm")) %>% # as sf
