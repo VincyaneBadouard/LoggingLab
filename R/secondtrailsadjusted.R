@@ -1930,7 +1930,7 @@ secondtrailsadjusted <- function(
 
     inventory <- inventory %>%
       left_join(DeadTrees, by = "idTree") %>%
-      mutate(DeathCause = ifelse(Selected != "1" & DeadTrees == "1",
+      mutate(DeathCause = ifelse(is.na(DeathCause) & Selected != "1" & DeadTrees == "1",
                                  "2ndtrail", DeathCause)) %>%  # Damage trees
       dplyr::select(-DeadTrees)
 
@@ -1951,7 +1951,7 @@ secondtrailsadjusted <- function(
 
     inventory <- inventory %>%
       left_join(DeadTrees, by = "idTree") %>%
-      mutate(DeathCause = ifelse( Selected != "1" & DeadTrees == "1",
+      mutate(DeathCause = ifelse(is.na(DeathCause) & Selected != "1" & DeadTrees == "1",
                                   "2ndtrail", DeathCause)) %>%  # Damage trees
       dplyr::select(-DeadTrees)
   }

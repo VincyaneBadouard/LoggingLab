@@ -115,7 +115,7 @@
 #'Common error sources:
 #' - no crs
 #' - crs with accent
-#' - *topography* and *plotmask* do not match
+#' - *topography* and *plotmask* do not match (plot them to check)
 #' - *topography* import as R Worspace (you must import it as a .tif file)
 #' - *Forest* name of the *inventory* doesn't match with the *Forest* name in
 #'    *volumeparameters* table
@@ -163,28 +163,28 @@
 #'  }
 #'
 loggingsimulation1 <- function(
-  inventory,
-  plotmask,
-  topography,
-  creekverticaldistance,
-  creekhorizontaldistance,
-  speciescriteria,
-  volumeparameters,
+    inventory,
+    plotmask,
+    topography,
+    creekverticaldistance,
+    creekhorizontaldistance,
+    speciescriteria,
+    volumeparameters,
 
-  scenario,
-  objective = NULL,
-  fuel = NULL,
-  diversification = NULL,
+    scenario,
+    objective = NULL,
+    fuel = NULL,
+    diversification = NULL,
 
-  winching = NULL,
-  directionalfelling = NULL,
+    winching = NULL,
+    directionalfelling = NULL,
 
-  specieslax = FALSE,
-  objectivelax = FALSE,
+    specieslax = FALSE,
+    objectivelax = FALSE,
 
-  crowndiameterparameters = ParamCrownDiameterAllometry,
-  seed = round(runif(n = 1, min = 1, max = 2^23)),
-  advancedloggingparameters = loggingparameters()
+    crowndiameterparameters = ParamCrownDiameterAllometry,
+    seed = round(runif(n = 1, min = 1, max = 2^23)),
+    advancedloggingparameters = loggingparameters()
 ){
 
   creekdistances <- list("distvert" = creekverticaldistance,
@@ -377,14 +377,14 @@ loggingsimulation1 <- function(
                             advancedloggingparameters = advancedloggingparameters)
 
   ScndTrailOutputs <- secondtrailsopening(topography = topography,
-                                              plotmask = plotmask,
-                                              maintrails = MainTrails, plotslope = PlotSlope,
-                                              harvestablepolygons = HarvestablePolygons,
-                                              machinepolygons = MachinePolygons,
-                                              maintrailsaccess = accesspts$AccessPointAll,
-                                              treeselectionoutputs = treeselectionoutputs,
-                                              scenario = scenario, winching = winching,
-                                              advancedloggingparameters = advancedloggingparameters
+                                          plotmask = plotmask,
+                                          maintrails = MainTrails, plotslope = PlotSlope,
+                                          harvestablepolygons = HarvestablePolygons,
+                                          machinepolygons = MachinePolygons,
+                                          maintrailsaccess = accesspts$AccessPointAll,
+                                          treeselectionoutputs = treeselectionoutputs,
+                                          scenario = scenario, winching = winching, fuel = fuel,
+                                          advancedloggingparameters = advancedloggingparameters
   )
 
 
@@ -416,12 +416,12 @@ loggingsimulation1 <- function(
   if(fuel != "0"){
 
     ScndTrailAdjustOutputs <- secondtrailsadjusted(inventory = inventory,
-                                                       topography = topography, plotmask = plotmask, maintrails = MainTrails,
-                                                       plotslope = PlotSlope,
-                                                       harvestablepolygons = HarvestablePolygons,
-                                                       machinepolygons = MachinePolygons, maintrailsaccess = MainTrailsAccess,
-                                                       scenario = scenario, winching = winching,
-                                                       advancedloggingparameters = advancedloggingparameters)
+                                                   topography = topography, plotmask = plotmask, maintrails = MainTrails,
+                                                   plotslope = PlotSlope,
+                                                   harvestablepolygons = HarvestablePolygons,
+                                                   machinepolygons = MachinePolygons, maintrailsaccess = MainTrailsAccess,
+                                                   scenario = scenario, winching = winching,
+                                                   advancedloggingparameters = advancedloggingparameters)
 
 
     if(is.null(ScndTrailAdjustOutputs$TrailsDensity) | as.numeric(ScndTrailAdjustOutputs$TrailsDensity) == 0){
@@ -450,6 +450,7 @@ loggingsimulation1 <- function(
                                          scenario = scenario, fuel = fuel,
                                          advancedloggingparameters = advancedloggingparameters)
 
+  inventory <- Timberoutputs$inventory
   TimberLoggedVolume <- Timberoutputs$TimberLoggedVolume
   NoHollowTimberLoggedVolume <- Timberoutputs$NoHollowTimberLoggedVolume
 
@@ -467,12 +468,13 @@ loggingsimulation1 <- function(
                                            NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
                                            advancedloggingparameters = advancedloggingparameters)
 
-  DamageVolume <- Fueloutputs$DamageVolume # only damage (without purge and hollow trees)
-  FuelVolume <- Fueloutputs$FuelVolume
+  inventory <- Fueloutputs$inventory
+  DamageBiomass <- Fueloutputs$DamageBiomass # only damage (without hollow trees)
+  FuelWoodBiomass <- Fueloutputs$FuelWoodBiomass
 
-  if(is.null(DamageVolume) | DamageVolume == 0){
+  if(is.null(DamageBiomass) | DamageBiomass == 0){
     print(inventory)
-    message("No DamageVolume. Check if it's normal in the printed inventory")
+    message("No DamageBiomass. Check if it's normal in the printed inventory")
   }
 
 
@@ -502,8 +504,8 @@ loggingsimulation1 <- function(
                   "HVinit" = HVinit,
                   "TimberLoggedVolume" = TimberLoggedVolume,
                   "NoHollowTimberLoggedVolume" = NoHollowTimberLoggedVolume,
-                  "FuelVolume" = FuelVolume,
-                  "DamageVolume" = DamageVolume, # only damage (without purge and hollow trees)
+                  "FuelWoodBiomass" = FuelWoodBiomass,
+                  "DamageBiomass" = DamageBiomass, # only damage (without hollow trees)
                   "LostBiomass" = LostBiomass,
                   "TrailsDensity" = TrailsDensity,
                   "AdjustTrailsDensity" = AdjustTrailsDensity,

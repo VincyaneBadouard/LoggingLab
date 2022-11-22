@@ -15,6 +15,7 @@ secondtrailsopening(
   treeselectionoutputs,
   scenario,
   winching = NULL,
+  fuel = NULL,
   verbose = FALSE,
   advancedloggingparameters = loggingparameters()
 )
@@ -65,6 +66,13 @@ If grapple + cable (winching = "2") without fuel wood (fuel = "0")
 recovery of the tree foot with grapple if possible (respected grapple
 conditions) otherwise with cable with angle to the trail.
 Avoidance of future/reserves if chosen.}
+
+\item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
+damage and unused part of logged trees for fuel = "1", exploitation of
+hollow trees, damage and and unused part of the log for fuel = "2".
+If fuel wood harvesting is chosen, these trails are preliminary,
+and the trails will be adjusted after tree felling for fuel wood recovery.
+The mortality of the trails is therefore not recorded at this stage}
 
 \item{verbose}{Allow to provide messages from internal functions (boolean)}
 
@@ -139,6 +147,7 @@ secondtrails <- secondtrailsopening(
   treeselectionoutputs = treeselectionoutputs,
   scenario = "manual",
   winching = winching,
+  fuel =  "0",
   advancedloggingparameters = loggingparameters())
   }
 

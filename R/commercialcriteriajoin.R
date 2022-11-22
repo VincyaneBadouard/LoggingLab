@@ -56,7 +56,7 @@ commercialcriteriajoin <- function(
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCriteria <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
-  TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
+  TreeFellingOrientationSuccess <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
   UpMinFD.species <- CommercialName.genus <- NULL
   CommercialName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL

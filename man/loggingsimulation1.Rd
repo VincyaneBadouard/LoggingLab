@@ -147,7 +147,7 @@ Common error sources:
 \itemize{
 \item no crs
 \item crs with accent
-\item \emph{topography} and \emph{plotmask} do not match
+\item \emph{topography} and \emph{plotmask} do not match (plot them to check)
 \item \emph{topography} import as R Worspace (you must import it as a .tif file)
 \item \emph{Forest} name of the \emph{inventory} doesn't match with the \emph{Forest} name in
 \emph{volumeparameters} table

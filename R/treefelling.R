@@ -352,7 +352,7 @@ treefelling <- function(
                                   sample(c(1,0), size = 1, replace = F,
                                          prob = c(Treefall2ndDeathProba, 1-Treefall2ndDeathProba)), NA)) %>% # 1 = dead tree, 0 = alive tree
     ungroup() %>%
-    mutate(Treefall2ndDeath = as.factor(Treefall2ndDeath)) %>% # alive trees ("0") -> DeathCause = NA
+    mutate(Treefall2ndDeath = as.factor(Treefall2ndDeath)) %>%
     mutate(DeathCause = ifelse(Treefall2ndDeath %in% "0", NA, # alive trees ("0") -> DeathCause = NA
                                DeathCause))
 

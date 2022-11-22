@@ -64,15 +64,15 @@ data(CreekDistances)
 \code{\link{Paracou6_2016}}
 
 The columns required for the package are:
- - *Forest* (to apply the corresponding volume formula)
- - *idTree*
- - *Xutm* and *Yutm*
- - *CodeAlive*
- - *Family*, *Genus*, *Species*
- - *CircCorr*
+- *Forest* (to apply the corresponding volume formula)
+- *idTree*
+- *Xutm* and *Yutm*
+- *CodeAlive*
+- *Family*, *Genus*, *Species*
+- *CircCorr*
 The columns optional for the package are:
- - *Plot* (1 value)
- - *CensusYear* (1 value)  
+- *Plot* (1 value)
+- *CensusYear* (1 value)  
 
 ```{r}
 # inventory class
@@ -139,15 +139,15 @@ exploitablefuelwoodvolume
 
 + **inventory** : Input forest inventory for 1 plot and 1 census year (see the inputs formats and metadata in the vignette or in Paracou6_2016.R) (data.frame)  
 The columns required for the package are:
- - *Forest* (to apply the corresponding volume formula)
- - *idTree*
- - *Xutm* and *Yutm*
- - *CodeAlive*
- - *Family*, *Genus*, *Species*
- - *CircCorr*
+- *Forest* (to apply the corresponding volume formula)
+- *idTree*
+- *Xutm* and *Yutm*
+- *CodeAlive*
+- *Family*, *Genus*, *Species*
+- *CircCorr*
 The columns optional for the package are:
- - *Plot* (1 value)
- - *CensusYear* (1 value)  
+- *Plot* (1 value)
+- *CensusYear* (1 value)  
 
 
 + **plotmask** Inventoried plot mask (SpatialPolygonsDataFrame **with a crs in UTM**)
@@ -257,7 +257,8 @@ kable(ScenariosTable)
 + **Proportion of successful directional felling events** = 60 %
 + **Minimum orientation of the tree fall to the trail** = 30 degree 
 + **Maximum orientation of the tree fall to the trail** = 45 degree 
-+ **Part taken from hollow trees for fuel exploitation** = 1/3 
++ **Part taken from hollow trees for fuel exploitation** = 1/3
++ **Proportion of the tree crown biomass used as fuel wood** (ref) = 2/3
 + **Purge (unused part of the log)** = 0.14 m^3 of fuel wood/m^3 of logged trees
 + **Maximum trail density** = 200 m/ha (has no impact on the simulation.
 A message will be sent to inform if this threshold has been exceeded)
@@ -267,13 +268,13 @@ A message will be sent to inform if this threshold has been exceeded)
 + **Cost matrix for optimized trail layout**:
 Gives an increasing cost according to a slope gradient, and
 different costs on certain cases:  
-  - "Initial" (default = 1000)
-  - "Access" (default = Inf)
-  - "BigTrees" (default = 500)
-  - "Reserves" (default = 500)
-  - "Futures" (default = 50)
-  - "MainTrails" (default = 1E-4)
-  - "SecondTrails" (default = 0.1)
+- "Initial" (default = 1000)
+- "Access" (default = Inf)
+- "BigTrees" (default = 500)
+- "Reserves" (default = 500)
+- "Futures" (default = 50)
+- "MainTrails" (default = 1E-4)
+- "SecondTrails" (default = 0.1)
 
 *Models*   
 
@@ -306,7 +307,7 @@ is in the area disturbed by the felling of a tree, according to the DBH of
 the tree whose probability of dying is estimated.
 Default: 1 / (1 + exp(-(-0.47323 + -0.02564 * DBH))) with DBH in cm (developed by M.Rojat)
 
-  
+
 # Paying attention to inputs - important source of error
 Common error sources:  
 - no crs  
@@ -475,7 +476,7 @@ loggingsummary(LoggingSimulationOutputs_iter) # Outputs of one logging simulatio
 **Description**:
 * inventorycheckformat() checks if the input inventory data is compatible with the ‘LoggingLab’ package and returns the inventory if the inventory is in the required format or stop the function if the format is not the one required.
 * cleaninventory()returns the inventory with **only alive trees within the inventoried plot**.
-  
+
 
 ```{r}
 inventory <- inventorycheckformat(Paracou6_2016)
@@ -685,6 +686,7 @@ ScndTrailOutputs <- secondtrailsopening(topography = DTMParacou,
                                         treeselectionoutputs = treeselectionoutputs,
                                         scenario = "manual",
                                         winching = "2",
+                                        fuel = "2",
                                         advancedloggingparameters = loggingparameters())
 
 inventory <- ScndTrailOutputs$inventory
@@ -793,7 +795,7 @@ the whole trunk will be exploitable as fuel wood.
 ```{r}
 TimberV <- timberharvestedvolume(inventory, scenario = "manual", fuel = "2",
                                  advancedloggingparameters = loggingparameters())
-
+inventory <- TimberV$inventory
 TimberLoggedVolume <- TimberV$TimberLoggedVolume
 NoHollowTimberLoggedVolume <- TimberV$NoHollowTimberLoggedVolume
 ```
@@ -807,9 +809,9 @@ FuelV <- exploitablefuelwoodvolume(inventory, scenario = "manual", fuel = "2",
                                    TimberLoggedVolume = TimberLoggedVolume,
                                    NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
                                    advancedloggingparameters = loggingparameters())
-
-DamageVolume <- FuelV$DamageVolume # only damage (without purge and hollow trees)
-FuelVolume <- FuelV$FuelVolume
+inventory <- FuelV$inventory
+DamageBiomass <- FuelV$DamageBiomass # only damage (without purge and hollow trees)
+FuelWoodBiomass <- FuelV$FuelWoodBiomass
 ```
 
 # Outputs
@@ -824,8 +826,8 @@ Numeric values:
 + **HVinit** : Initial harvestable volume in m3 (numeric)  
 + **TimberLoggedVolume** : Timber logged volume in m3 (numeric)  
 + **NoHollowTimberLoggedVolume** : No hollow timber logged volume (only healthy trees) in m3 (numeric)  
-+ **FuelVolume** : Fuel wood volume in m3 (numeric)  
-+ **DamageVolume** : Damages volume (only damages (= without purge and hollow trees)) in m3 (numeric)  
++ **FuelWoodBiomass** : Fuel wood biomass in ton (numeric)  
++ **DamageBiomass** : Damages biomass (only damages trees (= not trees logged)) in ton (numeric)  
 + **LostBiomass** : Total lost biomass in ton (numeric)  
 + **TrailsDensity** : Skidding trails density (preliminary if FWE) in m/ha (units)  
 + **AdjustTrailsDensity** : Adjusted skidding trails density if FWE in m/ha (units)  
@@ -841,9 +843,9 @@ Spatial objects:
 + **SmoothedTrails** : Smoothed secondary skidding trails (MULTIPOLYGON with crs)  
 + **MainTrailsAccess** : Random access point of main trail for each harvestable zone (POINT with crs)  
 + **TrailsIdentity** : Information on sections of the trails (matrix), with
-   - LineID: 
-   - LoggedTrees: idTree of trees reached by the trails
-   - TypeExpl: type of winching  
+- LineID: 
+- LoggedTrees: idTree of trees reached by the trails
+- TypeExpl: type of winching  
 + **RawSecondTrails** : Non-smoothed secondary skidding trails (SpatialLines with crs)  
 + **CostRasterAgg** : The cost raster (RasterLayer)  
 

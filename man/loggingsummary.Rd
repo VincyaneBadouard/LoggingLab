@@ -16,6 +16,8 @@ A summary of the outputs of the loggingsimulation function
 \item a reminder of the inputs
 \item the iterations statistics (mean, standard deviation, quantiles) of the
 outgoing figures
+Please note that all volumes in m3/ha and biomass in ton/ha are per
+exploitable hectare, not per plot hectare.
 }
 }
 \description{
@@ -24,6 +26,6 @@ Summary of the outputs of the loggingsimulation function
 \examples{
 data(LoggingSimulationOutputs_iter) # Outputs of one logging simulation (2 iterations and 2 cores)
 
-loggingsummary(LoggingSimulationOutputs_iter)
+loggingsummary(x = LoggingSimulationOutputs_iter)
 
 }

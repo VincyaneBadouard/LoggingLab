@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Version: 1.0
 
 RestoreWorkspace: No
@@ -25,33 +24,3 @@ PackageCheckArgs: --as-cran
 PackageRoxygenize: rd,collate,namespace
 
 SpellingDictionary: en_GB
-=======
-Version: 1.0
-
-RestoreWorkspace: No
-SaveWorkspace: No
-AlwaysSaveHistory: Default
-
-EnableCodeIndexing: Yes
-UseSpacesForTab: Yes
-NumSpacesForTab: 2
-Encoding: UTF-8
-
-RnwWeave: Sweave
-LaTeX: pdfLaTeX
-
-AutoAppendNewline: Yes
-StripTrailingWhitespace: Yes
-LineEndingConversion: Posix
-
-BuildType: Package
-PackageUseDevtools: Yes
-PackageInstallArgs: --no-multiarch --with-keep.source
-PackageBuildArgs: --no-build-vignettes
-PackageCheckArgs: --as-cran
-PackageRoxygenize: rd,collate,namespace
-
-UseNativePipeOperator: Yes
-
-SpellingDictionary: en_GB
->>>>>>> f0d9929ed437dbb9a7d28c2d8d612a442e26f831

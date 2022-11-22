@@ -16,6 +16,8 @@ A summary of the outputs of the loggingsimulation1 function
 \item a reminder of the inputs
 \item the outgoing figures
 \item a print of the output inventory
+Please note that all volumes in m3/ha and biomass in ton/ha are per
+exploitable hectare, not per plot hectare.
 }
 }
 \description{

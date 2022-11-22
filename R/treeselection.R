@@ -286,7 +286,7 @@ treeselection <- function(
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCriteria <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
-  TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
+  TreeFellingOrientationSuccess <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
   UpMinFD.species <- NULL
   VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL

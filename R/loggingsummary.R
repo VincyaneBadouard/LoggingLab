@@ -7,6 +7,8 @@
 #' - a reminder of the inputs
 #' - the iterations statistics (mean, standard deviation, quantiles) of the
 #'    outgoing figures
+#' Please note that all volumes in m3/ha and biomass in ton/ha are per
+#' exploitable hectare, not per plot hectare.
 #'
 #' @export
 #'
@@ -16,7 +18,7 @@
 #' @examples
 #' data(LoggingSimulationOutputs_iter) # Outputs of one logging simulation (2 iterations and 2 cores)
 #'
-#' loggingsummary(LoggingSimulationOutputs_iter)
+#' loggingsummary(x = LoggingSimulationOutputs_iter)
 #'
 loggingsummary <- function(x
 ){
@@ -31,7 +33,7 @@ loggingsummary <- function(x
   # Reminder of INPUTS:
   cat('inventory :', x[[1]]$INPUTinventory, '\n') # input inventory name
   cat('scenario :', x[[1]]$scenario, '\n') # scenario,
-  cat('objective :', x[[1]]$objective, 'm3/ha\n') # objective volume (m3/ha)
+  cat('objective :', x[[1]]$objective, 'm3/harvestable ha\n') # objective volume (m3/ha)
   cat('fuel :', x[[1]]$fuel, '\n') # fuel
   cat('diversification :', x[[1]]$diversification, '\n') # diversification
   cat('winching :', x[[1]]$winching, '\n') # winching type
@@ -41,8 +43,8 @@ loggingsummary <- function(x
 
   # Numeric values:
 
-  var <- c("HarvestableArea", "VO", "HVinit", "TimberLoggedVolume", "NoHollowTimberLoggedVolume", "FuelVolume",
-           "DamageVolume", "LostBiomass", "TrailsDensity", "AdjustTrailsDensity")
+  var <- c("HarvestableArea", "VO", "HVinit", "TimberLoggedVolume", "NoHollowTimberLoggedVolume", "FuelWoodBiomass",
+           "DamageBiomass", "LostBiomass", "TrailsDensity", "AdjustTrailsDensity")
 
   statsvars <- function(v, x){ # x the list, v the var
 
@@ -96,15 +98,15 @@ loggingsummary <- function(x
 
   cat('\n') # skip a line
 
-  cat('Fuel wood volume (m3):\n')
+  cat('Fuel wood biomass (ton):\n')
   print(unlist(RsltStats[6]))
-  print(set_units(unlist(RsltStats[6])/HarvestableArea, m3/ha)) # Damages + purge (+ hollow trees if fuel = "2") (m3)
+  print(set_units(unlist(RsltStats[6])/HarvestableArea, ton/ha)) # Damages + purge (+ hollow trees if fuel = "2") (m3)
 
   cat('\n') # skip a line
 
-  cat('Damages volume (m3):\n')
+  cat('Damages biomass (ton):\n')
   print(unlist(RsltStats[7]))
-  print(set_units(unlist(RsltStats[7])/HarvestableArea, m3/ha)) # only damages (without purge and hollow trees) (m3)
+  print(set_units(unlist(RsltStats[7])/HarvestableArea, ton/ha)) # only damages (without purge and hollow trees) (m3)
 
   cat('\n') # skip a line
 
@@ -121,6 +123,9 @@ loggingsummary <- function(x
   cat('Adjusted trails density (m/ha):\n')
   print(unlist(RsltStats[10])) # Adjusted trails density (m/ha)
 
+  cat('\n') # skip a line
+
+  cat('Please note that all volumes in m3/ha and biomass in ton/ha are per exploitable hectare, not per plot hectare.')
 
   # The after simulation inventory (data.frame)
   # print(x$inventory)

@@ -16,8 +16,7 @@ timberharvestedvolume(
 vignette) (data.frame)}
 
 \item{scenario}{Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
-"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-vignette)}
+"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the vignette)}
 
 \item{fuel}{Fuel wood exploitation: no exploitation = "0", exploitation of
 damage and unused part of logged trees for fuel = "1", exploitation of
@@ -27,11 +26,14 @@ hollow trees, damage and and unused part of the log for fuel = "2"}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-A list with the logged volume (\emph{TimberLoggedVolume})
-and when fuel = "2", the logged volume without the hollow trees
-(\emph{NoHollowTimberLoggedVolume}).
-\emph{NoHollowTimberLoggedVolume} is the logged volume (\emph{TimberLoggedVolume})
-when fuel = "0" or "1".
+A list with:
+\itemize{
+\item \emph{TimberLoggedVolume}: the timber logged volume (in m3)
+\item \emph{NoHollowTimberLoggedVolume}: the timber logged volume from only healthy
+trees (in m3)
+and add in the inventory the '\emph{TimberLoggedVolume}' column to indicate the
+timber volume logged by tree
+}
 }
 \description{
 Computes the timber harvested volume in healthy trees exploited
