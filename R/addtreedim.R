@@ -254,13 +254,13 @@ addtreedim <- function(
     stop("No harvestable volume per tree could be calculated.
          Check that the name of your 'Forest' is in the table in 'volumeparameters'")
 
-  if(any(inventory$TreeHarvestableVolume) < 0)
+  if(any(inventory$TreeHarvestableVolume < 0))
     warning("Some harvestable volumes of trees ('TreeHarvestableVolume')
             have been calculated as negative.
             The 'TreeHarvestableVolumeAllometry' or the 'volumeparameters' do
             not appear to be appropriate for the size (DBH) of the trees concerned")
 
-  if(any(inventory$CrownDiameter) < 0)
+  if(any(inventory$CrownDiameter < 0))
     warning("Some crown diameters ('CrownDiameter')
             have been calculated as negative.
             The 'CrownDiameterAllometry' or the 'crowndiameterparameters' do
