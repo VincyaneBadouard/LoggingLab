@@ -83,6 +83,7 @@ constraints and avoiding trees to protect.</p>
 <span>  <span class="va">treeselectionoutputs</span>,</span>
 <span>  <span class="va">scenario</span>,</span>
 <span>  winching <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fuel <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -152,6 +153,15 @@ If grapple + cable (winching = "2") without fuel wood (fuel = "0")
 recovery of the tree foot with grapple if possible (respected grapple
 conditions) otherwise with cable with angle to the trail.
 Avoidance of future/reserves if chosen.</p></dd>
+
+
+<dt>fuel</dt>
+<dd><p>Fuel wood exploitation: no exploitation = "0", exploitation of
+damage and unused part of logged trees for fuel = "1", exploitation of
+hollow trees, damage and and unused part of the log for fuel = "2".
+If fuel wood harvesting is chosen, these trails are preliminary,
+and the trails will be adjusted after tree felling for fuel wood recovery.
+The mortality of the trails is therefore not recorded at this stage</p></dd>
 
 
 <dt>verbose</dt>
@@ -228,6 +238,7 @@ zone (sfc_POINT with crs)</p></li>
 <span class="r-in"><span>  treeselectionoutputs <span class="op">=</span> <span class="va">treeselectionoutputs</span>,</span></span>
 <span class="r-in"><span>  scenario <span class="op">=</span> <span class="st">"manual"</span>,</span></span>
 <span class="r-in"><span>  winching <span class="op">=</span> <span class="va">winching</span>,</span></span>
+<span class="r-in"><span>  fuel <span class="op">=</span>  <span class="st">"0"</span>,</span></span>
 <span class="r-in"><span>  advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>

@@ -83,8 +83,7 @@ vignette) (data.frame)</p></dd>
 
 <dt>scenario</dt>
 <dd><p>Logging scenario: "RIL1", "RIL2broken", "RIL2", "RIL3",
-"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the
-vignette)</p></dd>
+"RIL3fuel", "RIL3fuelhollow" or "manual"(character) (see the vignette)</p></dd>
 
 
 <dt>fuel</dt>
@@ -102,12 +101,12 @@ hollow trees, damage and and unused part of the log for fuel = "2"</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list with the logged volume (<em>TimberLoggedVolume</em>)
-and when fuel = "2", the logged volume without the hollow trees
-(<em>NoHollowTimberLoggedVolume</em>).
-<em>NoHollowTimberLoggedVolume</em> is the logged volume (<em>TimberLoggedVolume</em>)
-when fuel = "0" or "1".</p>
-    </div>
+<p>A list with:</p><ul><li><p><em>TimberLoggedVolume</em>: the timber logged volume (in m3)</p></li>
+<li><p><em>NoHollowTimberLoggedVolume</em>: the timber logged volume from only healthy
+trees (in m3)
+and add in the inventory the '<em>TimberLoggedVolume</em>' column to indicate the
+timber volume logged by tree</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>When fuel is "2", by default, 2/3 of the log of a hollow tree will
@@ -142,6 +141,28 @@ as timber, but as fuel wood if chosen.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">timberharvestedvolume</span><span class="op">(</span><span class="va">inventory</span>, scenario <span class="op">=</span> <span class="st">"manual"</span>, fuel <span class="op">=</span> <span class="st">"2"</span>,</span></span>
 <span class="r-in"><span>advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $inventory</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3,525 × 59</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Forest Plot  PlotA…¹ SubPlot idTree Proto…² Xfield Yfield UTMZone   Lat   Lon</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Parac… 6        6.25       4 <span style="text-decoration: underline;">104</span>455 Guyafor  215     69.5      22  5.27 -<span style="color: #BB0000;">52.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Parac… 6        6.25       4 <span style="text-decoration: underline;">103</span>939 Guyafor  128.    34        22  5.27 -<span style="color: #BB0000;">52.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Parac… 6        6.25       2 <span style="text-decoration: underline;">102</span>249 Guyafor  202    134.       22  5.27 -<span style="color: #BB0000;">52.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Parac… 6        6.25       2 <span style="text-decoration: underline;">102</span>086 Guyafor  176.   182.       22  5.27 -<span style="color: #BB0000;">52.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Parac… 6        6.25       1 <span style="text-decoration: underline;">100</span>904 Guyafor   36    170        22  5.27 -<span style="color: #BB0000;">52.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Parac… 6        6.25       3 <span style="text-decoration: underline;">103</span>694 Guyafor  122    116.       22  5.27 -<span style="color: #BB0000;">52.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Parac… 6        6.25       1 <span style="text-decoration: underline;">101</span>090 Guyafor   67.5  138        22  5.27 -<span style="color: #BB0000;">52.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Parac… 6        6.25       1 <span style="text-decoration: underline;">101</span>193 Guyafor   75.5  208.       22  5.27 -<span style="color: #BB0000;">52.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Parac… 6        6.25       1 <span style="text-decoration: underline;">100</span>833 Guyafor   25    238.       22  5.27 -<span style="color: #BB0000;">52.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Parac… 6        6.25       1 <span style="text-decoration: underline;">101</span>474 Guyafor  106.   238.       22  5.27 -<span style="color: #BB0000;">52.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 3,515 more rows, 48 more variables: Family.x &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ScientificName &lt;chr&gt;, Genus &lt;chr&gt;, Species &lt;chr&gt;, BotaSource &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   BotaCertainty &lt;dbl&gt;, VernName &lt;chr&gt;, CensusYear &lt;int&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   CensusDateCertainty &lt;lgl&gt;, CodeAlive &lt;lgl&gt;, MeasCode &lt;int&gt;, Circ &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   CircCorr &lt;dbl&gt;, CorrCode &lt;chr&gt;, DBH &lt;dbl&gt;, TreesIn &lt;chr&gt;, Xutm &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Yutm &lt;dbl&gt;, TreeHarvestableVolume &lt;dbl&gt;, TrunkHeight &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   TreeHeight &lt;dbl&gt;, CrownHeight &lt;dbl&gt;, Taxo &lt;chr&gt;, CrownDiameter &lt;dbl&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TimberLoggedVolume</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 35.7794</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
