@@ -118,6 +118,7 @@ is estimated by the model 'Treefall2ndDeathModel', according to the DBH of the
 tree whose probability of dying is estimated.
 }
 \examples{
+\dontrun{
 set.seed(1)
 data(SecondaryTrails)
 
@@ -213,6 +214,7 @@ ggplot() +
   "Reserve" = "purple", "Probed hollow" = "forestgreen",
   "Treefall2nd" = "chocolate4")) +
   labs(color = "Logging status")
+}
 
 \dontrun{
 # The trees under the fallen trees
