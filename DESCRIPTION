@@ -50,7 +50,7 @@ Imports:
     tidyr (>= 1.1.2),
     BIOMASS (>= 2.1.7),
     rlang (>= 0.4.10),
-    raster (>= 3.5.15),
+    raster (>= 3.5.29),
     sp (>= 1.4.6),
     sf (>= 1.0.5),
     nngeo (>= 0.4.5),

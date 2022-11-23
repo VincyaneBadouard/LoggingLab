@@ -92,14 +92,14 @@
 #' HarvestableAreaOutputsCable$PlotSlope
 #'
 harvestableareadefinition <- function(
-  topography,
-  creekverticaldistance,
-  creekhorizontaldistance,
-  maintrails,
-  plotmask,
-  scenario,
-  winching = NULL,
-  advancedloggingparameters = loggingparameters()
+    topography,
+    creekverticaldistance,
+    creekhorizontaldistance,
+    maintrails,
+    plotmask,
+    scenario,
+    winching = NULL,
+    advancedloggingparameters = loggingparameters()
 ){
 
   creekdistances <- list("distvert" = creekverticaldistance,
@@ -211,13 +211,13 @@ harvestableareadefinition <- function(
         slope <= SlpCrit,
       true = 1,
       false = 0
-    )) -> PlotSlopeCreekDist # Identify harvestable area (1) /  non-harvestable area (0) by slope and Creek Vertical Height
+    )) -> PlotSlopeCreekDist # Identify harvestable area (1) / non-harvestable area (0) by slope and Creek Vertical Height
   RasterHarvestableFoT <-
     try(rasterFromXYZ(PlotSlopeCreekDist, crs = raster::crs(topography)), silent=TRUE)
 
-  PolygonHarvestableFoT <- rasterToPolygons(x = RasterHarvestableFoT$Harvestable,
-                                            n = 16,
-                                            dissolve = TRUE)
+  PolygonHarvestableFoT <- raster::rasterToPolygons(x = RasterHarvestableFoT$Harvestable,
+                                                    n = 16,
+                                                    dissolve = TRUE)
 
 
 
@@ -255,9 +255,9 @@ harvestableareadefinition <- function(
     RasterHarvestableCbl <-
       rasterFromXYZ(PlotSlopeCreekDist, crs = raster::crs(topography))
 
-    PolygonHarvestableCbl <- rasterToPolygons(x = RasterHarvestableCbl$Harvestable,
-                                              n = 16,
-                                              dissolve = TRUE)
+    PolygonHarvestableCbl <- raster::rasterToPolygons(x = RasterHarvestableCbl$Harvestable,
+                                                      n = 16,
+                                                      dissolve = TRUE)
 
     HarvestablePolygonsCbl <- PolygonHarvestableCbl %>% st_as_sf() %>% st_cast(to = "POLYGON", warn = FALSE)
     accesspolygonesCbl <- HarvestablePolygonsCbl %>% filter(Harvestable == 1) %>%

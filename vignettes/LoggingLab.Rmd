@@ -258,7 +258,7 @@ kable(ScenariosTable)
 + **Minimum orientation of the tree fall to the trail** = 30 degree 
 + **Maximum orientation of the tree fall to the trail** = 45 degree 
 + **Part taken from hollow trees for fuel exploitation** = 1/3
-+ **Proportion of the tree crown biomass used as fuel wood** (ref) = 2/3
++ **Proportion of the tree crown biomass used as fuel wood** (Eleotério et al. 2019) = 2/3 (Branches diameter >= 5 cm)  
 + **Purge (unused part of the log)** = 0.14 m^3 of fuel wood/m^3 of logged trees
 + **Maximum trail density** = 200 m/ha (has no impact on the simulation.
 A message will be sent to inform if this threshold has been exceeded)
@@ -958,7 +958,13 @@ plot(Rslt)
 ```
 
 
-
+# References
+  - Aubry-Kientz, Mélaine, et al. "A comparative assessment of the
+performance of individual tree crowns delineation algorithms from ALS data
+in tropical forests." Remote Sensing 11.9 (2019): 1086.  
+  - Eleotério, Jackson Roberto, et al. "Aboveground biomass quantification and
+tree-level prediction models for the Brazilian subtropical Atlantic Forest."
+Southern Forests: a Journal of Forest Science 81.3 (2019): 261-271.  
 
 
 

@@ -14,9 +14,9 @@ A large named list of 39  elements
 \item{TimberLoggedVolume}{Timber logged volume in m3 (numeric)}
 \item{NoHollowTimberLoggedVolume}{No hollow timber logged volume (only
 healthy trees) in m3 (numeric)}
-\item{FuelVolume}{Fuel wood volume in m3 (numeric)}
-\item{DamageVolume}{Damages volume (only damages (= without purge and
-hollow trees)) in m3 (numeric)}
+\item{FuelWoodBiomass}{Harvestable fuel wood biomass in ton (numeric)}
+\item{DamageBiomass}{Damages biomass (only damages trees (= dead by trails
+or secondary treefall) in ton (numeric)}
 \item{LostBiomass}{Total lost biomass in ton (numeric)}
 \item{TrailsDensity}{Trails density (preliminary if FWE) in m/ha (units)}
 \item{AdjustTrailsDensity}{Adjusted trails density if FWE in m/ha (units)}

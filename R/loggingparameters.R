@@ -67,8 +67,8 @@
 #'@param TreeHollowPartForFuel Proportion of hollow trees used as fuel wood.
 #'  Default = 1/3 (double)
 #'
-#'@param CrownPartForFuel Proportion of the tree crown biomass used as fuel
-#'  wood. Default = 2/3 (double) (ref)
+#'@param CrownPartForFuel Proportion of the tree crown biomass used as fuel wood.
+#'  Default = 2/3 (double) (Branches diameter >= 5 cm) (Eleotério et al. 2019)
 #'
 #'@param Purge Part of the log no used for timber, can be used for fuel wood.
 #'  Default = 0.14, in m3 of purge/m3 of volume of timber harvested. (double)
@@ -127,6 +127,9 @@
 #'@references Aubry-Kientz, Mélaine, et al. "A comparative assessment of the
 #'   performance of individual tree crowns delineation algorithms from ALS data
 #'   in tropical forests." Remote Sensing 11.9 (2019): 1086.
+#' Eleotério, Jackson Roberto, et al. "Aboveground biomass quantification and
+#'   tree-level prediction models for the Brazilian subtropical Atlantic Forest."
+#'   Southern Forests: a Journal of Forest Science 81.3 (2019): 261-271.
 #'
 #'@return A named list of 35 objects.
 #'

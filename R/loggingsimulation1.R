@@ -198,6 +198,9 @@ loggingsimulation1 <- function(
     stop("The 'inventory', 'speciescriteria', 'volumeparameters' and 'crowndiameterparameters' arguments
          of the 'loggingsimulation' function must be data.frames")
   # inventory as.data.frame to remove data.table or dplyr formats
+
+  INPUTinventory <- deparse(substitute(inventory)) # object name to this name in character
+
   inventory <- as.data.frame(inventory)
 
   # plotmask
@@ -297,8 +300,6 @@ loggingsimulation1 <- function(
   diversification <- scenariosparameters$diversification
   winching <- scenariosparameters$winching
   directionalfelling <- scenariosparameters$directionalfelling
-
-  INPUTinventory <- deparse(substitute(inventory)) # object name to this name in character
 
   # Function
 
