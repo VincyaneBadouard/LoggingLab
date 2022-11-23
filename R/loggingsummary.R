@@ -24,7 +24,7 @@ loggingsummary <- function(x
 ){
 
   # Global variables
-  m3 <- ha <- NULL
+  m3 <- ha <- ton <- NULL
 
   # Arguments check
   if(!inherits(x, "list"))

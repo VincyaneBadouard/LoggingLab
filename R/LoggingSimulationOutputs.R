@@ -12,6 +12,8 @@
 #'   specieslax : FALSE
 #'   objectivelax : TRUE
 #'
+#' @encoding UTF-8
+#'
 #' @format A large named list of 39  elements
 #' \describe{
 #'   \item{inventory}{Output forest inventory (data.frame)}
