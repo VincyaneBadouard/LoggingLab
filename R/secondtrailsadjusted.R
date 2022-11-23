@@ -95,6 +95,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' data(DTMParacou)
 #' data(PlotMask)
 #' data(HarvestableAreaOutputsCable)
@@ -218,6 +219,7 @@
 #'    "Adjusted-trails" = "darkred"))
 #'
 #' ScdTrailsAdj$TrailsIdentity
+#' }
 #'
 secondtrailsadjusted <- function(
   inventory,

@@ -99,6 +99,7 @@
 #'@importFrom stats runif
 #'
 #' @examples
+#' \dontrun{
 #' set.seed(1)
 #' data(SecondaryTrails)
 #'
@@ -194,6 +195,7 @@
 #'   "Reserve" = "purple", "Probed hollow" = "forestgreen",
 #'   "Treefall2nd" = "chocolate4")) +
 #'   labs(color = "Logging status")
+#' }
 #'
 #'\dontrun{
 #' # The trees under the fallen trees
