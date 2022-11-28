@@ -88,9 +88,6 @@
     <loc>/reference/directionalfellingsuccessdef.html</loc>
   </url>
   <url>
-    <loc>/reference/exploitablefuelwoodvolume.html</loc>
-  </url>
-  <url>
     <loc>/reference/felling1tree.html</loc>
   </url>
   <url>
@@ -110,6 +107,9 @@
   </url>
   <url>
     <loc>/reference/harvestableareadefinition.html</loc>
+  </url>
+  <url>
+    <loc>/reference/harvestablefuelwood.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
