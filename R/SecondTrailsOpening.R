@@ -1475,6 +1475,9 @@ secondtrailsopening <- function(
 
   inventory <- treeselectionoutputs$inventory
 
+  # initial inventory
+  inventory0 <- inventory
+
   lines <- do.call(rbind, Lines)
 
   # WinchingMachine info in the inventory
@@ -1578,6 +1581,10 @@ secondtrailsopening <- function(
         dplyr::select(-DeadTrees)
     }
   }
+
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function secondtrailsopening() is not the same.The function must be corrected.")
 
   # OUTPUTS
 

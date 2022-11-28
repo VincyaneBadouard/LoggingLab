@@ -98,6 +98,9 @@ timberharvestedvolume <- function(
   if(!inherits(advancedloggingparameters, "list"))
     stop("The 'advancedloggingparameters' argument of the 'timberharvestedvolume' function must be a list")
 
+  # initial inventory
+  inventory0 <- inventory
+
 
   #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, fuel = fuel)
@@ -124,6 +127,10 @@ timberharvestedvolume <- function(
 
   TimberLoggedVolume <- sum(inventory$TimberLoggedVolume, na.rm = TRUE)
   NoHollowTimberLoggedVolume <- Healthy
+
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function timberharvestedvolume() is not the same.The function must be corrected.")
 
 
   outputs <- list(inventory = inventory,

@@ -44,7 +44,7 @@ loggingsummary <- function(x
   # Numeric values:
 
   var <- c("HarvestableArea", "VO", "HVinit", "TimberLoggedVolume", "NoHollowTimberLoggedVolume", "FuelWoodBiomass",
-           "DamageBiomass", "LostBiomass", "TrailsDensity", "AdjustTrailsDensity")
+           "LoggingResidualBiomass", "LostBiomass", "TrailsDensity", "AdjustTrailsDensity")
 
   statsvars <- function(v, x){ # x the list, v the var
 
@@ -100,13 +100,13 @@ loggingsummary <- function(x
 
   cat('Fuel wood biomass (ton):\n')
   print(unlist(RsltStats[6]))
-  print(set_units(unlist(RsltStats[6])/HarvestableArea, ton/ha)) # Damages + purge (+ hollow trees if fuel = "2") (m3)
+  print(set_units(unlist(RsltStats[6])/HarvestableArea, ton/ha))
 
   cat('\n') # skip a line
 
-  cat('Damages biomass (ton):\n')
+  cat('Logging residual biomass (ton):\n')
   print(unlist(RsltStats[7]))
-  print(set_units(unlist(RsltStats[7])/HarvestableArea, ton/ha)) # only damages (without purge and hollow trees) (m3)
+  print(set_units(unlist(RsltStats[7])/HarvestableArea, ton/ha))
 
   cat('\n') # skip a line
 

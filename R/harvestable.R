@@ -151,6 +151,8 @@ harvestable <- function(
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- HarvestableZone <- NULL
 
+  # initial inventory
+  inventory0 <- inventory
 
   #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, winching = winching)
@@ -320,6 +322,10 @@ harvestable <- function(
   HVinit <- sum(HarvestableTable$TreeHarvestableVolume)
 
   harvestableOutputs <- list(inventory = inventory, HVinit = HVinit)
+
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function harvestable() is not the same.The function must be corrected.")
 
   return(harvestableOutputs) # return the new inventory and the HVinit
 }

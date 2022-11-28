@@ -222,18 +222,18 @@
 #' }
 #'
 secondtrailsadjusted <- function(
-  inventory,
-  topography,
-  plotmask,
-  maintrails,
-  plotslope,
-  harvestablepolygons,
-  machinepolygons,
-  maintrailsaccess = NULL,
-  scenario,
-  winching = NULL,
-  verbose = FALSE,
-  advancedloggingparameters = loggingparameters()
+    inventory,
+    topography,
+    plotmask,
+    maintrails,
+    plotslope,
+    harvestablepolygons,
+    machinepolygons,
+    maintrailsaccess = NULL,
+    scenario,
+    winching = NULL,
+    verbose = FALSE,
+    advancedloggingparameters = loggingparameters()
 ){
 
   # Arguments check
@@ -255,6 +255,8 @@ secondtrailsadjusted <- function(
   if(!inherits(maintrailsaccess, c("sf", "sfc")))
     stop("The 'maintrailsaccess' argument of the 'secondtrailsadjusted' function must be sf or sfc")
 
+  # initial inventory
+  inventory0 <- inventory
 
   # Options
   options("rgdal_show_exportToProj4_warnings"="none") # to avoid gdal warnings
@@ -358,7 +360,9 @@ secondtrailsadjusted <- function(
 
   # Points vector with coordinates of the harvestable trees:
   HarvestableTreesPoints <- inventory %>%
-    filter(LoggingStatus == "harvestable"|LoggingStatus == "harvestableUp"|LoggingStatus == "harvestable2nd") # harvestableUp = DBH > MinFD individuals, harvestable2nd = eco2 individuals is specieslax
+    filter(LoggingStatus == "harvestable"|
+             LoggingStatus == "harvestableUp"|
+             LoggingStatus == "harvestable2nd") # harvestableUp = DBH > MinFD individuals, harvestable2nd = eco2 individuals is specieslax
 
 
 
@@ -399,7 +403,8 @@ secondtrailsadjusted <- function(
   for (h in 1:nrow(inventory)) {
     if (!st_is_empty(Trunks[h])) {
       inventory_Tr$CrownGeom[h] <- st_difference(Trunks[h],inventory_sf[h,] %>%
-                                                              st_buffer(dist = (inventory_sf$TrunkHeight[h] * 0.95))) %>%
+                                                   st_buffer(dist =
+                                                               (inventory_sf$TrunkHeight[h] * 0.95))) %>%
         st_centroid() %>% st_union()%>% st_as_text()
     }
 
@@ -735,8 +740,8 @@ secondtrailsadjusted <- function(
   for (ID_Access in unique(ptsAll$ID_Acc)) {
 
     if (verbose){
-    print(ID_Access)
-      }
+      print(ID_Access)
+    }
 
     winching <- WinchingInit
     pts <- ptsAll %>% filter(ID_Acc == ID_Access) %>%  dplyr::select(-ID_Acc)
@@ -1193,7 +1198,7 @@ secondtrailsadjusted <- function(
             PointTreeWIP <- ptsDirAcc %>% filter(type == "Tree"| type == "Crown")
 
             if (verbose){
-            print(paste0("LoggedTrees : ",PointTreeWIP$origins[[1]]))
+              print(paste0("LoggedTrees : ",PointTreeWIP$origins[[1]]))
             }
 
             Lines[[l]] <- list("LineID" = NA,"LoggedTrees" = PointTreeWIP$origins,"Crownpts" = !Crown2FoT,"TypeExpl" = TmpTypeAcc,"IdMachineZone" = ID_Access)
@@ -1905,7 +1910,7 @@ secondtrailsadjusted <- function(
 
       TrailsDensity <- (SmoothedTrails  %>% st_intersection(plotmask %>% st_as_sf()) %>% st_area / advancedloggingparameters$ScndTrailWidth)/(plotmask %>% st_as_sf() %>% st_area() /10000)
 
-      }else{
+    }else{
       secondtrails <- smoothtrails(paths,
                                    plotmask,
                                    verbose = verbose,
@@ -1954,7 +1959,7 @@ secondtrailsadjusted <- function(
     inventory <- inventory %>%
       left_join(DeadTrees, by = "idTree") %>%
       mutate(DeathCause = ifelse(is.na(DeathCause) & Selected != "1" & DeadTrees == "1",
-                                  "2ndtrail", DeathCause)) %>%  # Damage trees
+                                 "2ndtrail", DeathCause)) %>%  # Damage trees
       dplyr::select(-DeadTrees)
   }
 
@@ -1975,6 +1980,10 @@ secondtrailsadjusted <- function(
     left_join(TrailsIdentity_df, by = "idTree")
 
   # OUTPUTS
+
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function secondtrailsadjusted() is not the same.The function must be corrected.")
 
   if (WinchingInit == "2") {
     secondtrails <- list("inventory" =  inventory,

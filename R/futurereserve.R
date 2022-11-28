@@ -104,6 +104,9 @@ futurereserve <- function(
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
+  # initial inventory
+  inventory0 <- inventory
+
 
   #Future: select essence and diameters
 
@@ -134,6 +137,9 @@ futurereserve <- function(
       mutate(LoggingStatus = ifelse(LoggingStatus == "future", "reserve", LoggingStatus))
   }
 
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function futurereserve() is not the same.The function must be corrected.")
 
   return(inventory)
 

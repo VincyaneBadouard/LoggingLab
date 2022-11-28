@@ -51,10 +51,10 @@ loggingsummary1 <- function(x
       round(x$NoHollowTimberLoggedVolume/HarvestableArea, digits = 1), 'm3/harvestable ha\n') # Logged volume (m3) (only healthy trees)
 
   cat('Fuel wood biomass :', round(x$FuelWoodBiomass, digits = 1), 'ton, ',
-      round(x$FuelWoodBiomass/HarvestableArea, digits = 1), 'ton/harvestable ha\n') # Damages + purge (+ hollow trees if fuel = "2") (m3)
+      round(x$FuelWoodBiomass/HarvestableArea, digits = 1), 'ton/harvestable ha\n')
 
-  cat('Damages biomass :', round(x$DamageBiomass, digits = 1), 'ton, ',
-      round(x$DamageBiomass/HarvestableArea, digits = 1), 'ton/harvestable ha\n') # only damages (without purge and hollow trees) (m3)
+  cat('Logging residual biomass :', round(x$LoggingResidualBiomass, digits = 1), 'ton, ',
+      round(x$LoggingResidualBiomass/HarvestableArea, digits = 1), 'ton/harvestable ha\n')
 
   cat('Lost biomass :', round(x$LostBiomass, digits = 1), 'ton\n') # Total lost biomass (ton)
 

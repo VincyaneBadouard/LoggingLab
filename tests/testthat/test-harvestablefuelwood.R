@@ -1,4 +1,4 @@
-test_that("exploitablefuelwoodvolume", {
+test_that("harvestablefuelwood", {
 
   # library(LoggingLab)
   # library(tidyverse)
@@ -68,49 +68,48 @@ test_that("exploitablefuelwoodvolume", {
 
   # Run function
 
-  Rslt_Fuel <- exploitablefuelwoodvolume(inventory_Fuel, scenario = "manual", fuel = "2",
-                                         TimberLoggedVolume = TimberLoggedVolume_Fuel,
-                                         NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume_Fuel,
-                                         advancedloggingparameters = loggingparameters())
+  Rslt_Fuel <- harvestablefuelwood(inventory_Fuel, scenario = "manual", fuel = "2",
+                                   TimberLoggedVolume = TimberLoggedVolume_Fuel,
+                                   NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume_Fuel,
+                                   advancedloggingparameters = loggingparameters())
 
-  Rslt_NoFuel <- exploitablefuelwoodvolume(inventory_NoFuel, scenario = "manual", fuel = "0",
-                                           TimberLoggedVolume = TimberLoggedVolume_NoFuel,
-                                           NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume_NoFuel,
-                                           advancedloggingparameters = loggingparameters())
+  Rslt_NoFuel <- harvestablefuelwood(inventory_NoFuel, scenario = "manual", fuel = "0",
+                                     TimberLoggedVolume = TimberLoggedVolume_NoFuel,
+                                     NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume_NoFuel,
+                                     advancedloggingparameters = loggingparameters())
 
   Rsltinventory_Fuel <- Rslt_Fuel$inventory
-  DamageBiomass_Fuel <- Rslt_Fuel$DamageBiomass
+  LoggingResidualBiomass_Fuel <- Rslt_Fuel$LoggingResidualBiomass
   FuelWoodBiomass_Fuel <-Rslt_Fuel$FuelWoodBiomass
 
   Rsltinventory_NoFuel <- Rslt_NoFuel$inventory
-  DamageBiomass_NoFuel <- Rslt_NoFuel$DamageBiomass
+  LoggingResidualBiomass_NoFuel <- Rslt_NoFuel$LoggingResidualBiomass
   FuelWoodBiomass_NoFuel <-Rslt_NoFuel$FuelWoodBiomass
 
   # Tests
 
   # Check the function arguments ####
 
-  expect_error(exploitablefuelwoodvolume(MatrixInventory),
-               regexp = "The 'inventory' argument of the 'exploitablefuelwoodvolume' function must be a data.frame")
+  expect_error(harvestablefuelwood(MatrixInventory),
+               regexp = "The 'inventory' argument of the 'harvestablefuelwood' function must be a data.frame")
 
-  expect_error(exploitablefuelwoodvolume(inventory, scenario = "RIL"),
-               regexp = "The 'scenario' argument of the 'exploitablefuelwoodvolume' function must be
+  expect_error(harvestablefuelwood(inventory, scenario = "RIL"),
+               regexp = "The 'scenario' argument of the 'harvestablefuelwood' function must be
          'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
-  expect_error(exploitablefuelwoodvolume(inventory, scenario = "manual", fuel = TRUE),
-               regexp = "The 'fuel' argument of the 'exploitablefuelwoodvolume' function must be '0', '1', '2' or NULL")
+  expect_error(harvestablefuelwood(inventory, scenario = "manual", fuel = TRUE),
+               regexp = "The 'fuel' argument of the 'harvestablefuelwood' function must be '0', '1', '2' or NULL")
 
-  expect_error(exploitablefuelwoodvolume(inventory, scenario = "manual", fuel = "2",
-                                         advancedloggingparameters = 20),
+  expect_error(harvestablefuelwood(inventory, scenario = "manual", fuel = "2",
+                                   advancedloggingparameters = 20),
                regexp = "The 'advancedloggingparameters' argument
-         of the 'exploitablefuelwoodvolume' function must be a list")
+         of the 'harvestablefuelwood' function must be a list")
 
-  expect_error(exploitablefuelwoodvolume(inventory, scenario = "manual", fuel = "2",
-                                         advancedloggingparameters = loggingparameters(),
-                                         TimberLoggedVolume = TRUE, NoHollowTimberLoggedVolume = TRUE),
+  expect_error(harvestablefuelwood(inventory, scenario = "manual", fuel = "2",
+                                   advancedloggingparameters = loggingparameters(),
+                                   TimberLoggedVolume = TRUE, NoHollowTimberLoggedVolume = TRUE),
                regexp = "The 'TimberLoggedVolume' and 'NoHollowTimberLoggedVolume' arguments
-         of the 'exploitablefuelwoodvolume' function must be numeric")
-
+         of the 'harvestablefuelwood' function must be numeric")
 
   # if no fuel wood exploitation : FuelWoodBiomass = Null, NA in the column.
   expect_true(is.null(FuelWoodBiomass_NoFuel))
@@ -123,35 +122,26 @@ test_that("exploitablefuelwoodvolume", {
     Rsltinventory_Fuel[!is.na(Rsltinventory_Fuel$DeathCause), ]$FuelWoodBiomass > 0))
 
 
-  # Always damages are generated by logging : DamageBiomass not null
-  DamageBiomass <- list(DamageBiomass_Fuel, DamageBiomass_NoFuel)
-  for(i in 1:length(DamageBiomass)){
-    expect_true(DamageBiomass[i] > 0)
+  # LoggingResidualBiomass not null
+  LoggingResidualBiomass <- list(LoggingResidualBiomass_Fuel, LoggingResidualBiomass_NoFuel)
+  for(i in 1:length(LoggingResidualBiomass)){
+    expect_true(!is.null(LoggingResidualBiomass[i]))
   }
 
-  # DamageBiomass = LogBiomass + PurgeBiomass + CrownBiomass of damage trees
-  inventorylist <- list(Rsltinventory_Fuel, Rsltinventory_NoFuel)
-  for(i in 1:length(inventorylist)){
 
-    DamageBiomass[[i]] == sum(
-      inventorylist[[i]][inventorylist[[i]]$DeathCause %in% "maintrail" |
-                           inventorylist[[i]]$DeathCause %in% "2ndtrail" |
-                           inventorylist[[i]]$DeathCause %in% "treefall2nd" |
-                           inventorylist[[i]]$DeathCause %in% "landing",]$LogBiomass,
-      na.rm = TRUE) +
-      sum(
-        inventorylist[[i]][inventorylist[[i]]$DeathCause %in% "maintrail" |
-                             inventorylist[[i]]$DeathCause %in% "2ndtrail" |
-                             inventorylist[[i]]$DeathCause %in% "treefall2nd" |
-                             inventorylist[[i]]$DeathCause %in% "landing",]$PurgeBiomass,
-        na.rm = TRUE) +
-      sum(
-        inventorylist[[i]][inventorylist[[i]]$DeathCause %in% "maintrail" |
-                             inventorylist[[i]]$DeathCause %in% "2ndtrail" |
-                             inventorylist[[i]]$DeathCause %in% "treefall2nd" |
-                             inventorylist[[i]]$DeathCause %in% "landing",]$CrownBiomass,
-        na.rm = TRUE)
+  Rsltinventory <- list(Rsltinventory_Fuel, Rsltinventory_NoFuel)
 
+  for(i in 1:length(Rsltinventory)){
+    # Timber in selected trees
+    expect_true(all(
+      Rsltinventory[[i]][Rsltinventory[[i]]$Selected == "1" &
+                           !is.na(Rsltinventory[[i]]$Selected), ]$TimberLoggedBiomass > 0))
+
+    # AGB = TimberLoggedBiomass + FuelWoodBiomass + LoggingResidualBiomass
+    expect_true(all(na.omit(
+      Rsltinventory[[i]]$AGB == (Rsltinventory[[i]]$TimberLoggedBiomass +
+                                   Rsltinventory[[i]]$FuelWoodBiomass +
+                                   Rsltinventory[[i]]$LoggingResidualBiomass))))
   }
 
 })

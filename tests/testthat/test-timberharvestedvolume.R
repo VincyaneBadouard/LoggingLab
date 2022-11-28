@@ -60,19 +60,19 @@ test_that("timberharvestedvolume", {
                regexp = "The 'advancedloggingparameters' argument of the 'timberharvestedvolume' function must be a list")
 
   # fuel !="2"
-  expect_true(Rslt$NoHollowTimberLoggedVolume == Rslt$TimberLoggedVolume) # no hollow trees exploitation
-  expect_true(Rslt$TimberLoggedVolume == Healthy) # the selected trees volume
+  expect_equal(Rslt$NoHollowTimberLoggedVolume, Rslt$TimberLoggedVolume) # no hollow trees exploitation
+  expect_equal(Rslt$TimberLoggedVolume, Healthy) # the selected trees volume
 
   # fuel =="2"
-  expect_true(RsltHollow$NoHollowTimberLoggedVolume == Healthy) # the selected healthy trees volume
+  expect_equal(RsltHollow$NoHollowTimberLoggedVolume, Healthy) # the selected healthy trees volume
 
   if(nrow(HollowTable) > 0)
-    expect_true(RsltHollow$TimberLoggedVolume == sum(RsltHollow$NoHollowTimberLoggedVolume +
-                                                       (1-advancedloggingparameters$TreeHollowPartForFuel) *
-                                                       sum(HollowTable$TreeHarvestableVolume)))
+    expect_equal(RsltHollow$TimberLoggedVolume, sum(RsltHollow$NoHollowTimberLoggedVolume +
+                                                      (1-advancedloggingparameters$TreeHollowPartForFuel) *
+                                                      sum(HollowTable$TreeHarvestableVolume)))
 
   if(nrow(HollowTable) == 0)
-    expect_true(RsltHollow$TimberLoggedVolume == RsltHollow$NoHollowTimberLoggedVolume) # no probed hollow trees
+    expect_equal(RsltHollow$TimberLoggedVolume, RsltHollow$NoHollowTimberLoggedVolume) # no probed hollow trees
 
 })
 
@@ -87,8 +87,3 @@ test_that("timberharvestedvolume", {
 ### - if(nrow(HollowTable) == 0): NoHollowTimberLoggedVolume
 
 ## NoHollowTimberLoggedVolume = sum(LoggedTable$TreeHarvestableVolume)
-
-
-
-
-

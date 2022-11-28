@@ -197,5 +197,5 @@ Rslt <- loggingsimulation(
 \code{\link{createcanopy}}, \code{\link{treefromthesky}},
 \code{\link{felling1tree}}, \code{\link{rotatepolygon}},
 \code{\link{getgeometry}}, \code{\link{timberharvestedvolume}},
-\code{\link{exploitablefuelwoodvolume}}
+\code{\link{harvestablefuelwood}}
 }

@@ -90,6 +90,9 @@ addtreedim <- function(
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
   family <- genus <- species <- meanWD <- levelWD <- WoodDensity <- NULL
 
+  # initial inventory
+  inventory0 <- inventory
+
   # Crown diameter allometry parameters data preparation:
 
   spParamCrownDiameter <- crowndiameterparameters %>% #parameters at species scale
@@ -266,6 +269,9 @@ addtreedim <- function(
             The 'CrownDiameterAllometry' or the 'crowndiameterparameters' do
             not appear to be appropriate for the size (DBH) of the trees concerned")
 
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function addtreedim() is not the same.The function must be corrected.")
 
   return(inventory)
 }

@@ -260,6 +260,10 @@ treefelling <- function(
   geometry <- idTree <- . <- Treefall2ndDeath <- Treefall2ndDeathProba <-  NULL
 
 
+  # initial inventory
+  inventory0 <- inventory
+
+
   # Redefinition of the parameters according to the chosen scenario
   scenariosparameters <- scenariosparameters(scenario = scenario, fuel = fuel, winching = winching,
                                              directionalfelling = directionalfelling)
@@ -359,6 +363,10 @@ treefelling <- function(
                                DeathCause))
 
   # length(which(inventory$DeathCause == "treefall2nd"))
+
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function treefelling() is not the same.The function must be corrected.")
 
 
   return(inventory)
@@ -460,6 +468,8 @@ directionalfellingsuccessdef <- function(
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
+  # initial inventory
+  inventory0 <- inventory
 
   # Totally random
   # if (totally random case){ # No directional felling
@@ -495,6 +505,10 @@ directionalfellingsuccessdef <- function(
 
   inventory$TreeFellingOrientationSuccess <- as.factor(inventory$TreeFellingOrientationSuccess)
 
+
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function directionalfellingsuccessdef() is not the same.The function must be corrected.")
 
   return(inventory)
 

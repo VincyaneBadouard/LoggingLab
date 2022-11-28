@@ -149,6 +149,11 @@ selected <- function(
   if(!all(unlist(lapply(list(VO, HVinit), inherits, "numeric"))))
     stop("Arguments 'VO' and 'HVinit' of the 'selected' function must be numeric")
 
+
+  # initial inventory
+  inventory0 <- inventory
+
+
   # Redefinition of the parameters according to the chosen scenario
   scenariosparameters <- scenariosparameters(scenario = scenario,
                                              fuel = fuel, diversification = diversification)
@@ -516,6 +521,10 @@ selected <- function(
                             EnergywoodTreesPoints = EnergywoodTreesPoints)
 
   }
+
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function selected() is not the same.The function must be corrected.")
 
   return(selectedOutputs) # return the new inventory and the 2 points vectors (HollowTrees and EnergywoodTrees)
 

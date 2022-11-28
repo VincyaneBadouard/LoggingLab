@@ -132,7 +132,7 @@ felling1tree
 rotatepolygon  
 getgeometry  
 timberharvestedvolume  
-exploitablefuelwoodvolume  
+harvestablefuelwood  
 
 
 # Arguments presentation
@@ -802,15 +802,18 @@ NoHollowTimberLoggedVolume <- TimberV$NoHollowTimberLoggedVolume
 
 ### Compute the exploitable fuel wood volume
 
-**Description**: Computes the exploitable fuel wood volume in healthy trees exploited for timber (their unused part), in the hollow trees and in the damage trees (caused by skidding trails, secondary windfall).
+**Description**: Computes the harvestable fuel wood biomass in healthy trees
+exploited for timber (their unused part), in the hollow trees and in the
+damage trees (caused by trails, secondary windfall). Computes also the the
+unused degraded tree biomass.
 
 ```{r}
-FuelV <- exploitablefuelwoodvolume(inventory, scenario = "manual", fuel = "2",
+FuelV <- harvestablefuelwood(inventory, scenario = "manual", fuel = "2",
                                    TimberLoggedVolume = TimberLoggedVolume,
                                    NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
                                    advancedloggingparameters = loggingparameters())
 inventory <- FuelV$inventory
-DamageBiomass <- FuelV$DamageBiomass # only damage (without purge and hollow trees)
+LoggingResidualBiomass <- FuelV$LoggingResidualBiomass
 FuelWoodBiomass <- FuelV$FuelWoodBiomass
 ```
 
@@ -827,7 +830,7 @@ Numeric values:
 + **TimberLoggedVolume** : Timber logged volume in m3 (numeric)  
 + **NoHollowTimberLoggedVolume** : No hollow timber logged volume (only healthy trees) in m3 (numeric)  
 + **FuelWoodBiomass** : Fuel wood biomass in ton (numeric)  
-+ **DamageBiomass** : Damages biomass (only damages trees (= not trees logged)) in ton (numeric)  
++ **LoggingResidualBiomass** : The unused degraded biomass in ton (numeric)  
 + **LostBiomass** : Total lost biomass in ton (numeric)  
 + **TrailsDensity** : Skidding trails density (preliminary if FWE) in m/ha (units)  
 + **AdjustTrailsDensity** : Adjusted skidding trails density if FWE in m/ha (units)  
@@ -959,10 +962,10 @@ plot(Rslt)
 
 
 # References
-  - Aubry-Kientz, Mélaine, et al. "A comparative assessment of the
+- Aubry-Kientz, Mélaine, et al. "A comparative assessment of the
 performance of individual tree crowns delineation algorithms from ALS data
 in tropical forests." Remote Sensing 11.9 (2019): 1086.  
-  - Eleotério, Jackson Roberto, et al. "Aboveground biomass quantification and
+- Eleotério, Jackson Roberto, et al. "Aboveground biomass quantification and
 tree-level prediction models for the Brazilian subtropical Atlantic Forest."
 Southern Forests: a Journal of Forest Science 81.3 (2019): 261-271.  
 

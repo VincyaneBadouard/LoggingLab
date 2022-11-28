@@ -131,7 +131,7 @@
 #'  \code{\link{createcanopy}}, \code{\link{treefromthesky}},
 #'  \code{\link{felling1tree}}, \code{\link{rotatepolygon}},
 #'  \code{\link{getgeometry}}, \code{\link{timberharvestedvolume}},
-#'  \code{\link{exploitablefuelwoodvolume}}
+#'  \code{\link{harvestablefuelwood}}
 #'
 #'@export
 #'
@@ -463,20 +463,15 @@ loggingsimulation1 <- function(
 
 
   #### Exploitable fuel wood volume quantification ####
-  Fueloutputs <- exploitablefuelwoodvolume(inventory,
+  Fueloutputs <- harvestablefuelwood(inventory,
                                            scenario = scenario, fuel = fuel,
                                            TimberLoggedVolume = TimberLoggedVolume,
                                            NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
                                            advancedloggingparameters = advancedloggingparameters)
 
   inventory <- Fueloutputs$inventory
-  DamageBiomass <- Fueloutputs$DamageBiomass # only damage (without hollow trees)
+  LoggingResidualBiomass <- Fueloutputs$LoggingResidualBiomass
   FuelWoodBiomass <- Fueloutputs$FuelWoodBiomass
-
-  if(is.null(DamageBiomass) | DamageBiomass == 0){
-    print(inventory)
-    message("No DamageBiomass. Check if it's normal in the printed inventory")
-  }
 
 
   DeadTrees <- inventory %>%
@@ -506,7 +501,7 @@ loggingsimulation1 <- function(
                   "TimberLoggedVolume" = TimberLoggedVolume,
                   "NoHollowTimberLoggedVolume" = NoHollowTimberLoggedVolume,
                   "FuelWoodBiomass" = FuelWoodBiomass,
-                  "DamageBiomass" = DamageBiomass, # only damage (without hollow trees)
+                  "LoggingResidualBiomass" = LoggingResidualBiomass,
                   "LostBiomass" = LostBiomass,
                   "TrailsDensity" = TrailsDensity,
                   "AdjustTrailsDensity" = AdjustTrailsDensity,

@@ -1,8 +1,9 @@
-#' Compute the exploitable fuel wood volume
+#' Compute the harvestable fuel wood biomass and the logging residual biomass
 #'
-#' @description Computes the exploitable fuel wood volume in healthy trees
+#' @description Computes the harvestable fuel wood biomass in healthy trees
 #'   exploited for timber (their unused part), in the hollow trees and in the
-#'   damage trees (caused by trails, secondary windfall).
+#'   damage trees (caused by trails, secondary windfall). Computes also the the
+#'   unused degraded tree biomass.
 #'
 #' @param inventory Input inventory (see the inputs formats and metadata in the
 #'   vignette) (data.frame)
@@ -24,8 +25,9 @@
 #' @param advancedloggingparameters Other parameters of the logging simulator
 #'   \code{\link{loggingparameters}} (list)
 #'
-#' @return A list with the damage biomass (ton), the fuel wood biomass (ton) when
-#'   fuel wood exploitation is chosen and the inventory with the added columns:
+#' @return A list with the logging residual biomass (ton), the fuel wood biomass
+#'   (ton) when fuel wood exploitation is chosen and the inventory with the added
+#'   columns:
 #'   - TimberLoggedBiomass (ton): The timber biomass logged by tree
 #'   - LogBiomass (ton): the biomass of the log (equivalent to the
 #'                 'TreeHarvestableVolume' but in biomass)
@@ -33,10 +35,11 @@
 #'   - PurgeBiomass (ton): the biomass of the purge by tree
 #'   - CrownBiomass (ton): the biomass of the tree crown
 #'   - FuelWoodBiomass (ton): the fuel wood biomass harvestable by tree
+#'   - LoggingResidualBiomass (ton): the unused degraded tree biomass.
 #'
 #' @export
 #'
-#' @details The exploitable part in fuel wood in:
+#' @details The harvestable part in fuel wood in:
 #'   - The healthy trees exploited for timber: 2/3 of their crown (default value
 #'     of 'CrownPartForFuel') + the unused part of the trunk ('Purge') (Default =
 #'     0.14 m3 of purge/m3 of volume of timber harvested).
@@ -46,9 +49,6 @@
 #'     the unused part of the trunk ('Purge')
 #'
 #'  - The damage trees (trails, secondary windfall): their trunk (=log + Purge)
-#'
-#' The damage biomass is the above ground biomass of all damaged trees by logging
-#' : by trails and secondary tree fall.
 #'
 #' @importFrom dplyr mutate
 #'
@@ -99,11 +99,13 @@
 #' TimberLoggedVolume <- TimberV$TimberLoggedVolume
 #' NoHollowTimberLoggedVolume <- TimberV$NoHollowTimberLoggedVolume
 #'
-#' exploitablefuelwoodvolume(inventory, scenario = "manual", fuel = "2",
-#' TimberLoggedVolume = TimberLoggedVolume, NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
-#' advancedloggingparameters = loggingparameters())
+#' Rslt <- harvestablefuelwood(inventory,
+#'                             scenario = "manual", fuel = "2",
+#'                             TimberLoggedVolume = TimberLoggedVolume,
+#'                             NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
+#'                             advancedloggingparameters = loggingparameters())
 #'
-exploitablefuelwoodvolume <- function(
+harvestablefuelwood <- function(
     inventory,
     scenario,
     fuel = NULL,
@@ -113,28 +115,32 @@ exploitablefuelwoodvolume <- function(
 ){
   #### Global variables ####
   DeathCause <- ProbedHollow <- Selected <- TreeHarvestableVolume <- AGB <- NULL
-  WoodDensity <- PurgeVolume <- LogBiomass <- PurgeBiomass <- CrownBiomass <-NULL
+  WoodDensity <- TimberLoggedBiomass <- PurgeVolume <- NULL
+  LogBiomass <- PurgeBiomass <- CrownBiomass <- NULL
 
   #### Arguments check ####
   if(!inherits(inventory, "data.frame"))
-    stop("The 'inventory' argument of the 'exploitablefuelwoodvolume' function must be a data.frame")
+    stop("The 'inventory' argument of the 'harvestablefuelwood' function must be a data.frame")
 
   if (!any(scenario == "RIL1" || scenario == "RIL2broken"|| scenario == "RIL2"||
            scenario == "RIL3"|| scenario == "RIL3fuel"||
            scenario == "RIL3fuelhollow"|| scenario =="manual"))
-    stop("The 'scenario' argument of the 'exploitablefuelwoodvolume' function must be
+    stop("The 'scenario' argument of the 'harvestablefuelwood' function must be
          'RIL1', 'RIL2broken', 'RIL2', 'RIL3', 'RIL3fuel', 'RIL3fuelhollow' or 'manual'")
 
   if (!any(fuel == "0" || fuel == "1"|| fuel == "2"|| is.null(fuel)))
-    stop("The 'fuel' argument of the 'exploitablefuelwoodvolume' function must be '0', '1', '2' or NULL")
+    stop("The 'fuel' argument of the 'harvestablefuelwood' function must be '0', '1', '2' or NULL")
 
   if(!inherits(advancedloggingparameters, "list"))
     stop("The 'advancedloggingparameters' argument
-         of the 'exploitablefuelwoodvolume' function must be a list")
+         of the 'harvestablefuelwood' function must be a list")
 
   if(!all(unlist(lapply(list(TimberLoggedVolume, NoHollowTimberLoggedVolume), inherits, "numeric"))))
     stop("The 'TimberLoggedVolume' and 'NoHollowTimberLoggedVolume' arguments
-         of the 'exploitablefuelwoodvolume' function must be numeric")
+         of the 'harvestablefuelwood' function must be numeric")
+
+  # initial inventory
+  inventory0 <- inventory
 
   #### Redefinition of the parameters according to the chosen scenario ####
   scenariosparameters <- scenariosparameters(scenario = scenario, fuel = fuel)
@@ -159,23 +165,27 @@ exploitablefuelwoodvolume <- function(
   TotalPurge <- advancedloggingparameters$Purge * TimberLoggedVolume # m3
 
   inventory <- inventory %>%
-    mutate(PurgeVolume = ifelse(!is.na(DeathCause),
-                                TotalPurge/nrow(inventory[!is.na(inventory$DeathCause),]), NA))
+    mutate(PurgeVolumeVB = ifelse(!is.na(DeathCause),
+                                  TotalPurge/nrow(inventory[!is.na(inventory$DeathCause),]), NA))
+  inventory <- inventory %>%
+    mutate(PurgeVolumeGD = ifelse(!is.na(DeathCause),
+                                  advancedloggingparameters$Purge * TreeHarvestableVolume, NA))
 
   # PurgeBiomass
   inventory <- inventory %>%
-    mutate(PurgeBiomass = PurgeVolume * WoodDensity)
+    mutate(PurgeBiomassVB = PurgeVolumeVB * WoodDensity) %>%
+    mutate(PurgeBiomassGD = PurgeVolumeGD * WoodDensity)
 
   # CrownBiomass
   # Tree biomass -(log biomass + purge biomass))
-  inventory <- inventory %>% mutate(CrownBiomass = AGB - (LogBiomass + PurgeBiomass))
+  inventory <- inventory %>% mutate(CrownBiomass = AGB - (LogBiomass + PurgeBiomassVB))
 
   # Healthy trees
   # 2/3 of CrownBiomass + PurgeBiomass
   inventory <- inventory %>%
     mutate(FuelWoodBiomass = ifelse(Selected == "1" & ProbedHollow == "0",
                                     advancedloggingparameters$CrownPartForFuel * CrownBiomass + # 2/3 of CrownBiomass
-                                      PurgeBiomass, NA)) # + purge
+                                      PurgeBiomassVB, NA)) # + purge
 
   # Hollow trees
   # 2/3 of CrownBiomass + 1/3 LogBiomass + PurgeBiomass
@@ -184,7 +194,7 @@ exploitablefuelwoodvolume <- function(
              ifelse(Selected == "1" & ProbedHollow == "1",
                     advancedloggingparameters$CrownPartForFuel * CrownBiomass + # 2/3 of CrownBiomass
                       advancedloggingparameters$TreeHollowPartForFuel * LogBiomass + # 1/3 log
-                      PurgeBiomass, # + purge
+                      PurgeBiomassVB, # + purge
                     FuelWoodBiomass))
 
   # Damage trees
@@ -194,22 +204,15 @@ exploitablefuelwoodvolume <- function(
                                       DeathCause %in% "2ndtrail" |
                                       DeathCause %in% "treefall2nd" |
                                       DeathCause %in% "landing",
-                                    LogBiomass + PurgeBiomass, # log + purge
+                                    LogBiomass + PurgeBiomassVB, # log + purge
                                     FuelWoodBiomass))
 
-  # Damage biomass = all the tree (AGB)
-  DamageBiomass <- sum(inventory[inventory$DeathCause %in% "maintrail" |
-                                   inventory$DeathCause %in% "2ndtrail" |
-                                   inventory$DeathCause %in% "treefall2nd" |
-                                   inventory$DeathCause %in% "landing",]$AGB,
-                       na.rm = TRUE)
-
-
-  # LoggingResidualBiomass
-  # inventory <- inventory %>%
-  #   mutate(LoggingResidualBiomass = AGB - (TimberLoggedBiomass + FuelWoodBiomass))
+  # LoggingResidualBiomass: biomass damage left in place
+  inventory <- inventory %>%
+    mutate(LoggingResidualBiomass = AGB - (TimberLoggedBiomass + FuelWoodBiomass))
 
   FuelWoodBiomass <- sum(inventory$FuelWoodBiomass, na.rm = TRUE)
+  LoggingResidualBiomass <- sum(inventory$LoggingResidualBiomass, na.rm = TRUE)
 
   if(fuel == "0"){ # No fuel wood exploitation
     inventory <- inventory %>%
@@ -218,9 +221,14 @@ exploitablefuelwoodvolume <- function(
     FuelWoodBiomass <- NULL
   }
 
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function harvestablefuelwood() is not the same.The function must be corrected.")
+
   outputs <- list(inventory = inventory,
-                  DamageBiomass = DamageBiomass, # only damage (without purge and hollow trees)
-                  FuelWoodBiomass = FuelWoodBiomass)
+                  FuelWoodBiomass = FuelWoodBiomass,
+                  LoggingResidualBiomass = LoggingResidualBiomass) # biomass damage left in place
+
 
   # ----------------------------------------------------------------------------
   # Former version
