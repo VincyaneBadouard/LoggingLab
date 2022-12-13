@@ -74,7 +74,7 @@
 #' @importFrom sf st_cast st_as_sf st_as_sfc st_intersection st_union st_sample st_join
 #'   st_buffer as_Spatial st_centroid st_set_precision st_make_valid st_set_agr
 #'   st_geometry st_area st_is_empty st_set_crs st_crs sf_use_s2 st_geometry<-
-#'   st_as_sfc
+#'   st_as_sfc st_drop_geometry
 #' @importFrom dplyr mutate row_number select as_tibble left_join if_else filter
 #'   arrange desc
 #' @importFrom tidyr unnest
@@ -113,7 +113,7 @@
 #' scndtrail = SecondaryTrails$SmoothedTrails,
 #' advancedloggingparameters = loggingparameters())
 #'
-#' ScdTrailsAdj <- try(secondtrailsadjusted(
+#' ScdTrailsAdj <- secondtrailsadjusted(
 #'   inventory = PostLogInventory,
 #'   topography = DTMParacou,
 #'   plotmask = PlotMask,
@@ -124,7 +124,7 @@
 #'   maintrailsaccess = SecondaryTrails$MainTrailsAccess,
 #'   scenario = scenario,
 #'   winching = winching,
-#'   advancedloggingparameters = loggingparameters()), silent=TRUE)
+#'   advancedloggingparameters = loggingparameters())
 #'
 #'
 #' library(ggplot2)
@@ -678,9 +678,8 @@ secondtrailsadjusted <- function(
     mutate(ID = NA) %>%
     mutate(type = "Crown") %>%
     st_set_crs(st_crs(AccessPointAll))
-  ptsCrAll <- ptsCrAllinit %>% filter(ptsCrAllinit %>%st_intersects(AccessMainTrails %>% st_union(),sparse = FALSE)) %>%
-    st_join(AccessMainTrails %>% st_buffer(dist =  max((advancedloggingparameters$ScndTrailWidth/2),factagg)) %>%
-              mutate(ID_Acc = ID) %>% dplyr::select(-ID)) %>%
+  ptsCrAll <- ptsCrAllinit %>% filter(ptsCrAllinit %>% st_intersects(AccessMainTrails %>% st_union(),sparse = FALSE)) %>%
+    left_join(ptsAll  %>%  select(ID_Acc,idTree)  %>%  st_drop_geometry(), by = "idTree" ) %>%
     dplyr::select(ID,ID_Acc,type,idTree)  %>% filter(!is.na(ID_Acc))
 
 
