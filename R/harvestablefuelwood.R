@@ -117,6 +117,7 @@ harvestablefuelwood <- function(
   DeathCause <- ProbedHollow <- Selected <- TreeHarvestableVolume <- AGB <- NULL
   WoodDensity <- TimberLoggedBiomass <- PurgeVolume <- NULL
   LogBiomass <- PurgeBiomass <- CrownBiomass <- NULL
+  PurgeVolumeVB <- PurgeVolumeGD <- PurgeBiomassVB <- NULL
 
   #### Arguments check ####
   if(!inherits(inventory, "data.frame"))

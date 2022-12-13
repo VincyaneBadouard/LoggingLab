@@ -112,7 +112,7 @@ maintrailsaccess = SecondaryTrails$MainTrailsAccess,
 scndtrail = SecondaryTrails$SmoothedTrails,
 advancedloggingparameters = loggingparameters())
 
-ScdTrailsAdj <- try(secondtrailsadjusted(
+ScdTrailsAdj <- secondtrailsadjusted(
   inventory = PostLogInventory,
   topography = DTMParacou,
   plotmask = PlotMask,
@@ -123,7 +123,7 @@ ScdTrailsAdj <- try(secondtrailsadjusted(
   maintrailsaccess = SecondaryTrails$MainTrailsAccess,
   scenario = scenario,
   winching = winching,
-  advancedloggingparameters = loggingparameters()), silent=TRUE)
+  advancedloggingparameters = loggingparameters())
 
 
 library(ggplot2)
