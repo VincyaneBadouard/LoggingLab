@@ -43,7 +43,7 @@
 #'
 #' timberharvestedvolume
 #'
-#' exploitablefuelwoodvolume
+#' harvestablefuelwood
 #'
 #' @keywords internal
 "_PACKAGE"

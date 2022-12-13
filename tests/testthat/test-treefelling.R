@@ -115,6 +115,14 @@ test_that("treefelling", {
 
   expect_true(nrow(Damage) <= nrow(DeadTrees)) # treefall2nd are less or equal to the number of trees under the felled trees
 
+  Treefall2ndDeathTrees <- testinventory %>%
+    dplyr::filter(Treefall2ndDeath == "1")
+
+  NotDeadTrees <- testinventory %>%
+    dplyr::filter(Treefall2ndDeath == "0")
+
+  expect_true(all(Treefall2ndDeathTrees$DeathCause == "treefall2nd"))
+  expect_true(all(is.na(NotDeadTrees$DeathCause)))
 
 
 })

@@ -53,6 +53,13 @@
 #'  conditions) otherwise with cable with angle to the trail.
 #'  Avoidance of future/reserves if chosen.
 #'
+#'@param fuel Fuel wood exploitation: no exploitation = "0", exploitation of
+#'   damage and unused part of logged trees for fuel = "1", exploitation of
+#'   hollow trees, damage and and unused part of the log for fuel = "2".
+#'   If fuel wood harvesting is chosen, these trails are preliminary,
+#'   and the trails will be adjusted after tree felling for fuel wood recovery.
+#'   The mortality of the trails is therefore not recorded at this stage
+#'
 #'@param verbose Allow to provide messages from internal functions (boolean)
 #'
 #' @param advancedloggingparameters Other parameters of the logging simulator
@@ -143,6 +150,7 @@
 #'   treeselectionoutputs = treeselectionoutputs,
 #'   scenario = "manual",
 #'   winching = winching,
+#'   fuel =  "0",
 #'   advancedloggingparameters = loggingparameters())
 #'   }
 #'
@@ -224,18 +232,19 @@
 #' SecondaryTrails$TrailsIdentity
 #'
 secondtrailsopening <- function(
-  topography,
-  plotmask,
-  maintrails,
-  plotslope,
-  harvestablepolygons,
-  machinepolygons,
-  maintrailsaccess = NULL,
-  treeselectionoutputs,
-  scenario,
-  winching = NULL,
-  verbose = FALSE,
-  advancedloggingparameters = loggingparameters()
+    topography,
+    plotmask,
+    maintrails,
+    plotslope,
+    harvestablepolygons,
+    machinepolygons,
+    maintrailsaccess = NULL,
+    treeselectionoutputs,
+    scenario,
+    winching = NULL,
+    fuel = NULL,
+    verbose = FALSE,
+    advancedloggingparameters = loggingparameters()
 ){
 
 
@@ -272,9 +281,10 @@ secondtrailsopening <- function(
   ID.y <- IdMachineZone <- IdMachineZone.y <- IdMachineZone.x <- LineID <- LoggedTrees <- TypeExpl <- NULL
 
   #### Redefinition of the parameters according to the chosen scenario ####
-  scenariosparameters <- scenariosparameters(scenario = scenario, winching = winching)
+  scenariosparameters <- scenariosparameters(scenario = scenario, winching = winching, fuel = fuel)
   WinchingInit <- scenariosparameters$winching
   winching <- WinchingInit
+  fuel <- scenariosparameters$fuel
 
   ##################################
 
@@ -874,14 +884,14 @@ secondtrailsopening <- function(
         ptsCbl$isEmpty <- FALSE
 
 
-            for (h in 1:dim(ptsCbl)[1]) {
-              if (st_geometry(ptsCbl[h,]) %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
-                ptsCbl$isEmpty[h] <- TRUE
-              }else{
-                suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
-                ptsCbl$isEmpty[h] <- FALSE
-              }
-            }
+        for (h in 1:dim(ptsCbl)[1]) {
+          if (st_geometry(ptsCbl[h,]) %>% st_intersects(AccessMainTrails %>% filter(ID == ID_Access),sparse = FALSE) == FALSE) {
+            ptsCbl$isEmpty[h] <- TRUE
+          }else{
+            suppressWarnings(st_geometry(ptsCbl[h,]) <- st_geometry(ptsCbl[h,] %>% st_intersection(AccessMainTrails %>% filter(ID == ID_Access))))
+            ptsCbl$isEmpty[h] <- FALSE
+          }
+        }
 
 
         ptsWIP <-  ptsCbl %>% filter(isEmpty == FALSE) %>% dplyr::select(-isEmpty) %>%#def cbl point as WIP point
@@ -1237,9 +1247,9 @@ secondtrailsopening <- function(
 
 
           pathsWIP <- pathsWIP %>% st_as_sf() %>% st_make_valid() %>% filter(!st_is_empty(pathsWIP %>%
-                                                                     st_as_sf())) %>% filter(
-                                                                       st_geometry_type(.)
-                                                                       %in% c("LINESTRING") )
+                                                                                            st_as_sf())) %>% filter(
+                                                                                              st_geometry_type(.)
+                                                                                              %in% c("LINESTRING") )
 
 
           if(dim(pathsWIP)[1]>0){
@@ -1465,6 +1475,9 @@ secondtrailsopening <- function(
 
   inventory <- treeselectionoutputs$inventory
 
+  # initial inventory
+  inventory0 <- inventory
+
   lines <- do.call(rbind, Lines)
 
   # WinchingMachine info in the inventory
@@ -1486,9 +1499,9 @@ secondtrailsopening <- function(
     left_join(TrailsIdentity_df, by = "idTree")
 
 
-    paths <- do.call(rbind, pathLines)
-    paths <- paths %>% st_as_sf() %>% st_make_valid() %>% filter(!st_is_empty(paths %>% st_as_sf())) %>% filter(
-      st_geometry_type(.) %in% c("LINESTRING") )
+  paths <- do.call(rbind, pathLines)
+  paths <- paths %>% st_as_sf() %>% st_make_valid() %>% filter(!st_is_empty(paths %>% st_as_sf())) %>% filter(
+    st_geometry_type(.) %in% c("LINESTRING") )
 
   if (dim(paths)[1]>0) {
 
@@ -1500,7 +1513,9 @@ secondtrailsopening <- function(
         st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2)  %>% st_make_valid() %>%
         st_union()%>% st_set_crs(st_crs(topography))
 
-      TrailsDensity <- (SmoothedTrails  %>% st_intersection(plotmask %>% st_as_sf()) %>% st_area / advancedloggingparameters$ScndTrailWidth)/(plotmask %>% st_as_sf() %>% st_area() /10000)
+      TrailsDensity <- (SmoothedTrails  %>%
+                          st_intersection(plotmask %>% st_as_sf()) %>%
+                          st_area / advancedloggingparameters$ScndTrailWidth)/(plotmask %>% st_as_sf() %>% st_area() /10000)
     }else{
       secondtrails <- smoothtrails(paths,
                                    plotmask,
@@ -1515,25 +1530,28 @@ secondtrailsopening <- function(
     #
     # # Records the dead trees
 
+    if(fuel == "0"){
 
-    if (!("DeathCause" %in% names(inventory))){
+      if (!("DeathCause" %in% names(inventory))){
+        inventory <- inventory %>%
+          add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
+      }
+
+      DeadTrees <- suppressWarnings(st_intersection(
+        st_make_valid(st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography))),
+        st_make_valid(st_as_sf(SmoothedTrails) %>% st_union()) # "make valid" to avoid self-intersection
+      )) %>%
+        add_column(DeadTrees = "1") %>%
+        dplyr::select(idTree, DeadTrees) %>% st_drop_geometry() # remove geometry column (sf to data.frame)
+      DeadTrees <- unique(DeadTrees)
+
       inventory <- inventory %>%
-        add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
+        left_join(DeadTrees, by = "idTree") %>%
+        mutate(DeathCause = ifelse(is.na(DeathCause) & Selected != "1" & DeadTrees == "1",
+                                   "2ndtrail", DeathCause)) %>%  # Damage trees
+        dplyr::select(-DeadTrees)
+
     }
-
-    DeadTrees <- suppressWarnings(st_intersection(
-      st_make_valid(st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography))),
-      st_make_valid(st_as_sf(SmoothedTrails) %>% st_union()) # "make valid" to avoid self-intersection
-    )) %>%
-      add_column(DeadTrees = "1") %>%
-      dplyr::select(idTree, DeadTrees) %>% st_drop_geometry() # remove geometry column (sf to data.frame)
-    DeadTrees <- unique(DeadTrees)
-
-    inventory <- inventory %>%
-      left_join(DeadTrees, by = "idTree") %>%
-      mutate(DeathCause = ifelse(is.na(DeathCause) & Selected != "1" & DeadTrees == "1",
-                                 "2ndtrail", DeathCause)) %>%  # Damage trees
-      dplyr::select(-DeadTrees)
 
   }else{
     paths <- NULL
@@ -1541,25 +1559,32 @@ secondtrailsopening <- function(
       st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2) %>% st_set_crs(st_crs(topography))
     TrailsDensity <- 0
 
-    if (!("DeathCause" %in% names(inventory))){
+    if(fuel == "0"){
+
+      if (!("DeathCause" %in% names(inventory))){
+        inventory <- inventory %>%
+          add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
+      }
+
+      DeadTrees <- suppressWarnings(sf::st_intersection(
+        sf::st_make_valid(st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography))),
+        sf::st_make_valid(st_as_sf(SmoothedTrails) %>% st_union()) # "make valid" to avoid self-intersection
+      )) %>%
+        add_column(DeadTrees = "1") %>%
+        dplyr::select(idTree, DeadTrees) %>% st_drop_geometry()
+      DeadTrees <- unique(DeadTrees)
+
       inventory <- inventory %>%
-        add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
+        left_join(DeadTrees, by = "idTree") %>%
+        mutate(DeathCause = ifelse(is.na(DeathCause) & Selected != "1" & DeadTrees == "1",
+                                   "2ndtrail", DeathCause)) %>%  # Damage trees
+        dplyr::select(-DeadTrees)
     }
-
-    DeadTrees <- suppressWarnings(sf::st_intersection(
-      sf::st_make_valid(st_set_crs(st_as_sf(inventory, coords = c("Xutm", "Yutm")), st_crs(topography))),
-      sf::st_make_valid(st_as_sf(SmoothedTrails) %>% st_union()) # "make valid" to avoid self-intersection
-    )) %>%
-      add_column(DeadTrees = "1") %>%
-      dplyr::select(idTree, DeadTrees) %>% st_drop_geometry()
-    DeadTrees <- unique(DeadTrees)
-
-    inventory <- inventory %>%
-      left_join(DeadTrees, by = "idTree") %>%
-      mutate(DeathCause = ifelse(is.na(DeathCause) & Selected != "1" & DeadTrees == "1",
-                                 "2ndtrail", DeathCause)) %>%  # Damage trees
-      dplyr::select(-DeadTrees)
   }
+
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function secondtrailsopening() is not the same.The function must be corrected.")
 
   # OUTPUTS
 

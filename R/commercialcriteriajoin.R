@@ -46,7 +46,7 @@ commercialcriteriajoin <- function(
            }
   )
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
+  Accessible <- CircCorr <- CodeAlive <- CommercialLevel <- NULL
   CommercialLevel.genus <- CommercialLevel.species <- Condition <- DBH <- NULL
   DeathCause <- DistCriteria <- Family <- CommercialName <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
@@ -56,7 +56,7 @@ commercialcriteriajoin <- function(
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCriteria <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
-  TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
+  TreeFellingOrientationSuccess <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
   UpMinFD.species <- CommercialName.genus <- NULL
   CommercialName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
@@ -64,6 +64,8 @@ commercialcriteriajoin <- function(
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
   Aggregative <- Aggregative.species <- Aggregative.genus <- NULL
 
+  # initial inventory
+  inventory0 <- inventory
 
   # Function
   genuscriteria <- speciescriteria %>% # for economic names that relate to entire genus
@@ -108,6 +110,11 @@ commercialcriteriajoin <- function(
   inventory <- inventory %>%
     mutate(CommercialLevel = ifelse(is.na(CommercialLevel), "0", CommercialLevel)) %>%
     mutate(CommercialLevel = factor(as.character(CommercialLevel)))
+
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function commercialcriteriajoin() is not the same.The function must be corrected.")
+
 
   return(inventory)
 }

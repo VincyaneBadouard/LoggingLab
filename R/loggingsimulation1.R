@@ -12,14 +12,14 @@
 #'  \code{\link{Paracou6_2016}}) (data.frame)
 #' The columns required are:
 #' - *Forest* (to apply the corresponding volume formula)
-#' - *Plot* (1 value)
-#' - *CensusYear* (1 value)
-#' - *PlotArea*
 #' - *idTree*
 #' - *Xutm* and *Yutm*
 #' - *CodeAlive*
-#' - *Family*, *Genus*, *Species* and *VernName*
-#' - *Circ* or *CircCorr*
+#' - *Family*, *Genus*, and *Species*
+#' - *CircCorr*
+#' The optional columns are
+#' - *Plot* (1 value)
+#' - *CensusYear* (1 value)
 #'
 #'@param plotmask Inventoried plot mask (SpatialPolygonsDataFrame
 #'  **with a crs in UTM**)
@@ -30,9 +30,14 @@
 #'  We advise you to generate your raster with Qgis rather than with the
 #'  'raster' package on R.
 #'
-#'@param creekdistances Relative distances (vertical (*distvert*) and horizontal
-#'  (*disthorz*)) (1 m resolution) from nearest channel network (list of 2 large
-#'  RasterLayers **with a crs in UTM**) (See \code{\link{CreekDistances}})
+#'@param creekverticaldistance Relative vertical distance
+#'  (1 m resolution) from nearest channel network
+#'  (RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
+#'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
+#'
+#'@param creekhorizontaldistance Relative horizontal distance
+#'  (1 m resolution) from nearest channel network
+#'  (RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
 #'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 #'
 #'@param speciescriteria Table of species exploitability criteria : species
@@ -110,7 +115,7 @@
 #'Common error sources:
 #' - no crs
 #' - crs with accent
-#' - *topography* and *plotmask* do not match
+#' - *topography* and *plotmask* do not match (plot them to check)
 #' - *topography* import as R Worspace (you must import it as a .tif file)
 #' - *Forest* name of the *inventory* doesn't match with the *Forest* name in
 #'    *volumeparameters* table
@@ -126,13 +131,13 @@
 #'  \code{\link{createcanopy}}, \code{\link{treefromthesky}},
 #'  \code{\link{felling1tree}}, \code{\link{rotatepolygon}},
 #'  \code{\link{getgeometry}}, \code{\link{timberharvestedvolume}},
-#'  \code{\link{exploitablefuelwoodvolume}}
+#'  \code{\link{harvestablefuelwood}}
 #'
 #'@export
 #'
 #'@importFrom dplyr filter mutate select left_join bind_rows
-#'@importFrom sf st_as_sf st_point
-#'@importFrom raster crs extract
+#'@importFrom sf st_as_sf st_point as_Spatial
+#'@importFrom raster crs extract raster
 #'@importFrom methods as
 #'
 #' @examples
@@ -147,7 +152,9 @@
 #'
 #' Rslt <- loggingsimulation1(
 #'  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
-#'  creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+#'  creekverticaldistance = CreekDistances$distvert,
+#'  creekhorizontaldistance = CreekDistances$disthorz,
+#'  speciescriteria = SpeciesCriteria,
 #'  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
 #'  objective = 10, fuel = "2", diversification = TRUE, winching = "2",
 #'  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
@@ -156,28 +163,32 @@
 #'  }
 #'
 loggingsimulation1 <- function(
-  inventory,
-  plotmask,
-  topography,
-  creekdistances,
-  speciescriteria,
-  volumeparameters,
+    inventory,
+    plotmask,
+    topography,
+    creekverticaldistance,
+    creekhorizontaldistance,
+    speciescriteria,
+    volumeparameters,
 
-  scenario,
-  objective = NULL,
-  fuel = NULL,
-  diversification = NULL,
+    scenario,
+    objective = NULL,
+    fuel = NULL,
+    diversification = NULL,
 
-  winching = NULL,
-  directionalfelling = NULL,
+    winching = NULL,
+    directionalfelling = NULL,
 
-  specieslax = FALSE,
-  objectivelax = FALSE,
+    specieslax = FALSE,
+    objectivelax = FALSE,
 
-  crowndiameterparameters = ParamCrownDiameterAllometry,
-  seed = round(runif(n = 1, min = 1, max = 2^23)),
-  advancedloggingparameters = loggingparameters()
+    crowndiameterparameters = ParamCrownDiameterAllometry,
+    seed = round(runif(n = 1, min = 1, max = 2^23)),
+    advancedloggingparameters = loggingparameters()
 ){
+
+  creekdistances <- list("distvert" = creekverticaldistance,
+                         "disthorz" = creekhorizontaldistance)
 
   #### Arguments check ####
 
@@ -186,19 +197,41 @@ loggingsimulation1 <- function(
                         inherits, "data.frame"))))
     stop("The 'inventory', 'speciescriteria', 'volumeparameters' and 'crowndiameterparameters' arguments
          of the 'loggingsimulation' function must be data.frames")
+  # inventory as.data.frame to remove data.table or dplyr formats
+
+  INPUTinventory <- deparse(substitute(inventory)) # object name to this name in character
+
+  inventory <- as.data.frame(inventory)
 
   # plotmask
-  if(length(plotmask) != 1 | !inherits(plotmask, "SpatialPolygonsDataFrame"))
-    stop("The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygonsDataFrame")
+  if(length(plotmask) != 1 | !inherits(plotmask, "SpatialPolygons")){
+    if((inherits(plotmask, "sf") & inherits(plotmask$geometry, "sfc_POLYGON")))
+      plotmask <- as_Spatial(plotmask)
+    if(!(inherits(plotmask, "sf") & inherits(plotmask$geometry, "sfc_POLYGON")))
+      stop("The 'plotmask' argument of the 'loggingsimulation' function must be a SpatialPolygons")
+  }
 
   # topography
-  if(!inherits(topography, "RasterLayer"))
-    stop("The 'topography' argument of the 'loggingsimulation' function must be a RasterLayer")
+  if(!inherits(topography, "RasterLayer")){
+    if(inherits(topography, "SpatRaster"))
+      topography <- raster(topography)
+    if(!inherits(topography, "SpatRaster"))
+      stop("The 'topography' argument of the 'loggingsimulation' function must be a RasterLayer")
+  }
 
   # creekdistances
-  if(length(creekdistances) < 2 |
-     !inherits(creekdistances, "list"))
-    stop("The 'creekdistances' argument of the 'loggingsimulation' function must be a list of 2 elements")
+  if(!inherits(creekverticaldistance, "RasterLayer")){
+    if(inherits(creekverticaldistance, "SpatRaster"))
+      creekverticaldistance <- raster(creekverticaldistance)
+    if(!inherits(creekverticaldistance, "SpatRaster"))
+      stop("The 'creekverticaldistance' argument of the 'loggingsimulation' function must be a RasterLayer")
+  }
+  if(!inherits(creekhorizontaldistance, "RasterLayer")){
+    if(inherits(creekhorizontaldistance, "SpatRaster"))
+      creekhorizontaldistance <- raster(creekhorizontaldistance)
+    if(!inherits(creekhorizontaldistance, "SpatRaster"))
+      stop("The 'creekhorizontaldistance' argument of the 'loggingsimulation' function must be a RasterLayer")
+  }
 
   # scenario
   if (length(scenario) != 1 |
@@ -268,8 +301,6 @@ loggingsimulation1 <- function(
   winching <- scenariosparameters$winching
   directionalfelling <- scenariosparameters$directionalfelling
 
-  INPUTinventory <- deparse(substitute(inventory)) # object name to this name in character
-
   # Function
 
 
@@ -294,7 +325,8 @@ loggingsimulation1 <- function(
   ##### Harvestable area definition ####
   HarvestableAreaOutputs <- harvestableareadefinition(
     topography = topography,
-    creekdistances = creekdistances,
+    creekverticaldistance = creekdistances$distvert,
+    creekhorizontaldistance = creekdistances$disthorz,
     maintrails = MainTrails,
     plotmask = plotmask,
     scenario = scenario, winching = winching,
@@ -309,7 +341,7 @@ loggingsimulation1 <- function(
   if(is.null(HarvestableArea) | HarvestableArea == 0){
     stop("The havestable area is equal to 0 or NULL.
     Either your plot is not exploitable at all according to your criteria, or there is probably a problem with the inputs:
-    'topography', 'creekdistances', and/or 'plotmask'")}
+    'topography', 'creekverticaldistance', 'creekhorizontaldistance', and/or 'plotmask'")}
 
   #### Tree selection (harvestable, future and reserve trees + defects trees): ####
   treeselectionoutputs <- treeselection(inventory,
@@ -346,14 +378,14 @@ loggingsimulation1 <- function(
                             advancedloggingparameters = advancedloggingparameters)
 
   ScndTrailOutputs <- secondtrailsopening(topography = topography,
-                                              plotmask = plotmask,
-                                              maintrails = MainTrails, plotslope = PlotSlope,
-                                              harvestablepolygons = HarvestablePolygons,
-                                              machinepolygons = MachinePolygons,
-                                              maintrailsaccess = accesspts$AccessPointAll,
-                                              treeselectionoutputs = treeselectionoutputs,
-                                              scenario = scenario, winching = winching,
-                                              advancedloggingparameters = advancedloggingparameters
+                                          plotmask = plotmask,
+                                          maintrails = MainTrails, plotslope = PlotSlope,
+                                          harvestablepolygons = HarvestablePolygons,
+                                          machinepolygons = MachinePolygons,
+                                          maintrailsaccess = accesspts$AccessPointAll,
+                                          treeselectionoutputs = treeselectionoutputs,
+                                          scenario = scenario, winching = winching, fuel = fuel,
+                                          advancedloggingparameters = advancedloggingparameters
   )
 
 
@@ -385,12 +417,12 @@ loggingsimulation1 <- function(
   if(fuel != "0"){
 
     ScndTrailAdjustOutputs <- secondtrailsadjusted(inventory = inventory,
-                                                       topography = topography, plotmask = plotmask, maintrails = MainTrails,
-                                                       plotslope = PlotSlope,
-                                                       harvestablepolygons = HarvestablePolygons,
-                                                       machinepolygons = MachinePolygons, maintrailsaccess = MainTrailsAccess,
-                                                       scenario = scenario, winching = winching,
-                                                       advancedloggingparameters = advancedloggingparameters)
+                                                   topography = topography, plotmask = plotmask, maintrails = MainTrails,
+                                                   plotslope = PlotSlope,
+                                                   harvestablepolygons = HarvestablePolygons,
+                                                   machinepolygons = MachinePolygons, maintrailsaccess = MainTrailsAccess,
+                                                   scenario = scenario, winching = winching,
+                                                   advancedloggingparameters = advancedloggingparameters)
 
 
     if(is.null(ScndTrailAdjustOutputs$TrailsDensity) | as.numeric(ScndTrailAdjustOutputs$TrailsDensity) == 0){
@@ -419,6 +451,7 @@ loggingsimulation1 <- function(
                                          scenario = scenario, fuel = fuel,
                                          advancedloggingparameters = advancedloggingparameters)
 
+  inventory <- Timberoutputs$inventory
   TimberLoggedVolume <- Timberoutputs$TimberLoggedVolume
   NoHollowTimberLoggedVolume <- Timberoutputs$NoHollowTimberLoggedVolume
 
@@ -430,19 +463,15 @@ loggingsimulation1 <- function(
 
 
   #### Exploitable fuel wood volume quantification ####
-  Fueloutputs <- exploitablefuelwoodvolume(inventory,
+  Fueloutputs <- harvestablefuelwood(inventory,
                                            scenario = scenario, fuel = fuel,
                                            TimberLoggedVolume = TimberLoggedVolume,
                                            NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
                                            advancedloggingparameters = advancedloggingparameters)
 
-  DamageVolume <- Fueloutputs$DamageVolume # only damage (without purge and hollow trees)
-  FuelVolume <- Fueloutputs$FuelVolume
-
-  if(is.null(DamageVolume) | DamageVolume == 0){
-    print(inventory)
-    message("No DamageVolume. Check if it's normal in the printed inventory")
-  }
+  inventory <- Fueloutputs$inventory
+  LoggingResidualBiomass <- Fueloutputs$LoggingResidualBiomass
+  FuelWoodBiomass <- Fueloutputs$FuelWoodBiomass
 
 
   DeadTrees <- inventory %>%
@@ -471,8 +500,8 @@ loggingsimulation1 <- function(
                   "HVinit" = HVinit,
                   "TimberLoggedVolume" = TimberLoggedVolume,
                   "NoHollowTimberLoggedVolume" = NoHollowTimberLoggedVolume,
-                  "FuelVolume" = FuelVolume,
-                  "DamageVolume" = DamageVolume, # only damage (without purge and hollow trees)
+                  "FuelWoodBiomass" = FuelWoodBiomass,
+                  "LoggingResidualBiomass" = LoggingResidualBiomass,
                   "LostBiomass" = LostBiomass,
                   "TrailsDensity" = TrailsDensity,
                   "AdjustTrailsDensity" = AdjustTrailsDensity,

@@ -8,7 +8,8 @@ loggingsimulation1(
   inventory,
   plotmask,
   topography,
-  creekdistances,
+  creekverticaldistance,
+  creekhorizontaldistance,
   speciescriteria,
   volumeparameters,
   scenario,
@@ -31,14 +32,14 @@ inputs formats and metadata in the vignette or in
 The columns required are:
 \itemize{
 \item \emph{Forest} (to apply the corresponding volume formula)
-\item \emph{Plot} (1 value)
-\item \emph{CensusYear} (1 value)
-\item \emph{PlotArea}
 \item \emph{idTree}
 \item \emph{Xutm} and \emph{Yutm}
 \item \emph{CodeAlive}
-\item \emph{Family}, \emph{Genus}, \emph{Species} and \emph{VernName}
-\item \emph{Circ} or \emph{CircCorr}
+\item \emph{Family}, \emph{Genus}, and \emph{Species}
+\item \emph{CircCorr}
+The optional columns are
+\item \emph{Plot} (1 value)
+\item \emph{CensusYear} (1 value)
 }}
 
 \item{plotmask}{Inventoried plot mask (SpatialPolygonsDataFrame
@@ -50,9 +51,14 @@ The columns required are:
 We advise you to generate your raster with Qgis rather than with the
 'raster' package on R.}
 
-\item{creekdistances}{Relative distances (vertical (\emph{distvert}) and horizontal
-(\emph{disthorz})) (1 m resolution) from nearest channel network (list of 2 large
-RasterLayers \strong{with a crs in UTM}) (See \code{\link{CreekDistances}})
+\item{creekverticaldistance}{Relative vertical distance
+(1 m resolution) from nearest channel network
+(RasterLayer \strong{with a crs in UTM}) (See \code{\link{CreekDistances}})
+To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.}
+
+\item{creekhorizontaldistance}{Relative horizontal distance
+(1 m resolution) from nearest channel network
+(RasterLayer \strong{with a crs in UTM}) (See \code{\link{CreekDistances}})
 To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.}
 
 \item{speciescriteria}{Table of species exploitability criteria : species
@@ -141,7 +147,7 @@ Common error sources:
 \itemize{
 \item no crs
 \item crs with accent
-\item \emph{topography} and \emph{plotmask} do not match
+\item \emph{topography} and \emph{plotmask} do not match (plot them to check)
 \item \emph{topography} import as R Worspace (you must import it as a .tif file)
 \item \emph{Forest} name of the \emph{inventory} doesn't match with the \emph{Forest} name in
 \emph{volumeparameters} table
@@ -160,7 +166,9 @@ data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allo
 
 Rslt <- loggingsimulation1(
  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
- creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+ creekverticaldistance = CreekDistances$distvert,
+ creekhorizontaldistance = CreekDistances$disthorz,
+ speciescriteria = SpeciesCriteria,
  volumeparameters = ForestZoneVolumeParametersTable, scenario = "manual",
  objective = 10, fuel = "2", diversification = TRUE, winching = "2",
  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
@@ -181,5 +189,5 @@ Rslt <- loggingsimulation1(
 \code{\link{createcanopy}}, \code{\link{treefromthesky}},
 \code{\link{felling1tree}}, \code{\link{rotatepolygon}},
 \code{\link{getgeometry}}, \code{\link{timberharvestedvolume}},
-\code{\link{exploitablefuelwoodvolume}}
+\code{\link{harvestablefuelwood}}
 }

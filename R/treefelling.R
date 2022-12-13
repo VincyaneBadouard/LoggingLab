@@ -99,6 +99,7 @@
 #'@importFrom stats runif
 #'
 #' @examples
+#' \dontrun{
 #' set.seed(1)
 #' data(SecondaryTrails)
 #'
@@ -194,6 +195,7 @@
 #'   "Reserve" = "purple", "Probed hollow" = "forestgreen",
 #'   "Treefall2nd" = "chocolate4")) +
 #'   labs(color = "Logging status")
+#' }
 #'
 #'\dontrun{
 #' # The trees under the fallen trees
@@ -245,7 +247,7 @@ treefelling <- function(
          you must fill in the arguments 'fuel' and 'directionalfelling'")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <-NULL
+  Accessible <- CircCorr <- CodeAlive <-NULL
   Condition <- DBH <- MinFD <- Taxo <- alpha <- bCoef <- NULL
   DeathCause <- DistCriteria <- Family <- CrownHeight <- CrownDiameter <- NULL
   Genus <- Logged <- TreePolygon <- NULL
@@ -256,6 +258,10 @@ treefelling <- function(
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- NULL
   VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   geometry <- idTree <- . <- Treefall2ndDeath <- Treefall2ndDeathProba <-  NULL
+
+
+  # initial inventory
+  inventory0 <- inventory
 
 
   # Redefinition of the parameters according to the chosen scenario
@@ -352,11 +358,15 @@ treefelling <- function(
                                   sample(c(1,0), size = 1, replace = F,
                                          prob = c(Treefall2ndDeathProba, 1-Treefall2ndDeathProba)), NA)) %>% # 1 = dead tree, 0 = alive tree
     ungroup() %>%
-    mutate(Treefall2ndDeath = as.factor(Treefall2ndDeath)) %>% # alive trees ("0") -> DeathCause = NA
+    mutate(Treefall2ndDeath = as.factor(Treefall2ndDeath)) %>%
     mutate(DeathCause = ifelse(Treefall2ndDeath %in% "0", NA, # alive trees ("0") -> DeathCause = NA
                                DeathCause))
 
   # length(which(inventory$DeathCause == "treefall2nd"))
+
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function treefelling() is not the same.The function must be corrected.")
 
 
   return(inventory)
@@ -441,7 +451,7 @@ directionalfellingsuccessdef <- function(
     stop("The 'advancedloggingparameters' argument of the 'directionalfellingsuccessdef' function must be a list")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- NULL
+  Accessible <- CircCorr <- CodeAlive <- NULL
   Condition <- DBH <- NULL
   DeathCause <- DistCriteria <- Family <- CrownHeight <- CrownDiameter <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- TreePolygon <- NULL
@@ -453,11 +463,13 @@ directionalfellingsuccessdef <- function(
   Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
-  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
-  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  UpMinFD.species <- NULL
+  VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 
+  # initial inventory
+  inventory0 <- inventory
 
   # Totally random
   # if (totally random case){ # No directional felling
@@ -493,6 +505,10 @@ directionalfellingsuccessdef <- function(
 
   inventory$TreeFellingOrientationSuccess <- as.factor(inventory$TreeFellingOrientationSuccess)
 
+
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function directionalfellingsuccessdef() is not the same.The function must be corrected.")
 
   return(inventory)
 
@@ -741,7 +757,7 @@ felling1tree <- function(
     stop("The 'advancedloggingparameters' argument of the 'felling1tree' function must be a list")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <- NULL
+  Accessible <- CircCorr <- CodeAlive <- NULL
   Condition <- DBH <- NULL
   DeathCause <- DistCriteria <- Family <- CrownHeight <- CrownDiameter <- NULL
   Genus <- Logged <- TreePolygon <- Crowns <- NULL
@@ -752,8 +768,8 @@ felling1tree <- function(
   Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
   TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
-  UpMinFD.species <- VernName.genus <- VernName.genus.genus <- NULL
-  VernName.species <- VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
+  UpMinFD.species <- NULL
+  VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
 

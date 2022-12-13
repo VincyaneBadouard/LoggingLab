@@ -276,7 +276,7 @@ treeselection <- function(
   options("rgdal_show_exportToProj4_warnings"="none")
 
   # Global variables
-  Accessible <- Circ <- CircCorr <- CodeAlive <-  NULL
+  Accessible <- CircCorr <- CodeAlive <-  NULL
   Condition <- DBH <- NULL
   DeathCause <- DistCriteria <- Family <- LogDBH <- NULL
   ForestZoneVolumeParametersTable <- Genus <- Logged <- NULL
@@ -286,12 +286,15 @@ treeselection <- function(
   ProbedHollow <- ProbedHollowProba <- ScientificName <- NULL
   Selected <- Slope <- SlopeCriteria <- Species <- Species.genus <- NULL
   SpeciesCriteria <- Taxo <- Taxo.family <- Taxo.genus <- Taxo.species <- NULL
-  TreeFellingOrientationSuccess <- TreeHarvestableVolume <- NULL
+  TreeFellingOrientationSuccess <- NULL
   TreeHeight <- TrunkHeight <- Up <- UpMinFD <- UpMinFD.genus <- NULL
   UpMinFD.species <- NULL
   VolumeCumSum <- Xutm <- Yutm <- aCoef <- NULL
   alpha <- alpha.family <- alpha.genus <- alpha.species <- bCoef <- NULL
   beta.family <- beta.genus <- beta.species <- geometry <- idTree <- NULL
+
+  # initial inventory
+  inventory0 <- inventory
 
   # Redefinition of the parameters according to the chosen scenario
   scenariosparameters <- scenariosparameters(scenario = scenario, objective = objective, fuel = fuel,
@@ -413,6 +416,10 @@ treeselection <- function(
   inventory <- inventory %>%
     mutate(LoggingStatus = ifelse(HVinit > VO & LoggingStatus == "harvestable2nd", "non-harvestable",
                                   LoggingStatus))
+
+  if(nrow(inventory) != nrow(inventory0))
+    stop("The number of rows between the input inventory and the output inventory
+         of the function treeselection() is not the same.The function must be corrected.")
 
   # OUTPUTS list
   treeselectionOutputs <- list(inventory = inventory,

@@ -12,6 +12,8 @@
 #'   specieslax : FALSE
 #'   objectivelax : TRUE
 #'
+#' @encoding UTF-8
+#'
 #' @format A large named list of 39  elements
 #' \describe{
 #'   \item{inventory}{Output forest inventory (data.frame)}
@@ -21,9 +23,8 @@
 #'   \item{TimberLoggedVolume}{Timber logged volume in m3 (numeric)}
 #'   \item{NoHollowTimberLoggedVolume}{No hollow timber logged volume (only
 #'   healthy trees) in m3 (numeric)}
-#'   \item{FuelVolume}{Fuel wood volume in m3 (numeric)}
-#'   \item{DamageVolume}{Damages volume (only damages (= without purge and
-#'   hollow trees)) in m3 (numeric)}
+#'   \item{FuelWoodBiomass}{Harvestable fuel wood biomass in ton (numeric)}
+#'   \item{LoggingResidualBiomass}{The unused degraded biomass in ton (numeric)}
 #'   \item{LostBiomass}{Total lost biomass in ton (numeric)}
 #'   \item{TrailsDensity}{Trails density (preliminary if FWE) in m/ha (units)}
 #'   \item{AdjustTrailsDensity}{Adjusted trails density if FWE in m/ha (units)}

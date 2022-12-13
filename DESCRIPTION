@@ -1,7 +1,6 @@
 Package: LoggingLab
 Title: An R Package to Simulate Forest Logging
 Version: 0.0.0.9003
-Date: 2022-09-09
 Authors@R: 
     c(person(given = "Vincyane",
            family = "Badouard",
@@ -41,7 +40,7 @@ Suggests:
     ggplot2 (>= 3.3.5)
 VignetteBuilder: knitr, rmarkdown
 Depends: 
-    R (>= 3.6)
+    R (>= 4.0)
 Config/testthat/edition: 3
 Imports: 
     magrittr (>= 2.0.1),
@@ -50,7 +49,7 @@ Imports:
     tidyr (>= 1.1.2),
     BIOMASS (>= 2.1.7),
     rlang (>= 0.4.10),
-    raster (>= 3.5.15),
+    raster (>= 3.5.29),
     sp (>= 1.4.6),
     sf (>= 1.0.5),
     nngeo (>= 0.4.5),

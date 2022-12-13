@@ -28,6 +28,7 @@ loggingparameters(
   MinTreefallOrientation = 30,
   MaxTreefallOrientation = 45,
   TreeHollowPartForFuel = 1/3,
+  CrownPartForFuel = 2/3,
   Purge = 0.14,
   MaxTrailDensity = 200,
   MaxLandingArea = 1500,
@@ -119,6 +120,9 @@ trail. Default = 45, in degree (double)}
 \item{TreeHollowPartForFuel}{Proportion of hollow trees used as fuel wood.
 Default = 1/3 (double)}
 
+\item{CrownPartForFuel}{Proportion of the tree crown biomass used as fuel wood.
+Default = 2/3 (double) (Branches diameter >= 5 cm) (Eleotério et al. 2019)}
+
 \item{Purge}{Part of the log no used for timber, can be used for fuel wood.
 Default = 0.14, in m3 of purge/m3 of volume of timber harvested. (double)}
 
@@ -176,7 +180,7 @@ exp(-(-0.47323 + -0.02564 * DBH))) with DBH in cm (developed by M.Rojat)
 (function)}
 }
 \value{
-A named list of 34 objects.
+A named list of 35 objects.
 }
 \description{
 Advanced parameters of the logging simulator
@@ -189,4 +193,7 @@ loggingparameters(MinDBHValue = 5)
 Aubry-Kientz, Mélaine, et al. "A comparative assessment of the
 performance of individual tree crowns delineation algorithms from ALS data
 in tropical forests." Remote Sensing 11.9 (2019): 1086.
+Eleotério, Jackson Roberto, et al. "Aboveground biomass quantification and
+tree-level prediction models for the Brazilian subtropical Atlantic Forest."
+Southern Forests: a Journal of Forest Science 81.3 (2019): 261-271.
 }

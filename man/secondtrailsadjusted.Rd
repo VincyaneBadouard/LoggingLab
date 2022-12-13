@@ -93,6 +93,7 @@ skidding trails is redefined to favour the recovery of trees through the
 crown (only with a grapple) in order to use the crowns for fuel wood.
 }
 \examples{
+\dontrun{
 data(DTMParacou)
 data(PlotMask)
 data(HarvestableAreaOutputsCable)
@@ -216,5 +217,6 @@ ggplot() +
    "Adjusted-trails" = "darkred"))
 
 ScdTrailsAdj$TrailsIdentity
+}
 
 }

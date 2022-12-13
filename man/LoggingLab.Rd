@@ -49,7 +49,7 @@ getgeometry
 
 timberharvestedvolume
 
-exploitablefuelwoodvolume
+harvestablefuelwood
 }
 
 \seealso{

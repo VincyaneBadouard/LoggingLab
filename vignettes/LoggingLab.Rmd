@@ -63,16 +63,17 @@ data(CreekDistances)
 # Required format of the inventory
 \code{\link{Paracou6_2016}}
 
-The columns required for the package are:  
-  - *Forest* (to apply the corresponding volume formula)  
-  - *Plot* (1 value)  
-  - *CensusYear* (1 value)  
-  - *PlotArea*  
-  - *idTree*  
-  - *Xutm* and *Yutm*  
-  - *CodeAlive*  
-  - *Family*, *Genus*, *Species* and *VernName*  
-  - *Circ* or *CircCorr*  
+The columns required for the package are:
+- *Forest* (to apply the corresponding volume formula)
+- *idTree*
+- *Xutm* and *Yutm*
+- *CodeAlive*
+- *Family*, *Genus*, *Species*
+- *CircCorr*
+The columns optional for the package are:
+- *Plot* (1 value)
+- *CensusYear* (1 value)  
+
 ```{r}
 # inventory class
 class(Paracou6_2016)
@@ -131,22 +132,22 @@ felling1tree
 rotatepolygon  
 getgeometry  
 timberharvestedvolume  
-exploitablefuelwoodvolume  
+harvestablefuelwood  
 
 
 # Arguments presentation
 
 + **inventory** : Input forest inventory for 1 plot and 1 census year (see the inputs formats and metadata in the vignette or in Paracou6_2016.R) (data.frame)  
-The columns required for the package are:  
-  - *Forest* (to apply the corresponding volume formula)  
-  - *Plot* (1 value)  
-  - *CensusYear* (1 value)  
-  - *PlotArea*  
-  - *idTree*  
-  - *Xutm* and *Yutm*  
-  - *CodeAlive*  
-  - *Family*, *Genus*, *Species* and *VernName*  
-  - *Circ* or *CircCorr*  
+The columns required for the package are:
+- *Forest* (to apply the corresponding volume formula)
+- *idTree*
+- *Xutm* and *Yutm*
+- *CodeAlive*
+- *Family*, *Genus*, *Species*
+- *CircCorr*
+The columns optional for the package are:
+- *Plot* (1 value)
+- *CensusYear* (1 value)  
 
 
 + **plotmask** Inventoried plot mask (SpatialPolygonsDataFrame **with a crs in UTM**)
@@ -155,9 +156,14 @@ The columns required for the package are:
 (RasterLayer **with a crs in UTM**) (See \code{\link{DTMParacou}})
 We advise you to generate your raster with Qgis rather than with the 'raster' package on R.
 
++ **creekverticaldistance**: Relative vertical distance
+(1 m resolution) from nearest channel network
+(RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
+To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 
-+ **creekdistances** Relative (vertical (*distvert*) and horizontal (*disthorz*)) distances
-from nearest channel network (list of 2 large RasterLayers **with a crs in UTM**)
++ **creekhorizontaldistance**: Relative horizontal distance
+(1 m resolution) from nearest channel network
+(RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
 To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 
 + **speciescriteria** : Table of species exploitability criteria : species
@@ -251,7 +257,8 @@ kable(ScenariosTable)
 + **Proportion of successful directional felling events** = 60 %
 + **Minimum orientation of the tree fall to the trail** = 30 degree 
 + **Maximum orientation of the tree fall to the trail** = 45 degree 
-+ **Part taken from hollow trees for fuel exploitation** = 1/3 
++ **Part taken from hollow trees for fuel exploitation** = 1/3
++ **Proportion of the tree crown biomass used as fuel wood** (Eleotério et al. 2019) = 2/3 (Branches diameter >= 5 cm)  
 + **Purge (unused part of the log)** = 0.14 m^3 of fuel wood/m^3 of logged trees
 + **Maximum trail density** = 200 m/ha (has no impact on the simulation.
 A message will be sent to inform if this threshold has been exceeded)
@@ -261,13 +268,13 @@ A message will be sent to inform if this threshold has been exceeded)
 + **Cost matrix for optimized trail layout**:
 Gives an increasing cost according to a slope gradient, and
 different costs on certain cases:  
-  - "Initial" (default = 1000)
-  - "Access" (default = Inf)
-  - "BigTrees" (default = 500)
-  - "Reserves" (default = 500)
-  - "Futures" (default = 50)
-  - "MainTrails" (default = 1E-4)
-  - "SecondTrails" (default = 0.1)
+- "Initial" (default = 1000)
+- "Access" (default = Inf)
+- "BigTrees" (default = 500)
+- "Reserves" (default = 500)
+- "Futures" (default = 50)
+- "MainTrails" (default = 1E-4)
+- "SecondTrails" (default = 0.1)
 
 *Models*   
 
@@ -300,7 +307,7 @@ is in the area disturbed by the felling of a tree, according to the DBH of
 the tree whose probability of dying is estimated.
 Default: 1 / (1 + exp(-(-0.47323 + -0.02564 * DBH))) with DBH in cm (developed by M.Rojat)
 
-  
+
 # Paying attention to inputs - important source of error
 Common error sources:  
 - no crs  
@@ -316,7 +323,9 @@ Common error sources:
 ```{r}
 Rslt <- loggingsimulation1(Paracou6_2016,
                            plotmask = PlotMask, topography = DTMParacou,
-                           creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+                           creekverticaldistance = CreekDistances$distvert,
+                           creekhorizontaldistance = CreekDistances$disthorz,
+                           speciescriteria = SpeciesCriteria,
                            volumeparameters = ForestZoneVolumeParametersTable,
                            scenario = "manual", objective = 20,
                            fuel = "2", winching = "2", directionalfelling = "2", 
@@ -329,7 +338,9 @@ With the ability to iterate and parallelize:
 ```{r}
 Rslt_iter <- loggingsimulation(Paracou6_2016,
                                plotmask = PlotMask, topography = DTMParacou,
-                               creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+                               creekverticaldistance = CreekDistances$distvert,
+                               creekhorizontaldistance = CreekDistances$disthorz,
+                               speciescriteria = SpeciesCriteria,
                                volumeparameters = ForestZoneVolumeParametersTable,
                                scenario = "manual", objective = 20,
                                fuel = "2", winching = "2", directionalfelling = "2", 
@@ -346,7 +357,9 @@ SimulTime <- microbenchmark::microbenchmark(
   loggingsimulation1(
     inventory = Paracou6_2016,
     plotmask = PlotMask, topography = DTMParacou,
-    creekdistances  = CreekDistances, speciescriteria = SpeciesCriteria,
+    creekverticaldistance = CreekDistances$distvert,
+    creekhorizontaldistance = CreekDistances$disthorz, 
+    speciescriteria = SpeciesCriteria,
     volumeparameters = ForestZoneVolumeParametersTable,
     scenario = "RIL3",
     objectivelax = TRUE,
@@ -355,7 +368,9 @@ SimulTime <- microbenchmark::microbenchmark(
   loggingsimulation(
     inventory = Paracou6_2016,
     plotmask = PlotMask, topography = DTMParacou,
-    creekdistances = CreekDistances, speciescriteria = SpeciesCriteria,
+    creekverticaldistance = CreekDistances$distvert,
+    creekhorizontaldistance = CreekDistances$disthorz, 
+    speciescriteria = SpeciesCriteria,
     volumeparameters = ForestZoneVolumeParametersTable,
     scenario = "RIL3", objectivelax = TRUE,
     crowndiameterparameters = ParamCrownDiameterAllometry, # 1632.843	s
@@ -461,7 +476,7 @@ loggingsummary(LoggingSimulationOutputs_iter) # Outputs of one logging simulatio
 **Description**:
 * inventorycheckformat() checks if the input inventory data is compatible with the ‘LoggingLab’ package and returns the inventory if the inventory is in the required format or stop the function if the format is not the one required.
 * cleaninventory()returns the inventory with **only alive trees within the inventoried plot**.
-  
+
 
 ```{r}
 inventory <- inventorycheckformat(Paracou6_2016)
@@ -504,7 +519,8 @@ By default, a prospecting unit is an area connected to a truck trail or a main s
 ```{r}
 HarvestableAreaOutputs <- harvestableareadefinition(
   topography = DTMParacou,
-  creekdistances = CreekDistances,
+  creekverticaldistance = CreekDistances$distvert,
+  creekhorizontaldistance = CreekDistances$disthorz,
   maintrails = MainTrails,
   plotmask = PlotMask,
   scenario = "manual", winching = "1", # with an zone for cable only
@@ -670,6 +686,7 @@ ScndTrailOutputs <- secondtrailsopening(topography = DTMParacou,
                                         treeselectionoutputs = treeselectionoutputs,
                                         scenario = "manual",
                                         winching = "2",
+                                        fuel = "2",
                                         advancedloggingparameters = loggingparameters())
 
 inventory <- ScndTrailOutputs$inventory
@@ -778,23 +795,26 @@ the whole trunk will be exploitable as fuel wood.
 ```{r}
 TimberV <- timberharvestedvolume(inventory, scenario = "manual", fuel = "2",
                                  advancedloggingparameters = loggingparameters())
-
+inventory <- TimberV$inventory
 TimberLoggedVolume <- TimberV$TimberLoggedVolume
 NoHollowTimberLoggedVolume <- TimberV$NoHollowTimberLoggedVolume
 ```
 
 ### Compute the exploitable fuel wood volume
 
-**Description**: Computes the exploitable fuel wood volume in healthy trees exploited for timber (their unused part), in the hollow trees and in the damage trees (caused by skidding trails, secondary windfall).
+**Description**: Computes the harvestable fuel wood biomass in healthy trees
+exploited for timber (their unused part), in the hollow trees and in the
+damage trees (caused by trails, secondary windfall). Computes also the the
+unused degraded tree biomass.
 
 ```{r}
-FuelV <- exploitablefuelwoodvolume(inventory, scenario = "manual", fuel = "2",
+FuelV <- harvestablefuelwood(inventory, scenario = "manual", fuel = "2",
                                    TimberLoggedVolume = TimberLoggedVolume,
                                    NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
                                    advancedloggingparameters = loggingparameters())
-
-DamageVolume <- FuelV$DamageVolume # only damage (without purge and hollow trees)
-FuelVolume <- FuelV$FuelVolume
+inventory <- FuelV$inventory
+LoggingResidualBiomass <- FuelV$LoggingResidualBiomass
+FuelWoodBiomass <- FuelV$FuelWoodBiomass
 ```
 
 # Outputs
@@ -809,8 +829,8 @@ Numeric values:
 + **HVinit** : Initial harvestable volume in m3 (numeric)  
 + **TimberLoggedVolume** : Timber logged volume in m3 (numeric)  
 + **NoHollowTimberLoggedVolume** : No hollow timber logged volume (only healthy trees) in m3 (numeric)  
-+ **FuelVolume** : Fuel wood volume in m3 (numeric)  
-+ **DamageVolume** : Damages volume (only damages (= without purge and hollow trees)) in m3 (numeric)  
++ **FuelWoodBiomass** : Fuel wood biomass in ton (numeric)  
++ **LoggingResidualBiomass** : The unused degraded biomass in ton (numeric)  
 + **LostBiomass** : Total lost biomass in ton (numeric)  
 + **TrailsDensity** : Skidding trails density (preliminary if FWE) in m/ha (units)  
 + **AdjustTrailsDensity** : Adjusted skidding trails density if FWE in m/ha (units)  
@@ -826,9 +846,9 @@ Spatial objects:
 + **SmoothedTrails** : Smoothed secondary skidding trails (MULTIPOLYGON with crs)  
 + **MainTrailsAccess** : Random access point of main trail for each harvestable zone (POINT with crs)  
 + **TrailsIdentity** : Information on sections of the trails (matrix), with
-   - LineID: 
-   - LoggedTrees: idTree of trees reached by the trails
-   - TypeExpl: type of winching  
+- LineID: 
+- LoggedTrees: idTree of trees reached by the trails
+- TypeExpl: type of winching  
 + **RawSecondTrails** : Non-smoothed secondary skidding trails (SpatialLines with crs)  
 + **CostRasterAgg** : The cost raster (RasterLayer)  
 
@@ -941,7 +961,13 @@ plot(Rslt)
 ```
 
 
-
+# References
+- Aubry-Kientz, Mélaine, et al. "A comparative assessment of the
+performance of individual tree crowns delineation algorithms from ALS data
+in tropical forests." Remote Sensing 11.9 (2019): 1086.  
+- Eleotério, Jackson Roberto, et al. "Aboveground biomass quantification and
+tree-level prediction models for the Brazilian subtropical Atlantic Forest."
+Southern Forests: a Journal of Forest Science 81.3 (2019): 261-271.  
 
 
 
