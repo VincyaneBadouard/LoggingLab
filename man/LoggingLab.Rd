@@ -68,7 +68,7 @@ Authors:
   \item Sylvain Schmitt \email{sylvain.m.schmitt@gmail.com}
   \item Guillaume Salzet \email{Guillaume.Salzet@ecofog.gf}
   \item Thomas Gaquiere \email{gaquiere.thomas@yahoo.com}
-  \item Géraldine Derroire \email{geraldine.derroire@cirad.fr}
+  \item GÃ©raldine Derroire \email{geraldine.derroire@cirad.fr}
 }
 
 }
