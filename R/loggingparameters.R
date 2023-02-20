@@ -70,8 +70,9 @@
 #'@param CrownPartForFuel Proportion of the tree crown biomass used as fuel wood.
 #'  Default = 2/3 (double) (Branches diameter >= 5 cm) (Eleotério et al. 2019)
 #'
-#'@param Purge Part of the log no used for timber, can be used for fuel wood.
-#'  Default = 0.14, in m3 of purge/m3 of volume of timber harvested. (double)
+#'@param Purge Part of the harvested log no used for timber, can be used for fuel
+#'  wood. Default = 0.14, in m3 of purge/m3 of volume of timber harvested.
+#'  (double)
 #'
 #'@param MaxTrailDensity Maximum trail density. Default = 200, in m/ha (double)
 #'  (has no impact on the simulation. A message will be sent to inform if

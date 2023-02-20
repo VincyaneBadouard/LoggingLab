@@ -42,8 +42,8 @@ columns:
 \item TimberLoggedBiomass (ton): The timber biomass logged by tree
 \item LogBiomass (ton): the biomass of the log (equivalent to the
 'TreeHarvestableVolume' but in biomass)
-\item PurgeVolume (m3): the volume of the purge by tree
-\item PurgeBiomass (ton): the biomass of the purge by tree
+\item PurgeVolume (m3): the volume of the purge of each harvestable tree
+\item PurgeBiomass (ton): the biomass of the purge of each harvestable tree
 \item CrownBiomass (ton): the biomass of the tree crown
 \item FuelWoodBiomass (ton): the fuel wood biomass harvestable by tree
 \item LoggingResidualBiomass (ton): the unused degraded tree biomass.
@@ -62,9 +62,8 @@ The harvestable part in fuel wood in:
 of 'CrownPartForFuel') + the unused part of the trunk ('Purge') (Default =
 0.14 m3 of purge/m3 of volume of timber harvested).
 \item The hollow trees if logged: 1/3 (default value of 'TreeHollowPartForFuel')
-of the log + 2/3 of their crown (default value of 'CrownPartForFuel') +
-the unused part of the trunk ('Purge')
-\item The damage trees (trails, secondary windfall): their trunk (=log + Purge)
+of the log + 2/3 of their crown (default value of 'CrownPartForFuel')
+\item The damage trees (trails, secondary windfall): their trunk
 }
 }
 \examples{

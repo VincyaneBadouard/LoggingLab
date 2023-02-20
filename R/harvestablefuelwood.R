@@ -31,8 +31,8 @@
 #'   - TimberLoggedBiomass (ton): The timber biomass logged by tree
 #'   - LogBiomass (ton): the biomass of the log (equivalent to the
 #'                 'TreeHarvestableVolume' but in biomass)
-#'   - PurgeVolume (m3): the volume of the purge by tree
-#'   - PurgeBiomass (ton): the biomass of the purge by tree
+#'   - PurgeVolume (m3): the volume of the purge of each harvestable tree
+#'   - PurgeBiomass (ton): the biomass of the purge of each harvestable tree
 #'   - CrownBiomass (ton): the biomass of the tree crown
 #'   - FuelWoodBiomass (ton): the fuel wood biomass harvestable by tree
 #'   - LoggingResidualBiomass (ton): the unused degraded tree biomass.
@@ -45,10 +45,9 @@
 #'     0.14 m3 of purge/m3 of volume of timber harvested).
 #'
 #'   - The hollow trees if logged: 1/3 (default value of 'TreeHollowPartForFuel')
-#'     of the log + 2/3 of their crown (default value of 'CrownPartForFuel') +
-#'     the unused part of the trunk ('Purge')
+#'     of the log + 2/3 of their crown (default value of 'CrownPartForFuel')
 #'
-#'  - The damage trees (trails, secondary windfall): their trunk (=log + Purge)
+#'  - The damage trees (trails, secondary windfall): their trunk
 #'
 #' @importFrom dplyr mutate
 #'
@@ -117,7 +116,6 @@ harvestablefuelwood <- function(
   DeathCause <- ProbedHollow <- Selected <- TreeHarvestableVolume <- AGB <- NULL
   WoodDensity <- TimberLoggedBiomass <- PurgeVolume <- NULL
   LogBiomass <- PurgeBiomass <- CrownBiomass <- NULL
-  PurgeVolumeVB <- PurgeVolumeGD <- PurgeBiomassVB <- NULL
 
   #### Arguments check ####
   if(!inherits(inventory, "data.frame"))
@@ -162,50 +160,44 @@ harvestablefuelwood <- function(
   inventory <- inventory %>%
     mutate(LogBiomass = TreeHarvestableVolume * WoodDensity)
 
-  # Purge
-  TotalPurge <- advancedloggingparameters$Purge * TimberLoggedVolume # m3
-
+  # Purge only of healthy trees (0 for the others)
   inventory <- inventory %>%
-    mutate(PurgeVolumeVB = ifelse(!is.na(DeathCause),
-                                  TotalPurge/nrow(inventory[!is.na(inventory$DeathCause),]), NA))
-  inventory <- inventory %>%
-    mutate(PurgeVolumeGD = ifelse(!is.na(DeathCause),
-                                  advancedloggingparameters$Purge * TreeHarvestableVolume, NA))
+    mutate(PurgeVolume =
+             ifelse(Selected == "1" & ProbedHollow == "0",
+                    advancedloggingparameters$Purge * TreeHarvestableVolume, 0))
 
   # PurgeBiomass
   inventory <- inventory %>%
-    mutate(PurgeBiomassVB = PurgeVolumeVB * WoodDensity) %>%
-    mutate(PurgeBiomassGD = PurgeVolumeGD * WoodDensity)
+    mutate(PurgeBiomass = PurgeVolume * WoodDensity)
 
   # CrownBiomass
-  # Tree biomass -(log biomass + purge biomass))
-  inventory <- inventory %>% mutate(CrownBiomass = AGB - (LogBiomass + PurgeBiomassVB))
+  # Tree biomass - log biomass
+  inventory <- inventory %>% mutate(CrownBiomass = AGB - LogBiomass)
 
   # Healthy trees
   # 2/3 of CrownBiomass + PurgeBiomass
   inventory <- inventory %>%
     mutate(FuelWoodBiomass = ifelse(Selected == "1" & ProbedHollow == "0",
                                     advancedloggingparameters$CrownPartForFuel * CrownBiomass + # 2/3 of CrownBiomass
-                                      PurgeBiomassVB, NA)) # + purge
+                                      PurgeBiomass, NA)) # + purge
 
   # Hollow trees
-  # 2/3 of CrownBiomass + 1/3 LogBiomass + PurgeBiomass
+  # 2/3 of CrownBiomass + 1/3 LogBiomass
   inventory <- inventory %>%
     mutate(FuelWoodBiomass =
              ifelse(Selected == "1" & ProbedHollow == "1",
                     advancedloggingparameters$CrownPartForFuel * CrownBiomass + # 2/3 of CrownBiomass
-                      advancedloggingparameters$TreeHollowPartForFuel * LogBiomass + # 1/3 log
-                      PurgeBiomassVB, # + purge
+                      advancedloggingparameters$TreeHollowPartForFuel * LogBiomass, # 1/3 log
                     FuelWoodBiomass))
 
   # Damage trees
-  # LogBiomass + PurgeBiomass
+  # LogBiomass
   inventory <- inventory %>%
     mutate(FuelWoodBiomass = ifelse(DeathCause %in% "maintrail" |
                                       DeathCause %in% "2ndtrail" |
                                       DeathCause %in% "treefall2nd" |
                                       DeathCause %in% "landing",
-                                    LogBiomass + PurgeBiomassVB, # log + purge
+                                    LogBiomass,
                                     FuelWoodBiomass))
 
   # LoggingResidualBiomass: biomass damage left in place
@@ -230,78 +222,6 @@ harvestablefuelwood <- function(
                   FuelWoodBiomass = FuelWoodBiomass,
                   LoggingResidualBiomass = LoggingResidualBiomass) # biomass damage left in place
 
-
-  # ----------------------------------------------------------------------------
-  # Former version
-
-
-  # # Damage trees (only trunk volume)
-  # DamageTable <- inventory %>%
-  #   dplyr::filter(DeathCause %in% "maintrail" |
-  #                   DeathCause %in% "2ndtrail" |
-  #                   DeathCause %in% "treefall2nd" |
-  #                   DeathCause %in% "landing")
-  #
-  # DamageVolume <- sum(DamageTable$TreeHarvestableVolume) # only the log, without purge
-  # # TreeHarvestableVolume = harvestable volume (= the log) in a tree according to its diameter and geographical position
-  #
-  # DamageVolume <- DamageVolume + (advancedloggingparameters$Purge * DamageVolume) # damage = the log and the purge -> trunk
-  #
-  # if(fuel == "0"){  # no fuel wood exploitation
-  #
-  #   FuelVolume <- NULL
-  # }
-  #
-  # # Fuel wood exploitation
-  # if(fuel != "0"){
-  #
-  #   # Add the purge of the healthy trees harvested for timber
-  #   DamagePurge <- sum(DamageVolume + advancedloggingparameters$Purge * TimberLoggedVolume)
-  #   # Purge = part of the trunk not used for timber.
-  #   # Default = 0.14 m3 of purge/m3 of volume of timber harvested.
-  #   # 1 tonne H35% de biomasse = 1m3
-  #
-  #   if(fuel == "1"){
-  #     FuelVolume <- DamagePurge
-  #   }
-  #
-  #   if(fuel == "2"){ # Hollow trees are also harvested
-  #
-  #     HollowTable <- inventory %>%
-  #       dplyr::filter(DeathCause == "hollowfuel")
-  #
-  #     if(nrow(HollowTable) > 0){
-  #       # damage + 1/3 of hollow trees volume + purge (0.14) of the healthy trees
-  #       # FuelVolume <- sum(DamageVolume +
-  #       #                     advancedloggingparameters$TreeHollowPartForFuel *
-  #       #                     sum(HollowTable$TreeHarvestableVolume) +
-  #       #                     advancedloggingparameters$Purge * NoHollowTimberLoggedVolume)
-  #
-  #       # DamageVolume (=damage (with their purge) +
-  #       # 1/3 of hollow trees volume + purge of all the cutted (healthy or hollow) trees
-  #
-  #       CuttedTable <- inventory %>%
-  #         filter(Selected == "1")
-  #
-  #       CuttedTreesLogVolume <- sum(CuttedTable$TreeHarvestableVolume) # Log volume of all the cutted trees (healthy or hollow)
-  #
-  #       CuttedTreesPurge <- advancedloggingparameters$Purge * CuttedTreesLogVolume # purge of all the cutted trees (healthy or hollow)
-  #
-  #       FuelVolume <- sum(DamageVolume +
-  #                           advancedloggingparameters$TreeHollowPartForFuel *
-  #                           sum(HollowTable$TreeHarvestableVolume) +
-  #                           CuttedTreesPurge)
-  #
-  #     }else if(nrow(HollowTable) == 0){
-  #
-  #       FuelVolume <- DamagePurge # no probed hollow trees
-  #     }
-  #   }
-  #
-  # }
-  #
-  # outputs <- list(DamageVolume = DamageVolume, # only damage (without purge and hollow trees)
-  #                 FuelVolume = FuelVolume)
 
   return(outputs)
 
