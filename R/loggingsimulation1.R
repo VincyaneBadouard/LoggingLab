@@ -107,7 +107,7 @@
 #'@param advancedloggingparameters Other parameters of the logging simulator
 #'  \code{\link{loggingparameters}} (list)
 #'
-#'@return  A large list of 39  elements: input forest inventory (data.frame) with
+#'@return  A large list of 40  elements: input forest inventory (data.frame) with
 #'  logging informations (list) (see the outputs metadata in the vignette or
 #'  \code{\link{LoggingSimulationOutputs}}).
 #'
@@ -150,7 +150,7 @@
 #' data(ForestZoneVolumeParametersTable) # volume parameters
 #' data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 #'
-#' Rslt <- loggingsimulation1(
+#' LoggingSimulationOutputs <- loggingsimulation1(
 #'  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
 #'  creekverticaldistance = CreekDistances$distvert,
 #'  creekhorizontaldistance = CreekDistances$disthorz,
@@ -452,7 +452,7 @@ loggingsimulation1 <- function(
                                          advancedloggingparameters = advancedloggingparameters)
 
   inventory <- Timberoutputs$inventory
-  TimberLoggedVolume <- Timberoutputs$TimberLoggedVolume
+  TimberLoggedVolume <- Timberoutputs$TimberLoggedVolume # purge included
   NoHollowTimberLoggedVolume <- Timberoutputs$NoHollowTimberLoggedVolume
 
   if(is.null(TimberLoggedVolume) |TimberLoggedVolume == 0){
@@ -472,6 +472,10 @@ loggingsimulation1 <- function(
   inventory <- Fueloutputs$inventory
   LoggingResidualBiomass <- Fueloutputs$LoggingResidualBiomass
   FuelWoodBiomass <- Fueloutputs$FuelWoodBiomass
+
+  # BO = TimberLoggedVolume - Purge
+  TotalPurgeVolume <- sum(inventory$PurgeVolume, na.rm = TRUE)
+  TimberExtractedVolume <- TimberLoggedVolume - TotalPurgeVolume
 
 
   DeadTrees <- inventory %>%
@@ -500,6 +504,7 @@ loggingsimulation1 <- function(
                   "HVinit" = HVinit,
                   "TimberLoggedVolume" = TimberLoggedVolume,
                   "NoHollowTimberLoggedVolume" = NoHollowTimberLoggedVolume,
+                  "TimberExtractedVolume" = TimberExtractedVolume, # Timber volume without purge
                   "FuelWoodBiomass" = FuelWoodBiomass,
                   "LoggingResidualBiomass" = LoggingResidualBiomass,
                   "LostBiomass" = LostBiomass,

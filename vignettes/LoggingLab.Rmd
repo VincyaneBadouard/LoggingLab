@@ -829,6 +829,7 @@ Numeric values:
 + **HVinit** : Initial harvestable volume in m3 (numeric)  
 + **TimberLoggedVolume** : Timber logged volume in m3 (numeric)  
 + **NoHollowTimberLoggedVolume** : No hollow timber logged volume (only healthy trees) in m3 (numeric)  
++ **TimberExtractedVolume** : Timber volume after purge in m3 (numeric)
 + **FuelWoodBiomass** : Fuel wood biomass in ton (numeric)  
 + **LoggingResidualBiomass** : The unused degraded biomass in ton (numeric)  
 + **LostBiomass** : Total lost biomass in ton (numeric)  

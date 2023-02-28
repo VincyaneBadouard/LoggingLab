@@ -138,7 +138,7 @@ Default = NULL}
 \item{cores}{Number of cores for parallelization (numeric). Default = 1.}
 }
 \value{
-A large list of 39  elements for each iteration, contained in a list.
+A large list of 40  elements for each iteration, contained in a list.
 Input inventory (data.frame) with logging informations (list) (see the
 outputs metadata in the vignette or
 \code{\link{LoggingSimulationOutputs_iter}}).
@@ -173,7 +173,7 @@ data(SpeciesCriteria) # species exploitability criteria
 data(ForestZoneVolumeParametersTable) # volume parameters
 data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 
-Rslt <- loggingsimulation(
+LoggingSimulationOutputs_iter <- loggingsimulation(
  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
  creekverticaldistance = CreekDistances$distvert,
  creekhorizontaldistance = CreekDistances$disthorz,

@@ -43,8 +43,9 @@ loggingsummary <- function(x
 
   # Numeric values:
 
-  var <- c("HarvestableArea", "VO", "HVinit", "TimberLoggedVolume", "NoHollowTimberLoggedVolume", "FuelWoodBiomass",
-           "LoggingResidualBiomass", "LostBiomass", "TrailsDensity", "AdjustTrailsDensity")
+  var <- c("HarvestableArea", "VO", "HVinit", "TimberLoggedVolume", "NoHollowTimberLoggedVolume",
+           "TimberExtractedVolume", "FuelWoodBiomass", "LoggingResidualBiomass",
+           "LostBiomass", "TrailsDensity", "AdjustTrailsDensity")
 
   statsvars <- function(v, x){ # x the list, v the var
 
@@ -95,6 +96,12 @@ loggingsummary <- function(x
   cat('No hollow timber logged volume (m3):\n')
   print(unlist(RsltStats[5]))
   print(set_units(unlist(RsltStats[5])/HarvestableArea, m3/ha)) # Logged volume (m3) (only healthy trees)
+
+  cat('\n') # skip a line
+
+  cat('Timber extracted volume (timber volume after purge) (m3):\n') # timber volume after purge
+  print(unlist(RsltStats[4]))
+  print(set_units(unlist(RsltStats[4])/HarvestableArea, m3/ha)) # Logged volume (m3) (only healthy trees if fuel != "2", healthy + hollow trees if fuel = "2")
 
   cat('\n') # skip a line
 

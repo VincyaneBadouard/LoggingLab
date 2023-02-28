@@ -50,6 +50,9 @@ loggingsummary1 <- function(x
   cat('No hollow timber logged volume :', round(x$NoHollowTimberLoggedVolume, digits = 1), 'm3, ',
       round(x$NoHollowTimberLoggedVolume/HarvestableArea, digits = 1), 'm3/harvestable ha\n') # Logged volume (m3) (only healthy trees)
 
+  cat('Timber extracted volume (timber volume after purge :', round(x$TimberExtractedVolume, digits = 1), 'm3, ',
+      round(x$TimberExtractedVolume/HarvestableArea, digits = 1), 'm3/harvestable ha\n') # Logged volume (m3) (only healthy trees if fuel != "2", healthy + hollow trees if fuel = "2")
+
   cat('Fuel wood biomass :', round(x$FuelWoodBiomass, digits = 1), 'ton, ',
       round(x$FuelWoodBiomass/HarvestableArea, digits = 1), 'ton/harvestable ha\n')
 

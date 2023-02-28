@@ -15,7 +15,7 @@
 #'   iter = 2
 #'   cores = 2
 #'
-#' @format A large list of 39  elements for each iteration, contained in a list.
+#' @format A large list of 40 elements for each iteration, contained in a list.
 #' \describe{
 #'   \item{inventory}{Output forest inventory (data.frame)}
 #'   \item{HarvestableArea}{Harvestable area in ha (numeric)}
@@ -24,6 +24,7 @@
 #'   \item{TimberLoggedVolume}{Timber logged volume in m3 (numeric)}
 #'   \item{NoHollowTimberLoggedVolume}{No hollow timber logged volume (only
 #'   healthy trees) in m3 (numeric)}
+#'   \item{TimberExtractedVolume}{Timber volume after purge in m3 (numeric)}
 #'   \item{FuelWoodBiomass}{Harvestable fuel wood biomass in ton (numeric)}
 #'   \item{LoggingResidualBiomass}{The unused degraded biomass in ton (numeric)}
 #'   \item{LostBiomass}{Total lost biomass in ton (numeric)}

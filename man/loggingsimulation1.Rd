@@ -129,7 +129,7 @@ Default = NULL}
 \code{\link{loggingparameters}} (list)}
 }
 \value{
-A large list of 39  elements: input forest inventory (data.frame) with
+A large list of 40  elements: input forest inventory (data.frame) with
 logging informations (list) (see the outputs metadata in the vignette or
 \code{\link{LoggingSimulationOutputs}}).
 }
@@ -164,7 +164,7 @@ data(SpeciesCriteria) # species exploitability criteria
 data(ForestZoneVolumeParametersTable) # volume parameters
 data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
 
-Rslt <- loggingsimulation1(
+LoggingSimulationOutputs <- loggingsimulation1(
  Paracou6_2016, plotmask = PlotMask, topography = DTMParacou,
  creekverticaldistance = CreekDistances$distvert,
  creekhorizontaldistance = CreekDistances$disthorz,
