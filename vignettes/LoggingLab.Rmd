@@ -85,6 +85,7 @@ Paracou6_2016 %>%
   kable() %>%
   kable_styling(font_size = 10, latex_options = "scale_down")
 ```
+
 # Required format of the species exploitability criteria
 \code{\link{SpeciesCriteria}}
 ```{r}
@@ -94,6 +95,7 @@ class(SpeciesCriteria)
 lapply(SpeciesCriteria, class)
 kable(SpeciesCriteria)
 ```
+
 # Required format of the volume parameters
 \code{\link{ForestZoneVolumeParametersTable}}
 ```{r}
@@ -103,6 +105,7 @@ class(ForestZoneVolumeParametersTable)
 lapply(ForestZoneVolumeParametersTable, class)
 kable(ForestZoneVolumeParametersTable)
 ```
+
 # Required format of the crown diameter allometry parameters
 \code{\link{ParamCrownDiameterAllometry}}
 ```{r}
