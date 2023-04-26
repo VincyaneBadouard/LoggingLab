@@ -90,7 +90,7 @@ inventory <- suppressMessages(treeselection(
   advancedloggingparameters = loggingparameters())$inventory)
 
 if (!("DeathCause" \%in\% names(inventory))){ inventory <- inventory \%>\%
-  add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
+  tibble::add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
 }
 
 inventory <- inventory \%>\%

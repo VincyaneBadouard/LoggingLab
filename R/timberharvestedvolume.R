@@ -111,7 +111,7 @@ timberharvestedvolume <- function(
   #### Function ####
   inventory <- inventory %>%
     mutate(TimberLoggedVolume = ifelse(Selected == "1" & ProbedHollow == "0", # Logged healthy trees
-                                       TreeHarvestableVolume, NA))
+                                       TreeHarvestableVolume, 0))
 
   Healthy <- sum(inventory$TimberLoggedVolume, na.rm = TRUE)
 

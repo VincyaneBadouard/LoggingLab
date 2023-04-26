@@ -75,7 +75,7 @@
 #'   advancedloggingparameters = loggingparameters())$inventory)
 #'
 #' if (!("DeathCause" %in% names(inventory))){ inventory <- inventory %>%
-#'   add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
+#'   tibble::add_column(DeathCause = NA) # if "DeathCause" column doesnt exist create it
 #' }
 #'
 #' inventory <- inventory %>%
@@ -201,8 +201,16 @@ harvestablefuelwood <- function(
                                     FuelWoodBiomass))
 
   # LoggingResidualBiomass: biomass damage left in place
+  if(fuel != "0"){
   inventory <- inventory %>%
     mutate(LoggingResidualBiomass = AGB - (TimberLoggedBiomass + FuelWoodBiomass))
+  }
+
+  if(fuel == "0"){ # No fuel wood exploitation
+    inventory <- inventory %>%
+      mutate(LoggingResidualBiomass = ifelse(!is.na(DeathCause),
+                                             AGB - TimberLoggedBiomass, NA))
+  }
 
   FuelWoodBiomass <- sum(inventory$FuelWoodBiomass, na.rm = TRUE)
   LoggingResidualBiomass <- sum(inventory$LoggingResidualBiomass, na.rm = TRUE)
