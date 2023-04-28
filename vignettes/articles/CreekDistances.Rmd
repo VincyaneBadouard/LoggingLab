@@ -1,0 +1,116 @@
+---
+title: "CreekDistances"
+author: "Gaquiere Thomas"
+date: "17/12/2021"
+output: html_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", echo = T, eval = F
+)
+```
+
+```{r setup, include=FALSE}
+library(Rsagacmd)
+library(raster)
+```
+
+# Creek Distances computation
+
+## Method 1 : Using Saga-GIS graphical user interface
+
+First step : install SAGA-GIS (Conrad, O., Bechtel, B., Bock, M., Dietrich, H., Fischer, E., Gerlitz, L., Wehberg, J., Wichmann, V., and Böhner, J. (2015): System for Automated Geoscientific Analyses (SAGA) v. 2.1.4, Geosci. Model Dev., 8, 1991-2007, <doi:10.5194/gmd-8-1991-2015>.) : <https://saga-gis.sourceforge.io/>
+
+-   Load the Digital Elevation Model (DEM) (1m resolution) in Saga.
+
+    1.  Execute : Tools -\> Tool Libraries -\> Terrain Analysis -\> Preprocessing -\> Fill Sinks XXL (Wang & Liu) with the loaded DEM and with 'Options : Minimum Slope parameter = 0.1'
+
+        This algorithm will produce a 'filled' DEM.
+
+    2.  Execute : Tools -\> Tool Libraries -\> Hydrology -\> Flow Accumulation (Top-Down) with the filled DEM (1.) as 'Elevation' grid input with default parameters and Method : 'Multiple Flow Direction'.
+
+    3.  Execute : Tools -\> Tool Libraries -\> Terrain Analysis -\> Channels -\> Channel Network with the following inputs :
+
+        -   Elevation : The filled DEM computed in 1.
+
+        -   Initiation Grid : The Flow grid obtained in 2.
+
+        -   Initiation Type : 'Greater than'
+
+        -   Initiation Threshold : minimum number of grid cells required to initiate a channel, with a 1m resolution DEM, we selected a value of 2500. This option may influence in a consequent way the obtained Channel Network (check the Spatial Extent of your DEM before setting this value).
+
+    4.  Execute : Tools -\> Tool Libraries -\> Terrain Analysis -\> Channels -\> Overland Flow Distance to Channel Network with the following inputs :
+
+        -   Elevation : The filled DEM computed in 1.
+
+        -   Channel Network : 'Channel Network' grid computed in 3.
+
+Save 'Vertical Overland Flow Distance' and 'Horizontal Overland Flow Distance' grids as GeoTIFF (\*.tif)
+
+Load the both rasters in your R environment,
+
+-   Vertical Overland Flow Distance : **creekverticaldistance in LoggingLab**
+
+-   Horizontal Overland Flow Distance : **creekhorizontaldistance in LoggingLab**
+
+## Method 2 : Using Saga-GIS and Rsagacmd
+
+First step : install SAGA-GIS and the Rsagacmd package.
+
+Load the Digital Elevation Model (DEM) (1m resolution) in R :
+
+```{r}
+DEM <- raster('/YOUR_DEM.tif')
+```
+
+Initialize link between Saga-GIS and Rsagacmd :
+
+```{r}
+Saga <- saga_gis(verbose=TRUE, raster_backend = "raster", vector_backend = "sf")
+```
+
+### 1 - Fill Sinks XXL (Wang & Liu)
+
+```{r}
+DEMFilledSinks <- Saga$ta_preprocessor$fill_sinks_xxl_wang_liu(elev = DEM, 
+                                                               minslope = .01)
+```
+
+### 2 - Flow Accumulation (Top-Down)
+
+```{r}
+TotalCatchmentArea <- Saga$ta_hydrology$flow_accumulation_top_down(elevation = DEMFilledSinks, 
+                                                                   method = 'Multiple Flow Direction')
+```
+
+The 'flow' component of the TotalCatchmentArea object will be used as initiation grid for the channel network computation.
+
+### 3 - Channel Network
+
+```{r}
+ChannelNetwork <- Saga$ta_channels$channel_network(elevation = DEMFilledSinks,
+                                                   init_grid = TotalCatchmentArea$flow,
+                                                   init_method = "Greater than",
+                                                   init_value = 2500) 
+```
+
+### 4 - Overland Flow Distances To Channel Network
+
+```{r}
+CreekDistances <- Saga$ta_channels$overland_flow_distance_to_channel_network(elevation = DEMFilledSinks,
+                                                                             channels = ChannelNetwork$chnlntwrk)
+```
+
+### 5 - Extract Creek Horizontal and Vertical Distances
+
+```{r}
+CreekVerticalDistance <- CreekDistances$distvert # creekverticaldistance 
+
+crs(CreekVerticalDistance) <- crs(DEM) # set the crs
+
+CreekHorizontalDistance <- CreekDistances$disthorz # creekhorizontaldistance 
+
+crs(CreekHorizontalDistance) <- crs(DEM) # set the crs
+```
