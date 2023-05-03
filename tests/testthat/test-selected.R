@@ -126,7 +126,7 @@ test_that("selected", {
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
-  VO <- HVinit + 20
+  VO <- HVinit + 40
 
 
   expect_message(selected(inventory, scenario = "manual", fuel = "0",

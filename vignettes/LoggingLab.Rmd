@@ -353,7 +353,7 @@ Rslt_iter <- loggingsimulation(Paracou6_2016,
                                iter = 2, cores = 2)
 ```
 The harvestable volume may change from one simulation to another because the identification of defect trees contains a random component.
-, eval = F
+
 ```{r, eval = F}
 SimulTime <- microbenchmark::microbenchmark(
   
