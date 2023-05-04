@@ -1,13 +1,14 @@
 #' Trees removed under polygons
 #'
 #' @param inventory Input inventory (see the inputs formats and metadata in the
-#'   vignette) (data.frame) with at least the following columns: - "idTree":
-#'   unique ID of the tree - "Xutm": X coordinate of the tree - "Yutm": Y
-#'   coordinate of the tree - "Selected": == "1" for the trees selected for
-#'   logging.
+#'   vignette) (data.frame) with at least the following columns:
+#'   - "idTree": unique ID of the tree
+#'   - "Xutm": X coordinate of the tree
+#'   - "Yutm": Y coordinate of the tree
+#'   - "Selected": == "1" for the trees selected for logging.
 #'
 #' @param polygons Polygon(s) (trails, landings) under which trees are removed.
-#'   (sfc_POLYGON or sfc_MULTIPOLYGON **with a crs in UTM**)
+#'   (POLYGON or MULTIPOLYGON **with a crs in UTM**)
 #'
 #' @param deathcause The cause of the tree death under the polygon(s) among:
 #'   "maintrail", "2ndtrail", "treefall2nd", "landing" (character)

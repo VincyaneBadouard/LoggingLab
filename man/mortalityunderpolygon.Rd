@@ -8,13 +8,16 @@ mortalityunderpolygon(inventory, polygons, deathcause)
 }
 \arguments{
 \item{inventory}{Input inventory (see the inputs formats and metadata in the
-vignette) (data.frame) with at least the following columns: - "idTree":
-unique ID of the tree - "Xutm": X coordinate of the tree - "Yutm": Y
-coordinate of the tree - "Selected": == "1" for the trees selected for
-logging.}
+vignette) (data.frame) with at least the following columns:
+\itemize{
+\item "idTree": unique ID of the tree
+\item "Xutm": X coordinate of the tree
+\item "Yutm": Y coordinate of the tree
+\item "Selected": == "1" for the trees selected for logging.
+}}
 
 \item{polygons}{Polygon(s) (trails, landings) under which trees are removed.
-(sfc_POLYGON or sfc_MULTIPOLYGON \strong{with a crs in UTM})}
+(POLYGON or MULTIPOLYGON \strong{with a crs in UTM})}
 
 \item{deathcause}{The cause of the tree death under the polygon(s) among:
 "maintrail", "2ndtrail", "treefall2nd", "landing" (character)}
