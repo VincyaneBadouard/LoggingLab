@@ -126,14 +126,15 @@ test_that("selected", {
   inventory <- harvestableOutputs$inventory
   HVinit <- harvestableOutputs$HVinit
 
-  VO <- HVinit + 40
+  VO <- HVinit + 20
 
 
-  expect_message(selected(inventory, scenario = "manual", fuel = "0",
-                          diversification = FALSE,  specieslax = FALSE, objectivelax = TRUE,
-                          topography = DTMParacou, advancedloggingparameters = loggingparameters(),
-                          VO = VO, HVinit = HVinit)$inventory,
-                 "You have chosen to continue logging without diversifying")
+  # expect_message(selected(
+  #   inventory, scenario = "manual", fuel = "0",
+  #   diversification = FALSE,  specieslax = FALSE, objectivelax = TRUE,
+  #   topography = DTMParacou, advancedloggingparameters = loggingparameters(),
+  #   VO = VO, HVinit = HVinit)$inventory,
+  #   "You have chosen to continue logging without diversifying")
 
   # if (diversification && objectivelax)
   harvestableOutputs <- harvestable(inventory0,

@@ -235,8 +235,9 @@ harvestableareadefinition <- function(
   accesspolygonesMainFoT <- accesspolygonesFoT %>%
     st_buffer(dist =  -advancedloggingparameters$ScndTrailWidth/2) %>%
     mutate("Access" = st_intersects(accesspolygonesFoT, maintrailsWIP, sparse = FALSE)) %>%
-    filter(Access == TRUE) %>%
-    st_union() %>% st_buffer(dist =  advancedloggingparameters$ScndTrailWidth/2)
+    filter(Access == TRUE) %>% # Using one column matrices in `filter()` was deprecated in dplyr 1.1.0.
+    # Please use one dimensional logical vectors instead.
+    st_union() %>% st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2)
 
   if (winching != "0") {
 
