@@ -4,10 +4,7 @@
     <loc>/404.html</loc>
   </url>
   <url>
-    <loc>/ToDo.html</loc>
-  </url>
-  <url>
-    <loc>/articles/CreekDistancesRmd.html</loc>
+    <loc>/articles/CreekDistances.html</loc>
   </url>
   <url>
     <loc>/articles/LoggingLab.html</loc>
@@ -134,6 +131,9 @@
   </url>
   <url>
     <loc>/reference/maintrailextract.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mortalityunderpolygon.html</loc>
   </url>
   <url>
     <loc>/reference/pipe.html</loc>
