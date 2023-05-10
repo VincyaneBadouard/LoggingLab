@@ -338,7 +338,7 @@ Rslt <- loggingsimulation1(Paracou6_2016,
 
 ```
 With the ability to iterate and parallelize:
-```{r}
+```{r, eval=FALSE}
 Rslt_iter <- loggingsimulation(Paracou6_2016,
                                plotmask = PlotMask, topography = DTMParacou,
                                creekverticaldistance = CreekDistances$distvert,
@@ -347,7 +347,8 @@ Rslt_iter <- loggingsimulation(Paracou6_2016,
                                volumeparameters = ForestZoneVolumeParametersTable,
                                scenario = "manual", objective = 20,
                                fuel = "2", winching = "2", directionalfelling = "2", 
-                               diversification = TRUE, specieslax = FALSE, objectivelax = TRUE,
+                               diversification = TRUE, specieslax = FALSE,
+                               objectivelax = TRUE,
                                crowndiameterparameters = ParamCrownDiameterAllometry,
                                advancedloggingparameters = loggingparameters(),
                                iter = 2, cores = 2)
@@ -812,9 +813,9 @@ unused degraded tree biomass.
 
 ```{r}
 FuelV <- harvestablefuelwood(inventory, scenario = "manual", fuel = "2",
-                                   TimberLoggedVolume = TimberLoggedVolume,
-                                   NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
-                                   advancedloggingparameters = loggingparameters())
+                             TimberLoggedVolume = TimberLoggedVolume,
+                             NoHollowTimberLoggedVolume = NoHollowTimberLoggedVolume,
+                             advancedloggingparameters = loggingparameters())
 inventory <- FuelV$inventory
 LoggingResidualBiomass <- FuelV$LoggingResidualBiomass
 FuelWoodBiomass <- FuelV$FuelWoodBiomass
