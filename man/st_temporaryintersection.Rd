@@ -37,6 +37,7 @@ data(PlotMask)
 data(SpeciesCriteria)
 data(ForestZoneVolumeParametersTable)
 data(HarvestableAreaOutputsCable)
+data(MainTrails)
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -53,6 +54,7 @@ treeselectionoutputs <- suppressWarnings(treeselection(
   harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
   plotslope = HarvestableAreaOutputsCable$PlotSlope,
   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+  maintrails = MainTrails,
   advancedloggingparameters = loggingparameters()))
 
 treebuffers <- treeselectionoutputs$SelectedTreesPoints \%>\% sf::st_buffer(40)

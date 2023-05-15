@@ -30,6 +30,7 @@
 #' data(SpeciesCriteria)
 #' data(ForestZoneVolumeParametersTable)
 #' data(HarvestableAreaOutputsCable)
+#' data(MainTrails)
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -46,6 +47,7 @@
 #'   harvestablearea = HarvestableAreaOutputsCable$HarvestableArea,
 #'   plotslope = HarvestableAreaOutputsCable$PlotSlope,
 #'   harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
+#'   maintrails = MainTrails,
 #'   advancedloggingparameters = loggingparameters()))
 #'
 #' treebuffers <- treeselectionoutputs$SelectedTreesPoints %>% sf::st_buffer(40)
@@ -54,10 +56,10 @@
 #' }
 #'
 st_temporaryintersection <- function(
-  topography,
-  plotmask,
-  treebuffers,
-  advancedloggingparameters = loggingparameters()
+    topography,
+    plotmask,
+    treebuffers,
+    advancedloggingparameters = loggingparameters()
 ){
 
   # Arguments check
@@ -126,7 +128,7 @@ st_temporaryintersection <- function(
   sf_AccumPolygons <- terra::rast(RasterAccum) %>%
     terra::as.polygons(dissolve = TRUE) %>%
     st_as_sf() %>% st_set_crs(st_crs(treebuffers)) %>%
-    rename(n.overlaps = layer) %>% st_cast("POLYGON",warn = FALSE)
+    rename(n.overlaps = layer) %>% st_cast("POLYGON", warn = FALSE)
   sf_interPolygons <- suppressWarnings(sf_AccumPolygons%>%
                                          mutate(origins = c(sf_AccumPolygons %>%
                                                               st_centroid() %>%

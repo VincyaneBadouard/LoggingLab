@@ -10,6 +10,11 @@ LoggingLab: An R Package to Simulate Forest Logging
 ```
 devtools::install_github("VincyaneBadouard/LoggingLab")
 ```
+
+# Singularity container
+https://github.com/sylvainschmitt/singularity-LoggingLab
+
+
 # To cite package ‘LoggingLab’ in publications use:
 ```
 citation("LoggingLab")
