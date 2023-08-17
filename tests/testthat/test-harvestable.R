@@ -55,32 +55,32 @@ test_that("harvestable", {
   expect_false(any(is.na(testinventory1$LoggingStatus)))
   expect_false(any(is.na(testinventory2$LoggingStatus)))
 
-  # CommercialLevel == "0" are  LoggingStatus =="non-harvestable"
+  # CommercialLevel == 0 are  LoggingStatus =="non-harvestable"
   TestCommercial <- testinventory1 %>%
-    dplyr::filter(CommercialLevel == "0")
+    dplyr::filter(CommercialLevel == 0)
 
   expect_true(all(TestCommercial$LoggingStatus =="non-harvestable"))
 
   TestCommercial <- testinventory2 %>%
-    dplyr::filter(CommercialLevel == "0")
+    dplyr::filter(CommercialLevel == 0)
 
   expect_true(all(TestCommercial$LoggingStatus =="non-harvestable"))
 
   # "harvestable": DBH >= MinFD & DBH <= MaxFD
 
-  # "harvestable": CommercialLevel == "1" ou "2" if diversification=T, or  diversification=F & specieslax=T
+  # "harvestable": CommercialLevel == 1 ou 2 if diversification=T, or  diversification=F & specieslax=T
   testinventory1a <- testinventory1 %>%
-    dplyr::filter(CommercialLevel == "2")
+    dplyr::filter(CommercialLevel == 2)
   testinventory2a <- testinventory2 %>%
-    dplyr::filter(CommercialLevel == "2")
+    dplyr::filter(CommercialLevel == 2)
 
   expect_true(any(testinventory1a$LoggingStatus =="harvestable"))
   expect_true(any(testinventory2a$LoggingStatus =="harvestable2nd"))
 
 
-  # "harvestable": CommercialLevel == "1"  diversification=F & specieslax=F
+  # "harvestable": CommercialLevel == 1  diversification=F & specieslax=F
   testinventory3a <- testinventory3 %>%
-    dplyr::filter(CommercialLevel != "1")
+    dplyr::filter(CommercialLevel != 1)
   expect_true(all(testinventory3a$LoggingStatus == "non-harvestable"))
 
 

@@ -70,7 +70,7 @@
 #'@param CrownPartForFuel Proportion of the tree crown biomass used as fuel wood.
 #'  Default = 2/3 (double) (Branches diameter >= 5 cm) (Eleotério et al. 2019)
 #'
-#'@param Purge Part of the harvested log no used for timber, can be used for fuel
+#'@param Purge Part of the harvested log not used for timber, can be used for fuel
 #'  wood. Default = 0.14, in m3 of purge/m3 of volume of timber harvested.
 #'  (double)
 #'
@@ -94,8 +94,8 @@
 #'    - "SecondTrails" (default = 0.1)
 #'
 #'@param TreeHarvestableVolumeAllometry By default, allometry of tree
-#'  harvestable volume, French Guiana ONF formula: aCoef + bCoef * (DBH/100)^2,
-#'  aCoef and bCoef depend on the forest location, stored in
+#'  harvestable volume, French Guiana ONF formula: aCoef + bCoef * (DBH/100)^2.
+#'  With aCoef and bCoef depending on the forest location, stored in
 #'  \code{\link{ForestZoneVolumeParametersTable}}, DBH in cm. (function)
 #'
 #'@param TrunkHeightAllometry Allometry of trunk height, based on the cylinder

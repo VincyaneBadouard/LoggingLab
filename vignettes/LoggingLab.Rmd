@@ -171,16 +171,14 @@ To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 
 + **speciescriteria** : Table of species exploitability criteria : species
 names, economic interest level, minimum and maximum felling diameter, in
-the same format of \code{\link{SpeciesCriteria}} (2 levels of commercial
-species) (data.frame)
+the same format of \code{\link{SpeciesCriteria}} (data.frame)
 
 + **volumeparameters** : Volume parameters table (in the same format of
 \code{\link{ForestZoneVolumeParametersTable}}) to compute the harvestable
 volume of each tree, depend to its geographic zone if several locations
 (data.frame)("Guide de Sylviculture", ONF ('Office National des Forêts') of French Guiana, 2014)
 
-+ **scenario** : Logging scenario: "**RIL1**", "**RIL2broken**", "**RIL2**", "**RIL3**",
-"**RIL3fuel**", "**RIL3fuelhollow**" or "**manual**"(character) (See *ScenariosTable*)
++ **scenario** : Logging scenario: "**RIL1**", "**RIL2broken**", "**RIL2**", "**RIL3**", "**RIL3fuel**", "**RIL3fuelhollow**" or "**manual**"(character) (See *ScenariosTable*)
 
 + **objective** : Objective volume (m3/ha) (numeric)
 
@@ -190,7 +188,7 @@ exploitation of **hollow trees, damages and unused part of logged trees** in
 fuel = "**2**"
 
 + **diversification** : Possibility to log other species in addition to the
-main commercial species (species with a value of 2 for commercial in the
+main commercial species (species with a value > 1 for commercial in the
 \code{\link{SpeciesCriteria}} table) (logical)
 
 + **winching** :  Tree recovery:  

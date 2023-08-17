@@ -1,6 +1,10 @@
 #'Compute tree dimensions (tree, trunk and crown height, crown diameter,
 #'harvestable volume, wood density, and AGB)
 #'
+#'@description Compute tree dimensions (tree, trunk and crown height, crown
+#'  diameter, harvestable volume, wood density, and AGB) from its Diameter at
+#'  Breast Height (DBH)
+#'
 #'@param inventory Input inventory (see the inputs formats and metadata in the
 #'  vignette) (data.frame)
 #'
@@ -26,10 +30,10 @@
 #'@details 'addtreedim' compute some tree dimensions with the
 #'  'advancedloggingparameters' argument:
 #'  - Tree height (in m) ('TreeHeightAllometry')
-#'  - Tree harvestable volume (m3) ('TreeHarvestableVolumeAllometry')
+#'  - Tree harvestable volume (m3) ('TreeHarvestableVolumeAllometry')(French Guiana ONF)
 #'  - Trunk height (in m) ('TrunkHeightAllometry')
 #'  - Crown height (in m)
-#'  - Crown diameter (in m) ('CrownDiameterAllometry')
+#'  - Crown diameter (in m) ('CrownDiameterAllometry') (Aubry-Kientz et al.2019)
 #'  - Wood density (g/cm3) (by the BIOMASS package)
 #'  - Tree above-ground biomass (AGB) (in ton) (by the BIOMASS package)
 #'

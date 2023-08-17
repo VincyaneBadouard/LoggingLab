@@ -84,8 +84,8 @@ commercialcriteriajoin <- function(
     mutate(CommercialName = ifelse(is.na(CommercialName.species), CommercialName.genus, CommercialName.species)) %>%
     dplyr::select(-CommercialName.species, -CommercialName.genus) %>%
 
-    mutate(CommercialLevel.species = as.character(CommercialLevel.species)) %>%
-    mutate(CommercialLevel.genus = as.character(CommercialLevel.genus)) %>%
+    # mutate(CommercialLevel.species = as.character(CommercialLevel.species)) %>% # remove for reviewer
+    # mutate(CommercialLevel.genus = as.character(CommercialLevel.genus)) %>% # remove for reviewer
 
     mutate(CommercialLevel = ifelse(is.na(CommercialLevel.species), CommercialLevel.genus, CommercialLevel.species)) %>%
     mutate(MinFD = ifelse(is.na(MinFD.species), MinFD.genus, MinFD.species)) %>%
@@ -97,19 +97,19 @@ commercialcriteriajoin <- function(
     dplyr::select(-CommercialLevel.species, -CommercialLevel.genus, -MinFD.species, -MinFD.genus,
                   -UpMinFD.species, -UpMinFD.genus, -MaxFD.species, -MaxFD.genus,
                   -Aggregative.species, -Aggregative.genus) %>%
-    mutate(CommercialLevel = as.character(CommercialLevel)) %>%
+    # mutate(CommercialLevel = as.character(CommercialLevel)) %>% # remove for reviewer
 
     # Exceptions management (CommercialLevel == "0" in speciescriteria)
-    mutate(CommercialName = ifelse(CommercialLevel == "0", NA, CommercialName)) %>%
-    mutate(MinFD = ifelse(CommercialLevel == "0", NA, MinFD)) %>%
-    mutate(UpMinFD = ifelse(CommercialLevel == "0", NA, UpMinFD)) %>%
-    mutate(MaxFD = ifelse(CommercialLevel == "0", NA, MaxFD)) %>%
-    mutate(Aggregative = ifelse(CommercialLevel == "0", NA, Aggregative))
+    mutate(CommercialName = ifelse(CommercialLevel == 0, NA, CommercialName)) %>% # in numeric for reviewer
+    mutate(MinFD = ifelse(CommercialLevel == 0, NA, MinFD)) %>%
+    mutate(UpMinFD = ifelse(CommercialLevel == 0, NA, UpMinFD)) %>%
+    mutate(MaxFD = ifelse(CommercialLevel == 0, NA, MaxFD)) %>%
+    mutate(Aggregative = ifelse(CommercialLevel == 0, NA, Aggregative))
 
 
   inventory <- inventory %>%
-    mutate(CommercialLevel = ifelse(is.na(CommercialLevel), "0", CommercialLevel)) %>%
-    mutate(CommercialLevel = factor(as.character(CommercialLevel)))
+    mutate(CommercialLevel = ifelse(is.na(CommercialLevel), 0, CommercialLevel)) # %>%
+    # mutate(CommercialLevel = factor(as.character(CommercialLevel))) # remove for reviewer
 
   if(nrow(inventory) != nrow(inventory0))
     stop("The number of rows between the input inventory and the output inventory

@@ -95,8 +95,10 @@ an unreached objective volume, or be abandoned ('objectivelax')
 \examples{
 data(Paracou6_2016)
 data(DTMParacou)
+data(PlotMask)
 data(HarvestableAreaOutputsCable)
 data(MainTrails)
+data(ForestZoneVolumeParametersTable)
 
 inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 volumeparameters = ForestZoneVolumeParametersTable)
@@ -104,7 +106,7 @@ volumeparameters = ForestZoneVolumeParametersTable)
 inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 
 harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
-diversification = TRUE, specieslax = FALSE,
+diversification = FALSE, specieslax = TRUE,
 plotslope = HarvestableAreaOutputsCable$PlotSlope,
 maintrails = MainTrails,
 harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
@@ -116,7 +118,7 @@ HVinit <- harvestableOutputs$HVinit
 
 selecInventory <- selected(inventory, topography = DTMParacou,
 scenario = "manual", fuel = "2", diversification = TRUE,
-VO = 125, HVinit = HVinit, specieslax = FALSE, objectivelax = TRUE,
+VO = 20, HVinit = HVinit, specieslax = TRUE, objectivelax = TRUE,
 advancedloggingparameters = loggingparameters())$inventory
 
 }

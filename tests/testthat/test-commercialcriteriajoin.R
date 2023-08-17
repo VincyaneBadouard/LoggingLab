@@ -40,11 +40,11 @@ test_that("commercialcriteriajoin", {
          function(element) expect_type(element, "double"))
 
   expect_type(testinventory$CommercialName, "character")
-  expect_s3_class(testinventory$CommercialLevel, "factor")
+  expect_type(testinventory$CommercialLevel, "double")
 
   # Check that commercial sp have logging info, and non-commercial have not:
   TestCommercial <- testinventory %>%
-    filter(CommercialLevel == "0")
+    filter(CommercialLevel == 0)
 
   TestList <- list( # list the variables to check
     TestCommercial$CommercialName,
@@ -56,7 +56,7 @@ test_that("commercialcriteriajoin", {
          function(element) expect_true(all(is.na(element))))
 
   TestCommercial <- testinventory %>%
-    filter(CommercialLevel != "0")
+    filter(CommercialLevel != 0)
 
   TestList <- list( # list the variables to check
     TestCommercial$CommercialName,
@@ -91,8 +91,8 @@ test_that("commercialcriteriajoin", {
 
 
 # check colonnes présentes et classe:
-# CommercialName(character), CommercialLevel(factor), MinFD(numeric), UpMinFD(numeric), MaxFD(numeric)
-# Quand CommercialLevel diff de "0" : CommercialName, MinFD, UpMinFD, MaxFD dif de NA
+# CommercialName(character), CommercialLevel(numeric), MinFD(numeric), UpMinFD(numeric), MaxFD(numeric)
+# Quand CommercialLevel diff de 0 : CommercialName, MinFD, UpMinFD, MaxFD dif de NA
 # Check species attribution exceptions
 
-# Quand CommercialLevel == "0" : CommercialName, MinFD, UpMinFD, MaxFD == NA
+# Quand CommercialLevel == 0 : CommercialName, MinFD, UpMinFD, MaxFD == NA

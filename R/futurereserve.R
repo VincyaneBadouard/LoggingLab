@@ -111,7 +111,7 @@ futurereserve <- function(
   #Future: select essence and diameters
 
   inventory <- inventory %>%
-    mutate(LoggingStatus = ifelse(CommercialLevel == "1" & Selected != "1" & HarvestableZone == TRUE &
+    mutate(LoggingStatus = ifelse(CommercialLevel == 1 & Selected != "1" & HarvestableZone == TRUE &
                                     ((Up == "0" &
                                         (DBH >= advancedloggingparameters$FutureTreesMinDiameter & DBH < MinFD))
                                      | (Up == "1" &
