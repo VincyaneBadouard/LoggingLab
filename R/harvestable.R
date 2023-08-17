@@ -162,7 +162,7 @@ harvestable <- function(
 
   # Calculation of spatial information (distance and slope)
   SpatInventory <- inventory %>%
-    dplyr::filter(CommercialLevel!= "0") %>%  # only take commercial sp, the calculation time is long enough
+    dplyr::filter(CommercialLevel!= 0) %>%  # only take commercial sp, the calculation time is long enough
     dplyr::filter(DBH >= MinFD & DBH <= MaxFD) # already selected commercial DBHs
 
   coordinates(SpatInventory) <- ~ Xutm + Yutm # transform the inventory into a spatial object by informing the coordinates
@@ -263,9 +263,9 @@ harvestable <- function(
   # Essences selection
   HarverstableConditions <- # = 1 boolean vector
     if (diversification || (!diversification && specieslax)) {
-      inventory$CommercialLevel =="1"| inventory$CommercialLevel == "2" # now or maybe after we will diversify
+      inventory$CommercialLevel >0 # now or maybe after we will diversify
     } else if (!diversification && !specieslax) {
-      inventory$CommercialLevel == "1" # We will never diversify
+      inventory$CommercialLevel == 1 # We will never diversify
     }
 
 
@@ -286,14 +286,14 @@ harvestable <- function(
   inventory <- inventory %>%
     mutate(LoggingStatus = ifelse(HarverstableConditions, #Under the above criteria, designate the harvestable species
                                   "harvestable", "non-harvestable")) %>%
-    mutate(LoggingStatus = ifelse(CommercialLevel == "0", #The non-commercial species are non-harvestable.
+    mutate(LoggingStatus = ifelse(CommercialLevel == 0, #The non-commercial species are non-harvestable.
                                   "non-harvestable", LoggingStatus)) %>%
 
     mutate(LoggingStatus = ifelse(
       !diversification &
         specieslax & #designate the secondarily harvestable species, because diversification only if necessary
         LoggingStatus == "harvestable" &
-        CommercialLevel == "2",
+        CommercialLevel >1,
       "harvestable2nd", LoggingStatus))
 
 

@@ -84,8 +84,10 @@
 #' @examples
 #' data(Paracou6_2016)
 #' data(DTMParacou)
+#' data(PlotMask)
 #' data(HarvestableAreaOutputsCable)
 #' data(MainTrails)
+#' data(ForestZoneVolumeParametersTable)
 #'
 #' inventory <- addtreedim(cleaninventory(Paracou6_2016, PlotMask),
 #' volumeparameters = ForestZoneVolumeParametersTable)
@@ -93,7 +95,7 @@
 #' inventory <- commercialcriteriajoin(inventory, SpeciesCriteria)
 #'
 #' harvestableOutputs <- harvestable(inventory, topography = DTMParacou,
-#' diversification = TRUE, specieslax = FALSE,
+#' diversification = F, specieslax = T,
 #' plotslope = HarvestableAreaOutputsCable$PlotSlope,
 #' maintrails = MainTrails,
 #' harvestablepolygons = HarvestableAreaOutputsCable$HarvestablePolygons,
@@ -104,8 +106,8 @@
 #' HVinit <- harvestableOutputs$HVinit
 #'
 #' selecInventory <- selected(inventory, topography = DTMParacou,
-#' scenario = "manual", fuel = "2", diversification = TRUE,
-#' VO = 125, HVinit = HVinit, specieslax = FALSE, objectivelax = TRUE,
+#' scenario = "manual", fuel = "2", diversification = T,
+#' VO = 20, HVinit = HVinit, specieslax = T, objectivelax = T,
 #' advancedloggingparameters = loggingparameters())$inventory
 #'
 selected <- function(
@@ -213,6 +215,7 @@ selected <- function(
       inventory <- inventory %>%
         mutate(Condition = ifelse(LoggingStatus == "harvestable2nd"|LoggingStatus == "harvestable",TRUE, FALSE)) %>%
         group_by(Condition) %>%
+        arrange(CommercialLevel) %>% # add for reviewer
         arrange(desc(TreeHarvestableVolume)) %>%
         mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
         ungroup() %>%
@@ -250,6 +253,7 @@ selected <- function(
       inventory <- inventory %>%
         mutate(Condition = ifelse(LoggingStatus == "harvestable",TRUE, FALSE)) %>%
         group_by(Condition) %>%
+        arrange(CommercialLevel) %>% # add for reviewer
         arrange(desc(TreeHarvestableVolume)) %>%
         mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
         ungroup() %>%
@@ -283,7 +287,7 @@ selected <- function(
 
     inventory <- inventory %>%
       mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" &
-                                      CommercialLevel == "1" & (DBH >= UpMinFD & DBH <= MaxFD), #designate the bigger individuals, when the plot is species-rich.
+                                      CommercialLevel == 1 & (DBH >= UpMinFD & DBH <= MaxFD), #designate the bigger individuals, when the plot is species-rich.
                                     "harvestableUp", LoggingStatus))
 
     if (!diversification) {
@@ -309,6 +313,7 @@ selected <- function(
         inventory <- inventory %>%
           mutate(Condition = ifelse(LoggingStatus == "harvestableUp", TRUE, FALSE)) %>%
           group_by(Condition) %>%
+          arrange(CommercialLevel) %>% # add for reviewer
           arrange(desc(TreeHarvestableVolume)) %>%
           mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
           ungroup() %>%
@@ -331,6 +336,7 @@ selected <- function(
         inventory <- inventory %>%
           mutate(Condition = ifelse(LoggingStatus == "harvestableUp"|LoggingStatus == "harvestable",TRUE,FALSE)) %>%
           group_by(Condition) %>%
+          arrange(CommercialLevel) %>% # add for reviewer
           arrange(desc(TreeHarvestableVolume)) %>%
           mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
           ungroup() %>%
@@ -353,7 +359,7 @@ selected <- function(
 
       # Increase the MinFD of the other economic species
       inventory <- inventory %>%
-        mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" & CommercialLevel == "2" &
+        mutate(LoggingStatus = ifelse(LoggingStatus == "harvestable" & CommercialLevel >1 &
                                         (DBH >= UpMinFD & DBH <= MaxFD), #designate preferred individuals of 2nd economic rank species too, when the plot is species-rich.
                                       "harvestableUp", LoggingStatus))
 
@@ -377,6 +383,7 @@ selected <- function(
         inventory <- inventory %>%
           mutate(Condition = ifelse(LoggingStatus == "harvestableUp"|LoggingStatus == "harvestable",TRUE,FALSE)) %>%
           group_by(Condition) %>%
+          arrange(CommercialLevel) %>% # add for reviewer
           arrange(desc(TreeHarvestableVolume)) %>%
           mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
           ungroup() %>%
@@ -413,6 +420,7 @@ selected <- function(
     inventory <- inventory %>%
       mutate(Condition = ifelse(LoggingStatus == "harvestable", TRUE, FALSE)) %>%
       group_by(Condition) %>%
+      arrange(CommercialLevel) %>% # add for reviewer
       arrange(desc(TreeHarvestableVolume)) %>%
       mutate(VolumeCumSum = cumsum(TreeHarvestableVolume)) %>%
       ungroup() %>%
@@ -435,6 +443,7 @@ selected <- function(
                              (TreeHarvestableVolume > min & TreeHarvestableVolume <= MissingVolume),
                            TRUE, FALSE)) %>%
     group_by(Crumbs) %>%
+    arrange(CommercialLevel) %>% # add for reviewer
     arrange(desc(TreeHarvestableVolume))
 
   if(any(inventory$Crumbs)){
