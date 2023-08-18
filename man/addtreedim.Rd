@@ -36,18 +36,19 @@ TreeHarvestableVolume (m^3), TrunkHeight (m), CrownHeight (m), CrownDiameter
 (in Mg)
 }
 \description{
-Compute tree dimensions (tree, trunk and crown height, crown diameter,
-harvestable volume, wood density, and AGB)
+Compute tree dimensions (tree, trunk and crown height, crown
+diameter, harvestable volume, wood density, and AGB) from its Diameter at
+Breast Height (DBH)
 }
 \details{
 'addtreedim' compute some tree dimensions with the
 'advancedloggingparameters' argument:
 \itemize{
 \item Tree height (in m) ('TreeHeightAllometry')
-\item Tree harvestable volume (m3) ('TreeHarvestableVolumeAllometry')
+\item Tree harvestable volume (m3) ('TreeHarvestableVolumeAllometry')(French Guiana ONF)
 \item Trunk height (in m) ('TrunkHeightAllometry')
 \item Crown height (in m)
-\item Crown diameter (in m) ('CrownDiameterAllometry')
+\item Crown diameter (in m) ('CrownDiameterAllometry') (Aubry-Kientz et al.2019)
 \item Wood density (g/cm3) (by the BIOMASS package)
 \item Tree above-ground biomass (AGB) (in ton) (by the BIOMASS package)
 }
