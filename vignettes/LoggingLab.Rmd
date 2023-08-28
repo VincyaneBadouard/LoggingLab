@@ -60,6 +60,36 @@ data(PlotMask)
 data(CreekDistances)
 ```
 
+```{r, echo = F}
+distvert <- as.data.frame(CreekDistances$distvert, xy = TRUE) %>%
+  na.omit() %>%
+  dplyr::rename('distvert' = 'file9e98702b30f5')
+
+
+ggplot() + 
+  geom_raster(data = distvert, aes(x = x, y = y, fill = distvert)) +
+  scale_fill_gradientn(name = "Relative elevation to the creek (m)",
+                       colors = hcl.colors(25, "Blues"),
+                       na.value="white") +
+  ggtitle("Paracou P6: Relative elevation to the creek") + 
+  theme_classic() +
+  coord_sf()
+
+disthorz <- as.data.frame(CreekDistances$disthorz, xy = TRUE) %>%
+  na.omit() %>%
+  dplyr::rename('disthorz' = 'file9e985b5916bd')
+
+
+ggplot() + 
+  geom_raster(data = disthorz, aes(x = x, y = y, fill = disthorz)) +
+  scale_fill_gradientn(name = "Relative horizontal distance to the creek (m)",
+                       colors = hcl.colors(25, "Blues"),
+                       na.value="white") +
+  ggtitle("Paracou P6: Relative elevation to the creek") + 
+  theme_classic() +
+  coord_sf()
+```
+
 # Required format of the inventory
 \code{\link{Paracou6_2016}}
 
