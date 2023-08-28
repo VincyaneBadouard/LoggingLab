@@ -11,7 +11,7 @@
 #'  \code{\link{loggingparameters}} (list)
 #'
 #'
-#'@importFrom  sf st_as_sf st_buffer st_union st_geometry st_area st_difference
+#'@importFrom sf st_as_sf st_buffer st_union st_geometry st_area st_difference
 #'  st_combine st_make_valid st_geometry_type
 #'@importFrom smoothr smooth
 #'@importFrom dplyr filter mutate

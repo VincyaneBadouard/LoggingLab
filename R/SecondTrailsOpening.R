@@ -99,6 +99,7 @@
 #' @importFrom tidyr unnest
 #' @importFrom tibble add_column
 #' @importFrom sp proj4string<- coordinates<-
+#' @importFrom sf st_as_sf st_union
 #' @importFrom lwgeom  st_snap_to_grid
 #' @importFrom smoothr smooth
 #' @importFrom gdistance transition geoCorrection

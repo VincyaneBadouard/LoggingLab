@@ -51,7 +51,7 @@
 #'
 #' @export
 #'
-#' @importFrom sf st_as_sf st_cast st_area st_buffer st_drop_geometry
+#' @importFrom sf st_as_sf st_union st_cast st_area st_buffer st_drop_geometry
 #' @importFrom raster mask terrain rasterFromXYZ rasterToPolygons
 #'   rasterToPoints extend aggregate focal disaggregate res
 #' @importFrom dplyr as_tibble left_join rename mutate if_else
