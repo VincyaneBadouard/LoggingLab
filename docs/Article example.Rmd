@@ -1,0 +1,272 @@
+---
+title: "Article example"
+author: "Vincyane Badouard"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Data and libraries
+```{r}
+data(Paracou6_2016) # inventory
+data(PlotMask) # inventoried plot mask
+data(DTMParacou) # topography
+data(CreekDistances) # relative elevation
+data(SpeciesCriteria) # species exploitability criteria
+data(ForestZoneVolumeParametersTable) # volume parameters
+data(ParamCrownDiameterAllometry) # parameters values of the crown diameter allometry
+
+library(LoggingLab)
+```
+
+# Simulation
+```{r}
+Rslt <- loggingsimulation(
+  inventory = Paracou6_2016,
+  plotmask = PlotMask, topography = DTMParacou,
+  creekverticaldistance = CreekDistances$distvert,
+  creekhorizontaldistance = CreekDistances$disthorz,
+  speciescriteria = SpeciesCriteria,
+  volumeparameters = ForestZoneVolumeParametersTable,
+  scenario = "manual",
+  objective = 30, fuel = "2", diversification = TRUE, winching = "2",
+  directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
+  crowndiameterparameters = ParamCrownDiameterAllometry,
+  advancedloggingparameters = loggingparameters(),
+  iter = 30, cores = 15)
+
+```
+
+# Time
+```{r}
+SimulTime <- microbenchmark::microbenchmark(
+  
+  loggingsimulation(
+    inventory = Paracou6_2016,
+    plotmask = PlotMask, topography = DTMParacou,
+    creekverticaldistance = CreekDistances$distvert,
+    creekhorizontaldistance = CreekDistances$disthorz,
+    speciescriteria = SpeciesCriteria,
+    volumeparameters = ForestZoneVolumeParametersTable,
+    scenario = "manual",
+    objective = 30, fuel = "2", diversification = TRUE, winching = "2",
+    directionalfelling = "2", specieslax = FALSE, objectivelax = TRUE,
+    crowndiameterparameters = ParamCrownDiameterAllometry,
+    advancedloggingparameters = loggingparameters(),
+    iter = 30, cores = 15), times = 1L
+)
+```
+
+# Summary
+```{r}
+loggingsummary(Rslt)
+```
+
+# Plot data prep
+```{r}
+
+NewInventory <- Rslt[[1]]$inventory
+MainTrails <- Rslt[[1]]$MainTrails
+HarvestablePolygons <- Rslt[[1]]$HarvestablePolygons
+MachinePolygons <- Rslt[[1]]$MachinePolygons
+SmoothedTrails <- Rslt[[1]]$SmoothedTrails
+AdjustSmoothedTrails <- Rslt[[1]]$AdjustSmoothedTrails
+
+
+NewInventory_crs <- NewInventory %>%
+  getgeometry(TreePolygon) %>%
+  sf::st_set_crs(sf::st_crs(MainTrails)) # set a crs
+
+
+Harvestable <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "harvestable"),
+  coords = c("Xutm", "Yutm")) %>%
+  st_set_crs(st_crs(MainTrails))
+
+HarvestableUp <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "harvestableUp"),
+  coords = c("Xutm", "Yutm")) %>%
+  st_set_crs(st_crs(MainTrails))
+
+Selected <- sf::st_as_sf(
+  dplyr::filter(NewInventory, Selected == "1"), coords = c("Xutm", "Yutm")) %>%
+  st_set_crs(st_crs(MainTrails))
+
+Reserve <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "reserve"),
+  coords = c("Xutm", "Yutm")) %>%
+  st_set_crs(st_crs(MainTrails))
+
+Future <- sf::st_as_sf(
+  dplyr::filter(NewInventory, LoggingStatus == "future"),
+  coords = c("Xutm", "Yutm")) %>%
+  st_set_crs(st_crs(MainTrails))
+
+ProbedHollow <- sf::st_as_sf(
+  dplyr::filter(NewInventory, ProbedHollow == "1"),
+  coords = c("Xutm", "Yutm")) %>%
+  st_set_crs(st_crs(MainTrails))
+
+VisibleDefect <- sf::st_as_sf(
+  dplyr::filter(NewInventory, VisibleDefect == "1"),
+  coords = c("Xutm", "Yutm")) %>%
+  st_set_crs(st_crs(MainTrails))
+
+```
+
+# Plot
+```{r}
+library(tidyverse)
+library(sf) 
+
+ggplot() +
+  
+  labs(title = "Paracou P6 - RIL3 with fuelwood & hollow trees") +
+  
+  # MainTrails
+  geom_sf(data = MainTrails,
+          aes(color = "MainTrails")) +
+  # Harvestable zones
+  geom_sf(data = HarvestablePolygons,
+          fill = "olivedrab", alpha = 0.1) +
+  geom_sf(data = MachinePolygons,
+          fill = "olivedrab", alpha = 0.5) +
+  labs(alpha = "Harvestable") +
+  
+  
+  geom_sf(data = VisibleDefect,
+          aes(colour = "Visible defect"), show.legend = "point") +
+  geom_sf(data = Future,
+          aes(colour = "Future"), show.legend = "point", size = 4) +
+  geom_sf(data = Reserve,
+          aes(colour = "Reserve"), show.legend = "point", size = 4) +
+  geom_sf(data = Harvestable,
+          aes(colour = "Harvestable"), show.legend = "point", size = 4) +
+  geom_sf(data = HarvestableUp,
+          aes(colour = "HarvestableUp"), show.legend = "point", size = 4) +
+  geom_sf(data = Selected,
+          aes(colour = "Selected"), show.legend = "point") +
+  geom_sf(data = ProbedHollow,
+          aes(colour = "Probed hollow"), show.legend = "point") +
+  
+  # 2ndary trails
+  geom_sf(data = st_as_sf(SmoothedTrails),
+          aes(color = "Initial-trails"),alpha = 0.5) +
+  # geom_sf(data = st_as_sf(SecondaryTrails$RawSecondTrails),
+  #         color = "green",alpha = 0.5) +
+  
+  # 2ndary trails adjusted
+  geom_sf(data = st_as_sf(AdjustSmoothedTrails),
+          aes(color = "Adjusted-trails"),alpha = 0.5) +
+  # geom_sf(data = st_as_sf(ScdTrailsAdj$RawSecondTrails),
+  #         color = "red",alpha = 0.5) +
+  
+  # cuted trees
+  geom_sf(data = NewInventory_crs, 
+          alpha = 0.5, fill = "darkgreen") +
+  
+  scale_colour_manual(name = "Logging status",
+                      values = c("Visible defect" = "pink",
+                                 "Harvestable" = "skyblue",
+                                 "HarvestableUp" = "blue", "Selected" = "red",
+                                 "Future" = "orange",
+                                 "Reserve" = "purple",
+                                 "Probed hollow" = "forestgreen",
+                                 "Harvestable area" = "olivedrab", 
+                                 "Initial-trails" = "darkgreen" ,
+                                 "Adjusted-trails" = "darkred",
+                                 "MainTrails" = "red"))
+# scale_fill_manual(name = "Logging structures",
+#                   values = c("Harvestable area" = "olivedrab", 
+#                              "Initial-trails" = "darkgreen" ,
+#                              "Adjusted-trails" = "darkred",
+#                              "MainTrails" = "red"))
+```
+```{r}
+ggplot() +
+  
+  labs(title = "Paracou P6 - RIL3 with fuelwood & hollow trees") +
+  
+  # Harvestable zones
+  geom_sf(data = HarvestablePolygons,
+          fill = "olivedrab", alpha = 0.1) +
+  geom_sf(data = MachinePolygons,
+          fill = "olivedrab", alpha = 0.5) +
+  labs(alpha = "Harvestable") +
+  
+  
+  geom_sf(data = VisibleDefect,
+          aes(colour = "Visible defect"), show.legend = "point") +
+  geom_sf(data = Future,
+          aes(colour = "Future"), show.legend = "point", size = 4) +
+  geom_sf(data = Reserve,
+          aes(colour = "Reserve"), show.legend = "point", size = 4) +
+  geom_sf(data = Harvestable,
+          aes(colour = "Harvestable"), show.legend = "point", size = 4) +
+  geom_sf(data = HarvestableUp,
+          aes(colour = "HarvestableUp"), show.legend = "point", size = 4) +
+  geom_sf(data = Selected,
+          aes(colour = "Selected"), show.legend = "point") +
+  geom_sf(data = ProbedHollow,
+          aes(colour = "Probed hollow"), show.legend = "point") +
+  
+  
+  scale_colour_manual(name = "Logging status",
+                      values = c("Visible defect" = "pink",
+                                 "Harvestable" = "skyblue",
+                                 "HarvestableUp" = "blue", "Selected" = "red",
+                                 "Future" = "orange",
+                                 "Reserve" = "purple",
+                                 "Probed hollow" = "forestgreen"))
+```
+
+
+# Damage volume computing on Margaux's simulations
+Plots (5): "SautLavilette", "Paracou11", "MontagnePlomb", "Acarouany", "Paracou16".  
+Scenario: "2" = RIL2 without cable, "3" = RIL2 with cable  
+Iterations number: 30 per plot.  
+TotalResidualVolume: damage volume (m3) per harvestable hectare
+```{r}
+residual_volume_ha <- readr::read_csv("D:/VSC ManagFores/residual_volume_ha.csv")
+residual_volume_ha
+unique(residual_volume_ha$plot)
+unique(residual_volume_ha$scenario)
+```
+## Per plot and scenario
+```{r}
+AverageResidualVolumes <- residual_volume_ha %>%
+  group_by(plot, scenario) %>%
+  mutate(AverageResidualVolume_ha = mean(TotalResidualVolume_ha)) %>%
+  mutate(MaxResidualVolume_ha = max(TotalResidualVolume_ha)) %>%
+  mutate(MinResidualVolume_ha = min(TotalResidualVolume_ha)) %>%
+  select(plot,scenario,
+         AverageResidualVolume_ha,
+         MaxResidualVolume_ha, MinResidualVolume_ha) %>%
+  unique()
+
+AverageResidualVolumes
+mean(AverageResidualVolumes$AverageResidualVolume_ha)
+max(AverageResidualVolumes$AverageResidualVolume_ha)
+min(AverageResidualVolumes$AverageResidualVolume_ha)
+quantile(AverageResidualVolumes$AverageResidualVolume_ha)
+```
+
+## Per scenario
+```{r}
+AverageResidualVolumes_scenar <- residual_volume_ha %>%
+  group_by(scenario) %>%
+  mutate(AverageResidualVolume_ha = mean(TotalResidualVolume_ha)) %>%
+  mutate(RV2.5 = quantile(TotalResidualVolume_ha, probs = 0.025)) %>%
+  mutate(RV97.5 = quantile(TotalResidualVolume_ha, probs = 0.975)) %>%
+  mutate(MaxResidualVolume_ha = max(TotalResidualVolume_ha)) %>%
+  mutate(MinResidualVolume_ha = min(TotalResidualVolume_ha)) %>%
+  select(scenario,
+         AverageResidualVolume_ha,
+         MaxResidualVolume_ha, MinResidualVolume_ha,
+         RV2.5, RV97.5) %>%
+  unique()
+
+AverageResidualVolumes_scenar
+mean(AverageResidualVolumes$AverageResidualVolume_ha)
+quantile(AverageResidualVolumes$AverageResidualVolume_ha, probs = c(0.025, 0.975))
+```
+

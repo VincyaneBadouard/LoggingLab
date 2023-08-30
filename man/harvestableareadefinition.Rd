@@ -67,7 +67,9 @@ defined as:
 }
 }
 \description{
-Harvestable zones definition within the plot
+The simulator avoids the water sources buffer zones and slopes
+inaccessible to machinery by taking the highest maximum slope percentage
+tolerated by the machines.
 }
 \examples{
 \dontrun{

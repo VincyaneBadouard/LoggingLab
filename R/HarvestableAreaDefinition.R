@@ -1,14 +1,19 @@
 #' Harvestable zones definition within the plot
 #'
+#' @description The simulator avoids the water sources buffer zones and slopes
+#'   inaccessible to machinery by taking the highest maximum slope percentage
+#'   tolerated by the machines.
+#'
+#'
 #' @param topography Digital terrain model (DTM) of the inventoried plot (LiDAR
 #'  or SRTM) (\code{\link{DTMParacou}}) (RasterLayer **with a crs in UTM**)
 #'
-#'@param creekverticaldistance Relative vertical distance
+#' @param creekverticaldistance Relative vertical distance
 #'  (1 m resolution) from nearest channel network
 #'  (RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
 #'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
 #'
-#'@param creekhorizontaldistance Relative horizontal distance
+#' @param creekhorizontaldistance Relative horizontal distance
 #'  (1 m resolution) from nearest channel network
 #'  (RasterLayer **with a crs in UTM**) (See \code{\link{CreekDistances}})
 #'  To generate creek distances: \code{\link{CreekDistances}} in 'Articles'.
@@ -199,7 +204,11 @@ harvestableareadefinition <- function(
 
   PlotTib <- cbind(PlotTib,PlotSlopePoint %>% st_as_sf() %>% st_drop_geometry())
 
-  SlpCrit <- atan(advancedloggingparameters$MaxTrailCenterlineSlope/100)
+  # Take the maximum slope threshold:
+  maxslope <- max(advancedloggingparameters$MaxTrailCenterlineSlope,
+                  advancedloggingparameters$GrappleMaxslope)
+
+  SlpCrit <- atan(maxslope/100)
 
   CreekHDistCrit <- advancedloggingparameters$WaterSourcesBufferZone
   CreekVDistCrit <- advancedloggingparameters$WaterSourcesRelativeHeight
@@ -221,22 +230,25 @@ harvestableareadefinition <- function(
 
 
 
-  HarvestablePolygonsFoT <- PolygonHarvestableFoT %>% st_as_sf() %>% st_cast(to = "POLYGON", warn = FALSE)
+  HarvestablePolygonsFoT <- PolygonHarvestableFoT %>%
+    st_as_sf() %>%
+    st_cast(to = "POLYGON", warn = FALSE)
 
 
   maintrailsWIP <- maintrails %>%
     st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth + factAgg)
 
-  accesspolygonesFoT <- HarvestablePolygonsFoT %>% filter(Harvestable == 1) %>%
+  accesspolygonesFoT <- HarvestablePolygonsFoT %>%
+    filter(Harvestable == 1) %>%
     st_union() %>% st_cast("POLYGON") %>% st_as_sf()
 
-  accesspolygonesFoT <- accesspolygonesFoT %>% filter(as.numeric(st_area(accesspolygonesFoT)) > factAgg^2 * res(topography)[1] )
+  accesspolygonesFoT <- accesspolygonesFoT %>%
+    filter(as.numeric(st_area(accesspolygonesFoT)) > factAgg^2 * res(topography)[1] )
 
   accesspolygonesMainFoT <- accesspolygonesFoT %>%
     st_buffer(dist =  -advancedloggingparameters$ScndTrailWidth/2) %>%
-    mutate("Access" = st_intersects(accesspolygonesFoT, maintrailsWIP, sparse = FALSE)) %>%
-    filter(Access == TRUE) %>% # Using one column matrices in `filter()` was deprecated in dplyr 1.1.0.
-    # Please use one dimensional logical vectors instead.
+    mutate("Access" = as.vector(st_intersects(accesspolygonesFoT, maintrailsWIP, sparse = FALSE))) %>%
+    dplyr::filter(Access == TRUE) %>%
     st_union() %>% st_buffer(dist = advancedloggingparameters$ScndTrailWidth/2)
 
   if (winching != "0") {
@@ -285,27 +297,10 @@ harvestableareadefinition <- function(
     accesspolygones <- accesspolygonesMainFoT
   }
 
-
-
-
   # transform tibble to raster
   # set crs to WGS84 UTM 22N
 
   # raster to polygon
-
-
-
-
-
-
-
-  if (winching != "0") {
-
-
-  }else{
-
-
-  }
 
 
   HarvestableArea <- as.numeric(sum(st_area(accesspolygones))/10000) # 1 ha = 10 000 m2 (as numeric to remove unit)
