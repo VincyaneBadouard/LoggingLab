@@ -59,7 +59,7 @@ loggingsummary1 <- function(x
   cat('Logging residual biomass :', round(x$LoggingResidualBiomass, digits = 1), 'ton, ',
       round(x$LoggingResidualBiomass/HarvestableArea, digits = 1), 'ton/harvestable ha\n')
 
-  cat('Lost biomass :', round(x$LostBiomass, digits = 1), 'ton\n') # Total lost biomass (ton)
+  cat('Total forest biomass lost :', round(x$LostBiomass, digits = 1), 'ton\n') # Total lost biomass (ton)
 
   cat('Trails density :', round(x$TrailsDensity, digits = 1), 'm/ha\n') # Trails density (m/ha) (Preliminary if fuel)
 

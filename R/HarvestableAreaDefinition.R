@@ -276,7 +276,8 @@ harvestableareadefinition <- function(
     accesspolygonesCbl <- HarvestablePolygonsCbl %>% filter(Harvestable == 1) %>%
       st_union() %>% st_cast("POLYGON") %>% st_as_sf()
 
-    accesspolygonesCbl <- accesspolygonesCbl %>% filter(as.numeric(st_area(accesspolygonesCbl)) > factAgg^2 * res(topography)[1] )
+    accesspolygonesCbl <- accesspolygonesCbl %>%
+      filter(as.numeric(st_area(accesspolygonesCbl)) > factAgg^2 * res(topography)[1] )
 
     accesspolygonesCable <- accesspolygonesMainFoT  %>%
       st_union()  %>%

@@ -17,7 +17,9 @@ healthy trees) in m3 (numeric)}
 \item{TimberExtractedVolume}{Timber volume after purge in m3 (numeric)}
 \item{FuelWoodBiomass}{Harvestable fuel wood biomass in ton (numeric)}
 \item{LoggingResidualBiomass}{The unused degraded biomass in ton (numeric)}
-\item{LostBiomass}{Total lost biomass in ton (numeric)}
+\item{LostBiomass}{Total lost biomass in ton (the total forest biomass lost
+due to logging (the sum of the AGB of all dead trees, whatever the logging
+cause) (numeric)}
 \item{TrailsDensity}{Trails density (preliminary if FWE) in m/ha (units)}
 \item{AdjustTrailsDensity}{Adjusted trails density if FWE in m/ha (units)}
 

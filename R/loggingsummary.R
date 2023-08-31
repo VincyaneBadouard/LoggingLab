@@ -43,9 +43,11 @@ loggingsummary <- function(x
 
   # Numeric values:
 
-  var <- c("HarvestableArea", "VO", "HVinit", "TimberLoggedVolume", "NoHollowTimberLoggedVolume",
-           "TimberExtractedVolume", "FuelWoodBiomass", "LoggingResidualBiomass",
-           "LostBiomass", "TrailsDensity", "AdjustTrailsDensity")
+  var <- c(
+    "HarvestableArea", "VO", "HVinit", "TimberLoggedVolume",
+    "NoHollowTimberLoggedVolume", "TimberExtractedVolume", "FuelWoodBiomass",
+    "LoggingResidualBiomass", "LostBiomass", "TrailsDensity", "AdjustTrailsDensity"
+  )
 
   statsvars <- function(v, x){ # x the list, v the var
 
@@ -62,7 +64,8 @@ loggingsummary <- function(x
     Min <- round(min(itervalues), digits = 1)
     Max <- round(max(itervalues), digits = 1)
 
-    output <- list(Mean = Mean, Sd = Sd, Min = Min, Q1 = Q1, Median = Median, Q3 = Q3, Max = Max)
+    output <- list(Mean = Mean, Sd = Sd, Min = Min,
+                   Q1 = Q1, Median = Median, Q3 = Q3, Max = Max)
 
     return(output)
   }
@@ -100,35 +103,35 @@ loggingsummary <- function(x
   cat('\n') # skip a line
 
   cat('Timber extracted volume (timber volume after purge) (m3):\n') # timber volume after purge
-  print(unlist(RsltStats[4]))
-  print(set_units(unlist(RsltStats[4])/HarvestableArea, m3/ha)) # Logged volume (m3) (only healthy trees if fuel != "2", healthy + hollow trees if fuel = "2")
+  print(unlist(RsltStats[6]))
+  print(set_units(unlist(RsltStats[6])/HarvestableArea, m3/ha)) # Logged volume (m3) (only healthy trees if fuel != "2", healthy + hollow trees if fuel = "2")
 
   cat('\n') # skip a line
 
   cat('Fuel wood biomass (ton):\n')
-  print(unlist(RsltStats[6]))
-  print(set_units(unlist(RsltStats[6])/HarvestableArea, ton/ha))
-
-  cat('\n') # skip a line
-
-  cat('Logging residual biomass (ton):\n')
   print(unlist(RsltStats[7]))
   print(set_units(unlist(RsltStats[7])/HarvestableArea, ton/ha))
 
   cat('\n') # skip a line
 
-  cat('Lost biomass (ton):\n')
-  print(unlist(RsltStats[8])) # Lost biomass (ton)
+  cat('Logging residual biomass (ton):\n')
+  print(unlist(RsltStats[8]))
+  print(set_units(unlist(RsltStats[8])/HarvestableArea, ton/ha))
+
+  cat('\n') # skip a line
+
+  cat('Total forest biomass lost (ton):\n')
+  print(unlist(RsltStats[9])) # Lost biomass (ton)
 
   cat('\n') # skip a line
 
   cat('Trails density (m/ha):\n')
-  print(unlist(RsltStats[9])) # Trails density (m/ha)
+  print(unlist(RsltStats[10])) # Trails density (m/ha)
 
   cat('\n') # skip a line
 
   cat('Adjusted trails density (m/ha):\n')
-  print(unlist(RsltStats[10])) # Adjusted trails density (m/ha)
+  print(unlist(RsltStats[11])) # Adjusted trails density (m/ha)
 
   cat('\n') # skip a line
 
