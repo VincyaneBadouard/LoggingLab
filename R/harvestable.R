@@ -207,7 +207,7 @@ harvestable <- function(
         }
         SpatInventory$DistCriteria[SpatInventory$idTree == SpatInventorytmp$idTree[ind]] <- SpatInventorytmp$DistCriteria[ind]
         # i = i+1 # and inform the progress bar
-        # setTxtProgressBar(ProgressBar, i)
+        # if(interactive()) setTxtProgressBar(ProgressBar, i)
       }
     } # Calculating distances end
   }

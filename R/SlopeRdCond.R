@@ -94,7 +94,7 @@ sloperdcond <- function(
         x[x==0] <- NA # exclude missing links
         AdjTr[AdjTr[,1]==i,2] <- x
         k = k+1 # update progress bar
-        setTxtProgressBar(ProgressBar, k) # plot progress bar
+        if(interactive()) setTxtProgressBar(ProgressBar, k) # plot progress bar
       }
 
       for (i in others) {
@@ -127,7 +127,7 @@ sloperdcond <- function(
         AdjTr[AdjTr[,1]==i,2] <- x # replace longitudinal links to rotated links
 
         k = k+1 # update progress bar
-        setTxtProgressBar(ProgressBar, k) # plot progress bar
+        if(interactive()) setTxtProgressBar(ProgressBar, k) # plot progress bar
       }
     }else{
       for (i in limits) {
@@ -165,7 +165,7 @@ sloperdcond <- function(
         x[x==0] <- NA # exclude missing links
         AdjTr[AdjTr[,1]==i,2] <- x
         k = k+1 # update progress bar
-        setTxtProgressBar(ProgressBar, k) # plot progress bar
+        if(interactive()) setTxtProgressBar(ProgressBar, k) # plot progress bar
       }
 
       for (i in others) {
@@ -201,7 +201,7 @@ sloperdcond <- function(
         AdjTr[AdjTr[,1]==i,2] <- x # replace longitudinal links to rotated links
 
         k = k+1 # update progress bar
-        setTxtProgressBar(ProgressBar, k) # plot progress bar
+        if(interactive()) setTxtProgressBar(ProgressBar, k) # plot progress bar
       }
     }
 
