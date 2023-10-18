@@ -1005,8 +1005,11 @@ secondtrailsopening <- function(
           }
         }else{
 
+          # Set pathsWIP CRS
+          pathsWIP <- st_set_crs(pathsWIP, st_crs(PointAcc))
 
           if (winching == "2") {
+
             ptsDirAcc <- ptsTreeWIP %>%
               mutate(gprlAcc  = c(FALSE,as.numeric(st_distance(ptsTreeWIP,st_union(pathsWIP %>%
                                                                                      st_buffer(dist = advancedloggingparameters$MaxMainTrailWidth/2) %>%

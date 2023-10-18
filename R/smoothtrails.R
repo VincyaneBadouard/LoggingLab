@@ -78,6 +78,8 @@ smoothtrails <- function(
       SmoothedTrails <- SmoothedSecondTrails
     }
 
+    # Set SmoothedTrails CRS
+    SmoothedTrails <- st_set_crs(SmoothedTrails, st_crs(plotmask))
 
     TrailsDensity <- (SmoothedTrails  %>% st_intersection(plotmask %>% st_as_sf()) %>% st_area / advancedloggingparameters$ScndTrailWidth)/(plotmask %>% st_as_sf() %>% st_area() /10000)
     if (verbose) {
