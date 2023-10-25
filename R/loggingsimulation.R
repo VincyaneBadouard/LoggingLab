@@ -342,7 +342,7 @@ loggingsimulation <- function(
   i <- NULL
   cl <- parallel::makeCluster(cores)
   doSNOW::registerDoSNOW(cl)
-  pb <- txtProgressBar(max = iter, style = 3)
+  if(interactive()) pb <- txtProgressBar(max = iter, style = 3)
   progress <- function(n) if(interactive()) setTxtProgressBar(pb, n)
   opts <- list(progress = progress)
   output <- foreach::foreach(j=1:iter,.packages = c("LoggingLab","tryCatchLog"),

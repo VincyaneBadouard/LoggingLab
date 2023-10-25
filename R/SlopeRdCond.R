@@ -48,7 +48,7 @@ sloperdcond <- function(
 
   v4 <- function(topography, AdjTr,directions){
     k = 1
-    ProgressBar <- txtProgressBar(min = 0, max = ncell(topography),style = 3)
+    if(interactive()) ProgressBar <- txtProgressBar(min = 0, max = ncell(topography),style = 3)
 
     limits <- c(
       1:ncol(topography), # top
