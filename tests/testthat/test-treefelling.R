@@ -77,7 +77,7 @@ test_that("treefelling", {
   Cutted <- testinventory %>%
     dplyr::filter(!is.na(TreePolygon) & ProbedHollow == "0")
 
-  expect_true(all(Cutted$DeathCause == "cutted"))
+  expect_true(all(Cutted$DeathCause == "cut"))
 
   # fuel wood exploitation
   Fuel <- testinventory %>%
@@ -86,7 +86,7 @@ test_that("treefelling", {
   expect_true(all(Fuel$DeathCause == "hollowfuel"))
 
   # Damage trees
-  felttrees <- testinventory %>% # Cutted trees (timber and fuel)
+  felttrees <- testinventory %>% # Cut trees (timber and fuel)
     dplyr::filter(!is.na(TreePolygon)) %>%
     dplyr::select(TreePolygon)
 
@@ -96,7 +96,7 @@ test_that("treefelling", {
     # felt trees
   )) %>%
     dplyr::filter(is.na(TreePolygon)) %>%
-    # dplyr::filter(Selected != "1"| is.na(Selected)) %>% # not already cutted trees
+    # dplyr::filter(Selected != "1"| is.na(Selected)) %>% # not already cut trees
     # dplyr::filter((Selected != "1" & ProbedHollow != "1")| is.na(Selected)) %>%
     select(idTree)
   sf::st_geometry(DeadTrees) <- NULL # remove TreePolygon column (sf to data.frame)

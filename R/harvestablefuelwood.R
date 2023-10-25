@@ -81,7 +81,7 @@
 #' inventory <- inventory %>%
 #'   dplyr ::mutate(DeathCause = ifelse(is.na(DeathCause) &
 #'                                        Selected == "1" & ProbedHollow == "0",
-#'                                      "cutted", DeathCause)) %>%
+#'                                      "cut", DeathCause)) %>%
 #'   dplyr::mutate(DeathCause = ifelse(is.na(DeathCause) &
 #'                                       Selected == "1" & ProbedHollow == "1",
 #'                                     "hollowfuel", DeathCause))
