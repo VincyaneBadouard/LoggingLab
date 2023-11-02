@@ -16,7 +16,7 @@ unused degraded tree biomass."><!-- mathjax --><script src="https://cdnjs.cloudf
     
     <a class="navbar-brand me-2" href="../index.html">LoggingLab</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9005</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -169,7 +169,7 @@ of the log + 2/3 of their crown (default value of 'CrownPartForFuel')</p></li>
 <span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="va">inventory</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span> <span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>DeathCause <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">DeathCause</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
 <span class="r-in"><span>                                       <span class="va">Selected</span> <span class="op">==</span> <span class="st">"1"</span> <span class="op">&amp;</span> <span class="va">ProbedHollow</span> <span class="op">==</span> <span class="st">"0"</span>,</span></span>
-<span class="r-in"><span>                                     <span class="st">"cutted"</span>, <span class="va">DeathCause</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>                                     <span class="st">"cut"</span>, <span class="va">DeathCause</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>DeathCause <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">DeathCause</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
 <span class="r-in"><span>                                      <span class="va">Selected</span> <span class="op">==</span> <span class="st">"1"</span> <span class="op">&amp;</span> <span class="va">ProbedHollow</span> <span class="op">==</span> <span class="st">"1"</span>,</span></span>
 <span class="r-in"><span>                                    <span class="st">"hollowfuel"</span>, <span class="va">DeathCause</span><span class="op">)</span><span class="op">)</span></span></span>

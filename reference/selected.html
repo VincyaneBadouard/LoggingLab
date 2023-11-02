@@ -12,7 +12,7 @@ to the objective volume and the exploitable volume on the plot."><!-- mathjax --
     
     <a class="navbar-brand me-2" href="../index.html">LoggingLab</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9005</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -177,8 +177,10 @@ an unreached objective volume, or be abandoned ('objectivelax')</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Paracou6_2016</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">DTMParacou</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">PlotMask</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HarvestableAreaOutputsCable</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">MainTrails</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="addtreedim.html">addtreedim</a></span><span class="op">(</span><span class="fu"><a href="cleaninventory.html">cleaninventory</a></span><span class="op">(</span><span class="va">Paracou6_2016</span>, <span class="va">PlotMask</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>volumeparameters <span class="op">=</span> <span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span></span>
@@ -186,7 +188,7 @@ an unreached objective volume, or be abandoned ('objectivelax')</p>
 <span class="r-in"><span><span class="va">inventory</span> <span class="op">&lt;-</span> <span class="fu"><a href="commercialcriteriajoin.html">commercialcriteriajoin</a></span><span class="op">(</span><span class="va">inventory</span>, <span class="va">SpeciesCriteria</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">harvestableOutputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="harvestable.html">harvestable</a></span><span class="op">(</span><span class="va">inventory</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
-<span class="r-in"><span>diversification <span class="op">=</span> <span class="cn">TRUE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>diversification <span class="op">=</span> <span class="cn">FALSE</span>, specieslax <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>plotslope <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">PlotSlope</span>,</span></span>
 <span class="r-in"><span>maintrails <span class="op">=</span> <span class="va">MainTrails</span>,</span></span>
 <span class="r-in"><span>harvestablepolygons <span class="op">=</span> <span class="va">HarvestableAreaOutputsCable</span><span class="op">$</span><span class="va">HarvestablePolygons</span>,</span></span>
@@ -198,10 +200,10 @@ an unreached objective volume, or be abandoned ('objectivelax')</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">selecInventory</span> <span class="op">&lt;-</span> <span class="fu">selected</span><span class="op">(</span><span class="va">inventory</span>, topography <span class="op">=</span> <span class="va">DTMParacou</span>,</span></span>
 <span class="r-in"><span>scenario <span class="op">=</span> <span class="st">"manual"</span>, fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>VO <span class="op">=</span> <span class="fl">125</span>, HVinit <span class="op">=</span> <span class="va">HVinit</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>VO <span class="op">=</span> <span class="fl">20</span>, HVinit <span class="op">=</span> <span class="va">HVinit</span>, specieslax <span class="op">=</span> <span class="cn">TRUE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> As the harvestable volume (= 188.2m^3)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>                 was higher (by 63.2m^3)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> As the harvestable volume (= 49.2m^3)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>                 was higher (by 29.2m^3)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>                 than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st and 2nd economic ranks species</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>                   were increased to UpMinFD. The objective volume has now been reached.</span>
 <span class="r-in"><span></span></span>

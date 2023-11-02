@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">LoggingLab</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9005</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -230,7 +230,7 @@ Default = 2/3 (double) (Branches diameter &gt;= 5 cm) (Eleotério et al. 2019)</
 
 
 <dt>Purge</dt>
-<dd><p>Part of the harvested log no used for timber, can be used for fuel
+<dd><p>Part of the harvested log not used for timber, can be used for fuel
 wood. Default = 0.14, in m3 of purge/m3 of volume of timber harvested.
 (double)</p></dd>
 
@@ -262,8 +262,8 @@ different costs on certain cases (2nd sub-list):</p><ul><li><p>"Initial" (defaul
 
 <dt>TreeHarvestableVolumeAllometry</dt>
 <dd><p>By default, allometry of tree
-harvestable volume, French Guiana ONF formula: aCoef + bCoef * (DBH/100)^2,
-aCoef and bCoef depend on the forest location, stored in
+harvestable volume, French Guiana ONF formula: aCoef + bCoef * (DBH/100)^2.
+With aCoef and bCoef depending on the forest location, stored in
 <code><a href="ForestZoneVolumeParametersTable.html">ForestZoneVolumeParametersTable</a></code>, DBH in cm. (function)</p></dd>
 
 
@@ -519,37 +519,37 @@ Southern Forests: a Journal of Forest Science 81.3 (2019): 261-271.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TreeHarvestableVolumeAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, aCoef, bCoef) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> aCoef + bCoef * (DBH/100)^2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5623b812e528&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55c481074120&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TrunkHeightAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, TreeHarvestableVolume) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TreeHarvestableVolume/(pi * (((DBH/100)/2)^2))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5623b812e528&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55c481074120&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TreeHeightAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> exp(0.07359191 + 1.34241216 * log(DBH) + -0.12282344 * log(DBH)^2)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5623b812e528&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55c481074120&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $CrownDiameterAllometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH, TreeHeight, alpha, beta) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> exp(((log(DBH) - alpha - rnorm(length(DBH), 0, 0.0295966977))/beta))/TreeHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5623b812e528&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55c481074120&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $RottenModel</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1/(1 + exp(-(-5.151 + 0.042 * DBH)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5623b812e528&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55c481074120&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $VisiblyDefectModel</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (LogDBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1/(1 + exp(-(-3.392 + 0.357 * LogDBH)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5623b812e528&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55c481074120&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Treefall2ndDeathModel</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (DBH) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1/(1 + exp(-(-0.47323 + -0.02564 * DBH)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5623b812e528&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55c481074120&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
