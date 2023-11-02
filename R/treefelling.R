@@ -321,7 +321,7 @@ treefelling <- function(
 
   inventory <- inventory %>%
     mutate(DeathCause = ifelse(is.na(DeathCause) & !is.na(TreePolygon) & ProbedHollow == "0",
-                               "cutted", DeathCause)) %>% # timber exploitation
+                               "cut", DeathCause)) %>% # timber exploitation
     mutate(DeathCause = ifelse(is.na(DeathCause) & !is.na(TreePolygon) & ProbedHollow == "1",
                                "hollowfuel", DeathCause)) # fuel wood exploitation
 

@@ -1175,6 +1175,8 @@ secondtrailsadjusted <- function(
             }
           }else{
 
+            # Set pathsWIP CRS
+            pathsWIP <- st_set_crs(pathsWIP, st_crs(ptsTreeWIP))
 
             if (winching == "2") {
               ptsDirAcc <- ptsTreeWIP %>%  mutate(gprlAcc  = c(FALSE,as.numeric(st_distance(ptsTreeWIP,st_union(pathsWIP,PointAcc))[2:dim(ptsTreeWIP)[1],1]) < advancedloggingparameters$GrappleLength)) %>%

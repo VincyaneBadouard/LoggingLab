@@ -34,7 +34,7 @@ test_that("harvestablefuelwood", {
 
   inventory <- inventory %>%
     mutate(DeathCause = ifelse(is.na(DeathCause) & Selected == "1" & ProbedHollow == "0",
-                               "cutted", DeathCause)) %>% # timber exploitation
+                               "cut", DeathCause)) %>% # timber exploitation
     mutate(DeathCause = ifelse(is.na(DeathCause) & Selected == "1" & ProbedHollow == "1",
                                "hollowfuel", DeathCause)) # fuel wood exploitation
 
