@@ -1,6 +1,6 @@
 # LoggingLab
 
-[![R-CMD-check](https://github.com/VincyaneBadouard/LoggingLab/workflows/R-CMD-check/badge.svg)](https://github.com/VincyaneBadouard/LoggingLab/actions)
+[![R-CMD-check](https://github.com/VincyaneBadouard/LoggingLab/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/VincyaneBadouard/LoggingLab/actions/workflows/R-CMD-check.yaml)
 
 [![codecov](https://codecov.io/gh/VincyaneBadouard/LoggingLab/branch/master/graph/badge.svg?token=ZG0R29IKA2)](https://codecov.io/gh/VincyaneBadouard/LoggingLab)
 
