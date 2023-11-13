@@ -1,0 +1,30 @@
+bibentry(bibtype = "Article",
+  title        = "{LoggingLab}: An {R} Package to Simulate Reduced-Impact Selective Logging in Tropical Forests Using Forest Inventory Data",
+  author       = c(person(given = "Vincyane",
+                          family = "Badouard"),
+                   person(given = "Sylvain",
+                          family = "Schmitt"),
+                   person(given = "Guillaume",
+                          family = "Salzet"),
+                   person(given = "Margaux",
+                          family = "Rojat"),
+                   person(given = "Caroline",
+                          family = "Bedeau"),
+                   person(given = "Olivier",
+                          family = "Brunaux"),
+                   person(given = "Géraldine",
+                          family = "Derroire")
+                  ),
+  journal      = "Ecological Modelling",
+  year         = "2023",
+  volume       = "487",
+  pages        = "110539",
+  doi          = "10.1016/j.ecolmodel.2023.110539",
+
+  header       = "To cite entropart in publications use:",
+  textVersion  =
+  paste("Badouard, V., Schmitt, S., Salzet, G., Gaquiere, T., Rojat, M., Bedeau, C., Brunaux, O., & Derroire, G. (2024).",
+        "LoggingLab: An R package to simulate reduced-impact selective logging in tropical forests using forest inventory data.",
+        "Ecological Modelling, 487, 110539.",
+        "doi:10.1016/j.ecolmodel.2023.110539")
+)

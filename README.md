@@ -6,7 +6,7 @@
 
 LoggingLab: An R Package to Simulate Forest Logging  
 
-# Installation (development version)
+# Installation
 ```
 devtools::install_github("VincyaneBadouard/LoggingLab")
 ```
@@ -15,20 +15,13 @@ devtools::install_github("VincyaneBadouard/LoggingLab")
 https://github.com/sylvainschmitt/singularity-LoggingLab
 
 
-# To cite package ‘LoggingLab’ in publications use:
+# Citation
+
+To cite the package ‘LoggingLab’ in publications use:
 ```
 citation("LoggingLab")
 ```
-Vincyane Badouard, Sylvain Schmitt, Guillaume Salzet, Thomas Gaquiere and Géraldine Derroire (2022).
-LoggingLab: An R Package to Simulate Forest Logging. R package version 0.0.0.9003.
-https://github.com/VincyaneBadouard/LoggingLab.git
 
-A BibTeX entry for LaTeX users is
-
-@Manual{,
-title = {LoggingLab: An R Package to Simulate Forest Logging},
-author = {Vincyane Badouard and Sylvain Schmitt and Guillaume Salzet and Thomas Gaquiere and Géraldine Derroire},
-year = {2022},
-note = {R package version 0.0.0.9003},
-url = {https://github.com/VincyaneBadouard/LoggingLab.git},
-}
+Badouard, V., Schmitt, S., Salzet, G., Gaquiere, T., Rojat, M., Bedeau, C., Brunaux, O., & Derroire, G. (2024). 
+LoggingLab: An R package to simulate reduced-impact selective logging in tropical forests using forest inventory data. 
+*Ecological Modelling*, 487, 110539. [doi:10.1016/j.ecolmodel.2023.110539](https://doi.org/10.1016/j.ecolmodel.2023.110539)
