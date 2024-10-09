@@ -11,3 +11,4 @@ ToDo.md
 ^R\.\\.Rmd$
 ^doc$
 ^Meta$
+^\.dockerignore$
