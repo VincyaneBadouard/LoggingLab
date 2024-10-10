@@ -418,6 +418,8 @@ secondtrailsadjusted <- function(
   # Points vector with coordinates of the selected trees:
   SelectedCrownsPoints <- st_as_sfc(inventory_Tr$CrownGeom) %>%
     sf::st_set_crs(sf::st_crs(topography)) %>%  st_as_sf() %>% st_join(Trunks)
+  if(names(SelectedCrownsPoints)[2] == "x")
+    SelectedCrownsPoints <- SelectedCrownsPoints %>% st_set_geometry("geometry")
 
   SelectedCrownsPoints <- SelectedCrownsPoints %>% filter(!st_is_empty(SelectedCrownsPoints))
 
@@ -923,7 +925,6 @@ secondtrailsadjusted <- function(
         }else{
 
           Crown2FoT <- FALSE
-
 
           ptsGrpl <- CrownPts %>% #def Grpl point
             st_buffer(dist = advancedloggingparameters$GrappleLength) %>%
