@@ -5,67 +5,49 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="LoggingLab">
 <title>LoggingLab • LoggingLab</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="LoggingLab">
-<meta property="og:description" content="LoggingLab">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="LoggingLab">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">LoggingLab</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="active nav-item">
-  <a class="nav-link" href="../articles/LoggingLab.html">Get started</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="active nav-item"><a class="nav-link" href="../articles/LoggingLab.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/CreekDistances.html">CreekDistances</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/CreekDistances.html">CreekDistances</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/VincyaneBadouard/LoggingLab/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/VincyaneBadouard/LoggingLab/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -74,11 +56,12 @@
 <script src="LoggingLab_files/kePrint-0.0.1/kePrint.js"></script><link href="LoggingLab_files/lightable-0.0.1/lightable.css" rel="stylesheet">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>LoggingLab</h1>
+
+      <h1>LoggingLab</h1>
             <h3 data-toc-skip class="subtitle">Logging simulator</h3>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/VincyaneBadouard/LoggingLab/blob/HEAD/vignettes/LoggingLab.Rmd" class="external-link"><code>vignettes/LoggingLab.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/VincyaneBadouard/LoggingLab/blob/master/vignettes/LoggingLab.Rmd" class="external-link"><code>vignettes/LoggingLab.Rmd</code></a></small>
       <div class="d-none name"><code>LoggingLab.Rmd</code></div>
     </div>
 
@@ -1164,2529 +1147,987 @@ TRUE
 <span><span class="co">#&gt; $Aggregative</span></span>
 <span><span class="co">#&gt; [1] "logical"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">SpeciesCriteria</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr>
-<th style="text-align:left;">
-CommercialName
-</th>
-<th style="text-align:left;">
-Genus
-</th>
-<th style="text-align:left;">
-Species
-</th>
-<th style="text-align:right;">
-CommercialLevel
-</th>
-<th style="text-align:right;">
-MinFD
-</th>
-<th style="text-align:right;">
-UpMinFD
-</th>
-<th style="text-align:right;">
-MaxFD
-</th>
-<th style="text-align:left;">
-Aggregative
-</th>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="18%">
+<col width="18%">
+<col width="14%">
+<col width="15%">
+<col width="5%">
+<col width="7%">
+<col width="5%">
+<col width="11%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">CommercialName</th>
+<th align="left">Genus</th>
+<th align="left">Species</th>
+<th align="right">CommercialLevel</th>
+<th align="right">MinFD</th>
+<th align="right">UpMinFD</th>
+<th align="right">MaxFD</th>
+<th align="left">Aggregative</th>
 </tr></thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-st martin rouge
-</td>
-<td style="text-align:left;">
-Andira
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-bamba apici
-</td>
-<td style="text-align:left;">
-Aniba
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-bagasse
-</td>
-<td style="text-align:left;">
-Bagassa
-</td>
-<td style="text-align:left;">
-guianensis
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-assao
-</td>
-<td style="text-align:left;">
-Balizia
-</td>
-<td style="text-align:left;">
-pedicellaris
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dokali
-</td>
-<td style="text-align:left;">
-Brosimum
-</td>
-<td style="text-align:left;">
-parinarioides
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-satiné rubané
-</td>
-<td style="text-align:left;">
-Brosimum
-</td>
-<td style="text-align:left;">
-rubescens
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dokali mapa
-</td>
-<td style="text-align:left;">
-Brosimum
-</td>
-<td style="text-align:left;">
-utile
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-bushi amanda
-</td>
-<td style="text-align:left;">
-Buchenavia
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-carapa
-</td>
-<td style="text-align:left;">
-Carapa
-</td>
-<td style="text-align:left;">
-guiansensis
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-carapa
-</td>
-<td style="text-align:left;">
-Carapa
-</td>
-<td style="text-align:left;">
-surinamensis
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chawari
-</td>
-<td style="text-align:left;">
-Caryocar
-</td>
-<td style="text-align:left;">
-glabrum
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chawari
-</td>
-<td style="text-align:left;">
-Caryocar
-</td>
-<td style="text-align:left;">
-microcarpum
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-balata pomme
-</td>
-<td style="text-align:left;">
-Chrysophyllum
-</td>
-<td style="text-align:left;">
-pomiferum
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-balata pomme
-</td>
-<td style="text-align:left;">
-Chrysophyllum
-</td>
-<td style="text-align:left;">
-sanguinolentum
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-baaka mapa
-</td>
-<td style="text-align:left;">
-Couma
-</td>
-<td style="text-align:left;">
-guianensis
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-maho cigare
-</td>
-<td style="text-align:left;">
-Couratari
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-angélique
-</td>
-<td style="text-align:left;">
-Dicorynia
-</td>
-<td style="text-align:left;">
-guianensis
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-coeur dehors
-</td>
-<td style="text-align:left;">
-Diplotropis
-</td>
-<td style="text-align:left;">
-purpurea
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-gaiac de cayenne
-</td>
-<td style="text-align:left;">
-Dipteryx
-</td>
-<td style="text-align:left;">
-odorata
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-gaiac de cayenne
-</td>
-<td style="text-align:left;">
-Dipteryx
-</td>
-<td style="text-align:left;">
-punctata
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-acacia franc
-</td>
-<td style="text-align:left;">
-Enterolobium
-</td>
-<td style="text-align:left;">
-oldemanii
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-acacia franc
-</td>
-<td style="text-align:left;">
-Enterolobium
-</td>
-<td style="text-align:left;">
-schomburgkii
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-wapa
-</td>
-<td style="text-align:left;">
-Eperua
-</td>
-<td style="text-align:left;">
-falcata
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-wapa courbaril
-</td>
-<td style="text-align:left;">
-Eperua
-</td>
-<td style="text-align:left;">
-grandiflora
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-maho coton
-</td>
-<td style="text-align:left;">
-Eriotheca
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-jaboty
-</td>
-<td style="text-align:left;">
-Erisma
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-maho noir
-</td>
-<td style="text-align:left;">
-Eschweilera
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-wandékolé
-</td>
-<td style="text-align:left;">
-Glycydendron
-</td>
-<td style="text-align:left;">
-amazonicum
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-goupi
-</td>
-<td style="text-align:left;">
-Goupia
-</td>
-<td style="text-align:left;">
-glabra
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ebène rouge
-</td>
-<td style="text-align:left;">
-Handroanthus
-</td>
-<td style="text-align:left;">
-impetiginosus
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ebène verte
-</td>
-<td style="text-align:left;">
-Handroanthus
-</td>
-<td style="text-align:left;">
-serratifolius
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-courbaril
-</td>
-<td style="text-align:left;">
-Hymenaea
-</td>
-<td style="text-align:left;">
-courbaril
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-courbaril
-</td>
-<td style="text-align:left;">
-Hymenaea
-</td>
-<td style="text-align:left;">
-oblongifolia
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-st martin jaune
-</td>
-<td style="text-align:left;">
-Hymenolobium
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-bougouni
-</td>
-<td style="text-align:left;">
-Inga
-</td>
-<td style="text-align:left;">
-alba
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-bougouni
-</td>
-<td style="text-align:left;">
-Inga
-</td>
-<td style="text-align:left;">
-huberi
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cèdre gris
-</td>
-<td style="text-align:left;">
-Lauraceae
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-maho rouge
-</td>
-<td style="text-align:left;">
-Lecythis
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-canari macaque
-</td>
-<td style="text-align:left;">
-Lecythis
-</td>
-<td style="text-align:left;">
-zabucajo
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cèdres durs
-</td>
-<td style="text-align:left;">
-Licaria
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-balata franc
-</td>
-<td style="text-align:left;">
-Manilkara
-</td>
-<td style="text-align:left;">
-bidentata
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-balata franc
-</td>
-<td style="text-align:left;">
-Manilkara
-</td>
-<td style="text-align:left;">
-huberi
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mamantin
-</td>
-<td style="text-align:left;">
-Micropholis
-</td>
-<td style="text-align:left;">
-egensis
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mamantin
-</td>
-<td style="text-align:left;">
-Micropholis
-</td>
-<td style="text-align:left;">
-melinoniana
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-balata blanc
-</td>
-<td style="text-align:left;">
-Micropholis
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-manil montagne
-</td>
-<td style="text-align:left;">
-Moronobea
-</td>
-<td style="text-align:left;">
-coccinea
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cèdre blanc
-</td>
-<td style="text-align:left;">
-Ocotea
-</td>
-<td style="text-align:left;">
-argyrophylla
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cèdre blanc
-</td>
-<td style="text-align:left;">
-Ocotea
-</td>
-<td style="text-align:left;">
-canaliculata
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cèdre noir
-</td>
-<td style="text-align:left;">
-Ocotea
-</td>
-<td style="text-align:left;">
-ceanothifolia
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cèdre noir
-</td>
-<td style="text-align:left;">
-Ocotea
-</td>
-<td style="text-align:left;">
-glomerata
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cèdre blanc
-</td>
-<td style="text-align:left;">
-Ocotea
-</td>
-<td style="text-align:left;">
-guianensis
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cèdre blanc
-</td>
-<td style="text-align:left;">
-Ocotea
-</td>
-<td style="text-align:left;">
-oblonga
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cèdre noir
-</td>
-<td style="text-align:left;">
-Ocotea
-</td>
-<td style="text-align:left;">
-schomburgkiana
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cèdre noir
-</td>
-<td style="text-align:left;">
-Ocotea
-</td>
-<td style="text-align:left;">
-tomentella
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dodomissinga
-</td>
-<td style="text-align:left;">
-Parkia
-</td>
-<td style="text-align:left;">
-decussata
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dodomissinga
-</td>
-<td style="text-align:left;">
-Parkia
-</td>
-<td style="text-align:left;">
-gigantocarpa
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dodomissinga
-</td>
-<td style="text-align:left;">
-Parkia
-</td>
-<td style="text-align:left;">
-nitida
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dodomissinga
-</td>
-<td style="text-align:left;">
-Parkia
-</td>
-<td style="text-align:left;">
-reticulata
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dodomissinga
-</td>
-<td style="text-align:left;">
-Parkia
-</td>
-<td style="text-align:left;">
-ulei
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dodomissinga
-</td>
-<td style="text-align:left;">
-Parkia
-</td>
-<td style="text-align:left;">
-velutina
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-amarante
-</td>
-<td style="text-align:left;">
-Peltogyne
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-parcouri
-</td>
-<td style="text-align:left;">
-Platonia
-</td>
-<td style="text-align:left;">
-insignis
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-kimboto
-</td>
-<td style="text-align:left;">
-Pradosia
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-alimiao
-</td>
-<td style="text-align:left;">
-Pseudopiptadenia
-</td>
-<td style="text-align:left;">
-psilostachya
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-alimiao
-</td>
-<td style="text-align:left;">
-Pseudopiptadenia
-</td>
-<td style="text-align:left;">
-suaveolens
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-gonfolo rose
-</td>
-<td style="text-align:left;">
-Qualea
-</td>
-<td style="text-align:left;">
-rosea
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-wacapou guittin
-</td>
-<td style="text-align:left;">
-Recordoxylon
-</td>
-<td style="text-align:left;">
-speciosum
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cèdre jaune
-</td>
-<td style="text-align:left;">
-Rhodostemonodaphne
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-gonfolo gris
-</td>
-<td style="text-align:left;">
-Ruizterania
-</td>
-<td style="text-align:left;">
-albiflora
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-grignon franc
-</td>
-<td style="text-align:left;">
-Sextonia
-</td>
-<td style="text-align:left;">
-rubra
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-simarouba
-</td>
-<td style="text-align:left;">
-Simarouba
-</td>
-<td style="text-align:left;">
-amara
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-kobé
-</td>
-<td style="text-align:left;">
-Sterculia
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-manil marécage
-</td>
-<td style="text-align:left;">
-Symphonia
-</td>
-<td style="text-align:left;">
-globulifera
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-manil marécage
-</td>
-<td style="text-align:left;">
-Symphonia
-</td>
-<td style="text-align:left;">
-sp.1
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-anangossi
-</td>
-<td style="text-align:left;">
-Terminalia
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sali
-</td>
-<td style="text-align:left;">
-Tetragastris
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-inkassa tiabici
-</td>
-<td style="text-align:left;">
-Vatairea
-</td>
-<td style="text-align:left;">
-eritrocarpa
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-inkassa
-</td>
-<td style="text-align:left;">
-Vataireopsis
-</td>
-<td style="text-align:left;">
-spp
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-yayamadou kwatae
-</td>
-<td style="text-align:left;">
-Virola
-</td>
-<td style="text-align:left;">
-kwatae
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-yayamadou montagne
-</td>
-<td style="text-align:left;">
-Virola
-</td>
-<td style="text-align:left;">
-michelii
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-yayamadou montagne
-</td>
-<td style="text-align:left;">
-Virola
-</td>
-<td style="text-align:left;">
-multicostata
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-yayamadou montagne
-</td>
-<td style="text-align:left;">
-Virola
-</td>
-<td style="text-align:left;">
-sebifera
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-moutende kouali
-</td>
-<td style="text-align:left;">
-Vochysia
-</td>
-<td style="text-align:left;">
-guianensis
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-achiwa kouali
-</td>
-<td style="text-align:left;">
-Vochysia
-</td>
-<td style="text-align:left;">
-neyratii
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-kopi kouali
-</td>
-<td style="text-align:left;">
-Vochysia
-</td>
-<td style="text-align:left;">
-surinamensis
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-wana kouali
-</td>
-<td style="text-align:left;">
-Vochysia
-</td>
-<td style="text-align:left;">
-tomentosa
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-wacapou
-</td>
-<td style="text-align:left;">
-Vouacapoua
-</td>
-<td style="text-align:left;">
-americana
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-55
-</td>
-<td style="text-align:right;">
-60
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Lecythis
-</td>
-<td style="text-align:left;">
-poiteaui
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Lecythis
-</td>
-<td style="text-align:left;">
-praeclara
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Lecythis
-</td>
-<td style="text-align:left;">
-holcogyne
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Lecythis
-</td>
-<td style="text-align:left;">
-pneumatophora
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Lecythis
-</td>
-<td style="text-align:left;">
-chartacea
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Micropholis
-</td>
-<td style="text-align:left;">
-cayennensis
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Micropholis
-</td>
-<td style="text-align:left;">
-obscura
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Pradosia
-</td>
-<td style="text-align:left;">
-cochlearia
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Pradosia
-</td>
-<td style="text-align:left;">
-huberi
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="odd">
+<td align="left">st martin rouge</td>
+<td align="left">Andira</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">bamba apici</td>
+<td align="left">Aniba</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">bagasse</td>
+<td align="left">Bagassa</td>
+<td align="left">guianensis</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">assao</td>
+<td align="left">Balizia</td>
+<td align="left">pedicellaris</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">dokali</td>
+<td align="left">Brosimum</td>
+<td align="left">parinarioides</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">satiné rubané</td>
+<td align="left">Brosimum</td>
+<td align="left">rubescens</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">dokali mapa</td>
+<td align="left">Brosimum</td>
+<td align="left">utile</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">bushi amanda</td>
+<td align="left">Buchenavia</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">carapa</td>
+<td align="left">Carapa</td>
+<td align="left">guiansensis</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">carapa</td>
+<td align="left">Carapa</td>
+<td align="left">surinamensis</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">chawari</td>
+<td align="left">Caryocar</td>
+<td align="left">glabrum</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">chawari</td>
+<td align="left">Caryocar</td>
+<td align="left">microcarpum</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">balata pomme</td>
+<td align="left">Chrysophyllum</td>
+<td align="left">pomiferum</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">balata pomme</td>
+<td align="left">Chrysophyllum</td>
+<td align="left">sanguinolentum</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">baaka mapa</td>
+<td align="left">Couma</td>
+<td align="left">guianensis</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">maho cigare</td>
+<td align="left">Couratari</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">angélique</td>
+<td align="left">Dicorynia</td>
+<td align="left">guianensis</td>
+<td align="right">1</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">coeur dehors</td>
+<td align="left">Diplotropis</td>
+<td align="left">purpurea</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">gaiac de cayenne</td>
+<td align="left">Dipteryx</td>
+<td align="left">odorata</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">gaiac de cayenne</td>
+<td align="left">Dipteryx</td>
+<td align="left">punctata</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">acacia franc</td>
+<td align="left">Enterolobium</td>
+<td align="left">oldemanii</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">acacia franc</td>
+<td align="left">Enterolobium</td>
+<td align="left">schomburgkii</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">wapa</td>
+<td align="left">Eperua</td>
+<td align="left">falcata</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">wapa courbaril</td>
+<td align="left">Eperua</td>
+<td align="left">grandiflora</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">maho coton</td>
+<td align="left">Eriotheca</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">jaboty</td>
+<td align="left">Erisma</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">maho noir</td>
+<td align="left">Eschweilera</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">wandékolé</td>
+<td align="left">Glycydendron</td>
+<td align="left">amazonicum</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">goupi</td>
+<td align="left">Goupia</td>
+<td align="left">glabra</td>
+<td align="right">1</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">ebène rouge</td>
+<td align="left">Handroanthus</td>
+<td align="left">impetiginosus</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">ebène verte</td>
+<td align="left">Handroanthus</td>
+<td align="left">serratifolius</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">courbaril</td>
+<td align="left">Hymenaea</td>
+<td align="left">courbaril</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">courbaril</td>
+<td align="left">Hymenaea</td>
+<td align="left">oblongifolia</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">st martin jaune</td>
+<td align="left">Hymenolobium</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">bougouni</td>
+<td align="left">Inga</td>
+<td align="left">alba</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">bougouni</td>
+<td align="left">Inga</td>
+<td align="left">huberi</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">cèdre gris</td>
+<td align="left">Lauraceae</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">maho rouge</td>
+<td align="left">Lecythis</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">canari macaque</td>
+<td align="left">Lecythis</td>
+<td align="left">zabucajo</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">cèdres durs</td>
+<td align="left">Licaria</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">balata franc</td>
+<td align="left">Manilkara</td>
+<td align="left">bidentata</td>
+<td align="right">1</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">balata franc</td>
+<td align="left">Manilkara</td>
+<td align="left">huberi</td>
+<td align="right">1</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">mamantin</td>
+<td align="left">Micropholis</td>
+<td align="left">egensis</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">mamantin</td>
+<td align="left">Micropholis</td>
+<td align="left">melinoniana</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">balata blanc</td>
+<td align="left">Micropholis</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">manil montagne</td>
+<td align="left">Moronobea</td>
+<td align="left">coccinea</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">cèdre blanc</td>
+<td align="left">Ocotea</td>
+<td align="left">argyrophylla</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">cèdre blanc</td>
+<td align="left">Ocotea</td>
+<td align="left">canaliculata</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">cèdre noir</td>
+<td align="left">Ocotea</td>
+<td align="left">ceanothifolia</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">cèdre noir</td>
+<td align="left">Ocotea</td>
+<td align="left">glomerata</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">cèdre blanc</td>
+<td align="left">Ocotea</td>
+<td align="left">guianensis</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">cèdre blanc</td>
+<td align="left">Ocotea</td>
+<td align="left">oblonga</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">cèdre noir</td>
+<td align="left">Ocotea</td>
+<td align="left">schomburgkiana</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">cèdre noir</td>
+<td align="left">Ocotea</td>
+<td align="left">tomentella</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">dodomissinga</td>
+<td align="left">Parkia</td>
+<td align="left">decussata</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">dodomissinga</td>
+<td align="left">Parkia</td>
+<td align="left">gigantocarpa</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">dodomissinga</td>
+<td align="left">Parkia</td>
+<td align="left">nitida</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">dodomissinga</td>
+<td align="left">Parkia</td>
+<td align="left">reticulata</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">dodomissinga</td>
+<td align="left">Parkia</td>
+<td align="left">ulei</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">dodomissinga</td>
+<td align="left">Parkia</td>
+<td align="left">velutina</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">amarante</td>
+<td align="left">Peltogyne</td>
+<td align="left">spp</td>
+<td align="right">1</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">parcouri</td>
+<td align="left">Platonia</td>
+<td align="left">insignis</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">kimboto</td>
+<td align="left">Pradosia</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">alimiao</td>
+<td align="left">Pseudopiptadenia</td>
+<td align="left">psilostachya</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">alimiao</td>
+<td align="left">Pseudopiptadenia</td>
+<td align="left">suaveolens</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">gonfolo rose</td>
+<td align="left">Qualea</td>
+<td align="left">rosea</td>
+<td align="right">1</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">wacapou guittin</td>
+<td align="left">Recordoxylon</td>
+<td align="left">speciosum</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">cèdre jaune</td>
+<td align="left">Rhodostemonodaphne</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">gonfolo gris</td>
+<td align="left">Ruizterania</td>
+<td align="left">albiflora</td>
+<td align="right">1</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">grignon franc</td>
+<td align="left">Sextonia</td>
+<td align="left">rubra</td>
+<td align="right">1</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">simarouba</td>
+<td align="left">Simarouba</td>
+<td align="left">amara</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">kobé</td>
+<td align="left">Sterculia</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">manil marécage</td>
+<td align="left">Symphonia</td>
+<td align="left">globulifera</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">manil marécage</td>
+<td align="left">Symphonia</td>
+<td align="left">sp.1</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">anangossi</td>
+<td align="left">Terminalia</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">sali</td>
+<td align="left">Tetragastris</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">inkassa tiabici</td>
+<td align="left">Vatairea</td>
+<td align="left">eritrocarpa</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">inkassa</td>
+<td align="left">Vataireopsis</td>
+<td align="left">spp</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">yayamadou kwatae</td>
+<td align="left">Virola</td>
+<td align="left">kwatae</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">yayamadou montagne</td>
+<td align="left">Virola</td>
+<td align="left">michelii</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">yayamadou montagne</td>
+<td align="left">Virola</td>
+<td align="left">multicostata</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">yayamadou montagne</td>
+<td align="left">Virola</td>
+<td align="left">sebifera</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">moutende kouali</td>
+<td align="left">Vochysia</td>
+<td align="left">guianensis</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">achiwa kouali</td>
+<td align="left">Vochysia</td>
+<td align="left">neyratii</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">kopi kouali</td>
+<td align="left">Vochysia</td>
+<td align="left">surinamensis</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">wana kouali</td>
+<td align="left">Vochysia</td>
+<td align="left">tomentosa</td>
+<td align="right">2</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">wacapou</td>
+<td align="left">Vouacapoua</td>
+<td align="left">americana</td>
+<td align="right">1</td>
+<td align="right">55</td>
+<td align="right">60</td>
+<td align="right">120</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">Lecythis</td>
+<td align="left">poiteaui</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="left">Lecythis</td>
+<td align="left">praeclara</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">Lecythis</td>
+<td align="left">holcogyne</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="left">Lecythis</td>
+<td align="left">pneumatophora</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">Lecythis</td>
+<td align="left">chartacea</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="left">Micropholis</td>
+<td align="left">cayennensis</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">Micropholis</td>
+<td align="left">obscura</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="left">Pradosia</td>
+<td align="left">cochlearia</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">Pradosia</td>
+<td align="left">huberi</td>
+<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
 </tr>
 </tbody>
 </table>
@@ -3713,216 +2154,96 @@ NA
 <span><span class="co">#&gt; [1] "numeric"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">ForestZoneVolumeParametersTable</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<thead><tr>
-<th style="text-align:left;">
-Forest
-</th>
-<th style="text-align:left;">
-Zone
-</th>
-<th style="text-align:right;">
-aCoef
-</th>
-<th style="text-align:right;">
-bCoef
-</th>
+<thead><tr class="header">
+<th align="left">Forest</th>
+<th align="left">Zone</th>
+<th align="right">aCoef</th>
+<th align="right">bCoef</th>
 </tr></thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Acarouany
-</td>
-<td style="text-align:left;">
-West
-</td>
-<td style="text-align:right;">
--0.061776
-</td>
-<td style="text-align:right;">
-8.83580
-</td>
+<tr class="odd">
+<td align="left">Acarouany</td>
+<td align="left">West</td>
+<td align="right">-0.061776</td>
+<td align="right">8.83580</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-BAFOG
-</td>
-<td style="text-align:left;">
-West
-</td>
-<td style="text-align:right;">
--0.061776
-</td>
-<td style="text-align:right;">
-8.83580
-</td>
+<tr class="even">
+<td align="left">BAFOG</td>
+<td align="left">West</td>
+<td align="right">-0.061776</td>
+<td align="right">8.83580</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Kaw
-</td>
-<td style="text-align:left;">
-East
-</td>
-<td style="text-align:right;">
--0.084516
-</td>
-<td style="text-align:right;">
-10.46132
-</td>
+<tr class="odd">
+<td align="left">Kaw</td>
+<td align="left">East</td>
+<td align="right">-0.084516</td>
+<td align="right">10.46132</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Laussat
-</td>
-<td style="text-align:left;">
-West
-</td>
-<td style="text-align:right;">
--0.061776
-</td>
-<td style="text-align:right;">
-8.83580
-</td>
+<tr class="even">
+<td align="left">Laussat</td>
+<td align="left">West</td>
+<td align="right">-0.061776</td>
+<td align="right">8.83580</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Montagne_Plomb
-</td>
-<td style="text-align:left;">
-Central
-</td>
-<td style="text-align:right;">
--0.035829
-</td>
-<td style="text-align:right;">
-8.76340
-</td>
+<tr class="odd">
+<td align="left">Montagne_Plomb</td>
+<td align="left">Central</td>
+<td align="right">-0.035829</td>
+<td align="right">8.76340</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Montagne_Tortue
-</td>
-<td style="text-align:left;">
-East
-</td>
-<td style="text-align:right;">
--0.084516
-</td>
-<td style="text-align:right;">
-10.46132
-</td>
+<tr class="even">
+<td align="left">Montagne_Tortue</td>
+<td align="left">East</td>
+<td align="right">-0.084516</td>
+<td align="right">10.46132</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Nouragues
-</td>
-<td style="text-align:left;">
-East
-</td>
-<td style="text-align:right;">
--0.084516
-</td>
-<td style="text-align:right;">
-10.46132
-</td>
+<tr class="odd">
+<td align="left">Nouragues</td>
+<td align="left">East</td>
+<td align="right">-0.084516</td>
+<td align="right">10.46132</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Organabo
-</td>
-<td style="text-align:left;">
-Central
-</td>
-<td style="text-align:right;">
--0.035829
-</td>
-<td style="text-align:right;">
-8.76340
-</td>
+<tr class="even">
+<td align="left">Organabo</td>
+<td align="left">Central</td>
+<td align="right">-0.035829</td>
+<td align="right">8.76340</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Paracou
-</td>
-<td style="text-align:left;">
-Central
-</td>
-<td style="text-align:right;">
--0.035829
-</td>
-<td style="text-align:right;">
-8.76340
-</td>
+<tr class="odd">
+<td align="left">Paracou</td>
+<td align="left">Central</td>
+<td align="right">-0.035829</td>
+<td align="right">8.76340</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Regina_St_Georges
-</td>
-<td style="text-align:left;">
-East
-</td>
-<td style="text-align:right;">
--0.084516
-</td>
-<td style="text-align:right;">
-10.46132
-</td>
+<tr class="even">
+<td align="left">Regina_St_Georges</td>
+<td align="left">East</td>
+<td align="right">-0.084516</td>
+<td align="right">10.46132</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Risquetout
-</td>
-<td style="text-align:left;">
-Central
-</td>
-<td style="text-align:right;">
--0.035829
-</td>
-<td style="text-align:right;">
-8.76340
-</td>
+<tr class="odd">
+<td align="left">Risquetout</td>
+<td align="left">Central</td>
+<td align="right">-0.035829</td>
+<td align="right">8.76340</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Tibourou
-</td>
-<td style="text-align:left;">
-East
-</td>
-<td style="text-align:right;">
--0.084516
-</td>
-<td style="text-align:right;">
-10.46132
-</td>
+<tr class="even">
+<td align="left">Tibourou</td>
+<td align="left">East</td>
+<td align="right">-0.084516</td>
+<td align="right">10.46132</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Tresor
-</td>
-<td style="text-align:left;">
-East
-</td>
-<td style="text-align:right;">
--0.084516
-</td>
-<td style="text-align:right;">
-10.46132
-</td>
+<tr class="odd">
+<td align="left">Tresor</td>
+<td align="left">East</td>
+<td align="right">-0.084516</td>
+<td align="right">10.46132</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Trinite
-</td>
-<td style="text-align:left;">
-Central
-</td>
-<td style="text-align:right;">
--0.035829
-</td>
-<td style="text-align:right;">
-8.76340
-</td>
+<tr class="even">
+<td align="left">Trinite</td>
+<td align="left">Central</td>
+<td align="right">-0.035829</td>
+<td align="right">8.76340</td>
 </tr>
 </tbody>
 </table>
@@ -3957,375 +2278,160 @@ Central
 <span><span class="co">#&gt; $Family</span></span>
 <span><span class="co">#&gt; [1] "character"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span><span class="va">ParamCrownDiameterAllometry</span>, n<span class="op">=</span><span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr>
-<th style="text-align:right;">
-alpha
-</th>
-<th style="text-align:right;">
-beta
-</th>
-<th style="text-align:left;">
-Taxo
-</th>
-<th style="text-align:left;">
-ScientificName
-</th>
-<th style="text-align:left;">
-Genus
-</th>
-<th style="text-align:left;">
-Species
-</th>
-<th style="text-align:left;">
-Family
-</th>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="10%">
+<col width="10%">
+<col width="5%">
+<col width="26%">
+<col width="14%">
+<col width="15%">
+<col width="17%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">alpha</th>
+<th align="right">beta</th>
+<th align="left">Taxo</th>
+<th align="left">ScientificName</th>
+<th align="left">Genus</th>
+<th align="left">Species</th>
+<th align="left">Family</th>
 </tr></thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-0.5661636
-</td>
-<td style="text-align:right;">
-0.5686018
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Manilkara
-</td>
-<td style="text-align:left;">
-Manilkara
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="odd">
+<td align="right">0.5083044</td>
+<td align="right">0.5957550</td>
+<td align="left">sp</td>
+<td align="left">Eriotheca_longitubulosa</td>
+<td align="left">Eriotheca</td>
+<td align="left">longitubulosa</td>
+<td align="left">NA</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.4448597
-</td>
-<td style="text-align:right;">
-0.5587949
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Pourouma_melinonii
-</td>
-<td style="text-align:left;">
-Pourouma
-</td>
-<td style="text-align:left;">
-melinonii
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="even">
+<td align="right">0.5246527</td>
+<td align="right">0.5895021</td>
+<td align="left">fam</td>
+<td align="left">Dichapetalaceae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Dichapetalaceae</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.4857481
-</td>
-<td style="text-align:right;">
-0.5795969
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Hirtella_bicornis
-</td>
-<td style="text-align:left;">
-Hirtella
-</td>
-<td style="text-align:left;">
-bicornis
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="odd">
+<td align="right">0.4755585</td>
+<td align="right">0.5720357</td>
+<td align="left">fam</td>
+<td align="left">Icacinaceae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Icacinaceae</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.4548206
-</td>
-<td style="text-align:right;">
-0.5890446
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Andira_coriacea
-</td>
-<td style="text-align:left;">
-Andira
-</td>
-<td style="text-align:left;">
-coriacea
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="even">
+<td align="right">0.4662083</td>
+<td align="right">0.5734541</td>
+<td align="left">sp</td>
+<td align="left">Eperua_grandiflora</td>
+<td align="left">Eperua</td>
+<td align="left">grandiflora</td>
+<td align="left">NA</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.5780100
-</td>
-<td style="text-align:right;">
-0.5574013
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Couratari_oblongifolia
-</td>
-<td style="text-align:left;">
-Couratari
-</td>
-<td style="text-align:left;">
-oblongifolia
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="odd">
+<td align="right">0.4479784</td>
+<td align="right">0.5624486</td>
+<td align="left">sp</td>
+<td align="left">Protium_tenuifolium</td>
+<td align="left">Protium</td>
+<td align="left">tenuifolium</td>
+<td align="left">NA</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.4678230
-</td>
-<td style="text-align:right;">
-0.5680580
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Poraqueiba_guianensis
-</td>
-<td style="text-align:left;">
-Poraqueiba
-</td>
-<td style="text-align:left;">
-guianensis
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="even">
+<td align="right">0.5056234</td>
+<td align="right">0.5822394</td>
+<td align="left">sp</td>
+<td align="left">Glycydendron_amazonicum</td>
+<td align="left">Glycydendron</td>
+<td align="left">amazonicum</td>
+<td align="left">NA</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.4632760
-</td>
-<td style="text-align:right;">
-0.5834162
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Oxandra_asbeckii
-</td>
-<td style="text-align:left;">
-Oxandra
-</td>
-<td style="text-align:left;">
-asbeckii
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="odd">
+<td align="right">0.4256834</td>
+<td align="right">0.5875930</td>
+<td align="left">sp</td>
+<td align="left">Dicorynia_guianensis</td>
+<td align="left">Dicorynia</td>
+<td align="left">guianensis</td>
+<td align="left">NA</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.4285765
-</td>
-<td style="text-align:right;">
-0.5493849
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Cecropia_obtusa
-</td>
-<td style="text-align:left;">
-Cecropia
-</td>
-<td style="text-align:left;">
-obtusa
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="even">
+<td align="right">0.4935255</td>
+<td align="right">0.5874612</td>
+<td align="left">gen</td>
+<td align="left">Anacardium</td>
+<td align="left">Anacardium</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.5446967
-</td>
-<td style="text-align:right;">
-0.5927876
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Moronobea_coccinea
-</td>
-<td style="text-align:left;">
-Moronobea
-</td>
-<td style="text-align:left;">
-coccinea
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="odd">
+<td align="right">0.4755039</td>
+<td align="right">0.5688203</td>
+<td align="left">sp</td>
+<td align="left">Sloanea_sp.14CAY-ATDN</td>
+<td align="left">Sloanea</td>
+<td align="left">sp.14CAY-ATDN</td>
+<td align="left">NA</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.4547439
-</td>
-<td style="text-align:right;">
-0.5665450
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Parinari_montana
-</td>
-<td style="text-align:left;">
-Parinari
-</td>
-<td style="text-align:left;">
-montana
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="even">
+<td align="right">0.5042767</td>
+<td align="right">0.5806769</td>
+<td align="left">fam</td>
+<td align="left">Apocynaceae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Apocynaceae</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.4755039
-</td>
-<td style="text-align:right;">
-0.5688203
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Sloanea_sp.14CAY-ATDN
-</td>
-<td style="text-align:left;">
-Sloanea
-</td>
-<td style="text-align:left;">
-sp.14CAY-ATDN
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="odd">
+<td align="right">0.4785262</td>
+<td align="right">0.5667554</td>
+<td align="left">sp</td>
+<td align="left">Jacaranda_copaia</td>
+<td align="left">Jacaranda</td>
+<td align="left">copaia</td>
+<td align="left">NA</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.4256834
-</td>
-<td style="text-align:right;">
-0.5875930
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Dicorynia_guianensis
-</td>
-<td style="text-align:left;">
-Dicorynia
-</td>
-<td style="text-align:left;">
-guianensis
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="even">
+<td align="right">0.4947435</td>
+<td align="right">0.5747305</td>
+<td align="left">sp</td>
+<td align="left">Carapa_procera</td>
+<td align="left">Carapa</td>
+<td align="left">procera</td>
+<td align="left">NA</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.4680930
-</td>
-<td style="text-align:right;">
-0.5658139
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Licania_heteromorpha
-</td>
-<td style="text-align:left;">
-Licania
-</td>
-<td style="text-align:left;">
-heteromorpha
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="odd">
+<td align="right">0.4902467</td>
+<td align="right">0.5925681</td>
+<td align="left">sp</td>
+<td align="left">Licaria_cannella</td>
+<td align="left">Licaria</td>
+<td align="left">cannella</td>
+<td align="left">NA</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.4075161
-</td>
-<td style="text-align:right;">
-0.6098194
-</td>
-<td style="text-align:left;">
-sp
-</td>
-<td style="text-align:left;">
-Qualea_rosea
-</td>
-<td style="text-align:left;">
-Qualea
-</td>
-<td style="text-align:left;">
-rosea
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="even">
+<td align="right">0.5099851</td>
+<td align="right">0.5822255</td>
+<td align="left">sp</td>
+<td align="left">Hevea_guianensis</td>
+<td align="left">Hevea</td>
+<td align="left">guianensis</td>
+<td align="left">NA</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0.4770149
-</td>
-<td style="text-align:right;">
-0.5685248
-</td>
-<td style="text-align:left;">
-gen
-</td>
-<td style="text-align:left;">
-Pogonophora
-</td>
-<td style="text-align:left;">
-Pogonophora
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
+<tr class="odd">
+<td align="right">0.5661636</td>
+<td align="right">0.5686018</td>
+<td align="left">gen</td>
+<td align="left">Manilkara</td>
+<td align="left">Manilkara</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 </tbody>
 </table>
@@ -4448,146 +2554,70 @@ the logging simulator (list)</p></li>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ScenariosTable</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">ScenariosTable</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<thead><tr>
-<th style="text-align:left;">
-Type
-</th>
-<th style="text-align:left;">
-SpatialDataType
-</th>
-<th style="text-align:left;">
-Objective
-</th>
-<th style="text-align:left;">
-Diversification
-</th>
-<th style="text-align:left;">
-Winching
-</th>
-<th style="text-align:left;">
-DirectionalFelling
-</th>
+<colgroup>
+<col width="17%">
+<col width="18%">
+<col width="11%">
+<col width="18%">
+<col width="10%">
+<col width="22%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Type</th>
+<th align="left">SpatialDataType</th>
+<th align="left">Objective</th>
+<th align="left">Diversification</th>
+<th align="left">Winching</th>
+<th align="left">DirectionalFelling</th>
 </tr></thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-RIL1
-</td>
-<td style="text-align:left;">
-SRTM
-</td>
-<td style="text-align:left;">
-20-25
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-0
-</td>
+<tr class="odd">
+<td align="left">RIL1</td>
+<td align="left">SRTM</td>
+<td align="left">20-25</td>
+<td align="left">FALSE</td>
+<td align="left">0</td>
+<td align="left">0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-RIL2broken
-</td>
-<td style="text-align:left;">
-LIDAR
-</td>
-<td style="text-align:left;">
-20-25
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-0
-</td>
+<tr class="even">
+<td align="left">RIL2broken</td>
+<td align="left">LIDAR</td>
+<td align="left">20-25</td>
+<td align="left">FALSE</td>
+<td align="left">0</td>
+<td align="left">0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-RIL2
-</td>
-<td style="text-align:left;">
-LIDAR
-</td>
-<td style="text-align:left;">
-20-25
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-0
-</td>
+<tr class="odd">
+<td align="left">RIL2</td>
+<td align="left">LIDAR</td>
+<td align="left">20-25</td>
+<td align="left">FALSE</td>
+<td align="left">1</td>
+<td align="left">0</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-RIL3
-</td>
-<td style="text-align:left;">
-LIDAR
-</td>
-<td style="text-align:left;">
-25-30
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-2
-</td>
-<td style="text-align:left;">
-2
-</td>
+<tr class="even">
+<td align="left">RIL3</td>
+<td align="left">LIDAR</td>
+<td align="left">25-30</td>
+<td align="left">TRUE</td>
+<td align="left">2</td>
+<td align="left">2</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-RIL3fuel
-</td>
-<td style="text-align:left;">
-LIDAR
-</td>
-<td style="text-align:left;">
-25-30
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-2
-</td>
-<td style="text-align:left;">
-2
-</td>
+<tr class="odd">
+<td align="left">RIL3fuel</td>
+<td align="left">LIDAR</td>
+<td align="left">25-30</td>
+<td align="left">TRUE</td>
+<td align="left">2</td>
+<td align="left">2</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-RIL3fuelhollow
-</td>
-<td style="text-align:left;">
-LIDAR
-</td>
-<td style="text-align:left;">
-25-30
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-2
-</td>
-<td style="text-align:left;">
-2
-</td>
+<tr class="even">
+<td align="left">RIL3fuelhollow</td>
+<td align="left">LIDAR</td>
+<td align="left">25-30</td>
+<td align="left">TRUE</td>
+<td align="left">2</td>
+<td align="left">2</td>
 </tr>
 </tbody>
 </table>
@@ -4720,8 +2750,8 @@ and the hydrographic network.</p>
 <span>                           diversification <span class="op">=</span> <span class="cn">TRUE</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                           crowndiameterparameters <span class="op">=</span> <span class="va">ParamCrownDiameterAllometry</span>,</span>
 <span>                           advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; As the harvestable volume (= 177.2m^3)</span></span>
-<span><span class="co">#&gt;                 was higher (by 102.2m^3)</span></span>
+<span><span class="co">#&gt; As the harvestable volume (= 181.4m^3)</span></span>
+<span><span class="co">#&gt;                 was higher (by 106.4m^3)</span></span>
 <span><span class="co">#&gt;                 than the objective volume, the Minimum Falling Diameter (MinFD) of the 1st and 2nd economic ranks species</span></span>
 <span><span class="co">#&gt;                   were increased to UpMinFD. The objective volume has now been reached.</span></span>
 <span><span class="co">#&gt; Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is FALSE</span></span>
@@ -4745,7 +2775,7 @@ and the hydrographic network.</p>
 because the identification of defect trees contains a random
 component.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">SimulTime</span> <span class="op">&lt;-</span> <span class="fu">microbenchmark</span><span class="fu">::</span><span class="fu">microbenchmark</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">SimulTime</span> <span class="op">&lt;-</span> <span class="fu">microbenchmark</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
 <span>  </span>
 <span>  <span class="fu"><a href="../reference/loggingsimulation1.html">loggingsimulation1</a></span><span class="op">(</span></span>
 <span>    inventory <span class="op">=</span> <span class="va">Paracou6_2016</span>,</span>
@@ -5079,8 +3109,8 @@ number as trees to be harvested.</p>
 <span>                                      plotslope <span class="op">=</span> <span class="va">PlotSlope</span>,maintrails <span class="op">=</span> <span class="va">MainTrails</span>,</span>
 <span>                                      harvestablepolygons <span class="op">=</span> <span class="va">HarvestablePolygons</span>,</span>
 <span>                                      advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; The harvestable volume (= 48.1m^3) was lower</span></span>
-<span><span class="co">#&gt;               (by 26.8m^3) than your objective volume.</span></span>
+<span><span class="co">#&gt; The harvestable volume (= 39.2m^3) was lower</span></span>
+<span><span class="co">#&gt;               (by 35.7m^3) than your objective volume.</span></span>
 <span><span class="co">#&gt;               You have chosen to continue logging without diversifying in this case.</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -5122,8 +3152,8 @@ volume on the plot.</p>
 <span>                      scenario <span class="op">=</span> <span class="st">"manual"</span>, fuel <span class="op">=</span> <span class="st">"2"</span>, diversification <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                      VO <span class="op">=</span> <span class="fl">125</span>, HVinit <span class="op">=</span> <span class="va">HVinit</span>, specieslax <span class="op">=</span> <span class="cn">FALSE</span>, objectivelax <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                      advancedloggingparameters <span class="op">=</span> <span class="fu"><a href="../reference/loggingparameters.html">loggingparameters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">inventory</span></span>
-<span><span class="co">#&gt; The harvestable volume (= 102.3m^3) was lower</span></span>
-<span><span class="co">#&gt;               (by 22.7m^3) than your objective volume.</span></span>
+<span><span class="co">#&gt; The harvestable volume (= 102.6m^3) was lower</span></span>
+<span><span class="co">#&gt;               (by 22.4m^3) than your objective volume.</span></span>
 <span><span class="co">#&gt;               You have chosen to continue logging in this case.</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -5564,28 +3594,26 @@ subtropical Atlantic Forest.” Southern Forests: a Journal of Forest
 Science 81.3 (2019): 261-271.</li>
 </ul>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by Vincyane Badouard, Sylvain Schmitt, Guillaume Salzet, Thomas Gaquiere, Géraldine Derroire.</p>
+  <p>Developed by Vincyane Badouard, Sylvain Schmitt, Guillaume Salzet, Thomas Gaquiere, Géraldine Derroire.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>

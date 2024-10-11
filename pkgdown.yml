@@ -1,8 +1,7 @@
-pandoc: 2.19.2
-pkgdown: 2.0.7
+pandoc: 3.1.11
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
+  articles/CreekDistances: CreekDistances.html
   LoggingLab: LoggingLab.html
-  CreekDistances: CreekDistances.html
-last_built: 2023-11-15T09:27Z
-
+last_built: 2024-10-11T17:27Z

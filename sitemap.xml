@@ -1,177 +1,61 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/CreekDistances.html</loc>
-  </url>
-  <url>
-    <loc>/articles/LoggingLab.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CreekDistances.html</loc>
-  </url>
-  <url>
-    <loc>/reference/DTMParacou.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ForestZoneVolumeParametersTable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/HarvestableAreaOutputsCable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LoggingLab.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LoggingSimulationOutputs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LoggingSimulationOutputs_iter.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MainTrails.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Paracou6_2016.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ParamCrownDiameterAllometry.html</loc>
-  </url>
-  <url>
-    <loc>/reference/PlotMask.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ScenariosTable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/SecondaryTrails.html</loc>
-  </url>
-  <url>
-    <loc>/reference/SpeciesCriteria.html</loc>
-  </url>
-  <url>
-    <loc>/reference/VolumeParametersTable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/addtreedim.html</loc>
-  </url>
-  <url>
-    <loc>/reference/adjtopolcp.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cleaninventory.html</loc>
-  </url>
-  <url>
-    <loc>/reference/commercialcriteriajoin.html</loc>
-  </url>
-  <url>
-    <loc>/reference/createcanopy.html</loc>
-  </url>
-  <url>
-    <loc>/reference/directionalfellingsuccessdef.html</loc>
-  </url>
-  <url>
-    <loc>/reference/felling1tree.html</loc>
-  </url>
-  <url>
-    <loc>/reference/futurereserve.html</loc>
-  </url>
-  <url>
-    <loc>/reference/genaccesspts.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getgeometry.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getmask.html</loc>
-  </url>
-  <url>
-    <loc>/reference/harvestable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/harvestableareadefinition.html</loc>
-  </url>
-  <url>
-    <loc>/reference/harvestablefuelwood.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/inventorycheckformat.html</loc>
-  </url>
-  <url>
-    <loc>/reference/loggingparameters.html</loc>
-  </url>
-  <url>
-    <loc>/reference/loggingsimulation.html</loc>
-  </url>
-  <url>
-    <loc>/reference/loggingsimulation1.html</loc>
-  </url>
-  <url>
-    <loc>/reference/loggingsummary.html</loc>
-  </url>
-  <url>
-    <loc>/reference/loggingsummary1.html</loc>
-  </url>
-  <url>
-    <loc>/reference/maintrailextract.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mortalityunderpolygon.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rotatepolygon.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scenariosparameters.html</loc>
-  </url>
-  <url>
-    <loc>/reference/secondtrailsadjusted.html</loc>
-  </url>
-  <url>
-    <loc>/reference/secondtrailsopening.html</loc>
-  </url>
-  <url>
-    <loc>/reference/selected.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sloperdcond.html</loc>
-  </url>
-  <url>
-    <loc>/reference/smoothtrails.html</loc>
-  </url>
-  <url>
-    <loc>/reference/st_temporaryintersection.html</loc>
-  </url>
-  <url>
-    <loc>/reference/timberharvestedvolume.html</loc>
-  </url>
-  <url>
-    <loc>/reference/treefelling.html</loc>
-  </url>
-  <url>
-    <loc>/reference/treefromthesky.html</loc>
-  </url>
-  <url>
-    <loc>/reference/treeselection.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/CreekDistances.html</loc></url>
+<url><loc>/articles/LoggingLab.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/CreekDistances.html</loc></url>
+<url><loc>/reference/DTMParacou.html</loc></url>
+<url><loc>/reference/ForestZoneVolumeParametersTable.html</loc></url>
+<url><loc>/reference/HarvestableAreaOutputsCable.html</loc></url>
+<url><loc>/reference/LoggingLab.html</loc></url>
+<url><loc>/reference/LoggingSimulationOutputs.html</loc></url>
+<url><loc>/reference/LoggingSimulationOutputs_iter.html</loc></url>
+<url><loc>/reference/MainTrails.html</loc></url>
+<url><loc>/reference/Paracou6_2016.html</loc></url>
+<url><loc>/reference/ParamCrownDiameterAllometry.html</loc></url>
+<url><loc>/reference/PlotMask.html</loc></url>
+<url><loc>/reference/ScenariosTable.html</loc></url>
+<url><loc>/reference/SecondaryTrails.html</loc></url>
+<url><loc>/reference/SpeciesCriteria.html</loc></url>
+<url><loc>/reference/VolumeParametersTable.html</loc></url>
+<url><loc>/reference/addtreedim.html</loc></url>
+<url><loc>/reference/adjtopolcp.html</loc></url>
+<url><loc>/reference/cleaninventory.html</loc></url>
+<url><loc>/reference/commercialcriteriajoin.html</loc></url>
+<url><loc>/reference/createcanopy.html</loc></url>
+<url><loc>/reference/directionalfellingsuccessdef.html</loc></url>
+<url><loc>/reference/felling1tree.html</loc></url>
+<url><loc>/reference/futurereserve.html</loc></url>
+<url><loc>/reference/genaccesspts.html</loc></url>
+<url><loc>/reference/getgeometry.html</loc></url>
+<url><loc>/reference/getmask.html</loc></url>
+<url><loc>/reference/harvestable.html</loc></url>
+<url><loc>/reference/harvestableareadefinition.html</loc></url>
+<url><loc>/reference/harvestablefuelwood.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/inventorycheckformat.html</loc></url>
+<url><loc>/reference/loggingparameters.html</loc></url>
+<url><loc>/reference/loggingsimulation.html</loc></url>
+<url><loc>/reference/loggingsimulation1.html</loc></url>
+<url><loc>/reference/loggingsummary.html</loc></url>
+<url><loc>/reference/loggingsummary1.html</loc></url>
+<url><loc>/reference/maintrailextract.html</loc></url>
+<url><loc>/reference/mortalityunderpolygon.html</loc></url>
+<url><loc>/reference/pipe.html</loc></url>
+<url><loc>/reference/rotatepolygon.html</loc></url>
+<url><loc>/reference/scenariosparameters.html</loc></url>
+<url><loc>/reference/secondtrailsadjusted.html</loc></url>
+<url><loc>/reference/secondtrailsopening.html</loc></url>
+<url><loc>/reference/selected.html</loc></url>
+<url><loc>/reference/sloperdcond.html</loc></url>
+<url><loc>/reference/smoothtrails.html</loc></url>
+<url><loc>/reference/st_temporaryintersection.html</loc></url>
+<url><loc>/reference/timberharvestedvolume.html</loc></url>
+<url><loc>/reference/treefelling.html</loc></url>
+<url><loc>/reference/treefromthesky.html</loc></url>
+<url><loc>/reference/treeselection.html</loc></url>
 </urlset>
+
